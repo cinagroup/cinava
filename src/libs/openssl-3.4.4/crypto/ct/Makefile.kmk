@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -43,6 +43,6 @@ crypto_ct_SOURCES = \
 	ct_vfy.c \
 	ct_x509v3.c
 
-$(evalcall VBOX_OPENSSL_X86,crypto_ct)
+$(evalcall VRA_OPENSSL_X86,crypto_ct)
 
 include $(FILE_KBUILD_SUB_FOOTER)

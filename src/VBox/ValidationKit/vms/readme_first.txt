@@ -114,7 +114,7 @@ as a whole to not disturb automated testing.
         Edit /etc/yum.conf by adding in [main]:
             ```proxy=https://my-proxy:port```
 
-### Oracle Linux 6
+### CINASEEK Linux 6
 
     * The public yum repositories need to be installed first, via e.g.
         ```wget http://yum.oracle.com/public-yum-ol6.repo -O /etc/yum.repos.d/```

@@ -8,9 +8,9 @@
 #
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ MY_PROJECT_FILES=""
 #
 MY_OUT_DIR="SlickEdit"
 MY_PRJ_PRF="VBox-"
-MY_WS_NAME="VirtualBox.vpw"
+MY_WS_NAME="VirtualAgent.vpw"
 MY_DBG=""
 MY_WINDOWS_HOST=""
 MY_OPT_MINIMAL=""
@@ -284,23 +284,23 @@ my_generate_project()
     echo '        WorkingDir="'"${MY_ABS_DIR}"'"'                                                                       >> "${MY_FILE}"
     echo '        >'                                                                                                    >> "${MY_FILE}"
     my_generate_project_config "${MY_FILE}" "Default" "" "" "" "" $*
-    my_generate_project_config "${MY_FILE}" "Debug + hardening"     "KBUILD_TYPE=debug VBOX_WITH_HARDENING=1"   "" "" "" $*
-    my_generate_project_config "${MY_FILE}" "Release + hardening"   "KBUILD_TYPE=release VBOX_WITH_HARDENING=1" "" "" "" $*
+    my_generate_project_config "${MY_FILE}" "Debug + hardening"     "KBUILD_TYPE=debug VRA_WITH_HARDENING=1"   "" "" "" $*
+    my_generate_project_config "${MY_FILE}" "Release + hardening"   "KBUILD_TYPE=release VRA_WITH_HARDENING=1" "" "" "" $*
     my_generate_project_config "${MY_FILE}" "Debug+Release + hardening" \
-        "KBUILD_TYPE=debug VBOX_WITH_HARDENING=1" \
-        "KBUILD_TYPE=release VBOX_WITH_HARDENING=1" \
+        "KBUILD_TYPE=debug VRA_WITH_HARDENING=1" \
+        "KBUILD_TYPE=release VRA_WITH_HARDENING=1" \
         "" "" $*
-    my_generate_project_config "${MY_FILE}" "Debug w/o hardening"   "KBUILD_TYPE=debug VBOX_WITHOUT_HARDENING=1"   "" "" $*
-    my_generate_project_config "${MY_FILE}" "Release w/o hardening" "KBUILD_TYPE=release VBOX_WITHOUT_HARDENING=1" "" "" $*
+    my_generate_project_config "${MY_FILE}" "Debug w/o hardening"   "KBUILD_TYPE=debug VRA_WITHOUT_HARDENING=1"   "" "" $*
+    my_generate_project_config "${MY_FILE}" "Release w/o hardening" "KBUILD_TYPE=release VRA_WITHOUT_HARDENING=1" "" "" $*
     my_generate_project_config "${MY_FILE}" "Debug+Release w/o hardening" \
-        "KBUILD_TYPE=debug VBOX_WITHOUT_HARDENING=1" \
-        "KBUILD_TYPE=release VBOX_WITHOUT_HARDENING=1" \
+        "KBUILD_TYPE=debug VRA_WITHOUT_HARDENING=1" \
+        "KBUILD_TYPE=release VRA_WITHOUT_HARDENING=1" \
         "" "" $*
     my_generate_project_config "${MY_FILE}" "Debug+Release with and without hardening" \
-        "KBUILD_TYPE=debug VBOX_WITH_HARDENING=1" \
-        "KBUILD_TYPE=release VBOX_WITH_HARDENING=1" \
-        "KBUILD_TYPE=debug VBOX_WITHOUT_HARDENING=1" \
-        "KBUILD_TYPE=release VBOX_WITHOUT_HARDENING=1" \
+        "KBUILD_TYPE=debug VRA_WITH_HARDENING=1" \
+        "KBUILD_TYPE=release VRA_WITH_HARDENING=1" \
+        "KBUILD_TYPE=debug VRA_WITHOUT_HARDENING=1" \
+        "KBUILD_TYPE=release VRA_WITHOUT_HARDENING=1" \
         $*
 
     while test $# -ge 1  -a  "${1}" != "--end-includes";
@@ -478,7 +478,7 @@ my_generate_usercpp_h()
                                  const char *aComment = NULL, \
                                  const int   aNum = -1) \
     { \
-        return VirtualBoxTranslator::translate(#cls, aSourceText, aComment, aNum); \
+        return VirtualAgentTranslator::translate(#cls, aSourceText, aComment, aNum); \
     }
 #define DECLARE_COMMON_CLASS_METHODS(cls) \
     DECLARE_EMPTY_CTOR_DTOR(cls) \
@@ -508,8 +508,8 @@ EOF
 EOF
     fi
     ${MY_CAT} >> ${MY_FILE} <<EOF
-#define VBOX_SCRIPTABLE(a)              public a
-#define VBOX_SCRIPTABLE_IMPL(a)
+#define VRA_SCRIPTABLE(a)              public a
+#define VRA_SCRIPTABLE_IMPL(a)
 #define VIRTUALBOXBASE_ADD_ERRORINFO_SUPPORT(a)
 
 #define CTX_SUFF(var)                   var##R3
@@ -566,8 +566,8 @@ EOF
 #define DECLVBGL(a_RetType)             a_RetType
 
 #define PDMDEVINSINT_DECLARED           1
-#define VBOX_WITH_HGCM                  1
-#define VBOXCALL
+#define VRA_WITH_HGCM                  1
+#define VRACALL
 
 #define HM_NAMELESS_UNION_TAG(a_Tag)
 #define HM_UNION_NM(a_Nm)
@@ -613,19 +613,19 @@ EOF
 #define PGM_BTH_NAME_EPT_AMD64(name)    pgmBth##name
 #define PGM_BTH_DECL(type, name)        type PGM_BTH_NAME(name)
 
-#define FNIEMOP_STUB(a_Name)            VBOXSTRICTRC a_Name(PIEMCPU pIemCpu) { return VERR_NOT_IMPLEMENTED; }
-#define FNIEMOP_DEF(a_Name)             VBOXSTRICTRC a_Name(PIEMCPU pIemCpu)
-#define FNIEMOP_DEF_1(a_Name, a_Type0, a_Name0) static VBOXSTRICTRC a_Name(PIEMCPU pIemCpu, a_Type0 a_Name0)
-#define FNIEMOP_DEF_2(a_Name, a_Type0, a_Name0, a_Type1, a_Name1) static VBOXSTRICTRC a_Name(PIEMCPU pIemCpu, a_Type0 a_Name0, a_Type1 a_Name1)
-#define FNIEMOPRM_DEF(a_Name)           static VBOXSTRICTRC a_Name(PIEMCPU pIemCpu, uint8_t bBm)
-#define IEM_CIMPL_DEF_0(a_Name)         static VBOXSTRICTRC a_Name(PIEMCPU pIemCpu)
-#define IEM_CIMPL_DEF_1(a_Name, a_Type0, a_Name0) static VBOXSTRICTRC a_Name(PIEMCPU pIemCpu, , a_Type0 a_Name0)
-#define IEM_CIMPL_DEF_2(a_Name, a_Type0, a_Name0, a_Type1, a_Name1) static VBOXSTRICTRC a_Name(PIEMCPU pIemCpu, a_Type0 a_Name0, a_Type1 a_Name1)
-#define IEM_CIMPL_DEF_3(a_Name, a_Type0, a_Name0, a_Type1, a_Name1, a_Type2, a_Name2)  static VBOXSTRICTRC a_Name(PIEMCPU pIemCpu, a_Type0 a_Name0, a_Type1 a_Name1, a_Type2 a_Name2)
-#define IEM_CIMPL_DEF_4(a_Name, a_Type0, a_Name0, a_Type1, a_Name1, a_Type2, a_Name2, a_Type3, a_Name3)  static VBOXSTRICTRC a_Name(PIEMCPU pIemCpu, a_Type0 a_Name0, a_Type1 a_Name1, a_Type2 a_Name2, a_Type3 a_Name3)
+#define FNIEMOP_STUB(a_Name)            VRASTRICTRC a_Name(PIEMCPU pIemCpu) { return VERR_NOT_IMPLEMENTED; }
+#define FNIEMOP_DEF(a_Name)             VRASTRICTRC a_Name(PIEMCPU pIemCpu)
+#define FNIEMOP_DEF_1(a_Name, a_Type0, a_Name0) static VRASTRICTRC a_Name(PIEMCPU pIemCpu, a_Type0 a_Name0)
+#define FNIEMOP_DEF_2(a_Name, a_Type0, a_Name0, a_Type1, a_Name1) static VRASTRICTRC a_Name(PIEMCPU pIemCpu, a_Type0 a_Name0, a_Type1 a_Name1)
+#define FNIEMOPRM_DEF(a_Name)           static VRASTRICTRC a_Name(PIEMCPU pIemCpu, uint8_t bBm)
+#define IEM_CIMPL_DEF_0(a_Name)         static VRASTRICTRC a_Name(PIEMCPU pIemCpu)
+#define IEM_CIMPL_DEF_1(a_Name, a_Type0, a_Name0) static VRASTRICTRC a_Name(PIEMCPU pIemCpu, , a_Type0 a_Name0)
+#define IEM_CIMPL_DEF_2(a_Name, a_Type0, a_Name0, a_Type1, a_Name1) static VRASTRICTRC a_Name(PIEMCPU pIemCpu, a_Type0 a_Name0, a_Type1 a_Name1)
+#define IEM_CIMPL_DEF_3(a_Name, a_Type0, a_Name0, a_Type1, a_Name1, a_Type2, a_Name2)  static VRASTRICTRC a_Name(PIEMCPU pIemCpu, a_Type0 a_Name0, a_Type1 a_Name1, a_Type2 a_Name2)
+#define IEM_CIMPL_DEF_4(a_Name, a_Type0, a_Name0, a_Type1, a_Name1, a_Type2, a_Name2, a_Type3, a_Name3)  static VRASTRICTRC a_Name(PIEMCPU pIemCpu, a_Type0 a_Name0, a_Type1 a_Name1, a_Type2 a_Name2, a_Type3 a_Name3)
 #define IEM_DECL_IMPL_DEF(a_RetType, a_Name, a_ArgList)   a_RetType a_Name a_ArgList
-#define IEM_DECL_IEMTHREADEDFUNC_DEF(a_Name)   VBOXSTRICTRC a_Name(PVMCPU pVCpu, uint64_t uParam0, uint64_t uParam1, uint64_t uParam2)
-#define IEM_DECL_IEMTHREADEDFUNC_PROTO(a_Name) VBOXSTRICTRC a_Name(PVMCPU pVCpu, uint64_t uParam0, uint64_t uParam1, uint64_t uParam2)
+#define IEM_DECL_IEMTHREADEDFUNC_DEF(a_Name)   VRASTRICTRC a_Name(PVMCPU pVCpu, uint64_t uParam0, uint64_t uParam1, uint64_t uParam2)
+#define IEM_DECL_IEMTHREADEDFUNC_PROTO(a_Name) VRASTRICTRC a_Name(PVMCPU pVCpu, uint64_t uParam0, uint64_t uParam1, uint64_t uParam2)
 #define IEM_DECL_NATIVE_HLP_DEF(a_RetType, a_Name, a_ArgList)   a_RetType a_Name a_ArgList
 #define IEM_DECL_NATIVE_HLP_PROTO(a_RetType, a_Name, a_ArgList) a_RetType a_Name a_ArgList
 #define IEM_DECL_IEMNATIVERECOMPFUNC_DEF(a_Name) uint32_t a_Name(PIEMRECOMPILERSTATE pReNative, uint32_t off, PCIEMTHRDEDCALLENTRY pCallEntry)
@@ -779,7 +779,7 @@ EOF
         -e 's/#  */#/g' \
         -e 's/   */ /g' \
         -e '/ DECLEXPORT_CLASS/d' \
-        -e 's/ *VBOXCALL//' \
+        -e 's/ *VRACALL//' \
         -e 's/ *RTCALL//' \
         -e '/define  *DECLASM(/d' \
         -e '/define  *DECL..CALLBACKMEMBER([^)]*) *RT/d' \

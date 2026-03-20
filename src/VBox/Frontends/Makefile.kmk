@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,44 +29,44 @@ SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 # Include Sub-Makefiles
-ifdef VBOX_WITH_MAIN
+ifdef VRA_WITH_MAIN
  include $(PATH_SUB_CURRENT)/VBoxManage/Makefile.kmk
 endif
-ifndef VBOX_ONLY_DOCS
- ifdef VBOX_WITH_MAIN
-  ifdef VBOX_WITH_FE_BALLOONCTRL
+ifndef VRA_ONLY_DOCS
+ ifdef VRA_WITH_MAIN
+  ifdef VRA_WITH_FE_BALLOONCTRL
    include $(PATH_SUB_CURRENT)/VBoxBalloonCtrl/Makefile.kmk
   endif
-  ifdef VBOX_WITH_FE_AUTOSTART
+  ifdef VRA_WITH_FE_AUTOSTART
    include $(PATH_SUB_CURRENT)/VBoxAutostart/Makefile.kmk
   endif
-  ifdef VBOX_WITH_FE_BUGREPORT
+  ifdef VRA_WITH_FE_BUGREPORT
    include $(PATH_SUB_CURRENT)/VBoxBugReport/Makefile.kmk
   endif
  endif
- ifdef VBOX_WITH_VBOXBFE
+ ifdef VRA_WITH_VRABFE
   include $(PATH_SUB_CURRENT)/VBoxBFE/Makefile.kmk
  endif
- ifdef VBOX_WITH_VBOXSDL
+ ifdef VRA_WITH_VRASDL
   include $(PATH_SUB_CURRENT)/VBoxSDL/Makefile.kmk
  endif
- ifdef VBOX_WITH_VBOXFB
+ ifdef VRA_WITH_VRAFB
   include $(PATH_SUB_CURRENT)/VBoxFB/Makefile.kmk
  endif
- ifdef VBOX_WITH_HEADLESS
+ ifdef VRA_WITH_HEADLESS
   include $(PATH_SUB_CURRENT)/VBoxHeadless/Makefile.kmk
  endif
- ifdef VBOX_WITH_QTGUI
-  include $(PATH_SUB_CURRENT)/VirtualBox/Makefile.kmk
+ ifdef VRA_WITH_QTGUI
+  include $(PATH_SUB_CURRENT)/VirtualAgent/Makefile.kmk
  endif
- ifdef VBOX_WITH_INTNET_PCAP
+ ifdef VRA_WITH_INTNET_PCAP
   include $(PATH_SUB_CURRENT)/VBoxIntnetPcap/Makefile.kmk
  endif
  include $(PATH_SUB_CURRENT)/Common/Makefile.kmk
-endif # !VBOX_ONLY_DOCS
+endif # !VRA_ONLY_DOCS
 
 ## @todo Include Python shell into binary delivery?
-ifdef VBOX_ONLY_SDK
+ifdef VRA_ONLY_SDK
  include $(PATH_SUB_CURRENT)/VBoxShell/Makefile.kmk
 endif
 

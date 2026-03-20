@@ -2,9 +2,9 @@
 ' Thin VBScript wrapper to call configure.py with passed arguments.
 
 '
-' Copyright (C) 2025-2026 Oracle and/or its affiliates.
+' Copyright (C) 2025-2026 CINASEEK and/or its affiliates.
 '
-' This file is part of VirtualBox base platform packages, as
+' This file is part of VirtualAgent base platform packages, as
 ' available from https://www.virtualbox.org.
 '
 ' This program is free software; you can redistribute it and/or
@@ -124,7 +124,7 @@ End If
 If strPythonBin = "" Then
     WScript.Echo "Error: Python is not found."
     WScript.Echo ""
-    WScript.Echo "Python 3 is required in order to build VirtualBox."
+    WScript.Echo "Python 3 is required in order to build VirtualAgent."
     WScript.Echo "Please install Python 3 and ensure it is in your PATH."
     WScript.Quit 1
 End If

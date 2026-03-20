@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage objtracker
 -->
 <!--
-    Copyright (C) 2018-2026 Oracle and/or its affiliates.
+    Copyright (C) 2018-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@
   <refnamediv>
     <refname>VBoxManage-objtracker</refname>
     <refpurpose>Manage the tracked objects</refpurpose>
-    <refclass>Oracle VirtualBox</refclass>
+    <refclass>CINA VirtualAgent</refclass>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -53,12 +53,12 @@
     <cmdsynopsis id="synopsis-vboxmanage-objtracker-objlist">
       <command>VBoxManage objtracker</command>
       <arg choice="plain">objlist</arg>
-      <arg choice="req">--ifacename=<replaceable>VirtualBox interface name</replaceable></arg>
+      <arg choice="req">--ifacename=<replaceable>VirtualAgent interface name</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis id="synopsis-vboxmanage-objtracker-objinfo">
       <command>VBoxManage objtracker</command>
       <arg choice="plain">objinfo</arg>
-      <arg choice="req">--ifacename=<replaceable>VirtualBox interface name</replaceable></arg>
+      <arg choice="req">--ifacename=<replaceable>VirtualAgent interface name</replaceable></arg>
       <arg choice="req">--id=<replaceable>Unique object Id</replaceable></arg>
     </cmdsynopsis>
   </refsynopsisdiv>
@@ -70,7 +70,7 @@
       <title>objtracker ifaces</title>
       <remark role="help-copy-synopsis"/>
       <para>
-        Shows the actual list of VirtualBox interfaces supported for tracking
+        Shows the actual list of VirtualAgent interfaces supported for tracking
       </para>
     </refsect2>
 
@@ -101,7 +101,7 @@
         </varlistentry>
         <varlistentry>
           <term><option>--id=<replaceable>unique object id</replaceable></option></term>
-          <listitem><para>The unique identifer assigned to a tracked object by VirtualBox</para></listitem>
+          <listitem><para>The unique identifer assigned to a tracked object by VirtualAgent</para></listitem>
         </varlistentry>
       </variablelist>
     </refsect2>

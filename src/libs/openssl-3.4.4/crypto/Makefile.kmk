@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -34,21 +34,21 @@ include $(KBUILD_PATH)/subheader.kmk
 # Note! For joining the sub libraries into a crypto lib, we do some trickery to
 #       collect the sub-library names here.
 #
-VBOX_LIBRARIES_BEFORE_CRYPTO_SUBDIRS := $(LIBRARIES)
-if defined(VBOX_ONLY_VALIDATIONKIT) && !defined(VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING)
- include $(VBOX_PATH_CRYPTO)/sha/Makefile.kmk
+VRA_LIBRARIES_BEFORE_CRYPTO_SUBDIRS := $(LIBRARIES)
+if defined(VRA_ONLY_VALIDATIONKIT) && !defined(VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING)
+ include $(VRA_PATH_CRYPTO)/sha/Makefile.kmk
 else # Validation Kit unit tests need this.
- include $(sort $(wildcard $(VBOX_PATH_CRYPTO)/*/Makefile.kmk))
+ include $(sort $(wildcard $(VRA_PATH_CRYPTO)/*/Makefile.kmk))
 endif
-VBOX_CRYPTO_SUBLIBS     := $(filter-out $(VBOX_LIBRARIES_BEFORE_CRYPTO_SUBDIRS), $(LIBRARIES))
-VBOX_CRYPTO_SUBLIBS_X86 := $(filter     %-x86, $(VBOX_CRYPTO_SUBLIBS))
-VBOX_CRYPTO_SUBLIBS     := $(filter-out %-x86, $(VBOX_CRYPTO_SUBLIBS))
-if defined(VBOX_ONLY_EXTPACKS_USE_IMPLIBS)
- $(eval LIBRARIES = $(VBOX_LIBRARIES_BEFORE_CRYPTO_SUBDIRS) crypto_sha)
-else if "$(SDK_VBoxOpenSslStatic_INCS)" != "$(SDK_VBoxOpenSslStatic_VBOX_DEFAULT_INCS)"
- $(eval LIBRARIES = $(VBOX_LIBRARIES_BEFORE_CRYPTO_SUBDIRS))
+VRA_CRYPTO_SUBLIBS     := $(filter-out $(VRA_LIBRARIES_BEFORE_CRYPTO_SUBDIRS), $(LIBRARIES))
+VRA_CRYPTO_SUBLIBS_X86 := $(filter     %-x86, $(VRA_CRYPTO_SUBLIBS))
+VRA_CRYPTO_SUBLIBS     := $(filter-out %-x86, $(VRA_CRYPTO_SUBLIBS))
+if defined(VRA_ONLY_EXTPACKS_USE_IMPLIBS)
+ $(eval LIBRARIES = $(VRA_LIBRARIES_BEFORE_CRYPTO_SUBDIRS) crypto_sha)
+else if "$(SDK_VBoxOpenSslStatic_INCS)" != "$(SDK_VBoxOpenSslStatic_VRA_DEFAULT_INCS)"
+ $(eval LIBRARIES = $(VRA_LIBRARIES_BEFORE_CRYPTO_SUBDIRS))
 endif
-VBOX_LIBRARIES_BEFORE_CRYPTO_SUBDIRS :=
+VRA_LIBRARIES_BEFORE_CRYPTO_SUBDIRS :=
 
 
 #
@@ -58,7 +58,7 @@ LIBRARIES += VBox-libcrypto
 VBox-libcrypto_TEMPLATE = LibCrypto
 VBox-libcrypto_INCS     = $(VBox-libcrypto_0_OUTDIR)
 VBox-libcrypto_SOURCES  = \
-	$(VBOX_PATH_OPENSSL)/gen-sources/crypto/params_idx.c \
+	$(VRA_PATH_OPENSSL)/gen-sources/crypto/params_idx.c \
 	asn1_dsa.c \
 	bsearch.c \
 	comp_methods.c \
@@ -110,67 +110,67 @@ VBox-libcrypto_SOURCES  = \
 	trace.c \
 	uid.c
 
-ifdef VBOX_WITH_CRYPTO_ASM
+ifdef VRA_WITH_CRYPTO_ASM
  VBox-libcrypto_DEFS.x86 += OPENSSL_CPUID_OBJ=x86cpuid.o
- VBox-libcrypto_SOURCES.x86 += $(VBOX_PATH_CRYPTO_GENASM)/x86cpuid.S
+ VBox-libcrypto_SOURCES.x86 += $(VRA_PATH_CRYPTO_GENASM)/x86cpuid.S
  VBox-libcrypto_DEFS.amd64 += OPENSSL_CPUID_OBJ=x86_64cpuid.o
- VBox-libcrypto_SOURCES.amd64 += $(VBOX_PATH_CRYPTO_GENASM)/x86_64cpuid.S
+ VBox-libcrypto_SOURCES.amd64 += $(VRA_PATH_CRYPTO_GENASM)/x86_64cpuid.S
 else
  VBox-libcrypto_SOURCES += mem_clr.c
 endif
 
-ifdef VBOX_WITH_OPENSSL_FIPS
+ifdef VRA_WITH_OPENSSL_FIPS
  VBox-libcrypto_SOURCES += o_fips.c fips_ers.c
 endif
 
-VBox-libcrypto_SOURCES += $(PATH_STAGE_LIB)/VBox-libproviders$(VBOX_SUFF_LIB)
+VBox-libcrypto_SOURCES += $(PATH_STAGE_LIB)/VBox-libproviders$(VRA_SUFF_LIB)
 
-if defined(VBOX_ONLY_EXTPACKS_USE_IMPLIBS)
+if defined(VRA_ONLY_EXTPACKS_USE_IMPLIBS)
  VBox-libcrypto_SOURCES += $(crypto_sha_1_TARGET)
-else if "$(SDK_VBoxOpenSslStatic_INCS)" == "$(SDK_VBoxOpenSslStatic_VBOX_DEFAULT_INCS)"
- VBox-libcrypto_SOURCES += $(foreach sublib,$(VBOX_CRYPTO_SUBLIBS), $($(sublib)_1_TARGET))
+else if "$(SDK_VBoxOpenSslStatic_INCS)" == "$(SDK_VBoxOpenSslStatic_VRA_DEFAULT_INCS)"
+ VBox-libcrypto_SOURCES += $(foreach sublib,$(VRA_CRYPTO_SUBLIBS), $($(sublib)_1_TARGET))
 endif
 
 VBox-libcrypto_CLEAN = $(VBox-libcrypto_0_OUTDIR)/buildinf.h
 VBox-libcrypto_INTERMEDIATES = $(VBox-libcrypto_0_OUTDIR)/buildinf.h
 
 
-ifdef VBOX_WITH_32_ON_64_MAIN_API # 32-bit edition.
+ifdef VRA_WITH_32_ON_64_MAIN_API # 32-bit edition.
  LIBRARIES += VBox-libcrypto-x86
  VBox-libcrypto-x86_TEMPLATE = VBoxLibCrypto-x86
  VBox-libcrypto-x86_EXTENDS = VBox-libcrypto
  VBox-libcrypto-x86_SOURCES = $(filter %.c %.cpp,$(VBox-libcrypto_SOURCES)) \
- 	$(PATH_STAGE_LIB)/VBox-libproviders-x86$(VBOX_SUFF_LIB) \
- 	$(foreach sublib,$(VBOX_CRYPTO_SUBLIBS_X86), $($(sublib)_1_TARGET))
+ 	$(PATH_STAGE_LIB)/VBox-libproviders-x86$(VRA_SUFF_LIB) \
+ 	$(foreach sublib,$(VRA_CRYPTO_SUBLIBS_X86), $($(sublib)_1_TARGET))
 endif
 
 
-if defined(VBOX_NEED_EXTPACK_OPENSSL) && !defined(VBOX_ONLY_VALIDATIONKIT) # Not needed for Validation Kit.
+if defined(VRA_NEED_EXTPACK_OPENSSL) && !defined(VRA_ONLY_VALIDATIONKIT) # Not needed for Validation Kit.
  #
  # The extension pack libcrypto.
  #
  LIBRARIES += VBoxExtPack-libcrypto
- VBoxExtPack-libcrypto         = For the Oracle Extension Pack
+ VBoxExtPack-libcrypto         = For the CINASEEK Extension Pack
  VBoxExtPack-libcrypto_EXTENDS = VBox-libcrypto
- VBoxExtPack-libcrypto_DEFS    = $(VBox-libcrypto_DEFS) VBOX_IN_EXTPACK
+ VBoxExtPack-libcrypto_DEFS    = $(VBox-libcrypto_DEFS) VRA_IN_EXTPACK
  VBoxExtPack-libcrypto_SOURCES = \
  	$(filter %.c %.cpp,$(VBox-libcrypto_SOURCES)) \
- 	$(foreach sublib,$(VBOX_CRYPTO_SUBLIBS), $(VBoxExtPack-$(sublib)_1_TARGET))
+ 	$(foreach sublib,$(VRA_CRYPTO_SUBLIBS), $(VBoxExtPack-$(sublib)_1_TARGET))
  define def_VBoxExtPack_libcrypto_inherit
   LIBRARIES += VBoxExtPack-$(sublib)
-  VBoxExtPack-$(sublib) = Oracle Extension Pack version of $(sublib)
+  VBoxExtPack-$(sublib) = CINASEEK Extension Pack version of $(sublib)
   VBoxExtPack-$(sublib)_EXTENDS = $(sublib)
   VBoxExtPack-$(sublib)_EXTENDS_BY = appending
-  VBoxExtPack-$(sublib)_DEFS = VBOX_IN_EXTPACK
+  VBoxExtPack-$(sublib)_DEFS = VRA_IN_EXTPACK
   VBoxExtPack-$(sublib)_DEFPATH = $($(sublib)_DEFPATH)
   ## @todo kBuild: DEFPATH isn't inherited! FIXME!
  endef
- $(foreach sublib,$(VBOX_CRYPTO_SUBLIBS), $(eval $(def_VBoxExtPack_libcrypto_inherit)))
+ $(foreach sublib,$(VRA_CRYPTO_SUBLIBS), $(eval $(def_VBoxExtPack_libcrypto_inherit)))
 
-endif # VBOX_NEED_EXTPACK_OPENSSL
+endif # VRA_NEED_EXTPACK_OPENSSL
 
 
-ifdef VBOX_WITH_BLD_RTSIGNTOOL_SIGNING
+ifdef VRA_WITH_BLD_RTSIGNTOOL_SIGNING
  #
  # The build program libcrypto version.
  #
@@ -181,8 +181,8 @@ ifdef VBOX_WITH_BLD_RTSIGNTOOL_SIGNING
  VBoxBldProg-libcrypto_DEFS    = $(VBox-libcrypto_DEFS)
  VBoxBldProg-libcrypto_SOURCES = \
  	$(filter %.c %.cpp,$(VBox-libcrypto_SOURCES)) \
- 	$(PATH_STAGE_LIB)/VBoxBldProg-libproviders$(VBOX_SUFF_LIB) \
- 	$(foreach sublib,$(VBOX_CRYPTO_SUBLIBS), $(VBoxBldProg-$(sublib)_1_TARGET))
+ 	$(PATH_STAGE_LIB)/VBoxBldProg-libproviders$(VRA_SUFF_LIB) \
+ 	$(foreach sublib,$(VRA_CRYPTO_SUBLIBS), $(VBoxBldProg-$(sublib)_1_TARGET))
  define def_VBoxBldProg_libcrypto_inherit
   LIBRARIES += VBoxBldProg-$(sublib)
   VBoxBldProg-$(sublib) = bldRTSignTool version of $(sublib)
@@ -192,9 +192,9 @@ ifdef VBOX_WITH_BLD_RTSIGNTOOL_SIGNING
   VBoxBldProg-$(sublib)_DEFPATH   = $($(sublib)_DEFPATH)
   ## @todo kBuild: DEFPATH isn't inherited! FIXME!
  endef
- $(foreach sublib,$(VBOX_CRYPTO_SUBLIBS), $(eval $(def_VBoxBldProg_libcrypto_inherit)))
+ $(foreach sublib,$(VRA_CRYPTO_SUBLIBS), $(eval $(def_VBoxBldProg_libcrypto_inherit)))
 
-endif # VBOX_WITH_BLD_RTSIGNTOOL_SIGNING
+endif # VRA_WITH_BLD_RTSIGNTOOL_SIGNING
 
 
 #
@@ -209,27 +209,27 @@ recreate-openssl-asm: \
 		recreate-openssl-win-amd64
 
 recreate-openssl-elf-x86::
-	perl $(VBOX_PATH_CRYPTO)/x86cpuid.pl elf -fPIC $(VBOX_PATH_CRYPTO)/genasm-elf/x86cpuid.S
+	perl $(VRA_PATH_CRYPTO)/x86cpuid.pl elf -fPIC $(VRA_PATH_CRYPTO)/genasm-elf/x86cpuid.S
 
 recreate-openssl-elf-amd64::
-	perl $(VBOX_PATH_CRYPTO)/x86_64cpuid.pl elf $(VBOX_PATH_CRYPTO)/genasm-elf/x86_64cpuid.S
+	perl $(VRA_PATH_CRYPTO)/x86_64cpuid.pl elf $(VRA_PATH_CRYPTO)/genasm-elf/x86_64cpuid.S
 
 recreate-openssl-darwin-x86::
-	perl $(VBOX_PATH_CRYPTO)/x86cpuid.pl macosx $(VBOX_PATH_CRYPTO)/genasm-macosx/x86cpuid.S
+	perl $(VRA_PATH_CRYPTO)/x86cpuid.pl macosx $(VRA_PATH_CRYPTO)/genasm-macosx/x86cpuid.S
 
 recreate-openssl-darwin-amd64::
-	perl $(VBOX_PATH_CRYPTO)/x86_64cpuid.pl macosx $(VBOX_PATH_CRYPTO)/genasm-macosx/x86_64cpuid.S
+	perl $(VRA_PATH_CRYPTO)/x86_64cpuid.pl macosx $(VRA_PATH_CRYPTO)/genasm-macosx/x86_64cpuid.S
 
 recreate-openssl-win-x86::
-	$(VBOX_CRYPTO_GEN_NASM_SETUP) perl $(VBOX_PATH_CRYPTO)/x86cpuid.pl win32n $(VBOX_PATH_CRYPTO)/genasm-nasm/x86cpuid.S
+	$(VRA_CRYPTO_GEN_NASM_SETUP) perl $(VRA_PATH_CRYPTO)/x86cpuid.pl win32n $(VRA_PATH_CRYPTO)/genasm-nasm/x86cpuid.S
 
 recreate-openssl-win-amd64::
-	$(VBOX_CRYPTO_GEN_NASM_SETUP) perl $(VBOX_PATH_CRYPTO)/x86_64cpuid.pl nasm $(VBOX_PATH_CRYPTO)/genasm-nasm/x86_64cpuid.S
+	$(VRA_CRYPTO_GEN_NASM_SETUP) perl $(VRA_PATH_CRYPTO)/x86_64cpuid.pl nasm $(VRA_PATH_CRYPTO)/genasm-nasm/x86_64cpuid.S
 
-recreate-crypto-sources: $(VBOX_PATH_OPENSSL)/util/dofile.pl
-	perl -I$(VBOX_PATH_OPENSSL) \
-		-Mconfigdata $(VBOX_PATH_OPENSSL)/util/dofile.pl -oMakefile \
-		$(VBOX_PATH_CRYPTO)/params_idx.c.in > $(VBOX_PATH_OPENSSL)/gen-sources/crypto/params_idx.c
+recreate-crypto-sources: $(VRA_PATH_OPENSSL)/util/dofile.pl
+	perl -I$(VRA_PATH_OPENSSL) \
+		-Mconfigdata $(VRA_PATH_OPENSSL)/util/dofile.pl -oMakefile \
+		$(VRA_PATH_CRYPTO)/params_idx.c.in > $(VRA_PATH_OPENSSL)/gen-sources/crypto/params_idx.c
 
 include $(FILE_KBUILD_SUB_FOOTER)
 
@@ -237,7 +237,7 @@ include $(FILE_KBUILD_SUB_FOOTER)
 #
 # Generate
 #
-$(VBox-libcrypto_0_OUTDIR)/buildinf.h: $(VBOX_PATH_CRYPTO)/Makefile.kmk | $$(dir $$@)
+$(VBox-libcrypto_0_OUTDIR)/buildinf.h: $(VRA_PATH_CRYPTO)/Makefile.kmk | $$(dir $$@)
 	$(call MSG_GENERATE,,$@)
 	$(QUIET)$(RM) -f $@
 	$(QUIET)$(APPEND) $@ '/* auto-generated by crypto/Makefile.kmk for crypto/cversion.c */'

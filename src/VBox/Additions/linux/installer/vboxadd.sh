@@ -5,9 +5,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 # a systemd unit.  X-Service-Type is our own invention, also for systemd.
 
 # chkconfig: 345 10 90
-# description: VirtualBox Linux Additions kernel modules
+# description: VirtualAgent Linux Additions kernel modules
 #
 ### BEGIN INIT INFO
 # Provides:       vboxadd
@@ -40,7 +40,7 @@
 # Default-Stop:   0 1 6
 # X-Start-Before: display-manager
 # X-Service-Type: oneshot
-# Description:    VirtualBox Linux Additions kernel modules
+# Description:    VirtualAgent Linux Additions kernel modules
 ### END INIT INFO
 
 ## @todo This file duplicates a lot of script with vboxdrv.sh.  When making
@@ -65,8 +65,8 @@ PATH=$PATH:/bin:/sbin:/usr/sbin
 PACKAGE=VBoxGuestAdditions
 MODPROBE=/sbin/modprobe
 OLDMODULES="vboxguest vboxadd vboxsf vboxvfs vboxvideo"
-SERVICE="VirtualBox Guest Additions"
-VBOXSERVICE_PIDFILE="/var/run/vboxadd-service.sh"
+SERVICE="VirtualAgent Guest Additions"
+VRASERVICE_PIDFILE="/var/run/vboxadd-service.sh"
 ## systemd logs information about service status, otherwise do that ourselves.
 QUIET=
 test -z "${TARGET_VER}" && TARGET_VER=`uname -r`
@@ -79,7 +79,7 @@ if test -n "$KERN_MAJ" -a -n "$KERN_MIN"; then
     [ $KERN_MAJ -ge 7 -a $KERN_MIN -ge 0 ] && have_vboxvideo_build=
 fi
 
-export VBOX_KBUILD_TYPE
+export VRA_KBUILD_TYPE
 export USERNAME
 
 setup_log()
@@ -152,14 +152,14 @@ MODULE_SRC="$INSTALL_DIR/src/vboxguest-$INSTALL_VER"
 BUILDINTMP="$MODULE_SRC/build_in_tmp"
 
 # Path to VBoxService control script.
-VBOX_SERVICE_SCRIPT="/sbin/rcvboxadd-service"
+VRA_SERVICE_SCRIPT="/sbin/rcvboxadd-service"
 
-# Attempt to detect VirtualBox Guest Additions version and revision information.
-VBOXCONTROL="${INSTALL_DIR}/bin/VBoxControl"
-VBOX_VERSION="`"$VBOXCONTROL" --version | cut -d r -f1`"
-[ -n "$VBOX_VERSION" ] || VBOX_VERSION='unknown'
-VBOX_REVISION="r`"$VBOXCONTROL" --version | cut -d r -f2`"
-[ "$VBOX_REVISION" != "r" ] || VBOX_REVISION='unknown'
+# Attempt to detect VirtualAgent Guest Additions version and revision information.
+VRACONTROL="${INSTALL_DIR}/bin/VBoxControl"
+VRA_VERSION="`"$VRACONTROL" --version | cut -d r -f1`"
+[ -n "$VRA_VERSION" ] || VRA_VERSION='unknown'
+VRA_REVISION="r`"$VRACONTROL" --version | cut -d r -f2`"
+[ "$VRA_REVISION" != "r" ] || VRA_REVISION='unknown'
 
 # Returns if a specific module is running or not.
 #
@@ -205,7 +205,7 @@ check_running_module_version()
 
     if [ -d "/sys/module" ]; then
 
-        expected="$VBOX_VERSION $VBOX_REVISION"
+        expected="$VRA_VERSION $VRA_REVISION"
 
         [ -n "$mod" ] || return
         [ -n "$expected" ] || return
@@ -231,7 +231,7 @@ do_vboxguest_non_udev()
         fi
         test -n "$maj" || {
             rmmod vboxguest 2>/dev/null
-            fail "Cannot locate the VirtualBox device"
+            fail "Cannot locate the VirtualAgent device"
         }
 
         mknod -m 0664 $dev c $maj $min || {
@@ -294,19 +294,19 @@ update_initramfs()
     type systemd-inhibit >/dev/null 2>&1 || return
     if type dracut >/dev/null 2>&1; then
         tmp_log=$(mktemp /tmp/XXXXXX)
-        systemd-inhibit --why="Installing VirtualBox Guest Additions" \
+        systemd-inhibit --why="Installing VirtualAgent Guest Additions" \
             dracut -f --logfile "$tmp_log" --kver "${version}"
         msg=$(cat "$tmp_log")
         rm -f "$tmp_log"
     elif type update-initramfs >/dev/null 2>&1; then
-        systemd-inhibit --why="Installing VirtualBox Guest Additions" \
+        systemd-inhibit --why="Installing VirtualAgent Guest Additions" \
             update-initramfs -u -k "${version}"
     fi
 
     log2file "$msg"
 }
 
-# Removes any existing VirtualBox guest kernel modules from the disk, but not
+# Removes any existing VirtualAgent guest kernel modules from the disk, but not
 # from the kernel as they may still be in use
 cleanup_modules()
 {
@@ -468,7 +468,7 @@ sign_modules()
 
     # Sign kernel modules if kernel configuration requires it.
     if test "$(kernel_requires_module_signature $KERN_VER)" = "1"; then
-        log "Signing VirtualBox Guest Additions kernel modules"
+        log "Signing VirtualAgent Guest Additions kernel modules"
 
         # Generate new signing key if needed.
         [ -n "$HAVE_UPDATE_SECUREBOOT_POLICY_TOOL" ] && SHIM_NOTRIGGER=y update-secureboot-policy --new-key
@@ -535,7 +535,7 @@ Restart \"rcvboxadd setup\" after system is rebooted.
     fi
 }
 
-# Build and install the VirtualBox guest kernel modules
+# Build and install the VirtualAgent guest kernel modules
 setup_modules()
 {
     KERN_VER="$1"
@@ -754,7 +754,7 @@ module_signed()
     # be explicitly set by administrator. This script will look for it
     # in /etc/virtualbox-guest-additions.conf. Make sure that you know
     # what you do!
-    if [ "$VBOX_BYPASS_MODULES_SIGNATURE_CHECK" = "1" ]; then
+    if [ "$VRA_BYPASS_MODULES_SIGNATURE_CHECK" = "1" ]; then
         echo "1"
         return
     fi
@@ -799,22 +799,22 @@ module_signed()
     echo "1"
 }
 
-# Checks if a given kernel module matches the installed VirtualBox Guest Additions version.
+# Checks if a given kernel module matches the installed VirtualAgent Guest Additions version.
 #
 # Input $1: Module name to check.
 #
 # Returns "1" if externally built module is available in the system and its
-# version and revision number do match to current VirtualBox installation.
+# version and revision number do match to current VirtualAgent installation.
 # None otherwise.
 module_available()
 {
     mod="$1"
     [ -n "$mod" ] || return
 
-    [ "$VBOX_VERSION" = "$(module_version "$mod")" ] || return
-    [ "$VBOX_REVISION" = "$(module_revision "$mod")" ] || return
+    [ "$VRA_VERSION" = "$(module_version "$mod")" ] || return
+    [ "$VRA_REVISION" = "$(module_revision "$mod")" ] || return
 
-    # Check if module belongs to VirtualBox installation.
+    # Check if module belongs to VirtualAgent installation.
     #
     # We have a convention that only modules from /lib/modules/*/misc
     # belong to us. Modules from other locations are treated as
@@ -866,10 +866,10 @@ setup()
         # Check whether modules setup is already complete for currently running kernel.
         # Prevent unnecessary rebuilding in order to speed up booting process.
         if test "$(setup_complete)" = "1"; then
-            log "VirtualBox Guest Additions kernel modules $VBOX_VERSION $VBOX_REVISION are \
+            log "VirtualAgent Guest Additions kernel modules $VRA_VERSION $VRA_REVISION are \
 already available for kernel $TARGET_VER and do not require to be rebuilt."
         else
-            log "Building the VirtualBox Guest Additions kernel modules.  This may take a while."
+            log "Building the VirtualAgent Guest Additions kernel modules.  This may take a while."
             log "To build modules for other installed kernels, run"
             log "  /sbin/rcvboxadd quicksetup <version>"
             log "or"
@@ -952,7 +952,7 @@ start()
         else
             log "You must sign vboxguest, vboxsf and
 vboxvideo (if present) kernel modules before using
-VirtualBox Guest Additions. See the documentation
+VirtualAgent Guest Additions. See the documentation
 for your Linux distribution."
         fi
     fi
@@ -1050,7 +1050,7 @@ check_running_module()
             log "module $mod is not loaded"
         else
             # If module was loaded it means that it has incorrect version.
-            log "currently loaded module $mod version ($(running_module_version "$mod")) does not match to VirtualBox Guest Additions installation version ($VBOX_VERSION $VBOX_REVISION)"
+            log "currently loaded module $mod version ($(running_module_version "$mod")) does not match to VirtualAgent Guest Additions installation version ($VRA_VERSION $VRA_REVISION)"
         fi
 
         # Set "bad" rc.
@@ -1110,7 +1110,7 @@ check_status_kernel()
 # Currently only check for VBoxService.
 check_status_user()
 {
-    [ -r "$VBOXSERVICE_PIDFILE" ] && check_pid "$(cat $VBOXSERVICE_PIDFILE)" >/dev/null 2>&1
+    [ -r "$VRASERVICE_PIDFILE" ] && check_pid "$(cat $VRASERVICE_PIDFILE)" >/dev/null 2>&1
 }
 
 send_signal_by_pidfile()
@@ -1204,9 +1204,9 @@ reload()
     log "reloading kernel modules and services"
 
     # Stop VBoxService if running.
-    $VBOX_SERVICE_SCRIPT status >/dev/null 2>&1
+    $VRA_SERVICE_SCRIPT status >/dev/null 2>&1
     if [ $? -eq 0 ]; then
-        $VBOX_SERVICE_SCRIPT stop >/dev/null 2>&1 || fail "unable to stop VBoxService"
+        $VRA_SERVICE_SCRIPT stop >/dev/null 2>&1 || fail "unable to stop VBoxService"
     fi
 
     # Unmount Shared Folders.
@@ -1257,7 +1257,7 @@ reload()
         [ $? -eq 0 ] && try_load_preserve_rc "modprobe vboxsf" "unable to load vboxsf kernel module, see dmesg"
 
         # Start VBoxService and VBoxDRMClient.
-        [ $? -eq 0 ] && try_load_preserve_rc "$VBOX_SERVICE_SCRIPT start" "unable to start VBoxService"
+        [ $? -eq 0 ] && try_load_preserve_rc "$VRA_SERVICE_SCRIPT start" "unable to start VBoxService"
 
         # Reload VBoxClient processes.
         [ $? -eq 0 ] && try_load_preserve_rc "send_signal -USR1 control" "unable to reload user session services"
@@ -1286,9 +1286,9 @@ reload()
 dmnstatus()
 {
     if running_module "vboxguest"; then
-        echo "The VirtualBox Additions are currently running."
+        echo "The VirtualAgent Additions are currently running."
     else
-        echo "The VirtualBox Additions are not currently running."
+        echo "The VirtualAgent Additions are not currently running."
     fi
 }
 
@@ -1360,9 +1360,9 @@ status-kernel)
     check_root
     check_status_kernel
     if [ $? -eq 0 ]; then
-        info "kernel modules $VBOX_VERSION $VBOX_REVISION are loaded"
+        info "kernel modules $VRA_VERSION $VRA_REVISION are loaded"
     else
-        info "kernel modules $VBOX_VERSION $VBOX_REVISION were not loaded"
+        info "kernel modules $VRA_VERSION $VRA_REVISION were not loaded"
         false
     fi
     ;;
@@ -1370,9 +1370,9 @@ status-user)
     check_root
     check_status_user
     if [ $? -eq 0 ]; then
-        info "user-land services $VBOX_VERSION $VBOX_REVISION are running"
+        info "user-land services $VRA_VERSION $VRA_REVISION are running"
     else
-        info "user-land services $VBOX_VERSION $VBOX_REVISION are not running"
+        info "user-land services $VRA_VERSION $VRA_REVISION are not running"
         false
     fi
     ;;

@@ -1,12 +1,12 @@
 # $Id: Makefile.kmk 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# Sub-Makefile for the VirtualBox Guest Mesa 3D components
+# Sub-Makefile for the VirtualAgent Guest Mesa 3D components
 #
 
 #
-# Copyright (C) 2016-2026 Oracle and/or its affiliates.
+# Copyright (C) 2016-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -31,11 +31,11 @@ include $(KBUILD_PATH)/subheader.kmk
 #
 # Make sure our Config.kmk is included.
 #
-ifndef VBOX_MESA3D_CONFIG_KMK_INCLUDED
+ifndef VRA_MESA3D_CONFIG_KMK_INCLUDED
  include $(PATH_SUB_CURRENT)/../../Config.kmk
 endif
 
-PYTHON_CMD = $(VBOX_BLD_PYTHON) -B
+PYTHON_CMD = $(VRA_BLD_PYTHON) -B
 
 #
 # Target lists.
@@ -110,7 +110,7 @@ ifeq ($(KBUILD_TARGET),win)
  #  -wd4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
  #  -wd4805: '|=' : unsafe mix of type 'GLboolean' and type 'bool' in operation
  #  -wd4918: 'y' : invalid character in pragma optimization list
- VBOX_MESA3D_VCC_DISABLED_WARNINGS         := \
+ VRA_MESA3D_VCC_DISABLED_WARNINGS         := \
  	-wd4005 -wd4018 -wd4054 -wd4057 -wd4090 -wd4098 -wd4099 -wd4100 -wd4101 -wd4130 -wd4132 -wd4146 \
  	-wd4152 -wd4189 -wd4200 -wd4204 -wd4206 -wd4211 -wd4221 -wd4245 -wd4255 -wd4258 -wd4265 -wd4267 -wd4266 \
  	-wd4287 -wd4291 -wd4305 -wd4306 -wd4310 -wd4311 -wd4351 -wd4355 -wd4388 -wd4389 -wd4640 -wd4668 -wd4700 \
@@ -122,24 +122,24 @@ ifeq ($(KBUILD_TARGET),win)
  # -wd4777: '_snprintf' : format string '%u' requires an argument of type 'unsigned int', but variadic argument 1 has type 'const DWORD'
  # -wd4459: declaration of 'stw_dev' hides global declaration
  # -wd4457: declaration of 'usage' hides function parameter
- VBOX_MESA3D_VCC_DISABLED_WARNINGS         += \
+ VRA_MESA3D_VCC_DISABLED_WARNINGS         += \
  	-wd4458 -wd4477 -wd4774 -wd4456 -wd4777 -wd4459 -wd4457
  # -wd4254: '=': conversion from 'unsigned int':'3' to 'unsigned int':'2', possible loss of data
  # -wd5039: pointer or reference to potentially throwing function passed to 'extern "C"' function under -EHc. Undefined behavior may occur if this function throws an exception
  # -wd5204: class has virtual functions, but its trivial destructor is not virtual; instances of objects derived from this class may not be destructed correctly
  # -wd5219: implicit conversion from 'int' to 'float', possible loss of data
- VBOX_MESA3D_VCC_DISABLED_WARNINGS         += \
+ VRA_MESA3D_VCC_DISABLED_WARNINGS         += \
  	-wd4254 -wd5039 -wd5204 -wd5219
- if "$(VBOX_VCC_TOOL_STEM)" >= "VCC143"
+ if "$(VRA_VCC_TOOL_STEM)" >= "VCC143"
   # -wd4296: svga_tgsi_vgpu10.c(3403): warning C4296: '>=': expression is always true
   # -wd5249: shader_info.h(491): warning C5249: 'shader_info::<unnamed-tag>::depth_layout' of type 'gl_frag_depth_layout' has named enumerators with values that cannot be represented in the given bit field width of '3'.
   # -wd5262: ast_to_hir.cpp(1421): warning C5262: implicit fall-through occurs here; are you missing a break statement? Use [[fallthrough]] when a break statement is intentionally omitted between cases
-  VBOX_MESA3D_VCC_DISABLED_WARNINGS        += \
+  VRA_MESA3D_VCC_DISABLED_WARNINGS        += \
   	-wd4296 -wd5249 -wd5262
  endif
 
- TEMPLATE_VBoxMesa3DGuestR3Lib_CFLAGS.win   = $(TEMPLATE_VBoxMesa3DGuestR3Dll_CFLAGS.win) $(VBOX_MESA3D_VCC_DISABLED_WARNINGS)
- TEMPLATE_VBoxMesa3DGuestR3Lib_CXXFLAGS.win = $(TEMPLATE_VBoxMesa3DGuestR3Dll_CXXFLAGS.win) $(VBOX_MESA3D_VCC_DISABLED_WARNINGS)
+ TEMPLATE_VBoxMesa3DGuestR3Lib_CFLAGS.win   = $(TEMPLATE_VBoxMesa3DGuestR3Dll_CFLAGS.win) $(VRA_MESA3D_VCC_DISABLED_WARNINGS)
+ TEMPLATE_VBoxMesa3DGuestR3Lib_CXXFLAGS.win = $(TEMPLATE_VBoxMesa3DGuestR3Dll_CXXFLAGS.win) $(VRA_MESA3D_VCC_DISABLED_WARNINGS)
 endif
 TEMPLATE_VBoxMesa3DGuestR3Lib_INCS          = \
 	../include \
@@ -155,20 +155,20 @@ TEMPLATE_VBoxMesa3DGuestR3Lib_INCS          = \
 	src/gallium/include \
 	src/gallium/auxiliary \
 	src/gallium/state_trackers/wgl
-ifdef VBOX_WITH_NOCRT_STATIC
+ifdef VRA_WITH_NOCRT_STATIC
  TEMPLATE_VBoxMesa3DGuestR3Lib_INCS        += \
  	$(TEMPLATE_VBoxMesa3DGuestR3Dll_INCS)
 endif
-ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
  TEMPLATE_VBoxMesa3DGuestR3Lib_DEFS         = \
  	$(TEMPLATE_VBoxMesa3DGuestR3Dll_DEFS) \
- 	PACKAGE_VERSION="$(VBOX_MESA_VERSION)" \
- 	PACKAGE_BUGREPORT="$(VBOX_MESA)"
+ 	PACKAGE_VERSION="$(VRA_MESA_VERSION)" \
+ 	PACKAGE_BUGREPORT="$(VRA_MESA)"
 else
  TEMPLATE_VBoxMesa3DGuestR3Lib_DEFS         = \
  	$(TEMPLATE_VBoxMesa3DGuestR3Dll_DEFS) \
- 	PACKAGE_VERSION=\"$(VBOX_MESA_VERSION)\" \
- 	PACKAGE_BUGREPORT=\"$(VBOX_MESA)\"
+ 	PACKAGE_VERSION=\"$(VRA_MESA_VERSION)\" \
+ 	PACKAGE_BUGREPORT=\"$(VRA_MESA)\"
 endif
 # For wgl, glapi and mesa
 TEMPLATE_VBoxMesa3DGuestR3Lib_DEFS         += \
@@ -267,38 +267,38 @@ VBoxMesaUtilLib_SOURCES += \
 	src/util/u_debug_symbol.c
 
 VBoxMesaUtilLib_INCS = \
-	$(VBoxMesaUtilLib_0_OUTDIR)/$(VBOX_MESA)/src \
-	$(VBoxMesaUtilLib_0_OUTDIR)/$(VBOX_MESA)/src/util/format \
+	$(VBoxMesaUtilLib_0_OUTDIR)/$(VRA_MESA)/src \
+	$(VBoxMesaUtilLib_0_OUTDIR)/$(VRA_MESA)/src/util/format \
 	src/util/format
 
 VBoxMesaUtilLib_DEPS = \
-	$(VBoxMesaUtilLib_0_OUTDIR)/$(VBOX_MESA)/src/util/format/u_format_pack.h
+	$(VBoxMesaUtilLib_0_OUTDIR)/$(VRA_MESA)/src/util/format/u_format_pack.h
 
 VBoxMesaUtilLib_SOURCES += \
-	$(VBoxMesaUtilLib_0_OUTDIR)/$(VBOX_MESA)/src/util/format_srgb.c \
-	$(VBoxMesaUtilLib_0_OUTDIR)/$(VBOX_MESA)/src/util/format/u_format_table.c
+	$(VBoxMesaUtilLib_0_OUTDIR)/$(VRA_MESA)/src/util/format_srgb.c \
+	$(VBoxMesaUtilLib_0_OUTDIR)/$(VRA_MESA)/src/util/format/u_format_table.c
 
-$$(VBoxMesaUtilLib_0_OUTDIR)/$(VBOX_MESA)/src/util/:
+$$(VBoxMesaUtilLib_0_OUTDIR)/$(VRA_MESA)/src/util/:
 	$(QUIET)$(MKDIR) -p $@
-$$(VBoxMesaUtilLib_0_OUTDIR)/$(VBOX_MESA)/src/util/format/:
+$$(VBoxMesaUtilLib_0_OUTDIR)/$(VRA_MESA)/src/util/format/:
 	$(QUIET)$(MKDIR) -p $@
 
-$$(VBoxMesaUtilLib_0_OUTDIR)/$(VBOX_MESA)/src/util/format_srgb.c: \
-		$(VBOX_PATH_MESA)/src/util/format_srgb.py | $$(dir $$@)
+$$(VBoxMesaUtilLib_0_OUTDIR)/$(VRA_MESA)/src/util/format_srgb.c: \
+		$(VRA_PATH_MESA)/src/util/format_srgb.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< >$@
 
-$$(VBoxMesaUtilLib_0_OUTDIR)/$(VBOX_MESA)/src/util/format/u_format_table.c: \
-		$(VBOX_PATH_MESA)/src/util/format/u_format_table.py \
-		$(VBOX_PATH_MESA)/src/util/format/u_format.csv | $$(dir $$@)
+$$(VBoxMesaUtilLib_0_OUTDIR)/$(VRA_MESA)/src/util/format/u_format_table.c: \
+		$(VRA_PATH_MESA)/src/util/format/u_format_table.py \
+		$(VRA_PATH_MESA)/src/util/format/u_format.csv | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/util/format/u_format.csv >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/util/format/u_format.csv >$@
 
-$$(VBoxMesaUtilLib_0_OUTDIR)/$(VBOX_MESA)/src/util/format/u_format_pack.h: \
-		$(VBOX_PATH_MESA)/src/util/format/u_format_table.py \
-		$(VBOX_PATH_MESA)/src/util/format/u_format.csv | $$(dir $$@)
+$$(VBoxMesaUtilLib_0_OUTDIR)/$(VRA_MESA)/src/util/format/u_format_pack.h: \
+		$(VRA_PATH_MESA)/src/util/format/u_format_table.py \
+		$(VRA_PATH_MESA)/src/util/format/u_format.csv | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< --header $(VBOX_PATH_MESA)/src/util/format/u_format.csv >$@
+	$(QUIET)$(PYTHON_CMD) $< --header $(VRA_PATH_MESA)/src/util/format/u_format.csv >$@
 
 # 32 bit lib for 64 bit build
 VBoxMesaUtilLib-x86_EXTENDS      = VBoxMesaUtilLib
@@ -819,414 +819,414 @@ VBoxMesaLib_SOURCES += \
 	src/mapi/glapi/glapi.c
 
 VBoxMesaLib_INCS = \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/main \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/spirv \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/main \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/spirv \
 	src/compiler/glsl \
 	src/compiler/glsl/glcpp \
 	src/compiler/spirv
 
 VBoxMesaLib_DEPS = \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/ir_expression_operation.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_exec_decl.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_beginend_init.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_hw_select_init.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_save_init.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_save.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/glprocs.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/glapitemp.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/glapitable.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/get_hash.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/main/dispatch.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/main/format_info.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/main/remap_helper.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/builtin_types.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/astc_glsl.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/bc1_glsl.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/bc4_glsl.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/etc2_rgba_stitch_glsl.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/cross_platform_settings_piece_all.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/float64_glsl.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glsl_parser.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/ir_expression_operation_strings.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/ir_expression_operation_constant.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_builder_opcodes.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_opcodes.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_intrinsics.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_intrinsics_indices.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/spirv/vtn_generator_ids.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/program/program_parse.tab.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glsl_parser.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glcpp/glcpp-parse.h
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/ir_expression_operation.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_exec_decl.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_beginend_init.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_hw_select_init.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_save_init.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_save.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/glprocs.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/glapitemp.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/glapitable.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/get_hash.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/main/dispatch.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/main/format_info.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/main/remap_helper.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/builtin_types.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/astc_glsl.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/bc1_glsl.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/bc4_glsl.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/etc2_rgba_stitch_glsl.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/cross_platform_settings_piece_all.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/float64_glsl.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glsl_parser.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/ir_expression_operation_strings.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/ir_expression_operation_constant.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_builder_opcodes.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_opcodes.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_intrinsics.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_intrinsics_indices.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/spirv/vtn_generator_ids.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/program/program_parse.tab.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glsl_parser.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glcpp/glcpp-parse.h
 
 VBoxMesaLib_SOURCES += \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/builtin_types.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_exec_init.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/enums.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/unmarshal_table.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated0.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated1.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated2.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated3.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated4.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated5.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated6.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated7.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_opcodes.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_intrinsics.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_constant_expressions.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_opt_algebraic.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/main/format_fallback.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/spirv/vtn_gather_types.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/spirv/spirv_info.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/program/lex.yy.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/program/program_parse.tab.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glsl_parser.cpp \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glsl_lexer.cpp \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glcpp/glcpp-parse.c \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glcpp/glcpp-lex.c
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/builtin_types.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_exec_init.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/enums.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/unmarshal_table.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated0.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated1.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated2.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated3.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated4.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated5.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated6.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated7.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_opcodes.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_intrinsics.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_constant_expressions.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_opt_algebraic.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/main/format_fallback.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/spirv/vtn_gather_types.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/spirv/spirv_info.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/program/lex.yy.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/program/program_parse.tab.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glsl_parser.cpp \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glsl_lexer.cpp \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glcpp/glcpp-parse.c \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glcpp/glcpp-lex.c
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/:
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/:
 	$(QUIET)$(MKDIR) -p $@
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/:
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/:
 	$(QUIET)$(MKDIR) -p $@
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glcpp/:
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glcpp/:
 	$(QUIET)$(MKDIR) -p $@
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/:
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/:
 	$(QUIET)$(MKDIR) -p $@
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/spirv/:
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/spirv/:
 	$(QUIET)$(MKDIR) -p $@
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/:
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/:
 	$(QUIET)$(MKDIR) -p $@
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/:
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/:
 	$(QUIET)$(MKDIR) -p $@
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/main/:
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/main/:
 	$(QUIET)$(MKDIR) -p $@
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/program/:
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/program/:
 	$(QUIET)$(MKDIR) -p $@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_exec_init.c: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/api_exec_init.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_exec_init.c: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/api_exec_init.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_exec_decl.h: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/api_exec_decl_h.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_exec_decl.h: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/api_exec_decl_h.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_beginend_init.h: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/api_beginend_init_h.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_beginend_init.h: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/api_beginend_init_h.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_hw_select_init.h: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/api_hw_select_init_h.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_hw_select_init.h: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/api_hw_select_init_h.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_save_init.h: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/api_save_init_h.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_save_init.h: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/api_save_init_h.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/api_save.h: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/api_save_h.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/api_save.h: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/api_save_h.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/glprocs.h: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_procs.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/glprocs.h: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_procs.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -c -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -c -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/glapitemp.h: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_apitemp.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/glapitemp.h: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_apitemp.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/glapitable.h: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_table.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/glapitable.h: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_table.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/apiexec.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/enums.c: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_enums.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/registry/gl.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/enums.c: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_enums.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/registry/gl.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/registry/gl.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/registry/gl.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/main/dispatch.h: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_table.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/main/dispatch.h: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_table.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml -m remap_table >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml -m remap_table >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated.h: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_marshal_h.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/marshal_XML.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated.h: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_marshal_h.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/marshal_XML.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/unmarshal_table.c: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_unmarshal_table.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/unmarshal_table.c: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_unmarshal_table.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated0.c: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated0.c: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 0 8 >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 0 8 >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated1.c: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated1.c: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 1 8 >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 1 8 >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated2.c: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated2.c: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 2 8 >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 2 8 >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated3.c: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated3.c: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 3 8 >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 3 8 >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated4.c: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated4.c: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 4 8 >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 4 8 >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated5.c: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated5.c: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 5 8 >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 5 8 >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated6.c: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated6.c: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 6 8 >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 6 8 >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mapi/glapi/gen/marshal_generated7.c: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mapi/glapi/gen/marshal_generated7.c: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_marshal.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 7 8 >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml 7 8 >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/main/remap_helper.h: \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/remap_helper.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/main/remap_helper.h: \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/remap_helper.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/builtin_types.h: \
-		$(VBOX_PATH_MESA)/src/compiler/builtin_types_h.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/builtin_types.h: \
+		$(VRA_PATH_MESA)/src/compiler/builtin_types_h.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< $@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/builtin_types.c: \
-		$(VBOX_PATH_MESA)/src/compiler/builtin_types_c.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/builtin_types.c: \
+		$(VRA_PATH_MESA)/src/compiler/builtin_types_c.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< $@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/ir_expression_operation_constant.h: \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/ir_expression_operation.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/ir_expression_operation_constant.h: \
+		$(VRA_PATH_MESA)/src/compiler/glsl/ir_expression_operation.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< constant >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/ir_expression_operation_strings.h: \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/ir_expression_operation.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/ir_expression_operation_strings.h: \
+		$(VRA_PATH_MESA)/src/compiler/glsl/ir_expression_operation.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< strings >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/astc_glsl.h: \
-		$(VBOX_PATH_MESA)/src/util/xxd.py \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/astc_decoder.glsl | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/astc_glsl.h: \
+		$(VRA_PATH_MESA)/src/util/xxd.py \
+		$(VRA_PATH_MESA)/src/compiler/glsl/astc_decoder.glsl | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/compiler/glsl/astc_decoder.glsl $@ -n astc_source
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/compiler/glsl/astc_decoder.glsl $@ -n astc_source
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/float64_glsl.h: \
-		$(VBOX_PATH_MESA)/src/util/xxd.py \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/float64.glsl | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/float64_glsl.h: \
+		$(VRA_PATH_MESA)/src/util/xxd.py \
+		$(VRA_PATH_MESA)/src/compiler/glsl/float64.glsl | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/compiler/glsl/float64.glsl $@ -n float64_source
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/compiler/glsl/float64.glsl $@ -n float64_source
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/cross_platform_settings_piece_all.h: \
-		$(VBOX_PATH_MESA)/src/util/xxd.py \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/CrossPlatformSettings_piece_all.glsl | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/cross_platform_settings_piece_all.h: \
+		$(VRA_PATH_MESA)/src/util/xxd.py \
+		$(VRA_PATH_MESA)/src/compiler/glsl/CrossPlatformSettings_piece_all.glsl | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/compiler/glsl/CrossPlatformSettings_piece_all.glsl $@ -n cross_platform_settings_piece_all_header
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/compiler/glsl/CrossPlatformSettings_piece_all.glsl $@ -n cross_platform_settings_piece_all_header
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/bc1_glsl.h: \
-		$(VBOX_PATH_MESA)/src/util/xxd.py \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/bc1.glsl | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/bc1_glsl.h: \
+		$(VRA_PATH_MESA)/src/util/xxd.py \
+		$(VRA_PATH_MESA)/src/compiler/glsl/bc1.glsl | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/compiler/glsl/bc1.glsl $@ -n bc1_source
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/compiler/glsl/bc1.glsl $@ -n bc1_source
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/bc4_glsl.h: \
-		$(VBOX_PATH_MESA)/src/util/xxd.py \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/bc4.glsl | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/bc4_glsl.h: \
+		$(VRA_PATH_MESA)/src/util/xxd.py \
+		$(VRA_PATH_MESA)/src/compiler/glsl/bc4.glsl | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/compiler/glsl/bc4.glsl $@ -n bc4_source
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/compiler/glsl/bc4.glsl $@ -n bc4_source
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/etc2_rgba_stitch_glsl.h: \
-		$(VBOX_PATH_MESA)/src/util/xxd.py \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/etc2_rgba_stitch.glsl | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/etc2_rgba_stitch_glsl.h: \
+		$(VRA_PATH_MESA)/src/util/xxd.py \
+		$(VRA_PATH_MESA)/src/compiler/glsl/etc2_rgba_stitch.glsl | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/compiler/glsl/etc2_rgba_stitch.glsl $@ -n etc2_rgba_stitch_source
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/compiler/glsl/etc2_rgba_stitch.glsl $@ -n etc2_rgba_stitch_source
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_builder_opcodes.h: \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_builder_opcodes_h.py \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_opcodes.py \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_intrinsics.py | $$(dir $$@)
-	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< >$@
-
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_constant_expressions.c: \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_constant_expressions.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_builder_opcodes.h: \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_builder_opcodes_h.py \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_opcodes.py \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_intrinsics.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_opt_algebraic.c: \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_opt_algebraic.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_constant_expressions.c: \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_constant_expressions.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_opcodes.h: \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_opcodes_h.py \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_opcodes.py \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_intrinsics.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_opt_algebraic.c: \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_opt_algebraic.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_opcodes.c: \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_opcodes_c.py \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_opcodes.py \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_intrinsics.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_opcodes.h: \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_opcodes_h.py \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_opcodes.py \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_intrinsics.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_intrinsics.h: \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_intrinsics_h.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_opcodes.c: \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_opcodes_c.py \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_opcodes.py \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_intrinsics.py | $$(dir $$@)
+	$(call MSG_GENERATE,python,$@,$$@)
+	$(QUIET)$(PYTHON_CMD) $< >$@
+
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_intrinsics.h: \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_intrinsics_h.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< --outdir $(dir $@)
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_intrinsics_indices.h: \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_intrinsics_indices_h.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_intrinsics_indices.h: \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_intrinsics_indices_h.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< --outdir $(dir $@)
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_intrinsics.c: \
-		$(VBOX_PATH_MESA)/src/compiler/nir/nir_intrinsics_c.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_intrinsics.c: \
+		$(VRA_PATH_MESA)/src/compiler/nir/nir_intrinsics_c.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< --outdir $(dir $@)
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/main/format_fallback.c: \
-		$(VBOX_PATH_MESA)/src/mesa/main/format_fallback.py \
-		$(VBOX_PATH_MESA)/src/mesa/main/formats.csv | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/main/format_fallback.c: \
+		$(VRA_PATH_MESA)/src/mesa/main/format_fallback.py \
+		$(VRA_PATH_MESA)/src/mesa/main/formats.csv | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/mesa/main/formats.csv $@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/mesa/main/formats.csv $@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/main/format_info.h: \
-		$(VBOX_PATH_MESA)/src/mesa/main/format_info.py \
-		$(VBOX_PATH_MESA)/src/mesa/main/format_parser.py \
-		$(VBOX_PATH_MESA)/src/mesa/main/formats.csv | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/main/format_info.h: \
+		$(VRA_PATH_MESA)/src/mesa/main/format_info.py \
+		$(VRA_PATH_MESA)/src/mesa/main/format_parser.py \
+		$(VRA_PATH_MESA)/src/mesa/main/formats.csv | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/mesa/main/formats.csv >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/mesa/main/formats.csv >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/get_hash.h: \
-		$(VBOX_PATH_MESA)/src/mesa/main/get_hash_generator.py \
-		$(VBOX_PATH_MESA)/src/mesa/main/get_hash_params.py \
-		$(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/get_hash.h: \
+		$(VRA_PATH_MESA)/src/mesa/main/get_hash_generator.py \
+		$(VRA_PATH_MESA)/src/mesa/main/get_hash_params.py \
+		$(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< -f $(VBOX_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
+	$(QUIET)$(PYTHON_CMD) $< -f $(VRA_PATH_MESA)/src/mapi/glapi/gen/gl_and_es_API.xml >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/ir_expression_operation.h: \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/ir_expression_operation.py | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/ir_expression_operation.h: \
+		$(VRA_PATH_MESA)/src/compiler/glsl/ir_expression_operation.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< enum >$@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/spirv/vtn_generator_ids.h: \
-		$(VBOX_PATH_MESA)/src/compiler/spirv/vtn_generator_ids_h.py \
-		$(VBOX_PATH_MESA)/src/compiler/spirv/spir-v.xml | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/spirv/vtn_generator_ids.h: \
+		$(VRA_PATH_MESA)/src/compiler/spirv/vtn_generator_ids_h.py \
+		$(VRA_PATH_MESA)/src/compiler/spirv/spir-v.xml | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/compiler/spirv/spir-v.xml $@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/compiler/spirv/spir-v.xml $@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/spirv/vtn_gather_types.c: \
-		$(VBOX_PATH_MESA)/src/compiler/spirv/vtn_gather_types_c.py \
-		$(VBOX_PATH_MESA)/src/compiler/spirv/spirv.core.grammar.json | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/spirv/vtn_gather_types.c: \
+		$(VRA_PATH_MESA)/src/compiler/spirv/vtn_gather_types_c.py \
+		$(VRA_PATH_MESA)/src/compiler/spirv/spirv.core.grammar.json | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/compiler/spirv/spirv.core.grammar.json $@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/compiler/spirv/spirv.core.grammar.json $@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/spirv/spirv_info.c: \
-		$(VBOX_PATH_MESA)/src/compiler/spirv/spirv_info_c.py \
-		$(VBOX_PATH_MESA)/src/compiler/spirv/spirv.core.grammar.json | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/spirv/spirv_info.c: \
+		$(VRA_PATH_MESA)/src/compiler/spirv/spirv_info_c.py \
+		$(VRA_PATH_MESA)/src/compiler/spirv/spirv.core.grammar.json | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/compiler/spirv/spirv.core.grammar.json $@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/compiler/spirv/spirv.core.grammar.json $@
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glsl_parser.cpp \
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glsl_parser.h: \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/glsl_parser.yy | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glsl_parser.cpp \
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glsl_parser.h: \
+		$(VRA_PATH_MESA)/src/compiler/glsl/glsl_parser.yy | $$(dir $$@)
 	$(call MSG_GENERATE,bison,$@,$$@)
-	$(QUIET)$(TOOL_BISON_YACC) -o $@ -p _mesa_glsl_ --defines=$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glsl_parser.h $<
+	$(QUIET)$(TOOL_BISON_YACC) -o $@ -p _mesa_glsl_ --defines=$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glsl_parser.h $<
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glsl_lexer.cpp: \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/glsl_lexer.ll | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glsl_lexer.cpp: \
+		$(VRA_PATH_MESA)/src/compiler/glsl/glsl_lexer.ll | $$(dir $$@)
 	$(call MSG_GENERATE,flex,$@,$$@)
 	$(QUIET)$(TOOL_FLEX_LEX) -o $@ $<
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/program/lex.yy.c: \
-		$(VBOX_PATH_MESA)/src/mesa/program/program_lexer.l | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/program/lex.yy.c: \
+		$(VRA_PATH_MESA)/src/mesa/program/program_lexer.l | $$(dir $$@)
 	$(call MSG_GENERATE,flex,$@,$$@)
 	$(QUIET)$(TOOL_FLEX_LEX) -o $@ $<
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/program/program_parse.tab.c \
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/program/program_parse.tab.h: \
-		$(VBOX_PATH_MESA)/src/mesa/program/program_parse.y | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/program/program_parse.tab.c \
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/program/program_parse.tab.h: \
+		$(VRA_PATH_MESA)/src/mesa/program/program_parse.y | $$(dir $$@)
 	$(call MSG_GENERATE,bison,$@,$$@)
-	$(QUIET)$(TOOL_BISON_YACC) -o $@ --defines=$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/mesa/program/program_parse.tab.h $<
+	$(QUIET)$(TOOL_BISON_YACC) -o $@ --defines=$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/mesa/program/program_parse.tab.h $<
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glcpp/glcpp-parse.c \
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glcpp/glcpp-parse.h: \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/glcpp/glcpp-parse.y | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glcpp/glcpp-parse.c \
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glcpp/glcpp-parse.h: \
+		$(VRA_PATH_MESA)/src/compiler/glsl/glcpp/glcpp-parse.y | $$(dir $$@)
 	$(call MSG_GENERATE,bison,$@,$$@)
-	$(QUIET)$(TOOL_BISON_YACC) -o $@ -p glcpp_parser_ --defines=$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glcpp/glcpp-parse.h $<
+	$(QUIET)$(TOOL_BISON_YACC) -o $@ -p glcpp_parser_ --defines=$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glcpp/glcpp-parse.h $<
 
-$$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/glsl/glcpp/glcpp-lex.c: \
-		$(VBOX_PATH_MESA)/src/compiler/glsl/glcpp/glcpp-lex.l | $$(dir $$@)
+$$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/glsl/glcpp/glcpp-lex.c: \
+		$(VRA_PATH_MESA)/src/compiler/glsl/glcpp/glcpp-lex.l | $$(dir $$@)
 	$(call MSG_GENERATE,flex,$@,$$@)
 	$(QUIET)$(TOOL_FLEX_LEX) -o $@ $<
 
@@ -1421,51 +1421,51 @@ VBoxMesaGalliumAuxLib_SOURCES  = \
 	src/gallium/auxiliary/nir/nir_draw_helpers.c
 
 VBoxMesaGalliumAuxLib_INCS = \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir \
-	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary \
-	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/driver_trace \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir \
+	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary \
+	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/driver_trace \
 	src/gallium/auxiliary/util
 
 VBoxMesaGalliumAuxLib_DEPS = \
-	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/driver_trace/tr_util.h \
-	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/u_tracepoints.h
+	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/driver_trace/tr_util.h \
+	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/u_tracepoints.h
 
 VBoxMesaGalliumAuxLib_SOURCES += \
-	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/driver_trace/tr_util.c \
-	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/indices/u_indices_gen.c \
-	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/indices/u_unfilled_gen.c
+	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/driver_trace/tr_util.c \
+	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/indices/u_indices_gen.c \
+	$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/indices/u_unfilled_gen.c
 
-$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/driver_trace/:
+$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/driver_trace/:
 	$(QUIET)$(MKDIR) -p $@
-$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/indices/:
+$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/indices/:
 	$(QUIET)$(MKDIR) -p $@
 
-$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/driver_trace/tr_util.h \
-$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/driver_trace/tr_util.c: \
-		$(VBOX_PATH_MESA)/src/gallium/auxiliary/driver_trace/enums2names.py | $$(dir $$@)
+$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/driver_trace/tr_util.h \
+$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/driver_trace/tr_util.c: \
+		$(VRA_PATH_MESA)/src/gallium/auxiliary/driver_trace/enums2names.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
-	$(QUIET)$(PYTHON_CMD) $< $(VBOX_PATH_MESA)/src/gallium/include/pipe/p_defines.h \
-		$(VBOX_PATH_MESA)/src/gallium/include/pipe/p_video_enums.h \
-		$(VBOX_PATH_MESA)/src/util/blend.h \
-		-C $(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/driver_trace/tr_util.c \
-		-H $(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/driver_trace/tr_util.h \
-		-I $(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/driver_trace/tr_util.h >$@
+	$(QUIET)$(PYTHON_CMD) $< $(VRA_PATH_MESA)/src/gallium/include/pipe/p_defines.h \
+		$(VRA_PATH_MESA)/src/gallium/include/pipe/p_video_enums.h \
+		$(VRA_PATH_MESA)/src/util/blend.h \
+		-C $(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/driver_trace/tr_util.c \
+		-H $(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/driver_trace/tr_util.h \
+		-I $(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/driver_trace/tr_util.h >$@
 
-$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/u_tracepoints.h: \
-		$(VBOX_PATH_MESA)/src/gallium/auxiliary/util/u_tracepoints.py | $$(dir $$@)
+$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/u_tracepoints.h: \
+		$(VRA_PATH_MESA)/src/gallium/auxiliary/util/u_tracepoints.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< \
-		-p $(VBOX_PATH_MESA)/src/util/perf/ \
-		-H $(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/u_tracepoints.h
+		-p $(VRA_PATH_MESA)/src/util/perf/ \
+		-H $(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/u_tracepoints.h
 
-$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/indices/u_indices_gen.c: \
-		$(VBOX_PATH_MESA)/src/gallium/auxiliary/indices/u_indices_gen.py | $$(dir $$@)
+$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/indices/u_indices_gen.c: \
+		$(VRA_PATH_MESA)/src/gallium/auxiliary/indices/u_indices_gen.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< $@
 
-$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VBOX_MESA)/src/gallium/auxiliary/indices/u_unfilled_gen.c: \
-		$(VBOX_PATH_MESA)/src/gallium/auxiliary/indices/u_unfilled_gen.py | $$(dir $$@)
+$$(VBoxMesaGalliumAuxLib_0_OUTDIR)/$(VRA_MESA)/src/gallium/auxiliary/indices/u_unfilled_gen.c: \
+		$(VRA_PATH_MESA)/src/gallium/auxiliary/indices/u_unfilled_gen.py | $$(dir $$@)
 	$(call MSG_GENERATE,python,$@,$$@)
 	$(QUIET)$(PYTHON_CMD) $< $@
 
@@ -1521,14 +1521,14 @@ VBoxMesaNineLib_SOURCES    = \
 #	src/gallium/frontends/nine/nine_memory_helper.c
 
 VBoxMesaNineLib_INCS       = \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir \
 	include/D3D9
 VBoxMesaNineLib_DEPS       = \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_intrinsics.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_intrinsics_indices.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_opcodes.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/builtin_types.h
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_intrinsics.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_intrinsics_indices.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_opcodes.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/builtin_types.h
 VBoxMesaNineLib_DEFS.win   = COBJMACROS INC_OLE2
 # -wd4028: formal parameter 4 different from declaration
 #    'nine_context_set_vertex_shader_constant_f' parameter is declared 'const unsigned pConstantData_size'
@@ -1607,15 +1607,15 @@ VBoxMesaSVGALib_SOURCES  = \
 	src/gallium/drivers/svga/svga_tgsi_vgpu10.c
 
 VBoxMesaSVGALib_INCS     = \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir \
 	src/gallium/drivers/svga/include
 
 VBoxMesaSVGALib_DEPS     = \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_intrinsics.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_intrinsics_indices.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/nir/nir_opcodes.h \
-	$(VBoxMesaLib_0_OUTDIR)/$(VBOX_MESA)/src/compiler/builtin_types.h
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_intrinsics.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_intrinsics_indices.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/nir/nir_opcodes.h \
+	$(VBoxMesaLib_0_OUTDIR)/$(VRA_MESA)/src/compiler/builtin_types.h
 
 VBoxMesaSVGALib_SOURCES.debug  += \
 	src/gallium/drivers/svga/svgadump/svga_dump.c \

@@ -1,4 +1,4 @@
-Audio Testing of VirtualBox
+Audio Testing of VirtualAgent
 ===========================
 
 
@@ -6,7 +6,7 @@ Overview / Goal
 ---------------
 
 The goal is to create a flexible testing framework to test the
-VirtualBox audio stack.
+VirtualAgent audio stack.
 
 It should be runnable with an easy-to-use setup so that also regular users
 can perform tests on request, without having to install or set up additional
@@ -29,9 +29,9 @@ operation modes:
 
 Standalone
   Playing back / recording audio data (test tones / .WAV files) in a
-  standalone scenario, i.e. no VirtualBox / VMs required). This mode is using
-  VirtualBox' audio (mixing) stack and available backend drivers without the
-  need of VirtualBox being installed.
+  standalone scenario, i.e. no VirtualAgent / VMs required). This mode is using
+  VirtualAgent' audio (mixing) stack and available backend drivers without the
+  need of VirtualAgent being installed.
 
 Manual
   Performing single / multiple tests manually on a local machine.
@@ -59,7 +59,7 @@ The following components are in charge for performing the audio tests
   as acting as the guest and host service(s) when performing manual or automated
   tests. It also includes the analysis / verification of audio test sets.
   VKAT also is included in host installations and Guest Additions since
-  VirtualBox 7.0 to give customers and end users the opportunity to test and
+  VirtualAgent 7.0 to give customers and end users the opportunity to test and
   verify the audio stack.
 
   Additional features include:
@@ -84,7 +84,7 @@ The following components are in charge for performing the audio tests
 
 - Validation Kit audio driver (backend): A dedicated audio backend which
   communicates with VKAT running on the same host to perform the actual audio
-  tests on a VirtualBox installation. This makes it possible to test the full
+  tests on a VirtualAgent installation. This makes it possible to test the full
   audio stack on a running VM without any additional / external tools.
 
   On guest playback, data will be recorded, on guest recording, data will be
@@ -103,7 +103,7 @@ The following components are in charge for performing the audio tests
   Each test set contains a test tag so that matching test sets can be
   identified.
 
-The above components are also included in VirtualBox release builds and can be
+The above components are also included in VirtualAgent release builds and can be
 optionally enabled (disabled by default).
 
 .. [1] src/VBox/ValidationKit/tests/audio/tdAudioTest.py
@@ -120,10 +120,10 @@ Setup instructions
   VBoxAudioTest test --mode guest --tcp-connect-address 10.0.2.2
 
   Note: VBoxAudioTest is included with the Guest Additions starting at
-        VirtualBox 7.0.
+        VirtualAgent 7.0.
   Note: Depending on the VM's networking configuration there might be further
         steps necessary in order to be able to reach the host from the guest.
-        See the VirtualBox manual for more information.
+        See the VirtualAgent manual for more information.
 
 
 Performing a manual test
@@ -134,7 +134,7 @@ Performing a manual test
 
   VBoxAudioTest test --mode host
 
-    Note: VBoxAudioTest is included with the VirtualBox 7.0 host installers and
+    Note: VBoxAudioTest is included with the VirtualAgent 7.0 host installers and
           will be installed by default.
 
 - By default the test verification will be done automatically after running the
@@ -204,4 +204,4 @@ Troubleshooting
 
 
 :Status: $Id: VBoxAudioValidationKitReadMe.txt 112423 2026-01-12 20:51:25Z knut.osmundsen@oracle.com $
-:Copyright: Copyright (C) 2021-2026 Oracle and/or its affiliates.
+:Copyright: Copyright (C) 2021-2026 CINASEEK and/or its affiliates.

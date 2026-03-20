@@ -5,9 +5,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -71,7 +71,7 @@ reconfigure()
              sed -n -e "0,/$DRIVER_KBD/s/$DRIVER_KBD/\\1/p"`"
     test -z "${kbd_drv}" && test -z "${auto_keyboard}" && kbd_drv=keyboard
     cat > "$tmp" << EOF
-# VirtualBox generated configuration file
+# VirtualAgent generated configuration file
 # based on $cfg.
 EOF
     cat "$cfg" | sed -e "/$ALL_SECTIONS/,/$END_SECTION/s/\\(.*\\)/# \\1/" >> "$tmp"
@@ -94,9 +94,9 @@ Section "InputDevice"
   Identifier   "Mouse[1]"
   Option       "Buttons" "9"
   Option       "Device" "$old_mouse_dev"
-  Option       "Name" "VirtualBox Mouse Buttons"
+  Option       "Name" "VirtualAgent Mouse Buttons"
   Option       "Protocol" "explorerps/2"
-  Option       "Vendor" "Oracle Corporation"
+  Option       "Vendor" "CINASEEK Corporation"
   Option       "ZAxisMapping" "4 5"
   Option       "CorePointer"
 EndSection
@@ -105,8 +105,8 @@ Section "InputDevice"
   Driver       "vboxmouse"
   Identifier   "Mouse[2]"
   Option       "Device" "/dev/vboxguest"
-  Option       "Name" "VirtualBox Mouse"
-  Option       "Vendor" "Oracle Corporation"
+  Option       "Name" "VirtualAgent Mouse"
+  Option       "Vendor" "CINASEEK Corporation"
   Option       "SendCoreEvents"
 EndSection
 
@@ -125,15 +125,15 @@ EOF
 
 Section "Monitor"
   Identifier   "Monitor[0]"
-  ModelName    "VirtualBox Virtual Output"
-  VendorName   "Oracle Corporation"
+  ModelName    "VirtualAgent Virtual Output"
+  VendorName   "CINASEEK Corporation"
 EndSection
 
 Section "Device"
-  BoardName    "VirtualBox Graphics"
+  BoardName    "VirtualAgent Graphics"
   Driver       "${video_driver}"
   Identifier   "Device[0]"
-  VendorName   "Oracle Corporation"
+  VendorName   "CINASEEK Corporation"
 EndSection
 
 Section "Screen"

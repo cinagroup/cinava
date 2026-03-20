@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2022-2026 Oracle and/or its affiliates.
+# Copyright (C) 2022-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ include $(KBUILD_PATH)/subheader.kmk
 # OS/2 Unattended installation helper utility.
 # This is checked in as a binary, this is just the makefile for re-builting it.
 #
-ifdef VBOX_WITH_OPEN_WATCOM
+ifdef VRA_WITH_OPEN_WATCOM
  PROGRAMS += os2_util
 endif
 os2_util_TEMPLATE       = DUMMY

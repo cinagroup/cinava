@@ -2,14 +2,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-VirtualBox Validation Kit - VMDK raw disk tests.
+VirtualAgent Validation Kit - VMDK raw disk tests.
 """
 
 __copyright__ = \
 """
-Copyright (C) 2013-2026 Oracle and/or its affiliates.
+Copyright (C) 2013-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -88,7 +88,7 @@ class tdStorageRawDriveOs(vboxtestvms.BaseTestVm):
                     'Header' :
                         {
                             #Drive:       /dev/sdb
-                            'Model'       : '"ATA VBOX HARDDISK"',
+                            'Model'       : '"ATA VRA HARDDISK"',
                             'UUID'        : '62d4f394-0000-0000-0000-000000000000',
                             'Size'        : '2.0GiB',
                             'Sector Size' : '512 bytes',
@@ -115,7 +115,7 @@ class tdStorageRawDriveOs(vboxtestvms.BaseTestVm):
                     'Header' :
                         {
                             #Drive:       /dev/sdc
-                            'Model'       : '"ATA VBOX HARDDISK"',
+                            'Model'       : '"ATA VRA HARDDISK"',
                             'UUID'        : '7b642ab1-9d44-b844-a860-ce71e0686274',
                             'Size'        : '2.0GiB',
                             'Sector Size' : '512 bytes',
@@ -827,9 +827,9 @@ class tdStorageRawDriveOs(vboxtestvms.BaseTestVm):
         reporter.error('Not implemented');
         return False;
 
-    def installVirtualBox(self, oGuestSession):
+    def installVirtualAgent(self, oGuestSession):
         """
-        Install VirtualBox in the guest.
+        Install VirtualAgent in the guest.
         """
         _ = oGuestSession;
         reporter.error('Not implemented');
@@ -954,7 +954,7 @@ class tdStorageRawDriveOs(vboxtestvms.BaseTestVm):
                             fGetStdOut = True, fIsError = True):
         return self.guestProcessExecute(oGuestSession, sTestName,
                                         cMsTimeout, '/usr/bin/sudo',
-                                        ['/usr/bin/sudo', '/opt/VirtualBox/VBoxManage'] + asArgs, fGetStdOut, fIsError);
+                                        ['/usr/bin/sudo', '/opt/VirtualAgent/VBoxManage'] + asArgs, fGetStdOut, fIsError);
 
     def listHostDrives(self, oGuestSession, sHdd):
         """
@@ -1237,7 +1237,7 @@ class tdStorageRawDriveOsLinux(tdStorageRawDriveOs):
                  eNic0Type = None, cMbRam = None, cCpus = 1, fPae = None, sGuestAdditionsIso = None, sBootSector = None):
         tdStorageRawDriveOs.__init__(self, oSet, oTstDrv, sVmName, sKind, sHdd, eNic0Type, cMbRam,
                                cCpus, fPae, sGuestAdditionsIso, sBootSector);
-        self.sVBoxInstaller = '^VirtualBox-.*\\.run$';
+        self.sVBoxInstaller = '^VirtualAgent-.*\\.run$';
         return;
 
     def installAdditions(self, oSession, oGuestSession, oVM):
@@ -1264,7 +1264,7 @@ class tdStorageRawDriveOsLinux(tdStorageRawDriveOs):
                 if not fRc:
                     reporter.error('Error installing additional installer dependencies');
         elif oVM.OSTypeId.startswith('OL') \
-          or oVM.OSTypeId.startswith('Oracle') \
+          or oVM.OSTypeId.startswith('CINASEEK') \
           or oVM.OSTypeId.startswith('RHEL') \
           or oVM.OSTypeId.startswith('Redhat') \
           or oVM.OSTypeId.startswith('Cent'):
@@ -1316,9 +1316,9 @@ class tdStorageRawDriveOsLinux(tdStorageRawDriveOs):
         reporter.testDone();
         return (fRc, oGuestSession);
 
-    def installVirtualBox(self, oGuestSession):
+    def installVirtualAgent(self, oGuestSession):
         """
-        Install VirtualBox in the guest.
+        Install VirtualAgent in the guest.
         """
         reporter.testStart('Install Virtualbox into the guest VM');
         sTestBuild = self._findFile(self.sVBoxInstaller, self.asTestBuildDirs);
@@ -1328,7 +1328,7 @@ class tdStorageRawDriveOsLinux(tdStorageRawDriveOs):
             fRc = self.uploadFile(oGuestSession, sTestBuild,
                                   '/tmp/' + os.path.basename(sTestBuild));
         else:
-            reporter.error("VirtualBox install package is not defined");
+            reporter.error("VirtualAgent install package is not defined");
 
         if not fRc:
             reporter.error('Upload the vbox installer into guest VM failed');
@@ -1380,11 +1380,11 @@ class tdStorageRawDriveOsWin(tdStorageRawDriveOs):
                  eNic0Type = None, cMbRam = None, cCpus = 1, fPae = None, sGuestAdditionsIso = None, sBootSector = None):
         tdStorageRawDriveOs.__init__(self, oSet, oTstDrv, sVmName, sKind, sHdd, eNic0Type, cMbRam,
                                cCpus, fPae, sGuestAdditionsIso, sBootSector);
-        self.sVBoxInstaller = r'^VirtualBox-.*\.(exe|msi)$';
+        self.sVBoxInstaller = r'^VirtualAgent-.*\.(exe|msi)$';
         self.sVMDKPath=r'C:\Temp\vmdk';
         self.sPathDelimiter = '\\';
-        self.asHdds['6.1/storage/t-mbr.vdi']['Header']['Model'] = '"VBOX HARDDISK"';
-        self.asHdds['6.1/storage/t-gpt.vdi']['Header']['Model'] = '"VBOX HARDDISK"';
+        self.asHdds['6.1/storage/t-mbr.vdi']['Header']['Model'] = '"VRA HARDDISK"';
+        self.asHdds['6.1/storage/t-gpt.vdi']['Header']['Model'] = '"VRA HARDDISK"';
         self.asHdds['6.1/storage/t-mbr.vdi']['Partitions']['PartitionNumbers'] = [1, 2, 3, 4, 5, 6, 7, 8];
         return;
 
@@ -1418,8 +1418,8 @@ class tdStorageRawDriveOsWin(tdStorageRawDriveOs):
     def _callVBoxManage(self, oGuestSession, sTestName, cMsTimeout, asArgs = (),
                             fGetStdOut = True, fIsError = True):
         return self.guestProcessExecute(oGuestSession, sTestName,
-                                        cMsTimeout, r'C:\Program Files\Oracle\VirtualBox\VBoxManage.exe',
-                                        [r'C:\Program Files\Oracle\VirtualBox\VBoxManage.exe',] + asArgs, fGetStdOut, fIsError);
+                                        cMsTimeout, r'C:\Program Files\CINASEEK\VirtualAgent\VBoxManage.exe',
+                                        [r'C:\Program Files\CINASEEK\VirtualAgent\VBoxManage.exe',] + asArgs, fGetStdOut, fIsError);
 
     def _setPermissionsToVmdkFiles(self, oGuestSession):
         """
@@ -1463,7 +1463,7 @@ class tdStorageRawDriveOsWin(tdStorageRawDriveOs):
             if fRc is True:
                 # Add the Windows Guest Additions installer files to the files we want to download
                 # from the guest.
-                sGuestAddsDir = 'C:/Program Files/Oracle/VirtualBox Guest Additions/';
+                sGuestAddsDir = 'C:/Program Files/CINASEEK/VirtualAgent Guest Additions/';
                 asLogFiles.append(sGuestAddsDir + 'install.log');
                 # Note: There won't be a install_ui.log because of the silent installation.
                 asLogFiles.append(sGuestAddsDir + 'install_drivers.log');
@@ -1479,9 +1479,9 @@ class tdStorageRawDriveOsWin(tdStorageRawDriveOs):
         reporter.testDone();
         return (fRc and fGaRc, oGuestSession);
 
-    def installVirtualBox(self, oGuestSession):
+    def installVirtualAgent(self, oGuestSession):
         """
-        Install VirtualBox in the guest.
+        Install VirtualAgent in the guest.
         """
         reporter.testStart('Install Virtualbox into the guest VM');
         # Used windows image already contains the C:\Temp
@@ -1492,7 +1492,7 @@ class tdStorageRawDriveOsWin(tdStorageRawDriveOs):
             fRc = self.uploadFile(oGuestSession, sTestBuild,
                               'C:\\Temp\\' + os.path.basename(sTestBuild));
         else:
-            reporter.error("VirtualBox install package is not defined");
+            reporter.error("VirtualAgent install package is not defined");
 
         if not fRc:
             reporter.error('Upload the installing into guest VM failed');
@@ -1521,7 +1521,7 @@ class tdStorageRawDriveOsWin(tdStorageRawDriveOs):
                     (_, _, _, aBuf) = self.guestProcessExecute(oGuestSession, 'Check installation',
                                                                240 * 1000, 'C:\\Windows\\System32\\cmd.exe',
                                                                ['c:\\Windows\\System32\\cmd.exe', '/c',
-                                                                'dir', 'C:\\Program Files\\Oracle\\VirtualBox\\*.*'],
+                                                                'dir', 'C:\\Program Files\\CINASEEK\\VirtualAgent\\*.*'],
                                                                True, True);
                     reporter.log('Content of  VirtualBxox folder:');
                     reporter.log(str(aBuf));
@@ -1589,7 +1589,7 @@ class tdStorageRawDrive(vbox.TestDriver):                                      #
         reporter.log('');
         reporter.log('tdAutostart Options:');
         reporter.log('  --test-build-dirs <path1[,path2[,...]]>');
-        reporter.log('      The list of directories with VirtualBox distros. Overrides default path.');
+        reporter.log('      The list of directories with VirtualAgent distros. Overrides default path.');
         reporter.log('      Default path is $TESTBOX_SCRATCH_PATH/bin.');
         reporter.log('  --vbox-<os>-build <path>');
         reporter.log('      The path to vbox build for the specified OS.');
@@ -1654,7 +1654,7 @@ class tdStorageRawDrive(vbox.TestDriver):                                      #
                         if fRc:
                             (fRc, oGuestSession) = oTestVm.installAdditions(oSession, oGuestSession, oVM);
                         if fRc:
-                            fRc = oTestVm.installVirtualBox(oGuestSession);
+                            fRc = oTestVm.installVirtualAgent(oGuestSession);
                             if fRc:
                                 (fRc, sRawDrive) = oTestVm.listHostDrives(oGuestSession, sHdd);
                                 if fRc:
@@ -1664,7 +1664,7 @@ class tdStorageRawDrive(vbox.TestDriver):                                      #
                                 else:
                                     reporter.error('List host drives failed');
                             else:
-                                reporter.error('Installing VirtualBox in the guest failed');
+                                reporter.error('Installing VirtualAgent in the guest failed');
                         else:
                             reporter.error('Creating Guest Additions failed');
                     else:

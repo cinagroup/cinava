@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2010-2026 Oracle and/or its affiliates.
+# Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -47,12 +47,12 @@ include $(KBUILD_PATH)/subheader.kmk
 SYSMODS.solaris        += virtionet
 virtionet_NAME.solaris  = virtnet
 virtionet_TEMPLATE      = VBoxGuestR0Drv
-ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
- virtionet_DEFS         = VBOX_WITH_HGCM VBOX_SVN_REV=$(VBOX_SVN_REV) VBOX_VERSION_STRING="$(VBOX_VERSION_STRING)"
+ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
+ virtionet_DEFS         = VRA_WITH_HGCM VRA_SVN_REV=$(VRA_SVN_REV) VRA_VERSION_STRING="$(VRA_VERSION_STRING)"
 else
- virtionet_DEFS         = VBOX_WITH_HGCM VBOX_SVN_REV=$(VBOX_SVN_REV) VBOX_VERSION_STRING=\"$(VBOX_VERSION_STRING)\"
+ virtionet_DEFS         = VRA_WITH_HGCM VRA_SVN_REV=$(VRA_SVN_REV) VRA_VERSION_STRING=\"$(VRA_VERSION_STRING)\"
 endif
-virtionet_DEPS          = $(VBOX_SVN_REV_KMK)
+virtionet_DEPS          = $(VRA_SVN_REV_KMK)
 virtionet_INCS         := .
 virtionet_SOURCES       = \
 	Virtio-solaris.c \
@@ -61,7 +61,7 @@ virtionet_SOURCES       = \
 	VirtioNet-solaris.c
 # virtionet should resolve all IPRT bits from vboxguest.
 #virtionet_LIBS          = \
-#	$(VBOX_LIB_IPRT_GUEST_R0)
+#	$(VRA_LIB_IPRT_GUEST_R0)
 virtionet_LDFLAGS      += -N drv/vboxguest -N misc/mac
 
 include $(FILE_KBUILD_SUB_FOOTER)

@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ $$(CAPIHeaders_0_OUTDIR)/VBoxCAPIGlue.h: \
 		| $$(dir $$@)
 	$(call MSG_GENERATE,,$@)
 	$(QUIET)$(SED) \
-		-e 's/@VBOX_API_VERSION@/$(VBOX_API_VERSION)/' \
+		-e 's/@VRA_API_VERSION@/$(VRA_API_VERSION)/' \
 		<  $< >  $@
 
 #
@@ -69,30 +69,30 @@ INSTALLS += CAPIHeaders
 CAPIHeaders_MODE = a+r,u+rw
 CAPIHeaders_INST = $(INST_SDK)bindings/c/include/
 CAPIHeaders_SOURCES = \
-	$(CAPIHeaders_0_OUTDIR)/VBoxCAPI.h=>VBoxCAPI_v$(VBOX_API_VERSION).h
+	$(CAPIHeaders_0_OUTDIR)/VBoxCAPI.h=>VBoxCAPI_v$(VRA_API_VERSION).h
 CAPIHeaders_CLEAN = \
 	$(CAPIHeaders_0_OUTDIR)/VBoxCAPI.h
 
 $$(CAPIHeaders_0_OUTDIR)/VBoxCAPI.h: \
 		$(PATH_SUB_CURRENT)/capiidl.xsl \
 		$(PATH_SUB_CURRENT)/../idl/typemap-shared.inc.xsl \
-		$(VBOX_XIDL_FILE) \
+		$(VRA_XIDL_FILE) \
 		| $$(dir $$@)
 	$(call MSG_TOOL,xsltproc,CAPIHeaders,$<,$@)
-	$(QUIET)$(VBOX_XSLTPROC) --stringparam g_uVBoxCopyrightYear "$(VBOX_C_YEAR)" -o $@ $^
+	$(QUIET)$(VRA_XSLTPROC) --stringparam g_uVBoxCopyrightYear "$(VRA_C_YEAR)" -o $@ $^
 
-ifndef VBOX_ONLY_SDK
+ifndef VRA_ONLY_SDK
 
  #
  # The C API binding utility DLL
  #
  DLLS += VBoxCAPI
  VBoxCAPI_TEMPLATE = VBoxMainClientDll
- ifdef VBOX_WITH_XPCOM
+ ifdef VRA_WITH_XPCOM
   # Keep old name on XPCOM so that legacy code is happy.
   VBoxCAPI_NAME = VBoxXPCOMC
  endif
- VBoxCAPI_DEFS = IN_VBOXCAPI
+ VBoxCAPI_DEFS = IN_VRACAPI
  VBoxCAPI_SOURCES = \
  	VBoxCAPI.cpp
  VBoxCAPI_SOURCES.win = \
@@ -105,12 +105,12 @@ ifndef VBOX_ONLY_SDK
  #
  # The C API binding utility DLL, 32-bit variant for 64-bit hosts.
  #
- ifdef VBOX_WITH_32_ON_64_MAIN_API
+ ifdef VRA_WITH_32_ON_64_MAIN_API
   DLLS += VBoxCAPI-x86
   VBoxCAPI-x86_EXTENDS  := VBoxCAPI
   VBoxCAPI-x86_TEMPLATE := VBoxMainClientDll-x86
-  ifdef VBOX_WITH_XPCOM
-   VBoxCAPI-x86_INST    := $(INST_BIN)VBoxCAPI-x86$(VBOX_SUFF_DLL)
+  ifdef VRA_WITH_XPCOM
+   VBoxCAPI-x86_INST    := $(INST_BIN)VBoxCAPI-x86$(VRA_SUFF_DLL)
   endif
  endif
 
@@ -119,25 +119,25 @@ ifndef VBOX_ONLY_SDK
  #
  LIBRARIES += VBoxCAPIGlue
  VBoxCAPIGlue_TEMPLATE = VBoxMainExe
- VBoxCAPIGlue_DEFS = IN_VBOXCAPI
+ VBoxCAPIGlue_DEFS = IN_VRACAPI
  VBoxCAPIGlue_SOURCES = \
  	VBoxCAPIGlue.c
- ifdef VBOX_WITH_XPCOM
+ ifdef VRA_WITH_XPCOM
   VBoxCAPIGlue_SOURCES += \
-  	$(VBOX_PATH_SDK)/bindings/xpcom/lib/VirtualBox_i.c
+  	$(VRA_PATH_SDK)/bindings/xpcom/lib/VirtualAgent_i.c
  else
   VBoxCAPIGlue_SOURCES += \
-  	$(VBOX_PATH_SDK)/bindings/mscom/lib/VirtualBox_i.c
+  	$(VRA_PATH_SDK)/bindings/mscom/lib/VirtualAgent_i.c
  endif
  VBoxCAPIGlue_INCS = \
- 	$(VBOX_PATH_SDK)/bindings/c/include \
- 	$(VBOX_PATH_SDK)/bindings/c/glue
+ 	$(VRA_PATH_SDK)/bindings/c/include \
+ 	$(VRA_PATH_SDK)/bindings/c/glue
  VBoxCAPIGlue_INTERMEDIATES = \
- 	$(VBOX_PATH_SDK)/bindings/c/glue/VBoxCAPIGlue.h \
- 	$(VBOX_PATH_SDK)/bindings/c/include/VBoxCAPI_v$(VBOX_API_VERSION).h
+ 	$(VRA_PATH_SDK)/bindings/c/glue/VBoxCAPIGlue.h \
+ 	$(VRA_PATH_SDK)/bindings/c/include/VBoxCAPI_v$(VRA_API_VERSION).h
 
 
- ifdef VBOX_WITH_32_ON_64_MAIN_API
+ ifdef VRA_WITH_32_ON_64_MAIN_API
   # Same as above, but 32-bit version.
   LIBRARIES += VBoxCAPIGlue-x86
   VBoxCAPIGlue-x86_EXTENDS      := VBoxCAPIGlue
@@ -145,7 +145,7 @@ ifndef VBOX_ONLY_SDK
  endif
 
 
- if defined(VBOX_WITH_TESTCASES) && "$(KBUILD_TARGET)" != "darwin"
+ if defined(VRA_WITH_TESTCASES) && "$(KBUILD_TARGET)" != "darwin"
   #
   # The testcase (also in samples).
   # C testcase using the dynamic glue.
@@ -153,25 +153,25 @@ ifndef VBOX_ONLY_SDK
   PROGRAMS += tstCAPIGlue
   tstCAPIGlue_TEMPLATE = VBoxR3TstExe
   tstCAPIGlue_INCS = \
-  	$(VBOX_PATH_SDK)/bindings/c/include \
-  	$(VBOX_PATH_SDK)/bindings/c/glue
-  ifdef VBOX_WITH_XPCOM
+  	$(VRA_PATH_SDK)/bindings/c/include \
+  	$(VRA_PATH_SDK)/bindings/c/glue
+  ifdef VRA_WITH_XPCOM
    tstCAPIGlue_INCS += \
-   	$(VBOX_PATH_SDK)/bindings/xpcom/include
+   	$(VRA_PATH_SDK)/bindings/xpcom/include
   else
    tstCAPIGlue_INCS += \
-   	$(VBOX_PATH_SDK)/bindings/mscom/include
+   	$(VRA_PATH_SDK)/bindings/mscom/include
   endif
   tstCAPIGlue_INTERMEDIATES = \
-  	$(VBOX_PATH_SDK)/bindings/c/glue/VBoxCAPIGlue.h \
-  	$(VBOX_PATH_SDK)/bindings/c/include/VBoxCAPI_v$(VBOX_API_VERSION).h \
-  	$(if-expr !defined(VBOX_WITH_XPCOM),$(VBOX_PATH_SDK)/bindings/mscom/include/VirtualBox.h,)
+  	$(VRA_PATH_SDK)/bindings/c/glue/VBoxCAPIGlue.h \
+  	$(VRA_PATH_SDK)/bindings/c/include/VBoxCAPI_v$(VRA_API_VERSION).h \
+  	$(if-expr !defined(VRA_WITH_XPCOM),$(VRA_PATH_SDK)/bindings/mscom/include/VirtualAgent.h,)
   tstCAPIGlue_SOURCES = \
   	tstCAPIGlue.c
   tstCAPIGlue_LIBS = \
   	$(VBoxCAPIGlue_1_TARGET)
 
-  ifdef VBOX_WITH_32_ON_64_MAIN_API
+  ifdef VRA_WITH_32_ON_64_MAIN_API
    # Same as above, but 32-bit version.
    PROGRAMS += tstCAPIGlue-x86
    tstCAPIGlue-x86_EXTENDS      := tstCAPIGlue
@@ -181,7 +181,7 @@ ifndef VBOX_ONLY_SDK
   endif
  endif
 
-endif # !VBOX_ONLY_SDK
+endif # !VRA_ONLY_SDK
 
 # generate rules.
 include $(FILE_KBUILD_SUB_FOOTER)

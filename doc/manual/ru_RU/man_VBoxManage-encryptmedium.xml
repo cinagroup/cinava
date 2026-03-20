@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage encryptmedium
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -148,13 +148,13 @@
       пароля <literal>1001</literal> и используя файл пароля
       <filename>$HOME/pwfile</filename>:
     </para>
-<screen>$ VBoxManage encryptmedium "$HOME/VirtualBox VMs/ol7u4/ol7u4-1.vdi" \
+<screen>$ VBoxManage encryptmedium "$HOME/VirtualAgent VMs/ol7u4/ol7u4-1.vdi" \
   --cipher="AES-XTS128-PLAIN64" --newpasswordid="1001" --newpassword=$HOME/pwfile</screen>
     <para>
       Следующий пример показывает как расшифровать зашифрованный образ
       называемый <filename>ol7u4-2.vdi</filename>:
     </para>
-<screen>$ VBoxManage encryptmedium "$HOME/VirtualBox VMs/ol7u4/ol7u4-2.vdi" \
+<screen>$ VBoxManage encryptmedium "$HOME/VirtualAgent VMs/ol7u4/ol7u4-2.vdi" \
   --oldpassword=-
   Пароль: <replaceable>исходный-пароль</replaceable></screen>
     <para>
@@ -163,7 +163,7 @@
       читает исходный пароль из файла <filename>$HOME/pwfile.orig</filename>
       и назначает идентификатор пароля <literal>1001</literal>.
     </para>
-<screen>$ VBoxManage encryptmedium "$HOME/VirtualBox VMs/ol7u4/ol7u4-3.vdi" \
+<screen>$ VBoxManage encryptmedium "$HOME/VirtualAgent VMs/ol7u4/ol7u4-3.vdi" \
   --oldpassword=$HOME/pwfile.orig --newpassword=$HOME/pwfile --newpasswordid="1001"</screen>
   </refsect1>
 </refentry>

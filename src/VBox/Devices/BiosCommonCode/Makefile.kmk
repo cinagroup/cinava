@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2012-2026 Oracle and/or its affiliates.
+# Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ MakeAlternativeSource_TEMPLATE = VBoxAdvBldProg
 MakeAlternativeSource_DEFS     = IN_DIS
 MakeAlternativeSource_SOURCES  = MakeAlternativeSource.cpp
 MakeAlternativeSource_LIBS     = \
-	$(PATH_STAGE_LIB)/DisasmBldProg$(VBOX_HOSTSUFF_LIB)
+	$(PATH_STAGE_LIB)/DisasmBldProg$(VRA_HOSTSUFF_LIB)
 
 
 include $(FILE_KBUILD_SUB_FOOTER)

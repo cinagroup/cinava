@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2011-2026 Oracle and/or its affiliates.
+# Copyright (C) 2011-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 SUB_DEPTH = ../../../../..
 include $(KBUILD_PATH)/subheader.kmk
 
-if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBOX_ONLY_SDK)
+if defined(VRA_WITH_TESTCASES) && !defined(VRA_ONLY_ADDITIONS) && !defined(VRA_ONLY_SDK)
 
  #
  # Testcase which mocks HGCM to also test the VbglR3-side of Shared Clipboard.
@@ -40,7 +40,7 @@ if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBO
  #       without #ifdef modifications to the core code!
  #
  tstClipboardMockHGCM_TEMPLATE = VBoxR3TstExe
- tstClipboardMockHGCM_DEFS    = VBOX_WITH_HGCM VBOX_WITH_SHARED_CLIPBOARD
+ tstClipboardMockHGCM_DEFS    = VRA_WITH_HGCM VRA_WITH_SHARED_CLIPBOARD
  tstClipboardMockHGCM_SOURCES = \
  	tstClipboardMockHGCM.cpp \
  	../VBoxSharedClipboardSvc.cpp \
@@ -58,7 +58,7 @@ if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBO
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-x11.cpp \
   	../VBoxSharedClipboardSvc-x11.cpp
   tstClipboardMockHGCM_LIBPATH = \
-  	$(VBOX_LIBPATH_X11)
+  	$(VRA_LIBPATH_X11)
   tstClipboardMockHGCM_LIBS   += \
   	Xt \
   	X11
@@ -72,15 +72,15 @@ if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBO
 
  tstClipboardMockHGCM_CLEAN = $(tstClipboardMockHGCM_0_OUTDIR)/tstClipboardMockHGCM.run
 
- if defined(VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS)
+ if defined(VRA_WITH_SHARED_CLIPBOARD_TRANSFERS)
   tstClipboardMockHGCM_DEFS   += \
-  	VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS \
-  	$(if $(VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP),VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP,)
+  	VRA_WITH_SHARED_CLIPBOARD_TRANSFERS \
+  	$(if $(VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP),VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP,)
   tstClipboardMockHGCM_SOURCES += \
   	../VBoxSharedClipboardSvc-transfers.cpp \
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-transfers.cpp \
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-transfers-provider-local.cpp
-  if defined(VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP)
+  if defined(VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP)
    if1of ($(KBUILD_TARGET), linux solaris)
     tstClipboardMockHGCM_SOURCES += \
     	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-transfers-http.cpp
@@ -94,7 +94,7 @@ if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBO
 
  if 0 # Enable this if you want automatic runs after compilation.
   $$(tstClipboardMockHGCM_0_OUTDIR)/tstClipboardMockHGCM.run: $$(tstClipboardMockHGCM_1_STAGE_TARGET)
-	export VBOX_LOG_DEST=nofile; $(tstClipboardMockHGCM_1_STAGE_TARGET) quiet
+	export VRA_LOG_DEST=nofile; $(tstClipboardMockHGCM_1_STAGE_TARGET) quiet
 	$(QUIET)$(APPEND) -t "$@" "done"
   OTHERS += $(tstClipboardMockHGCM_0_OUTDIR)/tstClipboardMockHGCM.run
  endif
@@ -104,7 +104,7 @@ if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBO
  #
  PROGRAMS += tstClipboardServiceHost
  tstClipboardServiceHost_TEMPLATE = VBoxR3TstExe
- tstClipboardServiceHost_DEFS     = VBOX_WITH_HGCM UNIT_TEST
+ tstClipboardServiceHost_DEFS     = VRA_WITH_HGCM UNIT_TEST
  tstClipboardServiceHost_SOURCES  = \
  	../VBoxSharedClipboardSvc.cpp \
  	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-common.cpp \
@@ -113,8 +113,8 @@ if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBO
  tstClipboardServiceHost_LIBS     = $(LIB_RUNTIME)
  tstClipboardServiceHost_CLEAN    = $(tstClipboardServiceHost_0_OUTDIR)/tstClipboardServiceHost.run
 
- if defined(VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS)
-  tstClipboardServiceHost_DEFS    += VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+ if defined(VRA_WITH_SHARED_CLIPBOARD_TRANSFERS)
+  tstClipboardServiceHost_DEFS    += VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
   tstClipboardServiceHost_SOURCES += \
   	../VBoxSharedClipboardSvc-transfers.cpp \
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-transfers.cpp \
@@ -126,7 +126,7 @@ if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBO
  #
  PROGRAMS += tstClipboardServiceImpl
  tstClipboardServiceImpl_TEMPLATE = VBoxR3TstExe
- tstClipboardServiceImpl_DEFS     = VBOX_WITH_HGCM UNIT_TEST
+ tstClipboardServiceImpl_DEFS     = VRA_WITH_HGCM UNIT_TEST
  tstClipboardServiceImpl_SOURCES  = \
  	../VBoxSharedClipboardSvc.cpp \
  	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-common.cpp \
@@ -137,13 +137,13 @@ if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBO
  tstClipboardServiceImpl_LIBS     = $(LIB_RUNTIME)
  tstClipboardServiceImpl_CLEAN    = $(tstClipboardServiceImpl_0_OUTDIR)/tstClipboardServiceImpl.run
 
- if defined(VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS)
+ if defined(VRA_WITH_SHARED_CLIPBOARD_TRANSFERS)
   #
   #
   #
   PROGRAMS += tstClipboardTransfers
   tstClipboardTransfers_TEMPLATE = VBoxR3TstExe
-  tstClipboardTransfers_DEFS     = VBOX_WITH_HGCM UNIT_TEST VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+  tstClipboardTransfers_DEFS     = VRA_WITH_HGCM UNIT_TEST VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
   tstClipboardTransfers_SOURCES  = \
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-common.cpp \
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-transfers.cpp \
@@ -155,11 +155,11 @@ endif
 #
 # List of above testcases that will be included in the ValKit.
 #
-ifdef VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING
+ifdef VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING
  if1of ($(KBUILD_TARGET), linux solaris win)
   VALKIT_UNITTESTS_WHITELIST_GUEST_ADDITIONS += \
   	tstClipboardMockHGCM
  endif
-endif # VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING
+endif # VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING
 
 include $(FILE_KBUILD_SUB_FOOTER)

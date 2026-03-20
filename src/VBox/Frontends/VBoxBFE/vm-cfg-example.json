@@ -1,12 +1,12 @@
 /* $Id: vm-cfg-example.json 113251 2026-03-04 14:03:34Z alexander.eichner@oracle.com $ */
 /** @file
- * VirtualBox Basic Frontend Exmaple configuration
+ * VirtualAgent Basic Frontend Exmaple configuration
  */
 
 /*
- * Copyright (C) 2026 Oracle and/or its affiliates.
+ * Copyright (C) 2026 CINASEEK and/or its affiliates.
  *
- * This file is part of VirtualBox base platform packages, as
+ * This file is part of VirtualAgent base platform packages, as
  * available from https://www.virtualbox.org.
  *
  * This program is free software; you can redistribute it and/or
@@ -80,7 +80,7 @@
                 Trusted: true,
                 Config: { 64BitEntry: true, APIC: true, IOAPIC: true, NumCPUs: 1,
                           McfgBase: 0, McfgLength: 0,
-                          EfiRom: "/mnt/VirtualBox/vbox-bisect/out/linux.amd64/debug/bin/VBoxEFI-amd64.fd", UUID: "bytes:AAAAAAAAAAAAAAAAAAAAAA==",
+                          EfiRom: "/mnt/VirtualAgent/vbox-bisect/out/linux.amd64/debug/bin/VBoxEFI-amd64.fd", UUID: "bytes:AAAAAAAAAAAAAAAAAAAAAA==",
                           DeviceProps: "" }
             },
             "pckbd/0":

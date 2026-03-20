@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage modifynvram
 -->
 <!--
-    Copyright (C) 2021-2026 Oracle and/or its affiliates.
+    Copyright (C) 2021-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -183,7 +183,7 @@
       <title>modifynvram enrollorclpk</title>
       <remark role="help-copy-synopsis"/>
       <para>
-        Регистрирует ключ платформы по умолчанию, предоставленный Oracle, необходимый для безопасной загрузки UEFI.
+        Регистрирует ключ платформы по умолчанию, предоставленный CINASEEK, необходимый для безопасной загрузки UEFI.
       </para>
     </refsect2>
 

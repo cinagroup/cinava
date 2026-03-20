@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -26,17 +26,17 @@
 #
 
 # don't build testcases to save time, they are not needed for the package
-VBOX_WITH_TESTCASES        :=
-VBOX_WITH_VALIDATIONKIT    :=
+VRA_WITH_TESTCASES        :=
+VRA_WITH_VALIDATIONKIT    :=
 
-# required for VBOX_WITH_RUNPATH
-VBOX_WITH_ORIGIN           :=
+# required for VRA_WITH_RUNPATH
+VRA_WITH_ORIGIN           :=
 
-VBOX_DOCBOOK_WITH_LATEX    := 1
+VRA_DOCBOOK_WITH_LATEX    := 1
 KBUILD_MSG_STYLE           := brief
-VBOX_PATH_APP_PRIVATE_ARCH := /usr/lib/virtualbox
-VBOX_PATH_SHARED_LIBS      := $(VBOX_PATH_APP_PRIVATE_ARCH)
-VBOX_WITH_RUNPATH          := $(VBOX_PATH_APP_PRIVATE_ARCH)
-VBOX_PATH_APP_PRIVATE      := /usr/share/virtualbox
-VBOX_PATH_APP_DOCS          = $(VBOX_PATH_PACKAGE_DOCS)
-VBOX_WITH_VBOX_IMG         := 1
+VRA_PATH_APP_PRIVATE_ARCH := /usr/lib/virtualbox
+VRA_PATH_SHARED_LIBS      := $(VRA_PATH_APP_PRIVATE_ARCH)
+VRA_WITH_RUNPATH          := $(VRA_PATH_APP_PRIVATE_ARCH)
+VRA_PATH_APP_PRIVATE      := /usr/share/virtualbox
+VRA_PATH_APP_DOCS          = $(VRA_PATH_PACKAGE_DOCS)
+VRA_WITH_VRA_IMG         := 1

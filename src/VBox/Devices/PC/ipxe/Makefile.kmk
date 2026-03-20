@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2012-2026 Oracle and/or its affiliates.
+# Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ include $(KBUILD_PATH)/subheader.kmk
 #
 # Globals.
 #
-VBOX_PATH_IPXE_SRC := $(PATH_SUB_CURRENT)
+VRA_PATH_IPXE_SRC := $(PATH_SUB_CURRENT)
 
 
 #
@@ -40,15 +40,15 @@ VBOX_PATH_IPXE_SRC := $(PATH_SUB_CURRENT)
 #
 LIBRARIES += iPxeBiosBin
 iPxeBiosBin_TEMPLATE = VBoxR3Dll
-iPxeBiosBin_DEFS     = IN_VBOXDD2
+iPxeBiosBin_DEFS     = IN_VRADD2
 iPxeBiosBin_SOURCES  = $(iPxeBiosBin_0_OUTDIR)/iPxeBiosBin.c
 iPxeBiosBin_CLEAN    = \
 	$(iPxeBiosBin_0_OUTDIR)/iPxeBiosBin.c \
 
 if1of ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH), darwin.amd64 darwin.arm64 linux.arm64 os2.x86 solaris.amd64 win.amd64 win.arm64)
- $$(iPxeBiosBin_0_OUTDIR)/iPxeBiosBin.c: $(PATH_SUB_CURRENT)/iPxeBiosBin.rom $(VBOX_BIN2C) | $$(dir $$@)
+ $$(iPxeBiosBin_0_OUTDIR)/iPxeBiosBin.c: $(PATH_SUB_CURRENT)/iPxeBiosBin.rom $(VRA_BIN2C) | $$(dir $$@)
 	$(call MSG_TOOL,bin2c,iPxeBiosBin,$<,$@)
-	$(QUIET)$(VBOX_BIN2C) -min 32 -max 56 -mask 0x1ff -export NetBiosBinary $< $@
+	$(QUIET)$(VRA_BIN2C) -min 32 -max 56 -mask 0x1ff -export NetBiosBinary $< $@
 
 else
  iPxeBiosBin_CLEAN    += \
@@ -56,25 +56,25 @@ else
 	$(iPxeBiosBin_0_OUTDIR)/iPxeBaseBin.rom.bin \
 	$(iPxeBiosBin_0_OUTDIR)/iPxeBaseBin.rom.zinfo
 
- $$(iPxeBiosBin_0_OUTDIR)/iPxeBiosBin.c: $$(iPxeBiosBin_0_OUTDIR)/iPxeBiosBin.rom $(VBOX_BIN2C)
+ $$(iPxeBiosBin_0_OUTDIR)/iPxeBiosBin.c: $$(iPxeBiosBin_0_OUTDIR)/iPxeBiosBin.rom $(VRA_BIN2C)
 	$(call MSG_TOOL,bin2c,iPxeBiosBin,$<,$@)
-	$(QUIET)$(VBOX_BIN2C) -min 32 -max 56 -export NetBiosBinary $< $@
+	$(QUIET)$(VRA_BIN2C) -min 32 -max 56 -export NetBiosBinary $< $@
 
 
  $$(iPxeBiosBin_0_OUTDIR)/iPxeBiosBin.rom: \
 		$$(iPxeBaseBin_1_TARGET) \
 		$$(ipxezbin_1_TARGET) \
-		$(VBOX_PATH_IPXE_SRC)/src/util/padimg.pl \
-		$(VBOX_PATH_IPXE_SRC)/src/util/fixrom.pl \
+		$(VRA_PATH_IPXE_SRC)/src/util/padimg.pl \
+		$(VRA_PATH_IPXE_SRC)/src/util/fixrom.pl \
 		| $$(dir $$@)
 	$(call MSG_TOOL,zbin,iPxeBiosBin,$<,$@)
-	$(TOOL_$(VBOX_GCC32_TOOL)_OBJCOPY) -O binary -R .zinfo $< $(iPxeBiosBin_0_OUTDIR)/iPxeBaseBin.rom.bin
-	$(TOOL_$(VBOX_GCC32_TOOL)_OBJCOPY) -O binary -j .zinfo $< $(iPxeBiosBin_0_OUTDIR)/iPxeBaseBin.rom.zinfo
+	$(TOOL_$(VRA_GCC32_TOOL)_OBJCOPY) -O binary -R .zinfo $< $(iPxeBiosBin_0_OUTDIR)/iPxeBaseBin.rom.bin
+	$(TOOL_$(VRA_GCC32_TOOL)_OBJCOPY) -O binary -j .zinfo $< $(iPxeBiosBin_0_OUTDIR)/iPxeBaseBin.rom.zinfo
 	$(ipxezbin_1_TARGET) \
 	    $(iPxeBiosBin_0_OUTDIR)/iPxeBaseBin.rom.bin \
 	    $(iPxeBiosBin_0_OUTDIR)/iPxeBaseBin.rom.zinfo \
 	    > $@
-	perl $(VBOX_PATH_IPXE_SRC)/src/util/fixrom.pl $@
+	perl $(VRA_PATH_IPXE_SRC)/src/util/fixrom.pl $@
 	$(RM) -- \
 	    $(iPxeBiosBin_0_OUTDIR)/iPxeBaseBin.rom.bin \
 	    $(iPxeBiosBin_0_OUTDIR)/iPxeBaseBin.rom.zinfo
@@ -105,7 +105,7 @@ else
  # iPXE - Template used to build the ROM binary.
  #
  TEMPLATE_iPxe          := iPXE code
- TEMPLATE_iPxe_TOOL      = $(VBOX_GCC32_TOOL)
+ TEMPLATE_iPxe_TOOL      = $(VRA_GCC32_TOOL)
  TEMPLATE_iPxe_LDTOOL   := iPxeLinker
  TEMPLATE_iPxe_LD_DEBUG := split
  TEMPLATE_iPxe_LDFLAGS  := \
@@ -113,7 +113,7 @@ else
 	-N \
 	--no-check-sections \
 	--gc-sections \
-	-T $(VBOX_PATH_IPXE_SRC)/src/arch/x86/scripts/pcbios.lds \
+	-T $(VRA_PATH_IPXE_SRC)/src/arch/x86/scripts/pcbios.lds \
 	-u _rom_start  --defsym check__rom_start=_rom_start \
 	-u obj_config  --defsym check_obj_config=obj_config \
 	-u _build_id   --defsym _build_id=0xaffeaffe \
@@ -125,7 +125,7 @@ ifeq ($(KBUILD_TARGET), freebsd)
 else
  TEMPLATE_iPxe_LDFLAGS  += -m elf_i386
 endif
- TEMPLATE_iPxe_LNK_DEPS := $(VBOX_PATH_IPXE_SRC)/src/arch/x86/scripts/pcbios.lds
+ TEMPLATE_iPxe_LNK_DEPS := $(VRA_PATH_IPXE_SRC)/src/arch/x86/scripts/pcbios.lds
  TEMPLATE_iPxe_CFLAGS    = \
  	-g \
 	-fno-pie \
@@ -150,9 +150,9 @@ endif
 	-Wall \
 	-W \
 	-Wformat-nonliteral \
-	$(VBOX_GCC_fno-stack-protector) \
-	$(VBOX_GCC_fno-dwarf2-cfi-asm) \
-	$(VBOX_GCC_Wno-address)
+	$(VRA_GCC_fno-stack-protector) \
+	$(VRA_GCC_fno-dwarf2-cfi-asm) \
+	$(VRA_GCC_Wno-address)
  TEMPLATE_iPxe_ASFLAGS = \
 	-ffreestanding \
 	-ffunction-sections \
@@ -173,9 +173,9 @@ endif
 	-Wall \
 	-W \
 	-Wformat-nonliteral \
-	$(VBOX_GCC_fno-stack-protector) \
-	$(VBOX_GCC_fno-dwarf2-cfi-asm) \
-	$(VBOX_GCC_Wno-address) \
+	$(VRA_GCC_fno-stack-protector) \
+	$(VRA_GCC_fno-dwarf2-cfi-asm) \
+	$(VRA_GCC_Wno-address) \
 	-DASSEMBLY \
 	-DASM_TCHAR=@ \
 	-DASM_TCHAR_OPS=@
@@ -187,7 +187,7 @@ endif
 	VERSION_PATCH=1  \
 	ASM_TCHAR=@ \
 	ASM_TCHAR_OPS=@
- ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+ ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
   TEMPLATE_iPxe_DEFS += \
   	VERSION="1.21.1" \
   	BUILD_NAME="VBox"
@@ -407,11 +407,11 @@ endif
  ipxezbin_CFLAGS   = -Wno-format -Wno-unused-function -Wno-pointer-arith
  ipxezbin_SOURCES  = src/util/zbin.c
  ipxezbin_DEFS     = _POSIX_C_SOURCE=200809L # For ssize_t and fileno() in stdio.h (mostly if GNU extensions disabled with -std=c23).
- ifdef VBOX_WITH_LIBLZMA
+ ifdef VRA_WITH_LIBLZMA
   ipxezbin_INCS     = $(SDK_VBoxLibLzma_INCS) # Can't use the proper SDK here as link order matters and liblzma depends on our runtime.
   ipxezbin_LIBS    = \
   	$(SDK_VBoxLibLzma_LIBS) \
-  	$(PATH_STAGE_LIB)/RuntimeBldProg$(VBOX_HOSTSUFF_LIB)
+  	$(PATH_STAGE_LIB)/RuntimeBldProg$(VRA_HOSTSUFF_LIB)
  else
   ipxezbin_LIBS = lzma # Assume it is installed on the system ready for linking
  endif

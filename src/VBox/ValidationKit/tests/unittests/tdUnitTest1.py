@@ -3,14 +3,14 @@
 # $Id: tdUnitTest1.py 113217 2026-03-03 11:28:12Z brent.paulson@oracle.com $
 
 """
-VirtualBox Validation Kit - Unit Tests.
+VirtualAgent Validation Kit - Unit Tests.
 """
 
 __copyright__ = \
 """
-Copyright (C) 2010-2026 Oracle and/or its affiliates.
+Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -80,8 +80,8 @@ class tdUnitTest1(vbox.TestDriver):
             'testcase/tstRTR0ThreadPreemptionDriver': '>=7.0.0',    # Driverless package.
             'testcase/tstRTR0TimerDriver':            '>=7.0.0',    # Driverless package.
             'testcase/tstDarwinKeyboard': '',                       # Fails for unknown reason.
-            'testcase/tstVBoxAPIXPCOM': '',                         # Can't instantiate the VirtualBox object
-                                                                    # (binary would need moving to the VirtualBox installation
+            'testcase/tstVBoxAPIXPCOM': '',                         # Can't instantiate the VirtualAgent object
+                                                                    # (binary would need moving to the VirtualAgent installation
                                                                     # directory, merely a compile time test anyway)
         },
         'darwin.arm64': {
@@ -245,7 +245,7 @@ class tdUnitTest1(vbox.TestDriver):
         'tstTestFactory': '',                           # some strange xpcom18a4 test, does not work
         'testcase/tstRTSemXRoads': '',                  # sporadically failed: Traffic - 8 threads per direction, 10 sec :
                                                         # FAILED (8 errors)
-        'tstVBoxAPILinux': '',                          # creates VirtualBox directories for root user because of sudo
+        'tstVBoxAPILinux': '',                          # creates VirtualAgent directories for root user because of sudo
                                                         # (should be in vbox)
         'testcase/tstVMStructDTrace': '',               # This is a D-script generator.
         'tstVMStructRC': '',                            # This is a C-code generator.
@@ -405,7 +405,7 @@ class tdUnitTest1(vbox.TestDriver):
         self.oSession    = None;
         self.oTxsSession = None;
 
-        # The VirtualBox installation root directory.
+        # The VirtualAgent installation root directory.
         self.sVBoxInstallRoot = None;
 
         ## Testing mode being used:
@@ -525,7 +525,7 @@ class tdUnitTest1(vbox.TestDriver):
             ];
             if utils.getHostOs() == 'darwin':
                 for i in range(1, len(asCandidates)):
-                    asCandidates[i] = os.path.join(asCandidates[i], 'VirtualBox.app', 'Contents', 'MacOS');
+                    asCandidates[i] = os.path.join(asCandidates[i], 'VirtualAgent.app', 'Contents', 'MacOS');
 
             for sCandidat in asCandidates:
                 # The path of tstVMStructSize acts as a beacon to know where all other testcases are.
@@ -678,7 +678,7 @@ class tdUnitTest1(vbox.TestDriver):
 
             # If this is an ASAN build and we're on linux, make sure we've got
             # libasan.so.N in the  LD_LIBRARY_PATH or stuff w/o a RPATH entry
-            # pointing to /opt/VirtualBox will fail (like tstAsmStructs).
+            # pointing to /opt/VirtualAgent will fail (like tstAsmStructs).
             if self.getBuildType() == 'asan'  and  utils.getHostOs() in ('linux',):
                 sLdLibraryPath = '';
                 if 'LD_LIBRARY_PATH' in os.environ:
@@ -781,7 +781,7 @@ class tdUnitTest1(vbox.TestDriver):
     def _figureVersion(self):
         """ Tries to figure which VBox version this is, setting self.aiVBoxVer. """
         try:
-            oVBox = self.oVBoxMgr.getVirtualBox();
+            oVBox = self.oVBoxMgr.getVirtualAgent();
             sVer = oVBox.version;
             sVer += 'r' + str(self.uRevision);
 

@@ -2,7 +2,7 @@
 
 __copyright__ = \
 """
-Copyright (C) 2012-2026 Oracle and/or its affiliates.
+Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -31,10 +31,10 @@ OTHER DEALINGS IN THE SOFTWARE.
 # - Install Python and verify it works (2.7.2 will do, 3.x is untested yet)
 # - On Windows: Install the PyWin32 extensions for your Python version
 #   (see http://sourceforge.net/projects/pywin32/)
-# - If not already done, set the environment variable "VBOX_INSTALL_PATH"
-#   to point to your VirtualBox installation directory (which in turn must have
+# - If not already done, set the environment variable "VRA_INSTALL_PATH"
+#   to point to your VirtualAgent installation directory (which in turn must have
 #   the "sdk" subfolder")
-# - Install the VirtualBox Python bindings by doing a
+# - Install the VirtualAgent Python bindings by doing a
 #   "[python] vboxapisetup.py install"
 # - Run this sample with "[python] clienttest.py"
 
@@ -53,14 +53,14 @@ def enumToString(constants, enum, elem):
 
 def main(argv):
 
-    from vboxapi import VirtualBoxManager
-    # This is a VirtualBox COM/XPCOM API client, no data needed.
-    mgr = VirtualBoxManager(None, None)
+    from vboxapi import VirtualAgentManager
+    # This is a VirtualAgent COM/XPCOM API client, no data needed.
+    mgr = VirtualAgentManager(None, None)
 
-    # Get the global VirtualBox object
-    vbox = mgr.getVirtualBox()
+    # Get the global VirtualAgent object
+    vbox = mgr.getVirtualAgent()
 
-    print "Running VirtualBox version %s" %(vbox.version)
+    print "Running VirtualAgent version %s" %(vbox.version)
 
     # Get all constants through the Python manager code
     vboxConstants = mgr.constants

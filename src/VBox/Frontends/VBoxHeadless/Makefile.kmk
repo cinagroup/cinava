@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -33,42 +33,42 @@ include $(PATH_SUB_CURRENT)/testcase/Makefile.kmk
 #
 # Hardened VBoxHeadless.
 #
-ifdef VBOX_WITH_HARDENING
+ifdef VRA_WITH_HARDENING
  PROGRAMS += VBoxHeadlessHardened
  VBoxHeadlessHardened_TEMPLATE = VBoxR3HardenedExe
- VBoxHeadlessHardened_DEFS   += $(if $(VBOX_WITH_DRIVERLESS_NEM_FALLBACK),VBOX_WITH_DRIVERLESS_NEM_FALLBACK,)
+ VBoxHeadlessHardened_DEFS   += $(if $(VRA_WITH_DRIVERLESS_NEM_FALLBACK),VRA_WITH_DRIVERLESS_NEM_FALLBACK,)
  VBoxHeadlessHardened_SOURCES = VBoxHeadlessHardened.cpp
  VBoxHeadlessHardened_NAME = VBoxHeadless
- $(call VBOX_SET_VER_INFO_DLL,VBoxHeadlessHardened,VirtualBox Headless Frontend,$(VBOX_WINDOWS_ICON_FILE)) # Version info / description.
+ $(call VRA_SET_VER_INFO_DLL,VBoxHeadlessHardened,VirtualAgent Headless Frontend,$(VRA_WINDOWS_ICON_FILE)) # Version info / description.
 endif
 
 
 #
 # VBoxHeadless
 #
-ifdef VBOX_WITH_HARDENING
+ifdef VRA_WITH_HARDENING
  DLLS     += VBoxHeadless
 else
  PROGRAMS += VBoxHeadless
 endif
-VBoxHeadless_TEMPLATE := $(if $(VBOX_WITH_HARDENING),VBoxMainClientDll,VBoxMainClientSignedExe)
-VBoxHeadless_DEFS     += $(if $(VBOX_WITH_RECORDING),VBOX_WITH_RECORDING,)
+VBoxHeadless_TEMPLATE := $(if $(VRA_WITH_HARDENING),VBoxMainClientDll,VBoxMainClientSignedExe)
+VBoxHeadless_DEFS     += $(if $(VRA_WITH_RECORDING),VRA_WITH_RECORDING,)
 VBoxHeadless_INCS      = \
-	$(VBOX_GRAPHICS_INCS) \
+	$(VRA_GRAPHICS_INCS) \
 	../Common
 VBoxHeadless_SOURCES   = \
 	VBoxHeadless.cpp \
 	../Common/PasswordInput.cpp
-ifdef VBOX_WITH_GUEST_PROPS
- VBoxHeadless_DEFS    += VBOX_WITH_GUEST_PROPS
+ifdef VRA_WITH_GUEST_PROPS
+ VBoxHeadless_DEFS    += VRA_WITH_GUEST_PROPS
 endif
-ifdef VBOX_WITH_HARDENING
- VBoxHeadless_LDFLAGS.darwin += -install_name $(VBOX_DYLD_EXECUTABLE_PATH)/VBoxHeadless.dylib
+ifdef VRA_WITH_HARDENING
+ VBoxHeadless_LDFLAGS.darwin += -install_name $(VRA_DYLD_EXECUTABLE_PATH)/VBoxHeadless.dylib
 endif
-ifdef VBOX_WITH_HARDENING
- $(call VBOX_SET_VER_INFO_DLL,VBoxHeadless,VirtualBox Headless Frontend (dll),$(VBOX_WINDOWS_ICON_FILE)) # Version info / description.
+ifdef VRA_WITH_HARDENING
+ $(call VRA_SET_VER_INFO_DLL,VBoxHeadless,VirtualAgent Headless Frontend (dll),$(VRA_WINDOWS_ICON_FILE)) # Version info / description.
 else
- $(call VBOX_SET_VER_INFO_EXE,VBoxHeadless,VirtualBox Headless Frontend,$(VBOX_WINDOWS_ICON_FILE)) # Version info / description.
+ $(call VRA_SET_VER_INFO_EXE,VBoxHeadless,VirtualAgent Headless Frontend,$(VRA_WINDOWS_ICON_FILE)) # Version info / description.
 endif
 
 include $(FILE_KBUILD_SUB_FOOTER)

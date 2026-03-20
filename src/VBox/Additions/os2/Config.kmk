@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,13 +25,13 @@
 # SPDX-License-Identifier: GPL-3.0-only
 #
 
-ifdef VBOX_ADDITIONS_OS2_CONFIG_KMK_INCLUDED
+ifdef VRA_ADDITIONS_OS2_CONFIG_KMK_INCLUDED
  $(error oops.)
 endif
-VBOX_ADDITIONS_OS2_CONFIG_KMK_INCLUDED = true
+VRA_ADDITIONS_OS2_CONFIG_KMK_INCLUDED = true
 
 # Include the top-level configure file.
-ifndef VBOX_ROOT_CONFIG_KMK_INCLUDED
+ifndef VRA_ROOT_CONFIG_KMK_INCLUDED
  include $(PATH_ROOT)/Config.kmk
 endif
 

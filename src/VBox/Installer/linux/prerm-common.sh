@@ -1,14 +1,14 @@
 #!/bin/sh
 # $Id: prerm-common.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# Oracle VirtualBox
-# VirtualBox Linux pre-uninstaller common portions
+# CINA VirtualAgent
+# VirtualAgent Linux pre-uninstaller common portions
 #
 
 #
-# Copyright (C) 2015-2026 Oracle and/or its affiliates.
+# Copyright (C) 2015-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -34,9 +34,9 @@
 # distributions installer.
 #
 # We assume that all required files are in the same folder as this script
-# (e.g. /opt/VirtualBox, /usr/lib/VirtualBox, the build output directory).
+# (e.g. /opt/VirtualAgent, /usr/lib/VirtualAgent, the build output directory).
 #
-# Script exit status: 0 on success, 1 if VirtualBox is running and can not be
+# Script exit status: 0 on success, 1 if VirtualAgent is running and can not be
 # stopped (installers may show an error themselves or just pass on standard
 # error).
 

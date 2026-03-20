@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -53,33 +53,33 @@ VBoxSampleDriver_LIBS     = \
 #
 # VBoxPlaygroundDevice - A device module demonstrating some unusual features.
 #
-ifdef VBOX_WITH_MAIN
+ifdef VRA_WITH_MAIN
  DLLS += VBoxPlaygroundDevice
  VBoxPlaygroundDevice_TEMPLATE = VBoxR3Dll
  VBoxPlaygroundDevice_SOURCES  = \
  	DevPlayground.cpp
  VBoxPlaygroundDevice_LIBS     = \
- 	$(PATH_STAGE_LIB)/VBoxCOM$(VBOX_SUFF_LIB) \
+ 	$(PATH_STAGE_LIB)/VBoxCOM$(VRA_SUFF_LIB) \
  	$(LIB_RUNTIME)
 endif
 
-ifdef VBOX_WITH_XPCOM
- ## @todo may be worth creating the VBOX_XPCOM SDK def, or just a SDK_VBOXXPCOM.
- VBoxPlaygroundDevice_DEFS += VBOX_WITH_XPCOM
- ifdef VBOX_WITH_XPCOM_NAMESPACE_CLEANUP
-  VBoxPlaygroundDevice_DEFS += VBOX_WITH_XPCOM_NAMESPACE_CLEANUP
+ifdef VRA_WITH_XPCOM
+ ## @todo may be worth creating the VRA_XPCOM SDK def, or just a SDK_VRAXPCOM.
+ VBoxPlaygroundDevice_DEFS += VRA_WITH_XPCOM
+ ifdef VRA_WITH_XPCOM_NAMESPACE_CLEANUP
+  VBoxPlaygroundDevice_DEFS += VRA_WITH_XPCOM_NAMESPACE_CLEANUP
  endif
  VBoxPlaygroundDevice_INCS += \
- 	$(VBOX_XPCOM_INCS)
+ 	$(VRA_XPCOM_INCS)
  VBoxPlaygroundDevice_INTERMEDIATES += \
- 	$(VBOX_PATH_SDK)/bindings/xpcom/include/VirtualBox_XPCOM.h
+ 	$(VRA_PATH_SDK)/bindings/xpcom/include/VirtualAgent_XPCOM.h
  VBoxPlaygroundDevice_LIBS += \
  	$(LIB_XPCOM)
 else  # COM
  VBoxPlaygroundDevice_INCS += \
- 	$(VBOX_PATH_SDK)/bindings/mscom/include
+ 	$(VRA_PATH_SDK)/bindings/mscom/include
  VBoxPlaygroundDevice_INTERMEDIATES += \
- 	$(VBOX_PATH_SDK)/bindings/mscom/include/VirtualBox.h
+ 	$(VRA_PATH_SDK)/bindings/mscom/include/VirtualAgent.h
 endif # COM
 
 
@@ -90,25 +90,25 @@ include $(FILE_KBUILD_SUB_FOOTER)
 # Installs the filter.
 #
 install-filter:
-	$(if-expr "$(VBOX_MANAGE)" == "",$(error VBOX_MANAGE is not defined,))
-	$(if-expr "$(VBOX_VMNAME)" == "",$(error VBOX_VMNAME is not defined,))
+	$(if-expr "$(VRA_MANAGE)" == "",$(error VRA_MANAGE is not defined,))
+	$(if-expr "$(VRA_VMNAME)" == "",$(error VRA_VMNAME is not defined,))
 # Make VBox load the driver
-	$(VBOX_MANAGE) setextradata "$(VBOX_VMNAME)" "VBoxInternal/PDM/Drivers/VBoxSampleDriver/Path" \
+	$(VRA_MANAGE) setextradata "$(VRA_VMNAME)" "VBoxInternal/PDM/Drivers/VBoxSampleDriver/Path" \
 		"$(if $(VBoxSampleDriver_1_INST_TARGET),$(VBoxSampleDriver_1_INST_TARGET),$(VBoxSampleDriver_1_TARGET))"
 # Configure the matching.
-	$(VBOX_MANAGE) setextradata "$(VBOX_VMNAME)" "VBoxInternal/PDM/DriverTransformations/StorageFilter/AboveDriver" \
+	$(VRA_MANAGE) setextradata "$(VRA_VMNAME)" "VBoxInternal/PDM/DriverTransformations/StorageFilter/AboveDriver" \
 		"VD"
 # The config of the injected driver.
-	$(VBOX_MANAGE) setextradata "$(VBOX_VMNAME)" "VBoxInternal/PDM/DriverTransformations/StorageFilter/AttachedDriver/Driver" \
+	$(VRA_MANAGE) setextradata "$(VRA_VMNAME)" "VBoxInternal/PDM/DriverTransformations/StorageFilter/AttachedDriver/Driver" \
 		"StorageFilter"
-	$(VBOX_MANAGE) setextradata "$(VBOX_VMNAME)" "VBoxInternal/PDM/DriverTransformations/StorageFilter/AttachedDriver/Config/AsyncIOSupported" \
+	$(VRA_MANAGE) setextradata "$(VRA_VMNAME)" "VBoxInternal/PDM/DriverTransformations/StorageFilter/AttachedDriver/Config/AsyncIOSupported" \
 		"1"
 
 uninstall-filter:
-	$(if-expr "$(VBOX_MANAGE)" == "",$(error VBOX_MANAGE is not defined,))
-	$(if-expr "$(VBOX_VMNAME)" == "",$(error VBOX_VMNAME is not defined,))
-	$(VBOX_MANAGE) showvminfo "$(VBOX_VMNAME)"
-	$(VBOX_MANAGE) setextradata "$(VBOX_VMNAME)" "VBoxInternal/PDM/Drivers/VBoxSampleDriver/Path"
-	$(VBOX_MANAGE) setextradata "$(VBOX_VMNAME)" "VBoxInternal/PDM/DriverTransformations/StorageFilter/AboveDriver"
-	$(VBOX_MANAGE) setextradata "$(VBOX_VMNAME)" "VBoxInternal/PDM/DriverTransformations/StorageFilter/AttachedDriver/Config/AsyncIOSupported"
+	$(if-expr "$(VRA_MANAGE)" == "",$(error VRA_MANAGE is not defined,))
+	$(if-expr "$(VRA_VMNAME)" == "",$(error VRA_VMNAME is not defined,))
+	$(VRA_MANAGE) showvminfo "$(VRA_VMNAME)"
+	$(VRA_MANAGE) setextradata "$(VRA_VMNAME)" "VBoxInternal/PDM/Drivers/VBoxSampleDriver/Path"
+	$(VRA_MANAGE) setextradata "$(VRA_VMNAME)" "VBoxInternal/PDM/DriverTransformations/StorageFilter/AboveDriver"
+	$(VRA_MANAGE) setextradata "$(VRA_VMNAME)" "VBoxInternal/PDM/DriverTransformations/StorageFilter/AttachedDriver/Config/AsyncIOSupported"
 

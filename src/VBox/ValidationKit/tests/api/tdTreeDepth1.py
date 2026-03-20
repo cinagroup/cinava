@@ -3,14 +3,14 @@
 # $Id: tdTreeDepth1.py 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 
 """
-VirtualBox Validation Kit - Medium and Snapshot Tree Depth Test #1
+VirtualAgent Validation Kit - Medium and Snapshot Tree Depth Test #1
 """
 
 __copyright__ = \
 """
-Copyright (C) 2010-2026 Oracle and/or its affiliates.
+Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -101,12 +101,12 @@ class SubTstDrvTreeDepth1(base.SubTestDriverBase):
     def getNumOfHDsFromHardDisksArray(self):
         """
         Helper routine for counting the hard disks that belong to this VM which are
-        contained in the global IVirtualBox::hardDisks[] array (which contains base media
+        contained in the global IVirtualAgent::hardDisks[] array (which contains base media
         only).
         """
         cDisks = 0;
         aoHDs = self.oTstDrv.oVBoxMgr.getArray(self.oTstDrv.oVBox, 'hardDisks');
-        # Walk the IVirtualBox::hardDisks[] array for hard disks belonging to this VM.
+        # Walk the IVirtualAgent::hardDisks[] array for hard disks belonging to this VM.
         # The array may contain entries from other VMs created by previous API tessts
         # which haven't unregistered and deleted their VM's configuration.  The location
         # attribute of each disk looks similar to:
@@ -233,7 +233,7 @@ class SubTstDrvTreeDepth1(base.SubTestDriverBase):
             return False;
         oVM = None;
 
-        # If there are no base media belonging to this VM in the global IVirtualBox::hardDisks[]
+        # If there are no base media belonging to this VM in the global IVirtualAgent::hardDisks[]
         # array (expected) then there are no leftover child images either.
         cNumDisks = self.getNumOfHDsFromHardDisksArray();
         reporter.log('After unregister(DetachAllReturnHardDisksOnly): API reports %d base images (should be zero)' % (cNumDisks));
@@ -275,7 +275,7 @@ class SubTstDrvTreeDepth1(base.SubTestDriverBase):
         # disks.
         time.sleep(3);
 
-        # If there are no base media belonging to this VM in the global IVirtualBox::hardDisks[]
+        # If there are no base media belonging to this VM in the global IVirtualAgent::hardDisks[]
         # array (expected) then there are no leftover child images either.
         cNumDisks = self.getNumOfHDsFromHardDisksArray();
         reporter.log('After unregister(UnregisterOnly): API reports %d base images (should be zero)' % (cNumDisks));
@@ -329,7 +329,7 @@ class SubTstDrvTreeDepth1(base.SubTestDriverBase):
             return False;
         oVM = None;
 
-        # If there are no base media belonging to this VM in the global IVirtualBox::hardDisks[]
+        # If there are no base media belonging to this VM in the global IVirtualAgent::hardDisks[]
         # array (expected) then there are no leftover child images either.
         cNumDisks = self.getNumOfHDsFromHardDisksArray();
         reporter.log('After unregister(DetachAllReturnHardDisksOnly): API reports %d base images (should be zero)' % (cNumDisks));
@@ -371,7 +371,7 @@ class SubTstDrvTreeDepth1(base.SubTestDriverBase):
         # snapshots.
         time.sleep(3);
 
-        # If there are no base media belonging to this VM in the global IVirtualBox::hardDisks[]
+        # If there are no base media belonging to this VM in the global IVirtualAgent::hardDisks[]
         # array (expected) then there are no leftover child images either.
         cNumDisks = self.getNumOfHDsFromHardDisksArray();
         reporter.log('After unregister(UnregisterOnly): API reports %d base images (should be zero)' % (cNumDisks));

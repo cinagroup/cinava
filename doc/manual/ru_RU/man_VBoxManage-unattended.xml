@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage unattended
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -148,7 +148,7 @@
         </varlistentry>
         <varlistentry>
           <term><option>--install-additions</option>, <option>--no-install-additions</option></term>
-          <listitem><para>Устанавливать ли Дополнения Гостевой ОС VirtualBox.  (по умолчанию: --no-install-additions)</para></listitem>
+          <listitem><para>Устанавливать ли Дополнения Гостевой ОС VirtualAgent.  (по умолчанию: --no-install-additions)</para></listitem>
         </varlistentry>
         <varlistentry>
           <term><option>--additions-iso=<replaceable>iso-дополнений</replaceable></option></term>
@@ -158,13 +158,13 @@
         <varlistentry>
           <term><option>--install-txs</option>, <option>--no-install-txs</option></term>
           <listitem>
-            <para>Инсталлировать ли службу выполнения тестов (TXS) из VirtualBox ValidationKit.
+            <para>Инсталлировать ли службу выполнения тестов (TXS) из VirtualAgent ValidationKit.
               Это полезно при подготовке ВМ к тестированию или подобной работы. (по умолчанию: --no-install-txs)</para></listitem>
         </varlistentry>
         <varlistentry>
           <term><option>--validation-kit-iso=<replaceable>iso-тестирования</replaceable></option></term>
           <listitem>
-            <para>Путь к VirtualBox ValidationKit ISO. Опция необходима если указана <option>--install-txs</option>
+            <para>Путь к VirtualAgent ValidationKit ISO. Опция необходима если указана <option>--install-txs</option>
             </para></listitem>
         </varlistentry>
         <varlistentry>

@@ -5,9 +5,9 @@
 #
 
 #
-# Copyright (C) 2014-2026 Oracle and/or its affiliates.
+# Copyright (C) 2014-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -85,7 +85,7 @@ for strFullAbsoluteName in $pngFiles; do
         # Increment index:
         let iOutputFileIndex++
         # Re-fetch output-file name:
-        strOutputFileName=VirtualBox$iOutputFileIndex$strSuffix.qrc
+        strOutputFileName=VirtualAgent$iOutputFileIndex$strSuffix.qrc
         # Write output-file header:
         if [ "$fVerbose" = true ]; then echo "Writing header for file: $strOutputFileName"; fi
         echo "<RCC>" > $strOutputFileName

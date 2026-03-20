@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2024-2026 Oracle and/or its affiliates.
+# Copyright (C) 2024-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -76,12 +76,12 @@ VBox-libslirp_SOURCES = \
 ## UPGRADE: Must update include/slirp/libslirp-version.h
 OTHERS      += $(VBox-libslirp_0_OUTDIR)/libslirp-version.h-check
 OTHER_CLEAN += $(VBox-libslirp_0_OUTDIR)/libslirp-version.h-check
-VBOX_LIBSLIRP_BASE_VERSION := $(patsubst libslirp-%,%,$(notdir $(PATH_SUB_CURRENT)))
+VRA_LIBSLIRP_BASE_VERSION := $(patsubst libslirp-%,%,$(notdir $(PATH_SUB_CURRENT)))
 $$(VBox-libslirp_0_OUTDIR)/libslirp-version.h-check: $(PATH_SUB_CURRENT)/include/slirp/libslirp-version.h | $$(dir $$@)
 	$(call MSG_L2,Checking that libslirp-version.h is up-to-date)
 	$(SED) \
 		-e '/define  *SLIRP_VERSION_STRING /!d' \
-		-e '/ SLIRP_VERSION_STRING *["]$(subst .,[.],$(VBOX_LIBSLIRP_BASE_VERSION))[.]/d' \
+		-e '/ SLIRP_VERSION_STRING *["]$(subst .,[.],$(VRA_LIBSLIRP_BASE_VERSION))[.]/d' \
 		-e 'q1' \
                $<
 	$(TOUCH) $@

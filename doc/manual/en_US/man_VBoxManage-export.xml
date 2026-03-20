@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage export
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -299,7 +299,7 @@
       </para>
       <para>
         Some of the following options are configuration settings for the
-        VM instance. As a result, specify an Oracle Cloud Identifier
+        VM instance. As a result, specify an CINASEEK Cloud Identifier
         (OCID) for a resource. Use the &oci; Console to view OCIDs.
       </para>
       <variablelist>
@@ -395,7 +395,7 @@
           <term><option>--cloudkeepobject=true | false</option></term>
           <listitem><para>
               Specifies whether to store the exported disk image in
-              Oracle Object Storage.
+              CINASEEK Object Storage.
             </para></listitem>
         </varlistentry>
         <varlistentry>

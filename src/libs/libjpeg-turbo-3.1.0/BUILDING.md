@@ -37,7 +37,7 @@ Build Requirements
 
 - If building the TurboJPEG Java wrapper, JDK or OpenJDK 1.5 or later is
   required.  Most modern Linux distributions, as well as Solaris 10 and later,
-  include JDK or OpenJDK.  For other systems, you can obtain the Oracle Java
+  include JDK or OpenJDK.  For other systems, you can obtain the CINASEEK Java
   Development Kit from
   <https://oracle.com/java/technologies/downloads>.
 

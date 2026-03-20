@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2012-2026 Oracle and/or its affiliates.
+# Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 #
 # This code is based on:
 #
-# VirtualBox Guest Additions for Haiku.
+# VirtualAgent Guest Additions for Haiku.
 # Copyright (c) 2011 Mike Smith <mike@scgtrp.net>
 #                    François Revol <revol@free.fr>
 #
@@ -57,12 +57,12 @@
 SUB_DEPTH = ../../../../../..
 include	$(KBUILD_PATH)/subheader.kmk
 
-ifdef VBOX_WITH_ADDITION_DRIVERS
+ifdef VRA_WITH_ADDITION_DRIVERS
  SYSMODS += vboxvideo
 endif
 
 #
-# Populate FILES_VBOXSF_NOBIN
+# Populate FILES_VRASF_NOBIN
 #
 #include $(PATH_SUB_CURRENT)/files_VBoxVideo
 
@@ -72,14 +72,14 @@ endif
 #
 vboxvideo_TEMPLATE        = VBoxGuestR0Drv
 vboxvideo_DEFS            = \
-	MODULE IN_RT_R0 VBOXGUEST VBOX_WITH_HGCM \
+	MODULE IN_RT_R0 VRAGUEST VRA_WITH_HGCM \
 	KBUILD_MODNAME=KBUILD_STR\(VBoxVideo\) \
 	KBUILD_BASENAME=KBUILD_STR\(VBoxVideo\)
 vboxvideo_INCS            = \
 	$(PATH_ROOT)/src/VBox/Additions/common/VBoxGuestLib \
 	$(PATH_ROOT)/src/VBox/Additions/common/VBoxGuest \
 	$(PATH_ROOT)/src/VBox/Runtime/r0drv/haiku \
-	$(VBOX_GRAPHICS_INCS)
+	$(VRA_GRAPHICS_INCS)
 vboxvideo_SOURCES         = \
 	driver.cpp \
 	$(PATH_ROOT)/src/VBox/Additions/common/VBoxVideo/HGSMIBase.cpp \
@@ -88,8 +88,8 @@ vboxvideo_SOURCES         = \
 	$(PATH_ROOT)/src/VBox/Additions/common/VBoxVideo/VBVABase.cpp \
 	$(PATH_ROOT)/src/VBox/Additions/common/VBoxGuest/VBoxGuest-haiku-stubs.c
 vboxvideo_LIBS            = \
-	$(VBOX_LIB_VBGL_R0) \
-	$(VBOX_PATH_ADDITIONS_LIB)/HGSMIGuestR0Lib$(VBOX_SUFF_LIB)
+	$(VRA_LIB_VBGL_R0) \
+	$(VRA_PATH_ADDITIONS_LIB)/HGSMIGuestR0Lib$(VRA_SUFF_LIB)
 
 include	$(KBUILD_PATH)/subfooter.kmk
 

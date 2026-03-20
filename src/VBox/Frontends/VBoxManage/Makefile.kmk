@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -32,45 +32,45 @@ include $(PATH_ROOT)/doc/manual/Config.kmk
 
 
 # Common defines. Sort alphabetically!
-VBOX_COMMON_VBOXMANAGE_DEFS = \
-	$(if $(VBOX_WITH_AHCI), VBOX_WITH_AHCI) \
-	$(if $(VBOX_WITH_AUDIO_ALSA), VBOX_WITH_AUDIO_ALSA) \
-	$(if $(VBOX_WITH_AUDIO_OSS), VBOX_WITH_AUDIO_OSS) \
-	$(if $(VBOX_WITH_AUDIO_PULSE),VBOX_WITH_AUDIO_PULSE) \
-	$(if $(VBOX_WITH_AUDIO_RECORDING),VBOX_WITH_AUDIO_RECORDING) \
-	$(if $(VBOX_WITH_CLOUD_NET), VBOX_WITH_CLOUD_NET) \
-	$(if $(VBOX_WITH_COPYTOGUEST),VBOX_WITH_COPYTOGUEST) \
-	$(if $(VBOX_WITH_E1000),VBOX_WITH_E1000) \
-	$(if $(VBOX_WITH_FULL_VM_ENCRYPTION),VBOX_WITH_FULL_VM_ENCRYPTION) \
-	$(if $(VBOX_WITH_GUEST_CONTROL),VBOX_WITH_GUEST_CONTROL) \
-	$(if $(VBOX_WITH_GUEST_PROPS),VBOX_WITH_GUEST_PROPS) \
-	$(if $(VBOX_WITH_HEADLESS), VBOX_WITH_HEADLESS) \
-	$(if $(VBOX_WITH_HGCM), VBOX_WITH_HGCM) \
-	$(if $(VBOX_WITH_HOSTNETIF_API), VBOX_WITH_HOSTNETIF_API) \
-	$(if $(VBOX_WITH_IOMMU_AMD),VBOX_WITH_IOMMU_AMD) \
-	$(if $(VBOX_WITH_IOMMU_INTEL),VBOX_WITH_IOMMU_INTEL) \
-	$(if $(VBOX_WITH_MAIN_NLS),VBOX_WITH_MAIN_NLS) \
-	$(if $(VBOX_WITH_NAT_SERVICE),VBOX_WITH_NAT_SERVICE) \
-	$(if $(VBOX_WITH_NETFLT), VBOX_WITH_NETFLT) \
-	$(if $(VBOX_WITH_PCI_PASSTHROUGH),VBOX_WITH_PCI_PASSTHROUGH) \
-	$(if $(VBOX_WITH_RECORDING),VBOX_WITH_RECORDING) \
-	$(if $(VBOX_WITH_SCSI), VBOX_WITH_SCSI) \
-	$(if $(VBOX_WITH_SHARED_CLIPBOARD),VBOX_WITH_SHARED_CLIPBOARD) \
-	$(if $(VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS),VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS) \
-	$(if $(VBOX_WITH_TPM),VBOX_WITH_TPM) \
-	$(if $(VBOX_WITH_UPDATE_AGENT), VBOX_WITH_UPDATE_AGENT) \
-	$(if $(VBOX_WITH_USB_CARDREADER),VBOX_WITH_USB_CARDREADER) \
-	$(if $(VBOX_WITH_VBOXSDL), VBOX_WITH_VBOXSDL) \
-	$(if $(VBOX_WITH_VIRTIO),VBOX_WITH_VIRTIO) \
-	$(if $(VBOX_WITH_VIRTIO_NET_1_0),VBOX_WITH_VIRTIO_NET_1_0) \
-	$(if $(VBOX_WITH_VMSVGA),VBOX_WITH_VMSVGA) \
-	$(if-expr defined(VBOX_WITH_VMNET) && "$(KBUILD_TARGET)"=="darwin",VBOX_WITH_VMNET,)
+VRA_COMMON_VRAMANAGE_DEFS = \
+	$(if $(VRA_WITH_AHCI), VRA_WITH_AHCI) \
+	$(if $(VRA_WITH_AUDIO_ALSA), VRA_WITH_AUDIO_ALSA) \
+	$(if $(VRA_WITH_AUDIO_OSS), VRA_WITH_AUDIO_OSS) \
+	$(if $(VRA_WITH_AUDIO_PULSE),VRA_WITH_AUDIO_PULSE) \
+	$(if $(VRA_WITH_AUDIO_RECORDING),VRA_WITH_AUDIO_RECORDING) \
+	$(if $(VRA_WITH_CLOUD_NET), VRA_WITH_CLOUD_NET) \
+	$(if $(VRA_WITH_COPYTOGUEST),VRA_WITH_COPYTOGUEST) \
+	$(if $(VRA_WITH_E1000),VRA_WITH_E1000) \
+	$(if $(VRA_WITH_FULL_VM_ENCRYPTION),VRA_WITH_FULL_VM_ENCRYPTION) \
+	$(if $(VRA_WITH_GUEST_CONTROL),VRA_WITH_GUEST_CONTROL) \
+	$(if $(VRA_WITH_GUEST_PROPS),VRA_WITH_GUEST_PROPS) \
+	$(if $(VRA_WITH_HEADLESS), VRA_WITH_HEADLESS) \
+	$(if $(VRA_WITH_HGCM), VRA_WITH_HGCM) \
+	$(if $(VRA_WITH_HOSTNETIF_API), VRA_WITH_HOSTNETIF_API) \
+	$(if $(VRA_WITH_IOMMU_AMD),VRA_WITH_IOMMU_AMD) \
+	$(if $(VRA_WITH_IOMMU_INTEL),VRA_WITH_IOMMU_INTEL) \
+	$(if $(VRA_WITH_MAIN_NLS),VRA_WITH_MAIN_NLS) \
+	$(if $(VRA_WITH_NAT_SERVICE),VRA_WITH_NAT_SERVICE) \
+	$(if $(VRA_WITH_NETFLT), VRA_WITH_NETFLT) \
+	$(if $(VRA_WITH_PCI_PASSTHROUGH),VRA_WITH_PCI_PASSTHROUGH) \
+	$(if $(VRA_WITH_RECORDING),VRA_WITH_RECORDING) \
+	$(if $(VRA_WITH_SCSI), VRA_WITH_SCSI) \
+	$(if $(VRA_WITH_SHARED_CLIPBOARD),VRA_WITH_SHARED_CLIPBOARD) \
+	$(if $(VRA_WITH_SHARED_CLIPBOARD_TRANSFERS),VRA_WITH_SHARED_CLIPBOARD_TRANSFERS) \
+	$(if $(VRA_WITH_TPM),VRA_WITH_TPM) \
+	$(if $(VRA_WITH_UPDATE_AGENT), VRA_WITH_UPDATE_AGENT) \
+	$(if $(VRA_WITH_USB_CARDREADER),VRA_WITH_USB_CARDREADER) \
+	$(if $(VRA_WITH_VRASDL), VRA_WITH_VRASDL) \
+	$(if $(VRA_WITH_VIRTIO),VRA_WITH_VIRTIO) \
+	$(if $(VRA_WITH_VIRTIO_NET_1_0),VRA_WITH_VIRTIO_NET_1_0) \
+	$(if $(VRA_WITH_VMSVGA),VRA_WITH_VMSVGA) \
+	$(if-expr defined(VRA_WITH_VMNET) && "$(KBUILD_TARGET)"=="darwin",VRA_WITH_VMNET,)
 
 
-ifndef VBOX_ONLY_DOCS
+ifndef VRA_ONLY_DOCS
  PROGRAMS += VBoxManage
  VBoxManage_TEMPLATE   = VBoxMainClientExe
- VBoxManage_DEFS      += $(VBOX_COMMON_VBOXMANAGE_DEFS)
+ VBoxManage_DEFS      += $(VRA_COMMON_VRAMANAGE_DEFS)
  VBoxManage_DEFS.win   = _WIN32_WINNT=0x0500
  VBoxManage_INCS = \
  	$(VBoxManage_0_OUTDIR) \
@@ -87,9 +87,9 @@ ifndef VBOX_ONLY_DOCS
  	VBoxManageDebugVM.cpp \
  	VBoxManageDHCPServer.cpp \
  	VBoxManageDisk.cpp \
- 	$(if $(VBOX_WITH_GUEST_CONTROL),VBoxManageGuestCtrl.cpp) \
- 	$(if $(VBOX_WITH_GUEST_CONTROL),VBoxManageGuestCtrlListener.cpp) \
- 	$(if $(VBOX_WITH_GUEST_PROPS),VBoxManageGuestProp.cpp) \
+ 	$(if $(VRA_WITH_GUEST_CONTROL),VBoxManageGuestCtrl.cpp) \
+ 	$(if $(VRA_WITH_GUEST_CONTROL),VBoxManageGuestCtrlListener.cpp) \
+ 	$(if $(VRA_WITH_GUEST_PROPS),VBoxManageGuestProp.cpp) \
  	VBoxManageHelp.cpp \
  	$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.cpp \
  	$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_en_US.cpp \
@@ -103,10 +103,10 @@ ifndef VBOX_ONLY_DOCS
  	VBoxManageObjectTracker.cpp \
  	VBoxManageSnapshot.cpp \
  	VBoxManageStorageController.cpp \
- 	$(if $(VBOX_WITH_UPDATE_AGENT),VBoxManageUpdateCheck.cpp) \
+ 	$(if $(VRA_WITH_UPDATE_AGENT),VBoxManageUpdateCheck.cpp) \
  	VBoxManageUSB.cpp \
- 	$(if $(VBOX_WITH_NAT_SERVICE),VBoxManageNATNetwork.cpp,) \
- 	$(if $(VBOX_WITH_NAT_SERVICE),../../NetworkServices/NetLib/VBoxNetPortForwardString.cpp,) \
+ 	$(if $(VRA_WITH_NAT_SERVICE),VBoxManageNATNetwork.cpp,) \
+ 	$(if $(VRA_WITH_NAT_SERVICE),../../NetworkServices/NetLib/VBoxNetPortForwardString.cpp,) \
  	VBoxManageCloud.cpp \
  	VBoxManageCloudMachine.cpp \
  	../Common/PasswordInput.cpp
@@ -114,42 +114,42 @@ ifndef VBOX_ONLY_DOCS
  	VBoxManage.rc
  VBoxManage_LIBS      += $(LIB_DDU)
 
- ifdef VBOX_WITH_VBOXMANAGE_NLS
-  VBOX_PATH_VBOXMANAGE_SRC := $(PATH_SUB_CURRENT)
+ ifdef VRA_WITH_VRAMANAGE_NLS
+  VRA_PATH_VRAMANAGE_SRC := $(PATH_SUB_CURRENT)
   include $(PATH_SUB_CURRENT)/nls/ApprovedLanguages.kmk
 
-  VBoxManage_DEFS     += VBOX_WITH_VBOXMANAGE_NLS
+  VBoxManage_DEFS     += VRA_WITH_VRAMANAGE_NLS
   VBoxManage_INCS     += \
   	$(PATH_ROOT)/src/VBox/Main/include
   VBoxManage_SOURCES  += \
-  	$(PATH_ROOT)/src/VBox/Main/src-all/VirtualBoxTranslator.cpp \
+  	$(PATH_ROOT)/src/VBox/Main/src-all/VirtualAgentTranslator.cpp \
   	$(PATH_ROOT)/src/VBox/Main/src-all/QMTranslatorImpl.cpp \
   	$(PATH_ROOT)/src/VBox/Main/src-all/GlobalStatusConversion.cpp
 
-  #	$(addsuffix /VBoxManageBuiltInHelp.cpp,$(addprefix $(VBoxManage_0_OUTDIR)/,$(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES)))
+  #	$(addsuffix /VBoxManageBuiltInHelp.cpp,$(addprefix $(VBoxManage_0_OUTDIR)/,$(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES)))
   #VBoxManage_INTERMEDIATES += \
-  #	$(addsuffix /VBoxManageBuiltInHelp.h,$(addprefix $(VBoxManage_0_OUTDIR)/,$(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES)))
+  #	$(addsuffix /VBoxManageBuiltInHelp.h,$(addprefix $(VBoxManage_0_OUTDIR)/,$(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES)))
 
   # define qt6 tools for translation
   USES += qt6
 
   PROGRAMS += VBoxManageNls
   VBoxManageNls_TEMPLATE = VBoxNLS
-  VBoxManageNls_QT_TRANSLATIONS = $(addsuffix .ts,$(addprefix $(VBOX_PATH_VBOXMANAGE_SRC)/nls/VBoxManageNls_,$(VBOX_APPROVED_VBOXMANAGE_LANGUAGES)))
-  VBoxManageNls_VBOX_ALL_NLS_SOURCES = $(wildcard \
-  		$(VBOX_PATH_VBOXMANAGE_SRC)/*.h \
-  		$(VBOX_PATH_VBOXMANAGE_SRC)/*.cpp )
+  VBoxManageNls_QT_TRANSLATIONS = $(addsuffix .ts,$(addprefix $(VRA_PATH_VRAMANAGE_SRC)/nls/VBoxManageNls_,$(VRA_APPROVED_VRAMANAGE_LANGUAGES)))
+  VBoxManageNls_VRA_ALL_NLS_SOURCES = $(wildcard \
+  		$(VRA_PATH_VRAMANAGE_SRC)/*.h \
+  		$(VRA_PATH_VRAMANAGE_SRC)/*.cpp )
 
-  updatenls:: makeallnls $(VBOX_PATH_VBOXMANAGE_SRC)/nls/VBoxManageNls_en.ts
+  updatenls:: makeallnls $(VRA_PATH_VRAMANAGE_SRC)/nls/VBoxManageNls_en.ts
 
-  makeallnls:: $(VBoxManageNls_VBOX_ALL_NLS_SOURCES)
+  makeallnls:: $(VBoxManageNls_VRA_ALL_NLS_SOURCES)
 	$(call MSG_L1,lupdate all languages (nls/*.ts))
 	$(QUIET)$(TOOL_QT6_LUPDATE) \
 		$^ \
 		-locations none \
 		-ts \
 		$(filter-out nls/VBoxManageNls_en.ts, $(VBoxManageNls_QT_TRANSLATIONS)) \
-		$(VBOX_PATH_VBOXMANAGE_SRC)/nls/VBoxManageNls_xx_YY.ts
+		$(VRA_PATH_VRAMANAGE_SRC)/nls/VBoxManageNls_xx_YY.ts
 
   # fake-main-nls:
   #	$(foreach file, $(VBoxManageNls_QT_TRANSLATIONS) \
@@ -165,7 +165,7 @@ ifndef VBOX_ONLY_DOCS
 
   # Create the English translation file. This is something special cause it will
   # contain the plural forms only.
-  $(VBOX_PATH_VBOXMANAGE_SRC)/nls/VBoxManageNls_en.ts: $(VBoxManageNls_VBOX_ALL_NLS_SOURCES)
+  $(VRA_PATH_VRAMANAGE_SRC)/nls/VBoxManageNls_en.ts: $(VBoxManageNls_VRA_ALL_NLS_SOURCES)
 	$(call MSG_L1,lupdate $@)
 	$(QUIET)$(TOOL_QT6_LUPDATE) \
 		$^ \
@@ -180,13 +180,13 @@ ifndef VBOX_ONLY_DOCS
 		-e '/<\/context>/{H;x;/<message/p}' \
 		"$@"
 
- endif # VBOX_WITH_VBOXMANAGE_NLS
+ endif # VRA_WITH_VRAMANAGE_NLS
 
 
  # VBoxNetPortForwardString.h
  VBoxManageNATNetwork.cpp_INCS += ../../NetworkServices/NetLib/
 
-endif # VBOX_ONLY_DOCS
+endif # VRA_ONLY_DOCS
 
 ifneq ($(KBUILD_TARGET),win)
  # Workaround for buggy gcc-4.3 compilers, see
@@ -196,7 +196,7 @@ ifneq ($(KBUILD_TARGET),win)
  # Some later revisions of version 4.3.1 are known to work so we assume
  # that version 4.3.2 or later has this bug definitely fixed.
  VBoxManage_CXXFLAGS.release += \
- 	$(if $(VBOX_GCC_VERSION_CXX),$(if-expr $(VBOX_GCC_VERSION_CXX) < 40300 || $(VBOX_GCC_VERSION_CXX) > 40301,,--param max-fields-for-field-sensitive=0),)
+ 	$(if $(VRA_GCC_VERSION_CXX),$(if-expr $(VRA_GCC_VERSION_CXX) < 40300 || $(VRA_GCC_VERSION_CXX) > 40301,,--param max-fields-for-field-sensitive=0),)
  VBoxManageHelp_CXXFLAGS.release = $(VBoxManage_CXXFLAGS.release)
 endif
 
@@ -207,23 +207,23 @@ endif
 $(call KB_FN_DO_PASS0_ON_TARGET,VBoxManage)
 
 VBoxManage_CLEAN += \
-	$(VBOX_XML_CATALOG) \
-	$(VBOX_XML_CATALOG_DOCBOOK) \
-	$(VBOX_XML_CATALOG_MANUAL) \
-	$(VBOX_XML_ENTITIES) \
-	$(addprefix $(VBOX_PATH_MANUAL_OUTBASE)/en_US/, $(VBOX_XML_XREF_TO_TEXT) $(VBOX_XML_XREF_TO_TEXT).cat) \
+	$(VRA_XML_CATALOG) \
+	$(VRA_XML_CATALOG_DOCBOOK) \
+	$(VRA_XML_CATALOG_MANUAL) \
+	$(VRA_XML_ENTITIES) \
+	$(addprefix $(VRA_PATH_MANUAL_OUTBASE)/en_US/, $(VRA_XML_XREF_TO_TEXT) $(VRA_XML_XREF_TO_TEXT).cat) \
 	$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_en_US.cpp \
 	$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_en_US.cpp.ts \
 	$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.cpp \
 	$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.cpp.ts \
 	$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.h \
 	$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.h.ts \
-	$(addprefix $(VBoxManage_0_OUTDIR)/,$(filter man_VBoxManage-%,$(VBOX_MANUAL_XML_REFENTRY_FILES)))
+	$(addprefix $(VBoxManage_0_OUTDIR)/,$(filter man_VBoxManage-%,$(VRA_MANUAL_XML_REFENTRY_FILES)))
 
 # Preprocess the xml files, applying remarks.
-$(foreach file,$(filter man_VBoxManage-%,$(VBOX_MANUAL_XML_REFENTRY_FILES)) \
+$(foreach file,$(filter man_VBoxManage-%,$(VRA_MANUAL_XML_REFENTRY_FILES)) \
 , $(evalcall2 def_vbox_refentry_preprocess_for_manpage,$(VBoxManage_0_OUTDIR),$(file), \
-	$(VBOX_PATH_MANUAL_SRC)/en_US/$(file),replace-xrefs,en_US))
+	$(VRA_PATH_MANUAL_SRC)/en_US/$(file),replace-xrefs,en_US))
 
 
 ##
@@ -234,16 +234,16 @@ $(foreach file,$(filter man_VBoxManage-%,$(VBOX_MANUAL_XML_REFENTRY_FILES)) \
 # @param    2    language code.
 define def_vbox_man_generate_cpp_help
  ifneq ($(2),en_US)
-  VBOX_DOCBOOK_REFENTRY_TO_C_HELP_$(2) = $(VBOX_PATH_MANUAL_SRC)/$(2)/docbook-refentry-to-C-help.xsl
+  VRA_DOCBOOK_REFENTRY_TO_C_HELP_$(2) = $(VRA_PATH_MANUAL_SRC)/$(2)/docbook-refentry-to-C-help.xsl
  else
-  VBOX_DOCBOOK_REFENTRY_TO_C_HELP_$(2) = $(VBOX_DOCBOOK_REFENTRY_TO_C_HELP)
+  VRA_DOCBOOK_REFENTRY_TO_C_HELP_$(2) = $(VRA_DOCBOOK_REFENTRY_TO_C_HELP)
  endif
  $$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_$(2).cpp.ts \
  +| $$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_$(2).cpp: \
- 		$$(VBOX_DOCBOOK_REFENTRY_TO_C_HELP_$(2)) \
- 		$$(VBOX_DOCBOOK_REFENTRY_TO_C_HELP) \
- 		$$(addprefix $(1)/,$$(filter man_VBoxManage-%,$$(VBOX_MANUAL_XML_REFENTRY_FILES))) \
- 		$$(VBOX_XML_CATALOG) $$(VBOX_XML_CATALOG_DOCBOOK) $$(MAKEFILE) | $$$$(dir $$$$@)
+ 		$$(VRA_DOCBOOK_REFENTRY_TO_C_HELP_$(2)) \
+ 		$$(VRA_DOCBOOK_REFENTRY_TO_C_HELP) \
+ 		$$(addprefix $(1)/,$$(filter man_VBoxManage-%,$$(VRA_MANUAL_XML_REFENTRY_FILES))) \
+ 		$$(VRA_XML_CATALOG) $$(VRA_XML_CATALOG_DOCBOOK) $$(MAKEFILE) | $$$$(dir $$$$@)
 	$$(call MSG_TOOL,xsltproc $$(notdir $$(firstword $$(filter %.xsl,$$^))),,$$(filter %.xml,$$^),$$(patsubst %.ts,%,$$@))
 	$$(QUIET)$$(APPEND) -tn "$$@" \
 		'/* Autogenerated by $$<, do not edit! */' \
@@ -257,8 +257,8 @@ define def_vbox_man_generate_cpp_help
 		'RT_C_DECLS_END' \
 		'' \
 	$$(foreach refentry,$$(filter %.xml,$$^) \
-	,$$(NLTAB)$$(QUIET)$$(call VBOX_XSLTPROC_WITH_CAT, -a+to "$$@") \
-		 --path '$(VBOX_PATH_MANUAL_SRC)/$(2) $(VBOX_PATH_MANUAL_SRC)/en_US' $$< $$(refentry))
+	,$$(NLTAB)$$(QUIET)$$(call VRA_XSLTPROC_WITH_CAT, -a+to "$$@") \
+		 --path '$(VRA_PATH_MANUAL_SRC)/$(2) $(VRA_PATH_MANUAL_SRC)/en_US' $$< $$(refentry))
 	$$(QUIET)$$(APPEND) -n "$$@" \
 		'' \
 		'PCRTMSGREFENTRY     g_apHelpEntries_$(2)[] =' \
@@ -284,7 +284,7 @@ $(evalcall2 def_vbox_man_generate_cpp_help, $(VBoxManage_0_OUTDIR),en_US)
 $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.cpp.ts \
 +| $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.cpp: \
 		$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_en_US.cpp \
-		$(foreach lang,$(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES), $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_$(lang).cpp ) \
+		$(foreach lang,$(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES), $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_$(lang).cpp ) \
 		$(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.h
 	$(QUIET)$(APPEND) -tn "$@" \
 		'/* Autogenerated, do not edit! */' \
@@ -295,8 +295,8 @@ $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.cpp.ts \
 		'' \
 		'extern PCRTMSGREFENTRY g_apHelpEntries_en_US[];' \
 		'extern const uint32_t  g_cHelpEntries_en_US;'
-ifdef VBOX_WITH_VBOXMANAGE_NLS
-	$(foreach lang,$(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES) \
+ifdef VRA_WITH_VRAMANAGE_NLS
+	$(foreach lang,$(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES) \
 	,$(NLTAB)$(QUIET)$(APPEND) -n "$@" \
 		'' \
 		'extern PCRTMSGREFENTRY g_apHelpEntries_$(lang)[];' \
@@ -309,8 +309,8 @@ endif
 		'HELP_LANG_ENTRY_T const g_aHelpLangEntries[] = ' \
 		'{' \
 		'    { "en_US", 5, &g_apHelpEntries_en_US[0], &g_cHelpEntries_en_US },'
-ifdef VBOX_WITH_VBOXMANAGE_NLS
-	$(foreach lang,$(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES) \
+ifdef VRA_WITH_VRAMANAGE_NLS
+	$(foreach lang,$(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES) \
 	,$(NLTAB)$(QUIET)$(APPEND) "$@" '    { "$(lang)", $(length $(lang)), &g_apHelpEntries_$(lang)[0], &g_cHelpEntries_$(lang) },' )
 endif
 	$(QUIET)$(APPEND) -n "$@" \
@@ -325,9 +325,9 @@ endif
 
 $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.h.ts \
 +| $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.h: \
-		$(VBOX_DOCBOOK_REFENTRY_TO_H_HELP) \
-		$(addprefix $(VBoxManage_0_OUTDIR)/,$(filter man_VBoxManage-%,$(VBOX_MANUAL_XML_REFENTRY_FILES))) \
-		$(VBOX_XML_CATALOG) $(VBOX_XML_CATALOG_DOCBOOK) $(MAKEFILE) | $$(dir $$@)
+		$(VRA_DOCBOOK_REFENTRY_TO_H_HELP) \
+		$(addprefix $(VBoxManage_0_OUTDIR)/,$(filter man_VBoxManage-%,$(VRA_MANUAL_XML_REFENTRY_FILES))) \
+		$(VRA_XML_CATALOG) $(VRA_XML_CATALOG_DOCBOOK) $(MAKEFILE) | $$(dir $$@)
 	$(call MSG_TOOL,xsltproc $(notdir $(firstword $(filter %.xsl,$^))),,$(filter %.xml,$^),$(patsubst %.ts,%,$@))
 	$(QUIET)$(APPEND) -tn "$@" \
 		'/* Autogenerated by $<, do not edit! */' \
@@ -340,17 +340,17 @@ $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.h.ts \
 		'' \
 		'RT_C_DECLS_BEGIN' \
 		'' \
-		'typedef enum HELP_CMD_VBOXMANAGE' \
+		'typedef enum HELP_CMD_VRAMANAGE' \
 		'{' \
-		'    HELP_CMD_VBOXMANAGE_INVALID = 0,'
+		'    HELP_CMD_VRAMANAGE_INVALID = 0,'
 	$(foreach refentry,$(filter %.xml,$^) \
-	,$(NLTAB)$(QUIET)$(call VBOX_XSLTPROC_WITH_CAT, -a+to "$@") \
+	,$(NLTAB)$(QUIET)$(call VRA_XSLTPROC_WITH_CAT, -a+to "$@") \
 		--stringparam 'g_sMode' 'cmd' $< $(refentry))
 	$(QUIET)$(APPEND) -n "$@" \
-		'    HELP_CMD_VBOXMANAGE_END' \
-		'} HELP_CMD_VBOXMANAGE;'
+		'    HELP_CMD_VRAMANAGE_END' \
+		'} HELP_CMD_VRAMANAGE;'
 	$(foreach refentry,$(filter %.xml,$^) \
-	,$(NLTAB)$(QUIET)$(call VBOX_XSLTPROC_WITH_CAT, -a+to "$@") \
+	,$(NLTAB)$(QUIET)$(call VRA_XSLTPROC_WITH_CAT, -a+to "$@") \
 		--stringparam 'g_sMode' 'subcmd' $< $(refentry))
 	$(QUIET)$(APPEND) -n "$@" \
 		'' \
@@ -374,41 +374,41 @@ $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp.h.ts \
 		''
 	$(QUIET)$(CP) --changed -- "$@" "$(patsubst %.ts,%,$@)"
 
-ifdef VBOX_WITH_VBOXMANAGE_NLS
+ifdef VRA_WITH_VRAMANAGE_NLS
  VBoxManage_BLDDIRS += \
- 	$(addprefix $(VBoxManage_0_OUTDIR)/,$(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES))
+ 	$(addprefix $(VBoxManage_0_OUTDIR)/,$(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES))
 
  VBoxManage_SOURCES += \
- 	$(foreach lang, $(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES) \
+ 	$(foreach lang, $(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES) \
  		, $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_$(lang).cpp)
 
  VBoxManage_CLEAN += \
- 	$(foreach lang,$(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES), \
- 		$(addprefix $(VBOX_PATH_MANUAL_OUTBASE)/$(lang)/, \
- 			$(VBOX_XML_XREF_TO_TEXT) \
- 			$(VBOX_XML_XREF_TO_TEXT).cat \
+ 	$(foreach lang,$(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES), \
+ 		$(addprefix $(VRA_PATH_MANUAL_OUTBASE)/$(lang)/, \
+ 			$(VRA_XML_XREF_TO_TEXT) \
+ 			$(VRA_XML_XREF_TO_TEXT).cat \
  			)) \
- 	$(addsuffix .cpp,$(addprefix $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_,$(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES))) \
- 	$(addsuffix .cpp.ts,$(addprefix $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_,$(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES))) \
- 	$(foreach file, $(filter man_VBoxManage-%,$(VBOX_MANUAL_XML_REFENTRY_FILES)) \
- 		, $(addsuffix /$(file),$(addprefix $(VBoxManage_0_OUTDIR)/,$(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES))))
+ 	$(addsuffix .cpp,$(addprefix $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_,$(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES))) \
+ 	$(addsuffix .cpp.ts,$(addprefix $(VBoxManage_0_OUTDIR)/VBoxManageBuiltInHelp_,$(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES))) \
+ 	$(foreach file, $(filter man_VBoxManage-%,$(VRA_MANUAL_XML_REFENTRY_FILES)) \
+ 		, $(addsuffix /$(file),$(addprefix $(VBoxManage_0_OUTDIR)/,$(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES))))
 
  # Preprocess the xml files, applying remarks.
- $(foreach lang, $(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES) \
- , $(foreach file,$(filter man_VBoxManage-%,$(VBOX_MANUAL_XML_REFENTRY_FILES)) \
+ $(foreach lang, $(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES) \
+ , $(foreach file,$(filter man_VBoxManage-%,$(VRA_MANUAL_XML_REFENTRY_FILES)) \
    , $(evalcall2 def_vbox_refentry_preprocess_for_manpage,$(VBoxManage_0_OUTDIR)/$(lang),$(file) \
-       ,$(VBOX_PATH_MANUAL_SRC)/$(lang)/$(file),replace-xrefs \
-       ,$(if $(filter $(lang),$(VBOX_MANUAL_LANGUAGES)),$(lang),en_US))))
+       ,$(VRA_PATH_MANUAL_SRC)/$(lang)/$(file),replace-xrefs \
+       ,$(if $(filter $(lang),$(VRA_MANUAL_LANGUAGES)),$(lang),en_US))))
 
  # Generate the .cpp file.
- $(foreach lang, $(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES) \
+ $(foreach lang, $(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES) \
  , $(evalcall2 def_vbox_man_generate_cpp_help,$(VBoxManage_0_OUTDIR)/$(lang),$(lang)))
 
- # Ensure $(lang) subfolder in the $(VBOX_PATH_MANUAL_OUTBASE) is created (for section names file)
- BLDDIRS += $(addprefix $(VBOX_PATH_MANUAL_OUTBASE)/,$(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES))
+ # Ensure $(lang) subfolder in the $(VRA_PATH_MANUAL_OUTBASE) is created (for section names file)
+ BLDDIRS += $(addprefix $(VRA_PATH_MANUAL_OUTBASE)/,$(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES))
 
  # Generate sections names file for $(lang)
- $(foreach lang, $(VBOX_APPROVED_VBOXMANAGE_DOCBOOK_LANGUAGES) \
+ $(foreach lang, $(VRA_APPROVED_VRAMANAGE_DOCBOOK_LANGUAGES) \
  , $(evalcall2 def_vbox_xref_to_text,$(lang)))
 
 endif

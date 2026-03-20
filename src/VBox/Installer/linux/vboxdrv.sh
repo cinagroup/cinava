@@ -1,11 +1,11 @@
 #! /bin/sh
-# Oracle VirtualBox
+# CINA VirtualAgent
 # Linux kernel module init script
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 #
 
 # chkconfig: 345 20 80
-# description: VirtualBox Linux kernel module
+# description: VirtualAgent Linux kernel module
 #
 ### BEGIN INIT INFO
 # Provides:       vboxdrv
@@ -33,7 +33,7 @@
 # Required-Stop:
 # Default-Start:  2 3 4 5
 # Default-Stop:   0 1 6
-# Short-Description: VirtualBox Linux kernel module
+# Short-Description: VirtualAgent Linux kernel module
 ### END INIT INFO
 
 ## @todo This file duplicates a lot of script with vboxadd.sh.  When making
@@ -67,16 +67,16 @@ setup_log()
 }
 
 [ -f /etc/vbox/vbox.cfg ] && . /etc/vbox/vbox.cfg
-export VBOX_KBUILD_TYPE
+export VRA_KBUILD_TYPE
 export USERNAME
 export USER=$USERNAME
 
-if test -n "${INSTALL_DIR}" && test -x "${INSTALL_DIR}/VirtualBox"; then
+if test -n "${INSTALL_DIR}" && test -x "${INSTALL_DIR}/VirtualAgent"; then
     MODULE_SRC="${INSTALL_DIR}/src/vboxhost"
-elif test -x /usr/lib/virtualbox/VirtualBox; then
+elif test -x /usr/lib/virtualbox/VirtualAgent; then
     INSTALL_DIR=/usr/lib/virtualbox
     MODULE_SRC="/usr/share/virtualbox/src/vboxhost"
-elif test -x "${SCRIPT_DIR}/VirtualBox"; then
+elif test -x "${SCRIPT_DIR}/VirtualAgent"; then
     # Executing from the build directory
     INSTALL_DIR="${SCRIPT_DIR}"
     MODULE_SRC="${INSTALL_DIR}/src"
@@ -85,12 +85,12 @@ else
     # Applies to Debian packages only (but shouldn't hurt elsewhere)
     exit 0
 fi
-VBOXMANAGE="${INSTALL_DIR}/VBoxManage"
+VRAMANAGE="${INSTALL_DIR}/VBoxManage"
 BUILDINTMP="${MODULE_SRC}/build_in_tmp"
 
-# If the VirtualBoxVM file has the set-uid bit set or if it doesn't exist, setup vboxdrv
+# If the VirtualAgentVM file has the set-uid bit set or if it doesn't exist, setup vboxdrv
 # in hardened mode.  Otherwise, do the developer mode using vboxusers for access control.
-if test -u "${INSTALL_DIR}/VirtualBoxVM" || test '!' -e "${INSTALL_DIR}/VirtualBoxVM"; then
+if test -u "${INSTALL_DIR}/VirtualAgentVM" || test '!' -e "${INSTALL_DIR}/VirtualAgentVM"; then
     GROUP=root
     DEVICE_MODE=0600
 else
@@ -201,20 +201,20 @@ module_build_log()
         >> "${LOG}"
 }
 
-# Detect VirtualBox version info or report error.
-VBOX_VERSION="`"$VBOXMANAGE" -v | cut -d r -f1`"
-[ -n "$VBOX_VERSION" ] || failure 'Cannot detect VirtualBox version number'
-VBOX_REVISION="r`"$VBOXMANAGE" -v | cut -d r -f2`"
-[ "$VBOX_REVISION" != "r" ] || failure 'Cannot detect VirtualBox revision number'
+# Detect VirtualAgent version info or report error.
+VRA_VERSION="`"$VRAMANAGE" -v | cut -d r -f1`"
+[ -n "$VRA_VERSION" ] || failure 'Cannot detect VirtualAgent version number'
+VRA_REVISION="r`"$VRAMANAGE" -v | cut -d r -f2`"
+[ "$VRA_REVISION" != "r" ] || failure 'Cannot detect VirtualAgent revision number'
 
 ## Output the vboxdrv part of our udev rule.  This is redirected to the right file.
 udev_write_vboxdrv() {
-    VBOXDRV_GRP="$1"
-    VBOXDRV_MODE="$2"
+    VRADRV_GRP="$1"
+    VRADRV_MODE="$2"
 
-    echo "KERNEL==\"vboxdrv\", OWNER=\"root\", GROUP=\"$VBOXDRV_GRP\", MODE=\"$VBOXDRV_MODE\""
+    echo "KERNEL==\"vboxdrv\", OWNER=\"root\", GROUP=\"$VRADRV_GRP\", MODE=\"$VRADRV_MODE\""
     echo "KERNEL==\"vboxdrvu\", OWNER=\"root\", GROUP=\"root\", MODE=\"0666\""
-    echo "KERNEL==\"vboxnetctl\", OWNER=\"root\", GROUP=\"$VBOXDRV_GRP\", MODE=\"$VBOXDRV_MODE\""
+    echo "KERNEL==\"vboxnetctl\", OWNER=\"root\", GROUP=\"$VRADRV_GRP\", MODE=\"$VRADRV_MODE\""
 }
 
 ## Output the USB part of our udev rule.  This is redirected to the right file.
@@ -232,30 +232,30 @@ udev_write_usb() {
 ## version 55 into account.  It only creates rules for USB for udev versions
 ## recent enough to support USB device nodes.
 generate_udev_rule() {
-    VBOXDRV_GRP="$1"      # The group owning the vboxdrv device
-    VBOXDRV_MODE="$2"     # The access mode for the vboxdrv device
-    INSTALLATION_DIR="$3" # The directory VirtualBox is installed in
+    VRADRV_GRP="$1"      # The group owning the vboxdrv device
+    VRADRV_MODE="$2"     # The access mode for the vboxdrv device
+    INSTALLATION_DIR="$3" # The directory VirtualAgent is installed in
     USB_GROUP="$4"        # The group that has permission to access USB devices
     NO_INSTALL="$5"       # Set this to "1" to remove but not re-install rules
 
     # Extra space!
     case "$USB_GROUP" in ?*) USB_GROUP=" $USB_GROUP" ;; esac
     case "$NO_INSTALL" in "1") return ;; esac
-    udev_write_vboxdrv "$VBOXDRV_GRP" "$VBOXDRV_MODE"
+    udev_write_vboxdrv "$VRADRV_GRP" "$VRADRV_MODE"
     udev_write_usb "$INSTALLATION_DIR" "$USB_GROUP"
 }
 
 ## Install udev rule (disable with INSTALL_NO_UDEV=1 in
 ## /etc/default/virtualbox).
 install_udev() {
-    VBOXDRV_GRP="$1"      # The group owning the vboxdrv device
-    VBOXDRV_MODE="$2"     # The access mode for the vboxdrv device
-    INSTALLATION_DIR="$3" # The directory VirtualBox is installed in
+    VRADRV_GRP="$1"      # The group owning the vboxdrv device
+    VRADRV_MODE="$2"     # The access mode for the vboxdrv device
+    INSTALLATION_DIR="$3" # The directory VirtualAgent is installed in
     USB_GROUP="$4"        # The group that has permission to access USB devices
     NO_INSTALL="$5"       # Set this to "1" to remove but not re-install rules
 
     if test -d /etc/udev/rules.d; then
-        generate_udev_rule "$VBOXDRV_GRP" "$VBOXDRV_MODE" "$INSTALLATION_DIR" \
+        generate_udev_rule "$VRADRV_GRP" "$VRADRV_MODE" "$INSTALLATION_DIR" \
                            "$USB_GROUP" "$NO_INSTALL"
     fi
     # Remove old udev description file
@@ -282,9 +282,9 @@ sysfs_usb_devices="/sys/bus/usb/devices/*"
 
 ## Install udev rules and create device nodes for usb access
 setup_usb() {
-    VBOXDRV_GRP="$1"      # The group that should own /dev/vboxdrv
-    VBOXDRV_MODE="$2"     # The mode to be used for /dev/vboxdrv
-    INSTALLATION_DIR="$3" # The directory VirtualBox is installed in
+    VRADRV_GRP="$1"      # The group that should own /dev/vboxdrv
+    VRADRV_MODE="$2"     # The mode to be used for /dev/vboxdrv
+    INSTALLATION_DIR="$3" # The directory VirtualAgent is installed in
     USB_GROUP="$4"        # The group that should own the /dev/vboxusb device
                           # nodes unless INSTALL_NO_GROUP=1 in
                           # /etc/default/virtualbox.  Optional.
@@ -293,12 +293,12 @@ setup_usb() {
     # /etc/default/virtualbox)
     if [ "$INSTALL_NO_GROUP" != "1" ]; then
         usb_group=$USB_GROUP
-        vboxdrv_group=$VBOXDRV_GRP
+        vboxdrv_group=$VRADRV_GRP
     else
         usb_group=root
         vboxdrv_group=root
     fi
-    install_udev "${vboxdrv_group}" "$VBOXDRV_MODE" \
+    install_udev "${vboxdrv_group}" "$VRADRV_MODE" \
                  "$INSTALLATION_DIR" "${usb_group}" \
                  "$INSTALL_NO_UDEV" > ${udev_rule_file}
     # Build our device tree
@@ -430,7 +430,7 @@ module_signed()
     # use in order to verify module signature. This variable needs to
     # be explicitly set by administrator. This script will look for it
     # in /etc/vbox/vbox.cfg. Make sure that you know what you do!
-    if [ "$VBOX_BYPASS_MODULES_SIGNATURE_CHECK" = "1" ]; then
+    if [ "$VRA_BYPASS_MODULES_SIGNATURE_CHECK" = "1" ]; then
         echo "1"
         return
     fi
@@ -476,17 +476,17 @@ module_signed()
 }
 
 # Returns "1" if externally built module is available in the system and its
-# version and revision number do match to current VirtualBox installation.
+# version and revision number do match to current VirtualAgent installation.
 # Or empty string otherwise.
 module_available()
 {
     mod="$1"
     [ -n "$mod" ] || return
 
-    [ "$VBOX_VERSION" = "$(module_version "$mod")" ] || return
-    [ "$VBOX_REVISION" = "$(module_revision "$mod")" ] || return
+    [ "$VRA_VERSION" = "$(module_version "$mod")" ] || return
+    [ "$VRA_REVISION" = "$(module_revision "$mod")" ] || return
 
-    # Check if module belongs to VirtualBox installation.
+    # Check if module belongs to VirtualAgent installation.
     #
     # We have a convention that only modules from /lib/modules/*/misc
     # belong to us. Modules from other locations are treated as
@@ -525,15 +525,15 @@ setup_complete()
 
 start()
 {
-    begin_msg "Starting VirtualBox services" console
+    begin_msg "Starting VirtualAgent services" console
     if [ -d /proc/xen ]; then
-        failure "Running VirtualBox in a Xen environment is not supported"
+        failure "Running VirtualAgent in a Xen environment is not supported"
     fi
     if test "$(kernel_requires_module_signature)" = "1" && test -z "$DEB_KEY_ENROLLED"; then
         if test -n "$HAVE_DEB_KEY"; then
             begin_msg "You must re-start your system to finish Debian secure boot set-up." console
         else
-            begin_msg "You must sign these kernel modules before using VirtualBox:
+            begin_msg "You must sign these kernel modules before using VirtualAgent:
   $MODULE_LIST
 See the documentation for your Linux distribution." console
         fi
@@ -565,7 +565,7 @@ See the documentation for your Linux distribution." console
         fi
         if [ -z "$MAJOR" ]; then
             rmmod vboxdrv 2>/dev/null
-            failure "Cannot locate the VirtualBox device"
+            failure "Cannot locate the VirtualAgent device"
         fi
         if ! mknod -m 0660 $DEVICE c $MAJOR $MINOR 2>/dev/null; then
             rmmod vboxdrv 2>/dev/null
@@ -597,12 +597,12 @@ See the documentation for your Linux distribution." console
     fi
     # Remove any kernel modules left over from previously installed kernels.
     cleanup only_old
-    succ_msg "VirtualBox services started"
+    succ_msg "VirtualAgent services started"
 }
 
 stop()
 {
-    begin_msg "Stopping VirtualBox services" console
+    begin_msg "Stopping VirtualAgent services" console
 
     if running vboxpci; then
         if ! rmmod vboxpci 2>/dev/null; then
@@ -627,7 +627,7 @@ stop()
             failure "Cannot unlink $DEVICE"
         fi
     fi
-    succ_msg "VirtualBox services stopped"
+    succ_msg "VirtualAgent services stopped"
 }
 
 # enter the following variables in /etc/default/virtualbox:
@@ -643,26 +643,26 @@ stop_vms()
     for i in $SHUTDOWN_USERS; do
         # don't create the ipcd directory with wrong permissions!
         if [ -d /tmp/.vbox-$i-ipc ]; then
-            export VBOX_IPC_SOCKETID="$i"
-            VMS=`$VBOXMANAGE --nologo list runningvms | sed -e 's/^".*".*{\(.*\)}/\1/' 2>/dev/null`
+            export VRA_IPC_SOCKETID="$i"
+            VMS=`$VRAMANAGE --nologo list runningvms | sed -e 's/^".*".*{\(.*\)}/\1/' 2>/dev/null`
             if [ -n "$VMS" ]; then
                 if [ "$SHUTDOWN" = "poweroff" ]; then
                     begin_msg "Powering off remaining VMs"
                     for v in $VMS; do
-                        $VBOXMANAGE --nologo controlvm $v poweroff
+                        $VRAMANAGE --nologo controlvm $v poweroff
                     done
                     succ_msg "Remaining VMs powered off"
                 elif [ "$SHUTDOWN" = "acpibutton" ]; then
                     begin_msg "Sending ACPI power button event to remaining VMs"
                     for v in $VMS; do
-                        $VBOXMANAGE --nologo controlvm $v acpipowerbutton
+                        $VRAMANAGE --nologo controlvm $v acpipowerbutton
                         wait=30
                     done
                     succ_msg "ACPI power button event sent to remaining VMs"
                 elif [ "$SHUTDOWN" = "savestate" ]; then
                     begin_msg "Saving state of remaining VMs"
                     for v in $VMS; do
-                        $VBOXMANAGE --nologo controlvm $v savestate
+                        $VRAMANAGE --nologo controlvm $v savestate
                     done
                     succ_msg "State of remaining VMs saved"
                 fi
@@ -709,8 +709,8 @@ cleanup()
 # setup_script
 setup()
 {
-    begin_msg "Building VirtualBox kernel modules" console
-    log "Building the main VirtualBox module."
+    begin_msg "Building VirtualAgent kernel modules" console
+    log "Building the main VirtualAgent module."
 
     # Detect if kernel was built with clang.
     unset LLVM
@@ -761,11 +761,11 @@ setup()
     rm -f /etc/vbox/module_not_compiled
     depmod -a
     sync
-    succ_msg "VirtualBox kernel modules built"
+    succ_msg "VirtualAgent kernel modules built"
 
     # Sign kernel modules if kernel configuration requires it.
     if test "$(kernel_requires_module_signature)" = "1"; then
-        begin_msg "Signing VirtualBox kernel modules" console
+        begin_msg "Signing VirtualAgent kernel modules" console
 
         # Generate new signing key if needed.
         [ -n "$HAVE_UPDATE_SECUREBOOT_POLICY_TOOL" ] && SHIM_NOTRIGGER=y update-secureboot-policy --new-key
@@ -839,12 +839,12 @@ dmnstatus()
         if running vboxpci; then
             str="$str, vboxpci"
         fi
-        echo "VirtualBox kernel modules ($str) are loaded."
+        echo "VirtualAgent kernel modules ($str) are loaded."
         for i in $SHUTDOWN_USERS; do
             # don't create the ipcd directory with wrong permissions!
             if [ -d /tmp/.vbox-$i-ipc ]; then
-                export VBOX_IPC_SOCKETID="$i"
-                VMS=`$VBOXMANAGE --nologo list runningvms | sed -e 's/^".*".*{\(.*\)}/\1/' 2>/dev/null`
+                export VRA_IPC_SOCKETID="$i"
+                VMS=`$VRAMANAGE --nologo list runningvms | sed -e 's/^".*".*{\(.*\)}/\1/' 2>/dev/null`
                 if [ -n "$VMS" ]; then
                     echo "The following VMs are currently running:"
                     for v in $VMS; do
@@ -854,7 +854,7 @@ dmnstatus()
             fi
         done
     else
-        echo "VirtualBox kernel module is not loaded."
+        echo "VirtualAgent kernel module is not loaded."
     fi
 }
 

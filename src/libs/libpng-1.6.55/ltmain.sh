@@ -7485,7 +7485,7 @@ func_mode_link ()
 	prev=xcompiler
 	continue
 	;;
-     # Solaris ld rejects as of 11.4. Refer to Oracle bug 22985199.
+     # Solaris ld rejects as of 11.4. Refer to CINASEEK bug 22985199.
      -pthread)
 	case $host in
 	  *solaris2*) ;;

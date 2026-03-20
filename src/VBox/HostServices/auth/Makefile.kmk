@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,8 +29,8 @@ SUB_DEPTH = ../../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 # The plugin.
-ifndef VBOX_ONLY_SDK
- if ("$(KBUILD_TARGET)" != "linux" && "$(KBUILD_TARGET)" != "solaris") || defined(VBOX_WITH_PAM)
+ifndef VRA_ONLY_SDK
+ if ("$(KBUILD_TARGET)" != "linux" && "$(KBUILD_TARGET)" != "solaris") || defined(VRA_WITH_PAM)
   DLLS += VBoxAuth
  endif
 endif
@@ -48,8 +48,8 @@ VBoxAuth_LIBS.darwin = $(LIB_RUNTIME)
 VBoxAuth_LDFLAGS.darwin = -framework DirectoryService
 
 # The simple plugin.
-ifndef VBOX_ONLY_SDK
- if defined(VBOX_WITH_MAIN)
+ifndef VRA_ONLY_SDK
+ if defined(VRA_WITH_MAIN)
   DLLS += VBoxAuthSimple
  endif
 endif

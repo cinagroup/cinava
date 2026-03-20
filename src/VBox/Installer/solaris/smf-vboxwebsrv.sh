@@ -2,9 +2,9 @@
 # $Id: smf-vboxwebsrv.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 
 #
-# Copyright (C) 2008-2026 Oracle and/or its affiliates.
+# Copyright (C) 2008-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -35,13 +35,13 @@ VW_EXIT=0
 
 case $VW_OPT in
     start)
-        if [ ! -f /opt/VirtualBox/vboxwebsrv ]; then
-            echo "ERROR: /opt/VirtualBox/vboxwebsrv does not exist."
+        if [ ! -f /opt/VirtualAgent/vboxwebsrv ]; then
+            echo "ERROR: /opt/VirtualAgent/vboxwebsrv does not exist."
             return $SMF_EXIT_ERR_CONFIG
         fi
 
-        if [ ! -x /opt/VirtualBox/vboxwebsrv ]; then
-            echo "ERROR: /opt/VirtualBox/vboxwebsrv is not executable."
+        if [ ! -x /opt/VirtualAgent/vboxwebsrv ]; then
+            echo "ERROR: /opt/VirtualAgent/vboxwebsrv is not executable."
             return $SMF_EXIT_ERR_CONFIG
         fi
 
@@ -112,19 +112,19 @@ case $VW_OPT in
 
         # Set authentication method + password hash
         if [ -n "$VW_AUTH_LIBRARY" ]; then
-            su - "$VW_USER" -c "/opt/VirtualBox/VBoxManage setproperty websrvauthlibrary \"$VW_AUTH_LIBRARY\""
+            su - "$VW_USER" -c "/opt/VirtualAgent/VBoxManage setproperty websrvauthlibrary \"$VW_AUTH_LIBRARY\""
             if [ $? != 0 ]; then
                 echo "Error $? setting webservice authentication library to $VW_AUTH_LIBRARY"
             fi
         fi
         if [ -n "$VW_AUTH_PWHASH" ]; then
-            su - "$VW_USER" -c "/opt/VirtualBox/VBoxManage setextradata global \"VBoxAuthSimple/users/$VW_USER\" \"$VW_AUTH_PWHASH\""
+            su - "$VW_USER" -c "/opt/VirtualAgent/VBoxManage setextradata global \"VBoxAuthSimple/users/$VW_USER\" \"$VW_AUTH_PWHASH\""
             if [ $? != 0 ]; then
                 echo "Error $? setting webservice password hash"
             fi
         fi
 
-        exec su - "$VW_USER" -c "/opt/VirtualBox/vboxwebsrv --background --host \"$VW_HOST\" --port \"$VW_PORT\" $VW_SSL $VW_SSL_KEYFILE $VW_SSL_PASSWORDFILE $VW_SSL_CACERT $VW_SSL_CAPATH $VW_SSL_DHFILE $VW_SSL_RANDFILE --timeout \"$VW_TIMEOUT\" --check-interval \"$VW_CHECK_INTERVAL\" --threads \"$VW_THREADS\" --keepalive \"$VW_KEEPALIVE\" --authentication \"$VW_AUTHENTICATION\" $VW_LOGFILE --logrotate \"$VW_ROTATE\" --logsize \"$VW_LOGSIZE\" --loginterval \"$VW_LOGINTERVAL\""
+        exec su - "$VW_USER" -c "/opt/VirtualAgent/vboxwebsrv --background --host \"$VW_HOST\" --port \"$VW_PORT\" $VW_SSL $VW_SSL_KEYFILE $VW_SSL_PASSWORDFILE $VW_SSL_CACERT $VW_SSL_CAPATH $VW_SSL_DHFILE $VW_SSL_RANDFILE --timeout \"$VW_TIMEOUT\" --check-interval \"$VW_CHECK_INTERVAL\" --threads \"$VW_THREADS\" --keepalive \"$VW_KEEPALIVE\" --authentication \"$VW_AUTHENTICATION\" $VW_LOGFILE --logrotate \"$VW_ROTATE\" --logsize \"$VW_LOGSIZE\" --loginterval \"$VW_LOGINTERVAL\""
 
         VW_EXIT=$?
         if [ $VW_EXIT != 0 ]; then

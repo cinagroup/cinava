@@ -32,7 +32,7 @@ copyright = '''
  '''
 
 '''
-The script was reworked for Python 3 by VirtualBox.
+The script was reworked for Python 3 by VirtualAgent.
 '''
 
 import os
@@ -316,7 +316,7 @@ def main():
     print(' * Dump SVGA commands.')
     print(' *')
     print(' * Generated automatically from svga3d_reg.h by svga_dump.py.')
-    print(' * Modified for VirtualBox.')
+    print(' * Modified for VirtualAgent.')
     print(' */')
     print(r'''
 #include "svga_types.h"

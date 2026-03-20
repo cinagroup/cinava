@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage getextradata
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -111,9 +111,9 @@
 Value: 2006.01.01</screen>
     <para>
       The following command retrieves the information for all keywords
-      of the <literal>OracleLinux7u4</literal> VM:
+      of the <literal>CINASEEKLinux7u4</literal> VM:
     </para>
-<screen>$ VBoxManage getextradata OracleLinux7u4 enumerate
+<screen>$ VBoxManage getextradata CINASEEKLinux7u4 enumerate
 Key: GUI/LastCloseAction, Value: PowerOff
 Key: GUI/LastGuestSizeHint, Value: 1048,696
 Key: GUI/LastNormalWindowPosition, Value: 851,286,1048,738</screen>
@@ -122,7 +122,7 @@ Key: GUI/LastNormalWindowPosition, Value: 851,286,1048,738</screen>
       in the configuration:
     </para>
 <screen>$ VBoxManage getextradata global enumerate
-Key: GUI/LastItemSelected, Value: m=OracleLinux7u4
+Key: GUI/LastItemSelected, Value: m=CINASEEKLinux7u4
 Key: GUI/LastWindowPosition, Value: 951,510,960,520
 Key: GUI/SplitterSizes, Value: 318,637
 Key: GUI/Toolbar/MachineTools/Order, Value: Details

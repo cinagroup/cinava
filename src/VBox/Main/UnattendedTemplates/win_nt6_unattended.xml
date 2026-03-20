@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Copyright (C) 2016-2026 Oracle and/or its affiliates.
+    Copyright (C) 2016-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -25,20 +25,20 @@
 
     <settings pass="windowsPE">
         <component name="Microsoft-Windows-International-Core-WinPE"
-            processorArchitecture="@@VBOX_INSERT_OS_ARCH_ATTRIB_DQ@@"
+            processorArchitecture="@@VRA_INSERT_OS_ARCH_ATTRIB_DQ@@"
             publicKeyToken="31bf3856ad364e35" language="neutral"
             versionScope="nonSxS">
             <InputLocale>en-US</InputLocale>
-            <SystemLocale>@@VBOX_INSERT_DASH_LOCALE@@</SystemLocale>
-            <UserLocale>@@VBOX_INSERT_DASH_LOCALE@@</UserLocale>
+            <SystemLocale>@@VRA_INSERT_DASH_LOCALE@@</SystemLocale>
+            <UserLocale>@@VRA_INSERT_DASH_LOCALE@@</UserLocale>
             <!-- UILanguage must match the installation media language.  Stuff like de-CH does not work for
                  example de_windows_7_enterprise_with_sp1_x64_dvd_u_677649.iso.  However, stupidly we cannot
                  omit this element (kudos to brilliant minds at MS).  -->
-            <UILanguage>@@VBOX_INSERT_LANGUAGE@@</UILanguage>
+            <UILanguage>@@VRA_INSERT_LANGUAGE@@</UILanguage>
         </component>
 
         <component name="Microsoft-Windows-Setup"
-            processorArchitecture="@@VBOX_INSERT_OS_ARCH_ATTRIB_DQ@@"
+            processorArchitecture="@@VRA_INSERT_OS_ARCH_ATTRIB_DQ@@"
             publicKeyToken="31bf3856ad364e35" language="neutral"
             versionScope="nonSxS">
 
@@ -47,7 +47,7 @@
                 <Disk>
                     <DiskID>0</DiskID>
                     <WillWipeDisk>true</WillWipeDisk>
-@@VBOX_COND_IS_NOT_FIRMWARE_UEFI@@
+@@VRA_COND_IS_NOT_FIRMWARE_UEFI@@
                     <CreatePartitions>
                         <!-- TODO: Use the standard partitioning scheme at starting with Windows 8 maybe, using 2 partitions as described by Microsoft? -->
                         <CreatePartition>
@@ -56,8 +56,8 @@
                             <Extend>true</Extend>
                         </CreatePartition>
                     </CreatePartitions>
-@@VBOX_COND_END@@
-@@VBOX_COND_IS_FIRMWARE_UEFI@@
+@@VRA_COND_END@@
+@@VRA_COND_IS_FIRMWARE_UEFI@@
                     <CreatePartitions>
                         <CreatePartition wcm:action="add">
                             <Order>1</Order>
@@ -106,13 +106,13 @@
                             <Format>NTFS</Format>
                         </ModifyPartition>
                     </ModifyPartitions>
-@@VBOX_COND_END@@
+@@VRA_COND_END@@
                 </Disk>
             </DiskConfiguration>
 
             <UserData>
                 <ProductKey>
-                    <Key>@@VBOX_INSERT_PRODUCT_KEY_ELEMENT@@</Key>
+                    <Key>@@VRA_INSERT_PRODUCT_KEY_ELEMENT@@</Key>
                     <WillShowUI>OnError</WillShowUI>
                 </ProductKey>
                 <AcceptEula>true</AcceptEula>
@@ -124,18 +124,18 @@
                         <!-- TODO: This stuff doesn't work for en_windows_vista_enterprise_sp1_x64_and_x86.iso ... -->
                         <MetaData wcm:action="add">
                             <Key>/IMAGE/INDEX</Key>
-                            <Value>@@VBOX_INSERT_IMAGE_INDEX_ELEMENT@@</Value>
+                            <Value>@@VRA_INSERT_IMAGE_INDEX_ELEMENT@@</Value>
                         </MetaData>
                         <!-- <Path>d:\sources\install.wim</Path> - the w7 tests doesn't specify this -->
                     </InstallFrom>
                     <InstallTo>
                         <DiskID>0</DiskID>
-@@VBOX_COND_IS_NOT_FIRMWARE_UEFI@@
+@@VRA_COND_IS_NOT_FIRMWARE_UEFI@@
                         <PartitionID>1</PartitionID>
-@@VBOX_COND_END@@
-@@VBOX_COND_IS_FIRMWARE_UEFI@@
+@@VRA_COND_END@@
+@@VRA_COND_IS_FIRMWARE_UEFI@@
                         <PartitionID>4</PartitionID>
-@@VBOX_COND_END@@
+@@VRA_COND_END@@
                     </InstallTo>
                     <WillShowUI>OnError</WillShowUI>
                     <InstallToAvailablePartition>false</InstallToAvailablePartition>
@@ -180,14 +180,14 @@
 
     <settings pass="specialize">
         <component name="Microsoft-Windows-Shell-Setup"
-            processorArchitecture="@@VBOX_INSERT_OS_ARCH_ATTRIB_DQ@@"
+            processorArchitecture="@@VRA_INSERT_OS_ARCH_ATTRIB_DQ@@"
             publicKeyToken="31bf3856ad364e35" language="neutral"
             versionScope="nonSxS">
-            <ComputerName>@@VBOX_INSERT_HOSTNAME_WITHOUT_DOMAIN_MAX_15@@</ComputerName>
+            <ComputerName>@@VRA_INSERT_HOSTNAME_WITHOUT_DOMAIN_MAX_15@@</ComputerName>
         </component>
 
         <component name="Microsoft-Windows-Deployment"
-            processorArchitecture="@@VBOX_INSERT_OS_ARCH_ATTRIB_DQ@@"
+            processorArchitecture="@@VRA_INSERT_OS_ARCH_ATTRIB_DQ@@"
             publicKeyToken="31bf3856ad364e35" language="neutral"
             versionScope="nonSxS">
 
@@ -224,43 +224,43 @@
 
     <settings pass="oobeSystem">
         <component name="Microsoft-Windows-Shell-Setup"
-            processorArchitecture="@@VBOX_INSERT_OS_ARCH_ATTRIB_DQ@@"
+            processorArchitecture="@@VRA_INSERT_OS_ARCH_ATTRIB_DQ@@"
             publicKeyToken="31bf3856ad364e35" language="neutral"
             versionScope="nonSxS">
             <AutoLogon>
                 <Password>
-                    <Value>@@VBOX_INSERT_USER_PASSWORD_ELEMENT@@</Value>
+                    <Value>@@VRA_INSERT_USER_PASSWORD_ELEMENT@@</Value>
                     <PlainText>true</PlainText>
                 </Password>
                 <Enabled>true</Enabled>
-                <Username>@@VBOX_INSERT_USER_LOGIN_ELEMENT@@</Username>
+                <Username>@@VRA_INSERT_USER_LOGIN_ELEMENT@@</Username>
             </AutoLogon>
 
             <UserAccounts>
-@@VBOX_COND_IS_USER_LOGIN_NOT_ADMINISTRATOR@@
+@@VRA_COND_IS_USER_LOGIN_NOT_ADMINISTRATOR@@
                 <AdministratorPassword>
-                    <Value>@@VBOX_INSERT_ROOT_PASSWORD_ELEMENT@@</Value>
+                    <Value>@@VRA_INSERT_ROOT_PASSWORD_ELEMENT@@</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
 
                 <LocalAccounts>
                     <LocalAccount wcm:action="add">
-                        <Name>@@VBOX_INSERT_USER_LOGIN_ELEMENT@@</Name>
-                        <DisplayName>@@VBOX_INSERT_USER_FULL_NAME_ELEMENT@@</DisplayName>
+                        <Name>@@VRA_INSERT_USER_LOGIN_ELEMENT@@</Name>
+                        <DisplayName>@@VRA_INSERT_USER_FULL_NAME_ELEMENT@@</DisplayName>
                         <Group>administrators;users</Group>
                         <Password>
-                            <Value>@@VBOX_INSERT_USER_PASSWORD_ELEMENT@@</Value>
+                            <Value>@@VRA_INSERT_USER_PASSWORD_ELEMENT@@</Value>
                             <PlainText>true</PlainText>
                         </Password>
                     </LocalAccount>
                 </LocalAccounts>
-@@VBOX_COND_END@@
-@@VBOX_COND_IS_USER_LOGIN_ADMINISTRATOR@@
+@@VRA_COND_END@@
+@@VRA_COND_IS_USER_LOGIN_ADMINISTRATOR@@
                 <AdministratorPassword>
-                    <Value>@@VBOX_INSERT_USER_PASSWORD_ELEMENT@@</Value>
+                    <Value>@@VRA_INSERT_USER_PASSWORD_ELEMENT@@</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
-@@VBOX_COND_END@@
+@@VRA_COND_END@@
             </UserAccounts>
 
             <VisualEffects>
@@ -285,12 +285,12 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <Order>2</Order>
-                    <Description>VirtualBox post guest install steps </Description>
-                    <CommandLine>cmd.exe /c @@VBOX_INSERT_AUXILIARY_INSTALL_DIR@@VBOXPOST.CMD --vista-or-newer</CommandLine>
+                    <Description>VirtualAgent post guest install steps </Description>
+                    <CommandLine>cmd.exe /c @@VRA_INSERT_AUXILIARY_INSTALL_DIR@@VRAPOST.CMD --vista-or-newer</CommandLine>
                 </SynchronousCommand>
             </FirstLogonCommands>
 
-            <TimeZone>@@VBOX_INSERT_TIME_ZONE_WIN_NAME@@</TimeZone>
+            <TimeZone>@@VRA_INSERT_TIME_ZONE_WIN_NAME@@</TimeZone>
         </component>
 
     </settings>

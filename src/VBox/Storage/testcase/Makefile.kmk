@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ include $(KBUILD_PATH)/subheader.kmk
 #
 # Basic testcases for the VD code.
 #
-ifdef VBOX_WITH_TESTCASES
+ifdef VRA_WITH_TESTCASES
  PROGRAMS += tstVD tstVD-2 tstVDSnap tstVDFill
 
  tstVD_TEMPLATE = VBoxR3TstExe
@@ -69,14 +69,14 @@ ifdef VBOX_WITH_TESTCASES
 
  $$(TSTVDIO_BUILTIN_TESTS_FILE): $(MAKEFILE_CURRENT) \
  		$(foreach test,$(TSTVDIO_BUILTIN_TESTS),$(TSTVDIO_PATH_TESTS)/$(lastword $(subst =,$(SPACE) ,$(test)))) \
- 		$(VBOX_BIN2C) \
+ 		$(VRA_BIN2C) \
  		| $$(dir $$@)
 	$(QUIET)$(RM) -f -- $@ $@.vd
 	$(QUIET)$(APPEND) -n "$@" \
 		'' \
 		'#include "BuiltinTests.h"' \
 		''
-	$(foreach test,$(TSTVDIO_BUILTIN_TESTS), $(NLTAB)$(VBOX_BIN2C) -ascii --append --no-size \
+	$(foreach test,$(TSTVDIO_BUILTIN_TESTS), $(NLTAB)$(VRA_BIN2C) -ascii --append --no-size \
 		"$(firstword $(subst =,$(SP) ,$(test)))" \
 		"$(TSTVDIO_PATH_TESTS)/$(lastword $(subst =,$(SP) ,$(test)))" \
 		"$@")
@@ -88,8 +88,8 @@ ifdef VBOX_WITH_TESTCASES
  tstVDIo_TEMPLATE = VBoxR3TstExe
  tstVDIo_INCS := $(PATH_SUB_CURRENT)
 
- ifdef VBOX_TSTVDIO_WITH_LOG_REPLAY
-  tstVDIo_DEFS += VBOX_TSTVDIO_WITH_LOG_REPLAY
+ ifdef VRA_TSTVDIO_WITH_LOG_REPLAY
+  tstVDIo_DEFS += VRA_TSTVDIO_WITH_LOG_REPLAY
  endif
 
  tstVDIo_SOURCES  = \
@@ -112,7 +112,7 @@ ifdef VBOX_WITH_TESTCASES
  tstVDSnap_SOURCES  = tstVDSnap.cpp
 endif
 
-if defined(VBOX_WITH_TESTCASES) || defined(VBOX_WITH_VBOX_IMG)
+if defined(VRA_WITH_TESTCASES) || defined(VRA_WITH_VRA_IMG)
  PROGRAMS += vbox-img
 
  #
@@ -120,13 +120,13 @@ if defined(VBOX_WITH_TESTCASES) || defined(VBOX_WITH_VBOX_IMG)
  #
  ifn1of ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH), solaris.sparc32 solaris.sparc64)
   vbox-img_TEMPLATE := VBoxR3Exe
-  vbox-img_DEFS    := IN_VBOXDDU IN_VBOXDDU_STATIC VBOX_HDD_NO_DYNAMIC_BACKENDS
+  vbox-img_DEFS    := IN_VRADDU IN_VRADDU_STATIC VRA_HDD_NO_DYNAMIC_BACKENDS
  else
   vbox-img_TEMPLATE := VBoxR3Static
-  vbox-img_DEFS    := IN_VBOXDDU IN_VBOXDDU_STATIC VBOX_HDD_NO_DYNAMIC_BACKENDS
+  vbox-img_DEFS    := IN_VRADDU IN_VRADDU_STATIC VRA_HDD_NO_DYNAMIC_BACKENDS
  endif
  vbox-img_DEFS += \
- 	$(if $(VBOX_WITH_PLUGIN_CRYPT),VBOX_WITH_PLUGIN_CRYPT,)
+ 	$(if $(VRA_WITH_PLUGIN_CRYPT),VRA_WITH_PLUGIN_CRYPT,)
  vbox-img_INCS     := \
  	../../Main/include
  vbox-img_SOURCES  := \
@@ -148,7 +148,7 @@ if defined(VBOX_WITH_TESTCASES) || defined(VBOX_WITH_VBOX_IMG)
  	../VISO.cpp \
  	../VCICache.cpp \
  	../VDIfVfs.cpp
- ifdef VBOX_WITH_PLUGIN_CRYPT
+ ifdef VRA_WITH_PLUGIN_CRYPT
   vbox-img_SOURCES += \
   	../VDFilterCrypt.cpp \
   	../VDKeyStore.cpp
@@ -172,7 +172,7 @@ if defined(VBOX_WITH_TESTCASES) || defined(VBOX_WITH_VBOX_IMG)
   endif
   vbox-img_SDKS.win := VBoxNtDll
   vbox-img_LIBS = \
-  	$(VBOX_LIB_RUNTIME_STATIC)
+  	$(VRA_LIB_RUNTIME_STATIC)
   ifeq ($(KBUILD_TARGET),linux)
    ifdef SDK_VBoxLibXml2_LIBS
     vbox-img_LIBS += xml2
@@ -194,14 +194,14 @@ if defined(VBOX_WITH_TESTCASES) || defined(VBOX_WITH_VBOX_IMG)
 
 endif
 
-if defined(VBOX_WITH_TESTCASES) && defined(VBOX_WITH_PLUGIN_CRYPT) && defined(VBOX_WITH_VDKEYSTOREMGR)
+if defined(VRA_WITH_TESTCASES) && defined(VRA_WITH_PLUGIN_CRYPT) && defined(VRA_WITH_VDKEYSTOREMGR)
  PROGRAMS += vdkeystoremgr
 
  #
  # vdkeystoremgr - static because it might be used as a standalone tool.
  #
  vdkeystoremgr_TEMPLATE = VBoxR3Static
- vdkeystoremgr_DEFS += IN_VBOXDDU IN_VBOXDDU_STATIC VBOX_HDD_NO_DYNAMIC_BACKENDS
+ vdkeystoremgr_DEFS += IN_VRADDU IN_VRADDU_STATIC VRA_HDD_NO_DYNAMIC_BACKENDS
  if1of ($(KBUILD_TARGET), os2 win)
   vdkeystoremgr_SDKS = VBoxZlibStatic
  else
@@ -213,8 +213,8 @@ if defined(VBOX_WITH_TESTCASES) && defined(VBOX_WITH_PLUGIN_CRYPT) && defined(VB
  vdkeystoremgr_SOURCES.win = \
  	vdkeystoremgr.rc
  vdkeystoremgr_LIBS = \
- 	$(VBOX_LIB_RUNTIME_STATIC) \
- 	$(PATH_STAGE_LIB)/SUPR3$(VBOX_SUFF_LIB)
+ 	$(VRA_LIB_RUNTIME_STATIC) \
+ 	$(PATH_STAGE_LIB)/SUPR3$(VRA_SUFF_LIB)
  ifeq ($(KBUILD_TARGET),linux)
   ifdef SDK_VBoxLibXml2_LIBS
    vdkeystoremgr_LIBS += xml2

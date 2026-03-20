@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
    <mime-type type="application/x-virtualbox-vbox">
-      <comment>VirtualBox Machine Definition</comment>
-      <comment xml:lang="en">VirtualBox Machine Definition</comment>
+      <comment>VirtualAgent Machine Definition</comment>
+      <comment xml:lang="en">VirtualAgent Machine Definition</comment>
       <glob pattern="*.vbox"/>
       <icon name="virtualbox-vbox"/>
    </mime-type>
 
    <mime-type type="application/x-virtualbox-vbox-extpack">
-      <comment>VirtualBox Extension Pack</comment>
-      <comment xml:lang="en">VirtualBox Extension Pack</comment>
+      <comment>VirtualAgent Extension Pack</comment>
+      <comment xml:lang="en">VirtualAgent Extension Pack</comment>
       <glob pattern="*.vbox-extpack"/>
       <icon name="virtualbox-vbox-extpack"/>
    </mime-type>

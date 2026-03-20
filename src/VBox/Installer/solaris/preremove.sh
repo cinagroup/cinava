@@ -1,13 +1,13 @@
 #!/bin/sh
 # $Id: preremove.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox preremove script for Solaris.
+# VirtualAgent preremove script for Solaris.
 #
 
 #
-# Copyright (C) 2007-2026 Oracle and/or its affiliates.
+# Copyright (C) 2007-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -28,8 +28,8 @@
 
 currentzone=`zonename`
 if test "x$currentzone" = "xglobal"; then
-    echo "Removing VirtualBox services and drivers..."
-    ${PKG_INSTALL_ROOT:=/}/opt/VirtualBox/vboxconfig.sh --preremove
+    echo "Removing VirtualAgent services and drivers..."
+    ${PKG_INSTALL_ROOT:=/}/opt/VirtualAgent/vboxconfig.sh --preremove
     if test "$?" -eq 0; then
         echo "Done."
         exit 0

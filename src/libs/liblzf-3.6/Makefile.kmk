@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -46,11 +46,11 @@ VBox-liblzf_SOURCES = \
 
 VBox-liblzf-static_TEMPLATE   = VBoxR3StaticNonPedantic
 VBox-liblzf-static_EXTENDS    = VBox-liblzf
-ifdef VBOX_WITH_NOCRT_STATIC
+ifdef VRA_WITH_NOCRT_STATIC
  VBox-liblzf-static_DEFS      = $(VBox-liblzf_DEFS) IPRT_NO_CRT_FOR_3RD_PARTY
 endif
 
-ifdef VBOX_WITH_32_ON_64_MAIN_API # 32-bit edition.
+ifdef VRA_WITH_32_ON_64_MAIN_API # 32-bit edition.
  LIBRARIES += VBox-liblzf-x86
  VBox-liblzf-x86_TEMPLATE = VBoxR3DllNonPedantic-x86
  VBox-liblzf-x86_EXTENDS = VBox-liblzf

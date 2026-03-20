@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2019-2026 Oracle and/or its affiliates.
+# Copyright (C) 2019-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -39,6 +39,6 @@ crypto_err_SOURCES = \
 	err_mark.c \
 	err_prn.c \
 	err_save.c
-$(evalcall VBOX_OPENSSL_X86,crypto_err)
+$(evalcall VRA_OPENSSL_X86,crypto_err)
 
 include $(FILE_KBUILD_SUB_FOOTER)

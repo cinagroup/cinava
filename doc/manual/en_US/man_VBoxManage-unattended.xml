@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage unattended
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -165,23 +165,23 @@
         </varlistentry>
         <varlistentry>
           <term><option>--install-additions</option>, <option>--no-install-additions</option></term>
-          <listitem><para>Whether to install the VirtualBox guest additions.  (default: --no-install-additions)</para></listitem>
+          <listitem><para>Whether to install the VirtualAgent guest additions.  (default: --no-install-additions)</para></listitem>
         </varlistentry>
         <varlistentry>
           <term><option>--additions-iso=<replaceable>add-iso</replaceable></option></term>
           <listitem>
-            <para>Path to the VirtualBox guest additions ISO.  (default: installed/downloaded GAs)</para></listitem>
+            <para>Path to the VirtualAgent guest additions ISO.  (default: installed/downloaded GAs)</para></listitem>
         </varlistentry>
         <varlistentry>
           <term><option>--install-txs</option>, <option>--no-install-txs</option></term>
           <listitem>
-            <para>Whether to install the Test eXecution Service (TXS) from the VirtualBox ValidationKit.
+            <para>Whether to install the Test eXecution Service (TXS) from the VirtualAgent ValidationKit.
               This is useful when preparing VMs for testing or similar.  (default: --no-install-txs)</para></listitem>
         </varlistentry>
         <varlistentry>
           <term><option>--validation-kit-iso=<replaceable>testing-iso</replaceable></option></term>
           <listitem>
-            <para>Path to the VirtualBox ValidationKit ISO.  This is required if <option>--install-txs</option>
+            <para>Path to the VirtualAgent ValidationKit ISO.  This is required if <option>--install-txs</option>
               is specified. </para></listitem>
         </varlistentry>
         <varlistentry>

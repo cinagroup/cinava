@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2007-2026 Oracle and/or its affiliates.
+# Copyright (C) 2007-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -41,7 +41,7 @@ include $(KBUILD_PATH)/subheader.kmk
 include $(PATH_SUB_CURRENT)/lib/Makefile.kmk
 
 
-if defined(VBOX_WITH_ADDITION_DRIVERS) && "$(intersects $(KBUILD_TARGET), darwin freebsd haiku netbsd os2 solaris win)" != ""
+if defined(VRA_WITH_ADDITION_DRIVERS) && "$(intersects $(KBUILD_TARGET), darwin freebsd haiku netbsd os2 solaris win)" != ""
  #
  # VBoxGuest - The Guest Additions Driver.
  #
@@ -52,32 +52,32 @@ if defined(VBOX_WITH_ADDITION_DRIVERS) && "$(intersects $(KBUILD_TARGET), darwin
  VBoxGuest_NAME.netbsd   = vboxguest
  VBoxGuest_NAME.solaris  = vboxguest
  VBoxGuest_INST.darwin   = $(INST_ADDITIONS)VBoxGuest.kext/Contents/MacOS/
- if defined(VBOX_SIGNING_MODE) && defined(VBOX_SIGN_ADDITIONS) # See Additions/win/Makefile.kmk?
+ if defined(VRA_SIGNING_MODE) && defined(VRA_SIGN_ADDITIONS) # See Additions/win/Makefile.kmk?
   VBoxGuest_INSTTYPE.win  = none
   VBoxGuest_DEBUG_INSTTYPE.win  = both
  endif
- VBoxGuest_DEFS.haiku    = VBOX_SVN_REV=$(VBOX_SVN_REV) _KERNEL_MODE=1
- VBoxGuest_DEFS.solaris  = VBOX_SVN_REV=$(VBOX_SVN_REV)
- VBoxGuest_DEFS.win      = VBOX_GUESTDRV_WITH_RELEASE_LOGGER
+ VBoxGuest_DEFS.haiku    = VRA_SVN_REV=$(VRA_SVN_REV) _KERNEL_MODE=1
+ VBoxGuest_DEFS.solaris  = VRA_SVN_REV=$(VRA_SVN_REV)
+ VBoxGuest_DEFS.win      = VRA_GUESTDRV_WITH_RELEASE_LOGGER
  VBoxGuest_DEFS.win.x86  = TARGET_NT4 TARGET_NT3 RT_WITHOUT_NOCRT_WRAPPERS
- VBoxGuest_DEFS.darwin   = VBOX_GUESTDRV_WITH_RELEASE_LOGGER
+ VBoxGuest_DEFS.darwin   = VRA_GUESTDRV_WITH_RELEASE_LOGGER
  ifeq ($(KBUILD_TYPE),release)
   # Allow stopping/removing the driver without a reboot
   # in debug mode; this is very useful for testing the shutdown stuff!
-  VBoxGuest_DEFS.win    += VBOX_REBOOT_ON_UNINSTALL
+  VBoxGuest_DEFS.win    += VRA_REBOOT_ON_UNINSTALL
  endif
- ifdef VBOX_WITH_GUEST_BUGCHECK_DETECTION
-  VBoxGuest_DEFS.win    += VBOX_WITH_GUEST_BUGCHECK_DETECTION
+ ifdef VRA_WITH_GUEST_BUGCHECK_DETECTION
+  VBoxGuest_DEFS.win    += VRA_WITH_GUEST_BUGCHECK_DETECTION
  endif
  #VBoxGuest_DEFS.win     += LOG_ENABLED LOG_TO_BACKDOOR
  VBoxGuest_DEFS.win += \
- 	$(if $(VBOX_WITH_DPC_LATENCY_CHECKER),VBOX_WITH_DPC_LATENCY_CHECKER,)
- VBoxGuest_DEPS.solaris += $(VBOX_SVN_REV_KMK)
- VBoxGuest_DEPS.haiku   += $(VBOX_SVN_REV_HEADER)
- VBoxGuest_DEPS.freebsd += $(VBOX_SVN_REV_HEADER)
- VBoxGuest_DEPS.netbsd  += $(VBOX_SVN_REV_HEADER)
- VBoxGuest_DEPS.darwin  += $(VBOX_SVN_REV_HEADER)
- VBoxGuest_DEFS          = VBGL_VBOXGUEST VBOX_WITH_HGCM
+ 	$(if $(VRA_WITH_DPC_LATENCY_CHECKER),VRA_WITH_DPC_LATENCY_CHECKER,)
+ VBoxGuest_DEPS.solaris += $(VRA_SVN_REV_KMK)
+ VBoxGuest_DEPS.haiku   += $(VRA_SVN_REV_HEADER)
+ VBoxGuest_DEPS.freebsd += $(VRA_SVN_REV_HEADER)
+ VBoxGuest_DEPS.netbsd  += $(VRA_SVN_REV_HEADER)
+ VBoxGuest_DEPS.darwin  += $(VRA_SVN_REV_HEADER)
+ VBoxGuest_DEFS          = VBGL_VRAGUEST VRA_WITH_HGCM
  VBoxGuest_INCS          = .
  VBoxGuest_INCS.freebsd  = $(VBoxGuest_0_OUTDIR) $(PATH_STAGE)/gen-sys-hdrs
  VBoxGuest_INCS.netbsd   = $(VBoxGuest_0_OUTDIR) netbsd
@@ -93,33 +93,33 @@ if defined(VBOX_WITH_ADDITION_DRIVERS) && "$(intersects $(KBUILD_TARGET), darwin
    VBoxGuest_LDFLAGS.amd64 = -Entry:DriverEntry
    VBoxGuest_LDFLAGS.arm64 = -Entry:DriverEntry
    ifeq ($(KBUILD_TARGET_ARCH),x86)
-    VBoxGuest_SDKS       = ReorderCompilerIncs $(VBOX_WINDDK_GST_NT4)
+    VBoxGuest_SDKS       = ReorderCompilerIncs $(VRA_WINDDK_GST_NT4)
     VBoxGuest_LIBS       = \
-    	$(VBOX_LIB_VBGL_R0BASE) \
-    	$(VBOX_LIB_IPRT_GUEST_R0) \
-    	$(PATH_SDK_$(VBOX_WINDDK_GST_NT4)_LIB)/exsup.lib \
-    	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/ntoskrnl.lib \
-    	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/hal.lib
-    ifneq ($(VBOX_VCC_CC_GUARD_CF),)
+    	$(VRA_LIB_VBGL_R0BASE) \
+    	$(VRA_LIB_IPRT_GUEST_R0) \
+    	$(PATH_SDK_$(VRA_WINDDK_GST_NT4)_LIB)/exsup.lib \
+    	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/ntoskrnl.lib \
+    	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/hal.lib
+    ifneq ($(VRA_VCC_CC_GUARD_CF),)
      VBoxGuest_LIBS.x86 += \
-     	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/BufferOverflowK.lib
+     	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/BufferOverflowK.lib
     endif
    else
     VBoxGuest_LIBS       = \
-    	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/ntoskrnl.lib \
-    	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/hal.lib
+    	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/ntoskrnl.lib \
+    	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/hal.lib
     VBoxGuest_LIBS.arm64 += \
-    	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/BufferOverflowFastFailK.lib
+    	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/BufferOverflowFastFailK.lib
    endif
    VBoxGuest_USES.win += vboximportchecker
-   VBoxGuest_VBOX_IMPORT_CHECKER.win.x86 = nt31/r0
-   VBoxGuest_VBOX_IMPORT_CHECKER.win.amd64 = xp64/r0
+   VBoxGuest_VRA_IMPORT_CHECKER.win.x86 = nt31/r0
+   VBoxGuest_VRA_IMPORT_CHECKER.win.amd64 = xp64/r0
   endif # win
   ifn1of ($(KBUILD_TARGET), linux freebsd netbsd solaris haiku)
    VBoxGuest_SOURCES    = VBoxGuest-$(KBUILD_TARGET).cpp
   else
    VBoxGuest_SOURCES    = VBoxGuest-$(KBUILD_TARGET).c
-   VBoxGuest_$(KBUILD_TARGET).c_DEPS = $(VBOX_SVN_REV_HEADER)
+   VBoxGuest_$(KBUILD_TARGET).c_DEPS = $(VRA_SVN_REV_HEADER)
    ifeq ($(KBUILD_TARGET),freebsd)
     VBoxGuest-$(KBUILD_TARGET).c_CFLAGS = -Wno-sign-compare # /usr/src/sys/sys/vmmeter.h: In function 'vm_paging_needed'
    endif
@@ -134,8 +134,8 @@ if defined(VBOX_WITH_ADDITION_DRIVERS) && "$(intersects $(KBUILD_TARGET), darwin
   	../../../Runtime/r0drv/nt/nt3fakes-r0drv-nt.cpp \
   	../../../Runtime/r0drv/nt/nt3fakesA-r0drv-nt.asm
   VBoxGuest_LIBS        += \
-  	$(VBOX_LIB_VBGL_R0BASE) \
-  	$(VBOX_LIB_IPRT_GUEST_R0)
+  	$(VRA_LIB_VBGL_R0BASE) \
+  	$(VRA_LIB_IPRT_GUEST_R0)
   VBoxGuest_ORDERDEPS.freebsd = \
   	$(PATH_STAGE)/gen-sys-hdrs/pci_if.h \
   	$(PATH_STAGE)/gen-sys-hdrs/bus_if.h \
@@ -147,7 +147,7 @@ if defined(VBOX_WITH_ADDITION_DRIVERS) && "$(intersects $(KBUILD_TARGET), darwin
    SYSMODS += VBoxDev
    VBoxDev_TEMPLATE      = VBoxGuestR0Drv
    VBoxDev_NAME          = vboxdev
-   VBoxDev_DEFS          = VBOX_SVN_REV=$(VBOX_SVN_REV) _KERNEL_MODE=1 VBGL_VBOXGUEST VBOX_WITH_HGCM IN_RING0
+   VBoxDev_DEFS          = VRA_SVN_REV=$(VRA_SVN_REV) _KERNEL_MODE=1 VBGL_VRAGUEST VRA_WITH_HGCM IN_RING0
    VBoxDev_SOURCES       = VBoxDev-haiku.c VBoxGuest-haiku-stubs.c
   endif
  else # OS/2:
@@ -155,11 +155,11 @@ if defined(VBOX_WITH_ADDITION_DRIVERS) && "$(intersects $(KBUILD_TARGET), darwin
   # A library is used to make sure that VBoxGuestA-os2.asm is first in the link. (temporary hack?)
   VBoxGuest_SOURCES      = \
   	VBoxGuestA-os2.asm
-  ifdef VBOX_USE_WATCOM_FOR_OS2
+  ifdef VRA_USE_WATCOM_FOR_OS2
    VBoxGuest_LIBS        = \
    	$(VBoxGuestLibOs2Hack_1_TARGET) \
-   	$(VBOX_LIB_VBGL_R0BASE) \
-   	$(VBOX_LIB_IPRT_GUEST_R0) \
+   	$(VRA_LIB_VBGL_R0BASE) \
+   	$(VRA_LIB_IPRT_GUEST_R0) \
    	$(PATH_IGCC)/lib/libend.lib
   else
    VBoxGuest_SOURCES    += \
@@ -167,9 +167,9 @@ if defined(VBOX_WITH_ADDITION_DRIVERS) && "$(intersects $(KBUILD_TARGET), darwin
    #VBoxGuest_LDFLAGS        = -s -t -v
    VBoxGuest_LIBS        = \
    	$(VBoxGuestLibOs2Hack_1_TARGET) \
-   	$(VBOX_LIB_VBGL_R0BASE) \
-   	$(VBOX_LIB_IPRT_GUEST_R0) \
-   	$(VBOX_GCC_LIBGCC) \
+   	$(VRA_LIB_VBGL_R0BASE) \
+   	$(VRA_LIB_IPRT_GUEST_R0) \
+   	$(VRA_GCC_LIBGCC) \
    	end
   endif
   ## When debugging init with kDrvTest:
@@ -188,11 +188,11 @@ if defined(VBOX_WITH_ADDITION_DRIVERS) && "$(intersects $(KBUILD_TARGET), darwin
   	VBoxGuest.cpp
  endif # OS/2
 
- VBoxGuest.cpp_DEFS     = VBOX_SVN_REV=$(VBOX_SVN_REV)
+ VBoxGuest.cpp_DEFS     = VRA_SVN_REV=$(VRA_SVN_REV)
 endif # enabled
 
 
-if defined(VBOX_WITH_ADDITION_DRIVERS) && "$(KBUILD_TARGET)" == "darwin"
+if defined(VRA_WITH_ADDITION_DRIVERS) && "$(KBUILD_TARGET)" == "darwin"
  # Files necessary to make a darwin kernel extension bundle.
  INSTALLS += VBoxGuest.kext
  VBoxGuest.kext_INST     = $(INST_ADDITIONS)/VBoxGuest.kext/Contents/
@@ -202,21 +202,21 @@ if defined(VBOX_WITH_ADDITION_DRIVERS) && "$(KBUILD_TARGET)" == "darwin"
 
  $$(VBoxGuest.kext_0_OUTDIR)/Contents/Info.plist: \
  		$(PATH_SUB_CURRENT)/darwin/Info.plist \
- 		$(VBOX_VERSION_MK) | $$(dir $$@)
+ 		$(VRA_VERSION_MK) | $$(dir $$@)
 	$(call MSG_GENERATE,VBoxGuest,$@,$<)
 	$(QUIET)$(RM) -f $@
 	$(QUIET)$(SED) \
-		-e 's+@VBOX_VERSION_STRING@+$(VBOX_VERSION_STRING)+g' \
-		-e 's+@VBOX_VERSION_MAJOR@+$(VBOX_VERSION_MAJOR)+g' \
-		-e 's+@VBOX_VERSION_MINOR@+$(VBOX_VERSION_MINOR)+g' \
-		-e 's+@VBOX_VERSION_BUILD@+$(VBOX_VERSION_BUILD)+g' \
-		-e 's+@VBOX_VENDOR@+$(VBOX_VENDOR)+g' \
-		-e 's+@VBOX_PRODUCT@+$(VBOX_PRODUCT)+g' \
-		-e 's+@VBOX_C_YEAR@+$(VBOX_C_YEAR)+g' \
+		-e 's+@VRA_VERSION_STRING@+$(VRA_VERSION_STRING)+g' \
+		-e 's+@VRA_VERSION_MAJOR@+$(VRA_VERSION_MAJOR)+g' \
+		-e 's+@VRA_VERSION_MINOR@+$(VRA_VERSION_MINOR)+g' \
+		-e 's+@VRA_VERSION_BUILD@+$(VRA_VERSION_BUILD)+g' \
+		-e 's+@VRA_VENDOR@+$(VRA_VENDOR)+g' \
+		-e 's+@VRA_PRODUCT@+$(VRA_PRODUCT)+g' \
+		-e 's+@VRA_C_YEAR@+$(VRA_C_YEAR)+g' \
 		--output $@ \
 		$<
 
- $(evalcall2 VBOX_TEST_SIGN_KEXT,VBoxGuest)
+ $(evalcall2 VRA_TEST_SIGN_KEXT,VBoxGuest)
 endif # darwin
 
 
@@ -229,7 +229,7 @@ ifeq ($(KBUILD_TARGET),linux)
  INSTALLS += vboxguest-src
  vboxguest-src_INST     = $(INST_ADDITIONS)src/vboxguest/
  vboxguest-src_MODE     = a+r,u+w
- vboxguest-src_SOURCES  = $(subst ",,$(FILES_VBOXGUEST_NOBIN))
+ vboxguest-src_SOURCES  = $(subst ",,$(FILES_VRAGUEST_NOBIN))
 
  INSTALLS += vboxguest-scripts
  vboxguest-scripts_INST    = $(INST_ADDITIONS)src/
@@ -240,12 +240,12 @@ ifeq ($(KBUILD_TARGET),linux)
  INSTALLS += vboxguest-sh
  vboxguest-sh_INST      = $(INST_ADDITIONS)src/vboxguest/
  vboxguest-sh_MODE      = a+rx,u+w
- vboxguest-sh_SOURCES   = $(subst ",,$(FILES_VBOXGUEST_BIN))
+ vboxguest-sh_SOURCES   = $(subst ",,$(FILES_VRAGUEST_BIN))
 
  #
  # Build test for the Guest Additions kernel module (kmk check).
  #
- $(evalcall2 VBOX_LINUX_KMOD_TEST_BUILD_RULE_FN,vboxguest-src,,save_symvers)
+ $(evalcall2 VRA_LINUX_KMOD_TEST_BUILD_RULE_FN,vboxguest-src,,save_symvers)
 endif # Linux
 
 ifeq ($(KBUILD_TARGET),freebsd)
@@ -257,7 +257,7 @@ ifeq ($(KBUILD_TARGET),freebsd)
  INSTALLS += vboxguest-src
  vboxguest-src_INST     = $(INST_ADDITIONS)src/vboxguest/
  vboxguest-src_MODE     = a+r,u+w
- vboxguest-src_SOURCES  = $(subst ",,$(FILES_VBOXGUEST_NOBIN))
+ vboxguest-src_SOURCES  = $(subst ",,$(FILES_VRAGUEST_NOBIN))
 
 endif # FreeBSD
 
@@ -267,13 +267,13 @@ ifeq ($(KBUILD_TARGET),win)
  #
  PROGRAMS.win.x86 += VBoxGuestInstNT
  VBoxGuestInstNT_TEMPLATE = VBoxGuestR3Exe
- ifndef VBOX_WITH_NOCRT_STATIC
+ ifndef VRA_WITH_NOCRT_STATIC
   VBoxGuestInstNT_LDFLAGS := -Include:_vcc100_kernel32_fakes_asm # Temporary kludge to deal with some link order issue.
  endif
  VBoxGuestInstNT_INCS     = ../../win/include
  VBoxGuestInstNT_SOURCES  = win/VBoxGuestInst.cpp
  VBoxGuestInstNT_USES     = vboximportchecker
- VBoxGuestInstNT_VBOX_IMPORT_CHECKER.win.x86 = nt31
+ VBoxGuestInstNT_VRA_IMPORT_CHECKER.win.x86 = nt31
 endif
 
 

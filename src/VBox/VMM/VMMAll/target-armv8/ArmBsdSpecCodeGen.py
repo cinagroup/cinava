@@ -10,9 +10,9 @@ from __future__ import print_function;
 
 __copyright__ = \
 """
-Copyright (C) 2025-2026 Oracle and/or its affiliates.
+Copyright (C) 2025-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -1567,7 +1567,7 @@ class SysRegGeneratorBase(object):
             ' * Transformation status: %u - %s'
             % (oInfo.cIncompleteNodes, 'complete' if oInfo.cIncompleteNodes == 0 else 'incomplete'),
             ' */',
-            'static VBOXSTRICTRC %s_%s(PVMCPU pVCpu, %s %s%s) RT_NOEXCEPT'
+            'static VRASTRICTRC %s_%s(PVMCPU pVCpu, %s %s%s) RT_NOEXCEPT'
             % (self.sFuncPrefix, oInfo.sAsmValue, self.sParamType, self.sParamName,
                ', uint32_t uInstrEssence' if oInfo.cInstrEssenceRefs > 0 else ''),
             '{',
@@ -1628,7 +1628,7 @@ class SysRegGeneratorBase(object):
             % (self.kdTypeToGprSuff[self.sType], self.kdTypeToGprDesc[self.sType],),
             ' * @param   %-11s %s' % (self.sParamName, self.kdTypeToParamDesc[self.sType],),
             ' */',
-            'DECLHIDDEN(VBOXSTRICTRC) %s_generic(PVMCPU pVCpu, uint32_t idSysReg, uint32_t idxGpr%s, %s %s)'
+            'DECLHIDDEN(VRASTRICTRC) %s_generic(PVMCPU pVCpu, uint32_t idSysReg, uint32_t idxGpr%s, %s %s)'
             % (self.sFuncPrefix, self.kdTypeToGprSuff[self.sType],self.sParamType, self.sParamName,),
             '{',
         ];
@@ -1656,15 +1656,15 @@ class SysRegGeneratorBase(object):
                 asLines += [
                     '        case %s:' % (oInfo.sEnc,),
                     '        {',
-                    '            VBOXSTRICTRC const rcStrict = %s_%s(pVCpu, %s%s);'
+                    '            VRASTRICTRC const rcStrict = %s_%s(pVCpu, %s%s);'
                     % (self.sFuncPrefix, oInfo.sAsmValue, self.sParamName,
                        ', uInstrEssence' if oInfo.cInstrEssenceRefs else '',),
                 ];
                 if self.sType == 'read':
-                    asLines.append('            LogFlow(("%s_%s -> %%Rrc & *%s=%s\\n", VBOXSTRICTRC_VAL(rcStrict), *%s));'
+                    asLines.append('            LogFlow(("%s_%s -> %%Rrc & *%s=%s\\n", VRASTRICTRC_VAL(rcStrict), *%s));'
                                    % (self.sFuncPrefix, oInfo.sAsmValue, self.sParamName, sLogFmt, self.sParamName,));
                 else:
-                    asLines.append('            LogFlow(("%s_%s(%s) -> %%Rrc\\n", %s, VBOXSTRICTRC_VAL(rcStrict)));'
+                    asLines.append('            LogFlow(("%s_%s(%s) -> %%Rrc\\n", %s, VRASTRICTRC_VAL(rcStrict)));'
                                    % (self.sFuncPrefix, oInfo.sAsmValue, sLogFmt, self.sParamName,));
                 if oInfo.sRegName in self.kdRegsRequiringRecalcs:
                     asLines.append('            return %s(pVCpu, rcStrict);' % (self.kdRegsRequiringRecalcs[oInfo.sRegName],));
@@ -3668,9 +3668,9 @@ class IEMArmGenerator(object):
             ' */',
             '',
             '/*',
-            ' * Copyright (C) 2025' + sDashYear + ' Oracle and/or its affiliates.',
+            ' * Copyright (C) 2025' + sDashYear + ' CINASEEK and/or its affiliates.',
             ' *',
-            ' * This file is part of VirtualBox base platform packages, as',
+            ' * This file is part of VirtualAgent base platform packages, as',
             ' * available from https://www.virtualbox.org.',
             ' *',
             ' * This program is free software; you can redistribute it and/or',

@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,12 +29,12 @@ SUB_DEPTH = ../../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 # Include Sub-Makefiles.
-ifndef VBOX_OSE
+ifndef VRA_OSE
  include $(PATH_SUB_CURRENT)/keygen/Makefile.kmk
 endif
 
 # Python glue installer
-ifdef VBOX_WITH_PYTHON
+ifdef VRA_WITH_PYTHON
 
  INSTALLS += VBox-python-glue-vboxapisetup
  VBox-python-glue-vboxapisetup_INST     = $(INST_SDK)installer/python/vboxapi/
@@ -49,7 +49,7 @@ ifdef VBOX_WITH_PYTHON
  #
  # Automatically lint common installer Python stuff.
  #
- if defined(VBOX_WITH_PYLINT) && !defined(VBOX_WITHOUT_AUTO_PYLINT)
+ if defined(VRA_WITH_PYLINT) && !defined(VRA_WITHOUT_AUTO_PYLINT)
   OTHERS      += $(PATH_TARGET)/pylintInstallerCommon.run
   OTHER_CLEAN += $(PATH_TARGET)/pylintInstallerCommon.run
   $(PATH_TARGET)/pylintInstallerCommon.run: \
@@ -57,10 +57,10 @@ ifdef VBOX_WITH_PYTHON
 	$(QUIET)$(APPEND) -t "$@"
  endif
 
- VBOX_INSTALLER_COMMON_PYTHON_SOURCES := $(wildcard $(PATH_SUB_CURRENT)/*.py)
+ VRA_INSTALLER_COMMON_PYTHON_SOURCES := $(wildcard $(PATH_SUB_CURRENT)/*.py)
 
  $(evalcall def_vbox_installer_common_process_python_sources,FORCE)
 
-endif # VBOX_WITH_PYTHON
+endif # VRA_WITH_PYTHON
 
 include $(FILE_KBUILD_SUB_FOOTER)

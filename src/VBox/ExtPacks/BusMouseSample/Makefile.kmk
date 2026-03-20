@@ -4,7 +4,7 @@
 #
 
 #
-# Copyright (C) 2010-2026 Oracle and/or its affiliates.
+# Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -53,13 +53,13 @@ TEMPLATE_VBoxInsExtPackBusMouse_INST    = $(INST_EXTPACK)BusMouse/
 #
 # Globals.
 #
-VBOX_BUSMOUSE_NAME         = BusMouse
-VBOX_BUSMOUSE_MANGLED_NAME = BusMouse
-VBOX_PATH_EXTPACK_BUSMOUSE = $(PATH_STAGE)/$(INST_EXTPACK)BusMouse
+VRA_BUSMOUSE_NAME         = BusMouse
+VRA_BUSMOUSE_MANGLED_NAME = BusMouse
+VRA_PATH_EXTPACK_BUSMOUSE = $(PATH_STAGE)/$(INST_EXTPACK)BusMouse
 
 
 #
-# VBoxBusMouseMain - The module which the VirtualBox Main API talks to.
+# VBoxBusMouseMain - The module which the VirtualAgent Main API talks to.
 #
 DLLS += VBoxBusMouseMain
 VBoxBusMouseMain_TEMPLATE = VBoxR3ExtPackBusMouse
@@ -68,7 +68,7 @@ VBoxBusMouseMain_DEFS =
 
 
 #
-# VBoxBusMouseMainVM - The module in a VM which the VirtualBox Main API talks to.
+# VBoxBusMouseMainVM - The module in a VM which the VirtualAgent Main API talks to.
 #
 DLLS += VBoxBusMouseMainVM
 VBoxBusMouseMainVM_TEMPLATE = VBoxR3ExtPackBusMouse
@@ -83,8 +83,8 @@ DLLS += VBoxBusMouseR3
 VBoxBusMouseR3_TEMPLATE = VBoxR3ExtPackBusMouse
 VBoxBusMouseR3_SOURCES  = DevBusMouse.cpp
 
-ifdef VBOX_WITH_R0_MODULES
- ifdef VBOX_WITH_VBOXR0_AS_DLL
+ifdef VRA_WITH_R0_MODULES
+ ifdef VRA_WITH_VRAR0_AS_DLL
   DLLS    += VBoxBusMouseR0
  else
   SYSMODS += VBoxBusMouseR0
@@ -93,7 +93,7 @@ ifdef VBOX_WITH_R0_MODULES
  VBoxBusMouseR0_SOURCES  = DevBusMouse.cpp
 endif
 
-ifdef VBOX_WITH_RAW_MODE
+ifdef VRA_WITH_RAW_MODE
  SYSMODS += VBoxBusMouseRC
  VBoxBusMouseRC_TEMPLATE = VBoxRcExtPackBusMouse
  VBoxBusMouseRC_SOURCES  = DevBusMouse.cpp
@@ -107,87 +107,87 @@ INSTALLS += VBoxBusMouseIns
 VBoxBusMouseIns_TEMPLATE = VBoxInsExtPackBusMouse
 VBoxBusMouseIns_SOURCES = \
 	$(VBoxBusMouseIns_0_OUTDIR)/ExtPack.xml
-$(call VBOX_EDIT_VERSION_RULE_FN,VBoxBusMouseIns,ExtPack.xml)
+$(call VRA_EDIT_VERSION_RULE_FN,VBoxBusMouseIns,ExtPack.xml)
 
 
 #
 # Packing.
 #
-ifndef VBOX_WITHOUT_EXTPACK_BUSMOUSE_PACKING
- PACKING += $(VBOX_PATH_PACKAGES)/$(VBOX_BUSMOUSE_MANGLED_NAME)-$(VBOX_VERSION_STRING)r$(VBOX_SVN_REV).vbox-extpack
+ifndef VRA_WITHOUT_EXTPACK_BUSMOUSE_PACKING
+ PACKING += $(VRA_PATH_PACKAGES)/$(VRA_BUSMOUSE_MANGLED_NAME)-$(VRA_VERSION_STRING)r$(VRA_SVN_REV).vbox-extpack
 endif
 
-ifndef VBOX_WITH_EXTPACK_OS_ARCHS
+ifndef VRA_WITH_EXTPACK_OS_ARCHS
  ifeq ($(USER),bird) # for now
-  VBOX_WITH_EXTPACK_OS_ARCHS = $(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)
+  VRA_WITH_EXTPACK_OS_ARCHS = $(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)
  endif
 endif
 
-# Build the file list.  The macro takes 1=darwin.x86, 2=dist/VirtualBox.app/Contents/MacOS, 3=dylib
-VBOX_BUSMOUSE_FILES_MACRO = \
-	$(PATH_OUT_BASE)/$(1)/$(KBUILD_TYPE)/$(2)/ExtensionPacks/$(VBOX_BUSMOUSE_MANGLED_NAME)/$(1)/VBoxBusMouseMain.$(3)=>$(1)/VBoxBusMouseMain.$(3) \
-	$(PATH_OUT_BASE)/$(1)/$(KBUILD_TYPE)/$(2)/ExtensionPacks/$(VBOX_BUSMOUSE_MANGLED_NAME)/$(1)/VBoxBusMouseMainVM.$(3)=>$(1)/VBoxBusMouseMainVM.$(3) \
-	$(PATH_OUT_BASE)/$(1)/$(KBUILD_TYPE)/$(2)/ExtensionPacks/$(VBOX_BUSMOUSE_MANGLED_NAME)/$(1)/VBoxBusMouseR3.$(3)=>$(1)/VBoxBusMouseR3.$(3) \
-	$(PATH_OUT_BASE)/$(1)/$(KBUILD_TYPE)/$(2)/ExtensionPacks/$(VBOX_BUSMOUSE_MANGLED_NAME)/$(1)/VBoxBusMouseR0.r0=>$(1)/VBoxBusMouseR0.r0
-ifdef VBOX_WITH_RAW_MODE
- VBOX_BUSMOUSE_FILES_MACRO += \
- 	$(PATH_OUT_BASE)/$(1)/$(KBUILD_TYPE)/$(2)/ExtensionPacks/$(VBOX_BUSMOUSE_MANGLED_NAME)/$(1)/VBoxBusMouseRC.rc=>$(1)/VBoxBusMouseRC.rc
+# Build the file list.  The macro takes 1=darwin.x86, 2=dist/VirtualAgent.app/Contents/MacOS, 3=dylib
+VRA_BUSMOUSE_FILES_MACRO = \
+	$(PATH_OUT_BASE)/$(1)/$(KBUILD_TYPE)/$(2)/ExtensionPacks/$(VRA_BUSMOUSE_MANGLED_NAME)/$(1)/VBoxBusMouseMain.$(3)=>$(1)/VBoxBusMouseMain.$(3) \
+	$(PATH_OUT_BASE)/$(1)/$(KBUILD_TYPE)/$(2)/ExtensionPacks/$(VRA_BUSMOUSE_MANGLED_NAME)/$(1)/VBoxBusMouseMainVM.$(3)=>$(1)/VBoxBusMouseMainVM.$(3) \
+	$(PATH_OUT_BASE)/$(1)/$(KBUILD_TYPE)/$(2)/ExtensionPacks/$(VRA_BUSMOUSE_MANGLED_NAME)/$(1)/VBoxBusMouseR3.$(3)=>$(1)/VBoxBusMouseR3.$(3) \
+	$(PATH_OUT_BASE)/$(1)/$(KBUILD_TYPE)/$(2)/ExtensionPacks/$(VRA_BUSMOUSE_MANGLED_NAME)/$(1)/VBoxBusMouseR0.r0=>$(1)/VBoxBusMouseR0.r0
+ifdef VRA_WITH_RAW_MODE
+ VRA_BUSMOUSE_FILES_MACRO += \
+ 	$(PATH_OUT_BASE)/$(1)/$(KBUILD_TYPE)/$(2)/ExtensionPacks/$(VRA_BUSMOUSE_MANGLED_NAME)/$(1)/VBoxBusMouseRC.rc=>$(1)/VBoxBusMouseRC.rc
 endif
 
-VBOX_BUSMOUSE_FILES := \
-	$(VBOX_PATH_EXTPACK_BUSMOUSE)/ExtPack.xml=>ExtPack.xml
+VRA_BUSMOUSE_FILES := \
+	$(VRA_PATH_EXTPACK_BUSMOUSE)/ExtPack.xml=>ExtPack.xml
 
-if1of (darwin.amd64, $(VBOX_WITH_EXTPACK_OS_ARCHS))
- VBOX_BUSMOUSE_FILES += $(call VBOX_BUSMOUSE_FILES_MACRO,darwin.amd64,dist/VirtualBox.app/Contents/MacOS,dylib)
+if1of (darwin.amd64, $(VRA_WITH_EXTPACK_OS_ARCHS))
+ VRA_BUSMOUSE_FILES += $(call VRA_BUSMOUSE_FILES_MACRO,darwin.amd64,dist/VirtualAgent.app/Contents/MacOS,dylib)
 endif
-if1of (darwin.x86, $(VBOX_WITH_EXTPACK_OS_ARCHS))
- VBOX_BUSMOUSE_FILES += $(call VBOX_BUSMOUSE_FILES_MACRO,darwin.x86,dist/VirtualBox.app/Contents/MacOS,dylib)
+if1of (darwin.x86, $(VRA_WITH_EXTPACK_OS_ARCHS))
+ VRA_BUSMOUSE_FILES += $(call VRA_BUSMOUSE_FILES_MACRO,darwin.x86,dist/VirtualAgent.app/Contents/MacOS,dylib)
 endif
-if1of (freebsd.amd64, $(VBOX_WITH_EXTPACK_OS_ARCHS))
- VBOX_BUSMOUSE_FILES += $(call VBOX_BUSMOUSE_FILES_MACRO,freebsd.amd64,bin,so)
+if1of (freebsd.amd64, $(VRA_WITH_EXTPACK_OS_ARCHS))
+ VRA_BUSMOUSE_FILES += $(call VRA_BUSMOUSE_FILES_MACRO,freebsd.amd64,bin,so)
 endif
-if1of (freebsd.x86, $(VBOX_WITH_EXTPACK_OS_ARCHS))
- VBOX_BUSMOUSE_FILES += $(call VBOX_BUSMOUSE_FILES_MACRO,freebsd.x86,bin,so)
+if1of (freebsd.x86, $(VRA_WITH_EXTPACK_OS_ARCHS))
+ VRA_BUSMOUSE_FILES += $(call VRA_BUSMOUSE_FILES_MACRO,freebsd.x86,bin,so)
 endif
-if1of (linux.amd64, $(VBOX_WITH_EXTPACK_OS_ARCHS))
- VBOX_BUSMOUSE_FILES += $(call VBOX_BUSMOUSE_FILES_MACRO,linux.amd64,bin,so)
+if1of (linux.amd64, $(VRA_WITH_EXTPACK_OS_ARCHS))
+ VRA_BUSMOUSE_FILES += $(call VRA_BUSMOUSE_FILES_MACRO,linux.amd64,bin,so)
 endif
-if1of (linux.x86, $(VBOX_WITH_EXTPACK_OS_ARCHS))
- VBOX_BUSMOUSE_FILES += $(call VBOX_BUSMOUSE_FILES_MACRO,linux.x86,bin,so)
+if1of (linux.x86, $(VRA_WITH_EXTPACK_OS_ARCHS))
+ VRA_BUSMOUSE_FILES += $(call VRA_BUSMOUSE_FILES_MACRO,linux.x86,bin,so)
 endif
-if1of (os2.x86, $(VBOX_WITH_EXTPACK_OS_ARCHS))
- VBOX_BUSMOUSE_FILES += $(call VBOX_BUSMOUSE_FILES_MACRO,os2.x86,bin,so)
+if1of (os2.x86, $(VRA_WITH_EXTPACK_OS_ARCHS))
+ VRA_BUSMOUSE_FILES += $(call VRA_BUSMOUSE_FILES_MACRO,os2.x86,bin,so)
 endif
-if1of (solaris.amd64, $(VBOX_WITH_EXTPACK_OS_ARCHS))
- VBOX_BUSMOUSE_FILES += $(call VBOX_BUSMOUSE_FILES_MACRO,solaris.amd64,bin,so)
+if1of (solaris.amd64, $(VRA_WITH_EXTPACK_OS_ARCHS))
+ VRA_BUSMOUSE_FILES += $(call VRA_BUSMOUSE_FILES_MACRO,solaris.amd64,bin,so)
 endif
-if1of (solaris.x86, $(VBOX_WITH_EXTPACK_OS_ARCHS))
- VBOX_BUSMOUSE_FILES += $(call VBOX_BUSMOUSE_FILES_MACRO,solaris.x86,bin,so)
+if1of (solaris.x86, $(VRA_WITH_EXTPACK_OS_ARCHS))
+ VRA_BUSMOUSE_FILES += $(call VRA_BUSMOUSE_FILES_MACRO,solaris.x86,bin,so)
 endif
-if1of (win.amd64, $(VBOX_WITH_EXTPACK_OS_ARCHS))
- VBOX_BUSMOUSE_FILES += $(call VBOX_BUSMOUSE_FILES_MACRO,win.amd64,bin,dll)
+if1of (win.amd64, $(VRA_WITH_EXTPACK_OS_ARCHS))
+ VRA_BUSMOUSE_FILES += $(call VRA_BUSMOUSE_FILES_MACRO,win.amd64,bin,dll)
 endif
-if1of (win.x86, $(VBOX_WITH_EXTPACK_OS_ARCHS))
- VBOX_BUSMOUSE_FILES += $(call VBOX_BUSMOUSE_FILES_MACRO,win.x86,bin,dll)
+if1of (win.x86, $(VRA_WITH_EXTPACK_OS_ARCHS))
+ VRA_BUSMOUSE_FILES += $(call VRA_BUSMOUSE_FILES_MACRO,win.x86,bin,dll)
 endif
 
 # Pack it all up using a temporary staging directory.
-$(VBOX_PATH_PACKAGES)/$(VBOX_BUSMOUSE_MANGLED_NAME)-$(VBOX_VERSION_STRING)r$(VBOX_SVN_REV).vbox-extpack: \
-		$$(foreach file, $$(VBOX_BUSMOUSE_FILES), $$(firstword $$(subst =>,$$(SP),$$(file)))) \
-		| $(VBOX_PATH_PACKAGES)/
-	$(RM) -f $(wildcard $(VBOX_PATH_PACKAGES)/$(VBOX_BUSMOUSE_MANGLED_NAME)-*.vbox-extpack) \
+$(VRA_PATH_PACKAGES)/$(VRA_BUSMOUSE_MANGLED_NAME)-$(VRA_VERSION_STRING)r$(VRA_SVN_REV).vbox-extpack: \
+		$$(foreach file, $$(VRA_BUSMOUSE_FILES), $$(firstword $$(subst =>,$$(SP),$$(file)))) \
+		| $(VRA_PATH_PACKAGES)/
+	$(RM) -f $(wildcard $(VRA_PATH_PACKAGES)/$(VRA_BUSMOUSE_MANGLED_NAME)-*.vbox-extpack) \
 		$(VBoxBusMouseIns_0_OUTDIR)/ExtPack.manifest \
 		$(VBoxBusMouseIns_0_OUTDIR)/ExtPack.signature
 # Stage all the files
 	$(RM) -Rf $(VBoxBusMouseIns_0_OUTDIR)/Stage/
-	$(foreach file, $(VBOX_BUSMOUSE_FILES),\
+	$(foreach file, $(VRA_BUSMOUSE_FILES),\
 		$(NLTAB)$(MKDIR) -p $(dir $(lastword $(subst =>,$(SP)$(VBoxBusMouseIns_0_OUTDIR)/Stage/,$(file)))) \
 		$(NLTAB)$(CP) $(subst =>,$(SP)$(VBoxBusMouseIns_0_OUTDIR)/Stage/,$(file)) )
 # Create the manifest
-	$(VBOX_RTMANIFEST) \
+	$(VRA_RTMANIFEST) \
 		--manifest $(VBoxBusMouseIns_0_OUTDIR)/Stage/ExtPack.manifest \
 		--chdir $(VBoxBusMouseIns_0_OUTDIR)/Stage/ \
-		$(foreach file, $(VBOX_BUSMOUSE_FILES), $(lastword $(subst =>,$(SP),$(file))))
+		$(foreach file, $(VRA_BUSMOUSE_FILES), $(lastword $(subst =>,$(SP),$(file))))
 	$(APPEND) $(VBoxBusMouseIns_0_OUTDIR)/Stage/ExtPack.signature "todo"
 	$(CHMOD) a+r \
 		$(VBoxBusMouseIns_0_OUTDIR)/Stage/ExtPack.manifest \
@@ -196,12 +196,12 @@ $(VBOX_PATH_PACKAGES)/$(VBOX_BUSMOUSE_MANGLED_NAME)-$(VBOX_VERSION_STRING)r$(VBO
 if 0
 	tar -cvf - -C $(VBoxBusMouseIns_0_OUTDIR)/Stage/ . | gzip -9c > $@
 else
-	$(VBOX_RTTAR) -cvf "$@" $(VBOX_RTTAR_EXTPACK_OPTS) -C "$(VBoxBusMouseIns_0_OUTDIR)/Stage/" .
+	$(VRA_RTTAR) -cvf "$@" $(VRA_RTTAR_EXTPACK_OPTS) -C "$(VBoxBusMouseIns_0_OUTDIR)/Stage/" .
 endif
 # Clean up
 	$(RM) -Rf $(VBoxBusMouseIns_0_OUTDIR)/Stage/
 
-BLDDIRS += $(VBOX_PATH_PACKAGES)/
+BLDDIRS += $(VRA_PATH_PACKAGES)/
 
 include $(FILE_KBUILD_SUB_FOOTER)
 

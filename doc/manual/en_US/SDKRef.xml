@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -28,35 +28,35 @@
 
 <book>
   <bookinfo>
-    <title>&VBOX_PRODUCT;</title>
+    <title>&VRA_PRODUCT;</title>
 
     <subtitle>Programming Guide and Reference</subtitle>
 
-    <edition>Version &VBOX_VERSION_STRING;</edition>
+    <edition>Version &VRA_VERSION_STRING;</edition>
 
-    <corpauthor>&VBOX_VENDOR;</corpauthor>
+    <corpauthor>&VRA_VENDOR;</corpauthor>
 
     <address>http://www.virtualbox.org</address>
 
     <copyright>
-      <year>2004-&VBOX_C_YEAR;</year>
+      <year>2004-&VRA_C_YEAR;</year>
 
-      <holder>&VBOX_VENDOR;</holder>
+      <holder>&VRA_VENDOR;</holder>
     </copyright>
   </bookinfo>
 
   <chapter>
     <title>Introduction</title>
 
-    <para>VirtualBox comes with comprehensive support for third-party
+    <para>VirtualAgent comes with comprehensive support for third-party
     developers. This Software Development Kit (SDK) contains all the
     documentation and interface files that are needed to write code that
-    interacts with VirtualBox.</para>
+    interacts with VirtualAgent.</para>
 
     <sect1>
-      <title>Modularity: the building blocks of VirtualBox</title>
+      <title>Modularity: the building blocks of VirtualAgent</title>
 
-      <para>VirtualBox is cleanly separated into several layers, which can be
+      <para>VirtualAgent is cleanly separated into several layers, which can be
       visualized like in the picture below:</para>
 
       <mediaobject>
@@ -85,15 +85,15 @@
       exposes the entire feature set of the virtualization engine below. It is
       completely documented in this SDK Reference -- see <xref
       linkend="sdkref_classes"/> and <xref linkend="sdkref_enums"/> -- and
-      available to anyone who wishes to control VirtualBox programmatically.
+      available to anyone who wishes to control VirtualAgent programmatically.
       We chose the name "Main API" to differentiate it from other programming
-      interfaces of VirtualBox that may be publicly accessible.</para>
+      interfaces of VirtualAgent that may be publicly accessible.</para>
 
       <para>With the Main API, you can create, configure, start, stop and
       delete virtual machines, retrieve performance statistics about running
-      VMs, configure the VirtualBox installation in general, and more. In
+      VMs, configure the VirtualAgent installation in general, and more. In
       fact, internally, the front-end programs
-      <computeroutput>VirtualBox</computeroutput> and
+      <computeroutput>VirtualAgent</computeroutput> and
       <computeroutput>VBoxManage</computeroutput> use nothing but this API as
       well -- there are no hidden backdoors into the virtualization engine for
       our own front-ends. This ensures the entire Main API is both
@@ -109,7 +109,7 @@
       <para>There are several ways in which the Main API can be called by
       other code:<orderedlist>
           <listitem>
-            <para>VirtualBox comes with a <emphasis role="bold">web
+            <para>VirtualAgent comes with a <emphasis role="bold">web
             service</emphasis> that maps nearly the entire Main API. The web
             service ships in a stand-alone executable
             (<computeroutput>vboxwebsrv</computeroutput>) that, when running,
@@ -166,20 +166,20 @@
             API is implemented using the <emphasis role="bold">Component
             Object Model (COM), </emphasis> an interprocess mechanism for
             software components originally introduced by Microsoft for
-            Microsoft Windows. On a Windows host, VirtualBox will use
-            Microsoft COM; on other hosts where COM is not present, VirtualBox
+            Microsoft Windows. On a Windows host, VirtualAgent will use
+            Microsoft COM; on other hosts where COM is not present, VirtualAgent
             ships with XPCOM, a free software implementation of COM originally
             created by the Mozilla project for their browsers.</para>
 
             <para>So if you are familiar with COM and the C++ programming
             language (or with any other programming language that can handle
             COM/XPCOM objects, such as Java, Visual Basic or C#), then you can
-            use the COM/XPCOM API directly. VirtualBox comes with all the
+            use the COM/XPCOM API directly. VirtualAgent comes with all the
             necessary files and documentation to build fully functional COM
             applications. For an introduction, please see <xref
             linkend="api_com"/> below.</para>
 
-            <para>The VirtualBox front-ends (the graphical user interfaces as
+            <para>The VirtualAgent front-ends (the graphical user interfaces as
             well as the command line), which are all written in C++, use
             COM/XPCOM to call the Main API. Technically, the web service is
             another front-end to this COM API, mapping almost all of it to
@@ -231,7 +231,7 @@
         </table></para>
 
       <para>In the following chapters, we will describe the different ways in
-      which to program VirtualBox, starting with the method that is easiest to
+      which to program VirtualAgent, starting with the method that is easiest to
       use and then increasing in complexity as we go along.</para>
     </sect1>
 
@@ -261,45 +261,45 @@
           complete API provided by a web service. WSDL in turn uses XML Schema
           to describe types, which is not exactly terse either. However, as
           you will see from the samples provided in this chapter, the
-          VirtualBox web service shields you from these details and is easy to
+          VirtualAgent web service shields you from these details and is easy to
           use.</para>
         </footnote></para>
 
       <para>In order to successfully use a web service, a number of things are
       required -- primarily, a web service accepting connections; service
       descriptions; and a client that connects to that web service. Connections
-      to the VirtualBox web service are governed by the SOAP standard, which
+      to the VirtualAgent web service are governed by the SOAP standard, which
       describes how messages are to be exchanged between a service and its
       clients; the service descriptions are governed by WSDL.</para>
 
-      <para>In the case of VirtualBox, this translates into the following
+      <para>In the case of VirtualAgent, this translates into the following
       three components:<orderedlist>
           <listitem>
-            <para>The VirtualBox web service (the "server"): this is the
+            <para>The VirtualAgent web service (the "server"): this is the
             <computeroutput>vboxwebsrv</computeroutput> executable shipped
-            with VirtualBox. Once you start this executable (which acts as an
+            with VirtualAgent. Once you start this executable (which acts as an
             HTTP server on a specific TCP/IP port), clients can connect to the
-            web service and thus control a VirtualBox installation.</para>
+            web service and thus control a VirtualAgent installation.</para>
           </listitem>
 
           <listitem>
-            <para>VirtualBox also comes with WSDL files that describe the
+            <para>VirtualAgent also comes with WSDL files that describe the
             services provided by the web service. You can find these files in
             the <computeroutput>sdk/bindings/webservice/</computeroutput>
             directory. These files are understood by the web service toolkits
             that are shipped with most programming languages and enable you to
             easily access a web service even if you don't use our
-            object-oriented client layers. VirtualBox is shipped with
+            object-oriented client layers. VirtualAgent is shipped with
             pre-generated web service glue code for several languages (Python,
             Perl, Java).</para>
           </listitem>
 
           <listitem>
             <para>A client that connects to the web service in order to
-            control the VirtualBox installation.</para>
+            control the VirtualAgent installation.</para>
 
             <para>Unless you use some of the samples shipped with
-            VirtualBox, this needs to be written by you.</para>
+            VirtualAgent, this needs to be written by you.</para>
           </listitem>
         </orderedlist></para>
     </sect1>
@@ -312,12 +312,12 @@
       an HTTP server, accepts SOAP connections, remotely or from the same machine,
       and processes them.<note>
           <para>The web service executable is not delivered with the
-          VirtualBox SDK, but instead ships with the standard VirtualBox
+          VirtualAgent SDK, but instead ships with the standard VirtualAgent
           binary package for your specific platform. The SDK contains only
           platform-independent text files and documentation so thus the vboxwebsrv
           binary is shipped with the platform-specific packages.  Therefore the
           information on how to run vboxwebsrv as a service is included in the
-          VirtualBox documentation and not the SDK.</para>
+          VirtualAgent documentation and not the SDK.</para>
         </note></para>
 
       <para>The <computeroutput>vboxwebsrv</computeroutput> program, which
@@ -326,13 +326,13 @@
       a kill command.</para>
 
       <para>Once the web service is started, it acts as a front-end to the
-      VirtualBox installation of the user account that it is running under. In
+      VirtualAgent installation of the user account that it is running under. In
       other words, if the web service is run under the user account of
       <computeroutput>user1</computeroutput>, it will see and manipulate the
-      virtual machines and other data represented by the VirtualBox data of
+      virtual machines and other data represented by the VirtualAgent data of
       that user (for example, on a Linux machine, under
-      <computeroutput>/home/user1/.config/VirtualBox</computeroutput>; see the
-      VirtualBox User Guide for details on where this data is stored).</para>
+      <computeroutput>/home/user1/.config/VirtualAgent</computeroutput>; see the
+      VirtualAgent User Guide for details on where this data is stored).</para>
 
       <sect2 id="vboxwebsrv-ref">
         <title>Command line options of vboxwebsrv</title>
@@ -553,15 +553,15 @@
         <para><screen>VBoxManage setproperty websrvauthlibrary default|null|&lt;library&gt;</screen></para>
 
         <para>This way you can specify any shared object/dynamic link module
-        that conforms with the specifications for VirtualBox external
+        that conforms with the specifications for VirtualAgent external
         authentication modules as laid out in section <emphasis
-        role="bold">VRDE authentication</emphasis> of the VirtualBox User
+        role="bold">VRDE authentication</emphasis> of the VirtualAgent User
         Guide; the web service uses the same kind of modules as the
-        VirtualBox VRDE server. For technical details on VirtualBox external
+        VirtualAgent VRDE server. For technical details on VirtualAgent external
         authentication modules see <xref linkend="vbox-auth"/></para>
 
         <para>By default, after installation, the web service uses the
-        VBoxAuth module that ships with VirtualBox. This module uses PAM on
+        VBoxAuth module that ships with VirtualAgent. This module uses PAM on
         FreeBSD, Linux, and Solaris hosts to authenticate users. Any valid
         username/password combination is accepted, it does not have to be the
         username and password of the user running the web service daemon. If
@@ -572,7 +572,7 @@
         root helper internally, so make sure you test this before deploying it.
         One can override authentication failures due to lack of read privileges
         of the shadow password file by setting the environment variable
-        <computeroutput>VBOX_PAM_ALLOW_INACTIVE</computeroutput>.
+        <computeroutput>VRA_PAM_ALLOW_INACTIVE</computeroutput>.
         Please use this variable carefully and only if you fully understand what
         you're doing.</para>
       </sect2>
@@ -596,18 +596,18 @@
     <sect1 id="glue">
       <title>Using the object-oriented web service (OOWS)</title>
 
-      <para>As explained in <xref linkend="webservice-or-com"/>, VirtualBox
+      <para>As explained in <xref linkend="webservice-or-com"/>, VirtualAgent
       ships with client-side libraries for Java, Python and PHP that allow you
-      to use the VirtualBox web service in an intuitive, object-oriented way.
+      to use the VirtualAgent web service in an intuitive, object-oriented way.
       These libraries shield you from the client-side complications of managed
       object references and other implementation details that come with the
-      VirtualBox web service. (If you are interested in these complications,
+      VirtualAgent web service. (If you are interested in these complications,
       have a look at <xref linkend="raw-webservice"/>).</para>
 
-      <para>We recommend that you start your experiments with the VirtualBox
+      <para>We recommend that you start your experiments with the VirtualAgent
       web service by using our object-oriented client libraries for JAX-WS, a
       web service toolkit for Java, which enables you to write code to
-      interact with VirtualBox in the simplest manner possible.</para>
+      interact with VirtualAgent in the simplest manner possible.</para>
 
       <para>As "interfaces", "attributes" and "methods" are COM concepts,
       please read the documentation in <xref linkend="sdkref_classes"/> and
@@ -633,7 +633,7 @@
 
         <para>JAX-WS is a powerful toolkit by Sun Microsystems to build both
         server and client code with Java. It is part of Java 6 (JDK 1.6), but
-        can also be obtained separately for Java 5 (JDK 1.5). The VirtualBox
+        can also be obtained separately for Java 5 (JDK 1.5). The VirtualAgent
         SDK comes with precompiled OOWS bindings working with both Java 5 and
         6.</para>
 
@@ -673,8 +673,8 @@
               </listitem>
 
               <listitem>
-                <para>To start the VirtualBox web service, open a second
-                terminal and change to the directory where the VirtualBox
+                <para>To start the VirtualAgent web service, open a second
+                terminal and change to the directory where the VirtualAgent
                 executables are located. Then type:
                 <screen>./vboxwebsrv -v</screen></para>
 
@@ -707,8 +707,8 @@
 
           <para>The <computeroutput>clienttest</computeroutput> sample
           imitates a few typical command line tasks that
-          <computeroutput>VBoxManage</computeroutput>, VirtualBox's regular
-          command-line front-end, would provide (see the VirtualBox User
+          <computeroutput>VBoxManage</computeroutput>, VirtualAgent's regular
+          command-line front-end, would provide (see the VirtualAgent User
           Guide for details). In particular, you can run:<itemizedlist>
               <listitem>
                 <para><computeroutput>java clienttest show
@@ -719,7 +719,7 @@
               <listitem>
                 <para><computeroutput>java clienttest list
                 hostinfo</computeroutput>: show various information about the
-                host this VirtualBox installation runs on.</para>
+                host this VirtualAgent installation runs on.</para>
               </listitem>
 
               <listitem>
@@ -730,7 +730,7 @@
             </itemizedlist></para>
 
           <para>The <computeroutput>clienttest.java</computeroutput> sample
-          code illustrates common basic practices how to use the VirtualBox
+          code illustrates common basic practices how to use the VirtualAgent
           OOWS for JAX-WS, which we will explain in more detail in the
           following chapters.</para>
         </sect3>
@@ -768,8 +768,8 @@
                 which is the first call that actually communicates with the
                 server. This authenticates the client with the web service and
                 returns an instance of
-                <link linkend="IVirtualBox">IVirtualBox</link>,
-                the most fundamental interface of the VirtualBox web service,
+                <link linkend="IVirtualAgent">IVirtualAgent</link>,
+                the most fundamental interface of the VirtualAgent web service,
                 from which all other functionality can be derived.</para>
 
                 <para>If logon doesn't work, please take another look at <xref
@@ -788,14 +788,14 @@
           frees appropriate managed reference, as is required by the raw
           web service; see <xref linkend="managed-object-references"/> for
           details. This limitation may be reconsidered in a future version of
-          the VirtualBox SDK.</para>
+          the VirtualAgent SDK.</para>
         </sect3>
       </sect2>
 
       <sect2 id="glue-python-ws">
         <title>The object-oriented web service for Python</title>
 
-        <para>VirtualBox comes with two flavors of a Python API: one for web
+        <para>VirtualAgent comes with two flavors of a Python API: one for web
         service, discussed here, and one for the COM/XPCOM API discussed in
         <xref linkend="pycom"/>. The client code is mostly similar, except
         for the initialization part, so it is up to the application developer
@@ -809,7 +809,7 @@
         COM/XPCOM API gives better performance without the SOAP overhead, and
         does not require a web server to be running. On the other hand, the
         COM/XPCOM Python API requires a suitable Python bridge for your Python
-        installation (VirtualBox ships the most important ones for each
+        installation (VirtualAgent ships the most important ones for each
         platform<footnote>
             <para>On Mac OS X only the Python versions bundled with the OS
             are officially supported.</para>
@@ -818,11 +818,11 @@
             <para>See <ulink
             url="http://sourceforge.net/project/showfiles.php?group_id=78018">http://sourceforge.net/project/showfiles.php?group_id=78018</ulink>.</para>
           </footnote> is installed. Versions of Python Win32 extensions earlier
-          than 2.16 are known to have bugs, leading to issues with VirtualBox
+          than 2.16 are known to have bugs, leading to issues with VirtualAgent
           Python bindings, so please make sure to use latest available Python
           and Win32 extensions.</para>
 
-        <para>The VirtualBox OOWS for Python relies on the Python ZSI SOAP
+        <para>The VirtualAgent OOWS for Python relies on the Python ZSI SOAP
         implementation (see <ulink
         url="http://pywebsvcs.sourceforge.net/zsi.html">http://pywebsvcs.sourceforge.net/zsi.html</ulink>),
         which you will need to install locally before trying the examples.
@@ -832,7 +832,7 @@
         <para>To get started, open a terminal and change to the
         <computeroutput>sdk/bindings/glue/python/sample</computeroutput>
         directory, which contains an example of a simple interactive shell
-        able to control a VirtualBox instance. The shell is written using the
+        able to control a VirtualAgent instance. The shell is written using the
         API layer, thereby hiding different implementation details, so it is
         actually an example of code shared among XPCOM, MSCOM and web services.
         If you are interested in how to interact with the web services layer
@@ -842,25 +842,25 @@
         and web services).</para>
 
         <para>To start the shell, run the following commands:
-        <screen>/opt/VirtualBox/vboxwebsrv -t 0 # start web service with object autocollection disabled
-export VBOX_PROGRAM_PATH=/opt/VirtualBox        # your VirtualBox installation directory
-export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
+        <screen>/opt/VirtualAgent/vboxwebsrv -t 0 # start web service with object autocollection disabled
+export VRA_PROGRAM_PATH=/opt/VirtualAgent        # your VirtualAgent installation directory
+export VRA_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
 ./vboxshell.py -w        </screen>
         See <xref linkend="vboxshell"/> for more
-        details on the shell's functionality. For you, as a VirtualBox
+        details on the shell's functionality. For you, as a VirtualAgent
         application developer, the vboxshell sample could be interesting as an
         example of how to write code targeting both local and remote cases
         (COM/XPCOM and SOAP). The common part of the shell is the same -- the
         only difference is how it interacts with the invocation layer. You can
         use the <computeroutput>connect</computeroutput> shell command to
-        connect to remote VirtualBox servers; in this case you can skip
+        connect to remote VirtualAgent servers; in this case you can skip
         starting the local web server.</para>
       </sect2>
 
       <sect2>
         <title>The object-oriented web service for PHP</title>
 
-        <para>VirtualBox also comes with object-oriented web service (OOWS)
+        <para>VirtualAgent also comes with object-oriented web service (OOWS)
         wrappers for PHP5. These wrappers rely on the PHP SOAP
         Extension<footnote>
             <para>See
@@ -888,14 +888,14 @@ export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
             function call</emphasis> in the raw web service, with the object
             as an additional first parameter (before the "real" parameters
             listed in the documentation). So when the documentation says that
-            the <computeroutput>IVirtualBox</computeroutput> interface
+            the <computeroutput>IVirtualAgent</computeroutput> interface
             supports the <computeroutput>createMachine()</computeroutput>
             method (see
-            <link linkend="IVirtualBox__createMachine">IVirtualBox::createMachine()</link>),
+            <link linkend="IVirtualAgent__createMachine">IVirtualAgent::createMachine()</link>),
             the web service operation is
-            <computeroutput>IVirtualBox_createMachine(...)</computeroutput>,
+            <computeroutput>IVirtualAgent_createMachine(...)</computeroutput>,
             and a managed object reference to an
-            <computeroutput>IVirtualBox</computeroutput> object must be passed
+            <computeroutput>IVirtualAgent</computeroutput> object must be passed
             as the first argument.</para>
           </listitem>
 
@@ -905,10 +905,10 @@ export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
             also be a "set" function, unless the attribute is "readonly". The
             attribute name will be appended to the "get" or "set" prefix, with
             a capitalized first letter. So, the "version" readonly attribute
-            of the <computeroutput>IVirtualBox</computeroutput> interface can
+            of the <computeroutput>IVirtualAgent</computeroutput> interface can
             be retrieved by calling
-            <computeroutput>IVirtualBox_getVersion(vbox)</computeroutput>,
-            with <computeroutput>vbox</computeroutput> being the VirtualBox
+            <computeroutput>IVirtualAgent_getVersion(vbox)</computeroutput>,
+            with <computeroutput>vbox</computeroutput> being the VirtualAgent
             object.</para>
           </listitem>
 
@@ -933,16 +933,16 @@ export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
         url="http://axis.apache.org">http://axis.apache.org</ulink>. The
         following examples assume that you have Axis 1.4 installed.</para>
 
-        <para>The VirtualBox SDK ships with an example for Axis that, again,
+        <para>The VirtualAgent SDK ships with an example for Axis that, again,
         is called <computeroutput>clienttest.java</computeroutput> and that
         imitates a few <computeroutput>VBoxManage</computeroutput> commands
-        and sends them to the VirtualBox web service.</para>
+        and sends them to the VirtualAgent web service.</para>
 
         <para>To try out the raw web service with Axis complete the following
         steps:<orderedlist>
             <listitem>
               <para>Create a working directory somewhere. Under your
-              VirtualBox installation directory, find the
+              VirtualAgent installation directory, find the
               <computeroutput>sdk/webservice/samples/java/axis/</computeroutput>
               directory and copy the file
               <computeroutput>clienttest.java</computeroutput> to your working
@@ -973,7 +973,7 @@ export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
               <para>If the command executes successfully, you should see an
               "org" directory with subdirectories containing Java source files
               in your working directory. These classes represent the
-              interfaces that the VirtualBox web service offers, as described
+              interfaces that the VirtualAgent web service offers, as described
               by the WSDL file.</para>
 
               <para>This is the bit that makes using web services so
@@ -992,8 +992,8 @@ export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
             </listitem>
 
             <listitem>
-              <para>To start the VirtualBox web service, open a second
-              terminal and change to the directory where the VirtualBox
+              <para>To start the VirtualAgent web service, open a second
+              terminal and change to the directory where the VirtualAgent
               executables are located. Then type:
               <screen>./vboxwebsrv -v</screen></para>
 
@@ -1013,7 +1013,7 @@ export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
               localhost, but the code could be changed to connect remotely if
               the web service was running on a different machine) and make a
               number of method calls. It will output the version number of
-              your VirtualBox installation and a list of all virtual machines
+              your VirtualAgent installation and a list of all virtual machines
               that are currently registered (with a bit of seemingly random
               data, which will be explained later).</para>
             </listitem>
@@ -1024,7 +1024,7 @@ export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
         <title>Raw web service example for Perl</title>
 
         <para>We also ship a small sample for Perl. It uses the SOAP::Lite
-        perl module to communicate with the VirtualBox web service.</para>
+        perl module to communicate with the VirtualAgent web service.</para>
 
         <para>The
         <computeroutput>sdk/bindings/webservice/perl/lib/</computeroutput>
@@ -1050,8 +1050,8 @@ export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
             </listitem>
 
             <listitem>
-              <para>To start the VirtualBox web service, open a second
-              terminal and change to the directory where the VirtualBox
+              <para>To start the VirtualAgent web service, open a second
+              terminal and change to the directory where the VirtualAgent
               executables are located. Then type:
               <screen>./vboxwebsrv -v</screen></para>
 
@@ -1084,9 +1084,9 @@ export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
           <title>Fundamental conventions</title>
 
           <para>If you are familiar with other web services, you may find that the
-          VirtualBox web service behaves a bit differently to accommodate
-          for the fact that the VirtualBox web service more or less maps the
-          VirtualBox Main COM API. The primary challenges in mapping the VirtualBox
+          VirtualAgent web service behaves a bit differently to accommodate
+          for the fact that the VirtualAgent web service more or less maps the
+          VirtualAgent Main COM API. The primary challenges in mapping the VirtualAgent
           Main COM API to the web service are as follows:<itemizedlist>
               <listitem>
                 <para>Web services, as expressed by WSDL, are not
@@ -1102,23 +1102,23 @@ export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
               </listitem>
 
               <listitem>
-                <para>By contrast, the VirtualBox Main API, being expressed in
+                <para>By contrast, the VirtualAgent Main API, being expressed in
                 COM, is object-oriented and works entirely on objects, which
                 are grouped into public interfaces, which in turn have
                 attributes and methods associated with them.</para>
               </listitem>
-            </itemizedlist> For the VirtualBox web service, this results in
+            </itemizedlist> For the VirtualAgent web service, this results in
           three fundamental conventions:<orderedlist>
               <listitem>
                 <para>All <emphasis role="bold">function names</emphasis> in
-                the VirtualBox web service consist of an interface name and a
+                the VirtualAgent web service consist of an interface name and a
                 method name, joined together by an underscore. This is because
                 there are only functions ("operations") in WSDL, but no
                 classes, interfaces, or methods.</para>
               </listitem>
 
               <listitem>
-                <para>All calls to the VirtualBox web service (except for logon, see
+                <para>All calls to the VirtualAgent web service (except for logon, see
                 below) take a <emphasis role="bold">managed object reference</emphasis>
                 as the first argument, representing the object upon which the underlying
                 method is invoked. (Managed object references are explained in detail
@@ -1129,27 +1129,27 @@ export VBOX_SDK_PATH=/home/youruser/vbox-sdk    # where you've extracted the SDK
                 object:<screen>IMachine machine;
 result = machine.getName();</screen></para>
 
-                <para>In the VirtualBox web service, this looks something like
+                <para>In the VirtualAgent web service, this looks something like
                 this (again, pseudo-code):<screen>IMachineRef machine;
 result = IMachine_getName(machine);</screen></para>
               </listitem>
 
               <listitem>
                 <para>To make the web service stateful, and objects persistent
-                between method calls, the VirtualBox web service introduces a
+                between method calls, the VirtualAgent web service introduces a
                 <emphasis role="bold">session manager</emphasis> (by way of the
                  <link linkend="IWebsessionManager">IWebsessionManager</link>
                 interface), which manages object references. Any client wishing
                 to interact with the web service must first log on to the
                 session manager and in turn receives a managed object reference
                 to an object that supports the
-                <link linkend="IVirtualBox">IVirtualBox</link>
+                <link linkend="IVirtualAgent">IVirtualAgent</link>
                 interface (the basic interface in the Main API).</para>
               </listitem>
             </orderedlist></para>
 
           <para>In other words, as opposed to other web services, <emphasis
-          role="bold">the VirtualBox web service is both object-oriented and
+          role="bold">the VirtualAgent web service is both object-oriented and
           stateful.</emphasis></para>
         </sect3>
 
@@ -1157,7 +1157,7 @@ result = IMachine_getName(machine);</screen></para>
           <title>Example: A typical web service client session</title>
 
           <para>A typical short web service session to retrieve the version
-          number of the VirtualBox web service (to be precise, the underlying
+          number of the VirtualAgent web service (to be precise, the underlying
           Main API version number) looks like this:<orderedlist>
               <listitem>
                 <para>A client logs on to the web service by calling
@@ -1176,23 +1176,23 @@ result = IMachine_getName(machine);</screen></para>
                 inactivity (see <xref linkend="vboxwebsrv-ref"/>).</para>
 
                 <para>For the new session, the web service creates an instance
-                of <link linkend="IVirtualBox">IVirtualBox</link>.
+                of <link linkend="IVirtualAgent">IVirtualAgent</link>.
                 This interface is the most central one in the Main API and
                 allows access to all other interfaces, either through
-                attributes or method calls. For example, IVirtualBox contains
+                attributes or method calls. For example, IVirtualAgent contains
                 a list of all virtual machines that are currently registered
-                (as they would be listed on the left side of the VirtualBox
+                (as they would be listed on the left side of the VirtualAgent
                 main program).</para>
 
                 <para>The web service then creates a managed object reference
-                for this instance of IVirtualBox and returns it to the calling
+                for this instance of IVirtualAgent and returns it to the calling
                 client, which receives it as the return value of the logon
                 call. Something like this:</para>
 
-                <screen>string oVirtualBox;
-oVirtualBox = webservice.IWebsessionManager_logon("user", "pass");</screen>
+                <screen>string oVirtualAgent;
+oVirtualAgent = webservice.IWebsessionManager_logon("user", "pass");</screen>
 
-                <para>(The managed object reference "oVirtualBox" is just a
+                <para>(The managed object reference "oVirtualAgent" is just a
                 string consisting of digits and dashes. However, it is a
                 string with a meaning and will be checked by the web service.
                 For details, see below. As hinted above,
@@ -1203,27 +1203,27 @@ oVirtualBox = webservice.IWebsessionManager_logon("user", "pass");</screen>
               </listitem>
 
               <listitem>
-                <para>The VirtualBox Main API documentation explains that the
-                <computeroutput>IVirtualBox</computeroutput> interface has a
-                <link linkend="IVirtualBox__version">version</link>
+                <para>The VirtualAgent Main API documentation explains that the
+                <computeroutput>IVirtualAgent</computeroutput> interface has a
+                <link linkend="IVirtualAgent__version">version</link>
                 attribute, which is a string. For each attribute, there is a
                 "get" and a "set" method in COM, which maps to the corresponding
                 operations in the web service. So, to retrieve the "version"
-                attribute of this <computeroutput>IVirtualBox</computeroutput>
+                attribute of this <computeroutput>IVirtualAgent</computeroutput>
                 object, the web service client does this:
                 <screen>string version;
-version = webservice.IVirtualBox_getVersion(oVirtualBox);
+version = webservice.IVirtualAgent_getVersion(oVirtualAgent);
 
 print version;</screen></para>
 
                 <para>And it will print
-                "&VBOX_VERSION_MAJOR;.&VBOX_VERSION_MINOR;.&VBOX_VERSION_BUILD;".</para>
+                "&VRA_VERSION_MAJOR;.&VRA_VERSION_MINOR;.&VRA_VERSION_BUILD;".</para>
               </listitem>
 
               <listitem>
                 <para>The web service client calls
                 <link linkend="IWebsessionManager__logoff">IWebsessionManager::logoff()</link>
-                with the VirtualBox managed object reference. This will clean
+                with the VirtualAgent managed object reference. This will clean
                 up all allocated resources.</para>
               </listitem>
             </orderedlist></para>
@@ -1247,7 +1247,7 @@ print version;</screen></para>
                 <link linkend="IWebsessionManager__logon">IWebsessionManager::logon()</link>.</para>
 
                 <para>Upon logon, the websession manager creates one instance
-                of <link linkend="IVirtualBox">IVirtualBox</link>,
+                of <link linkend="IVirtualAgent">IVirtualAgent</link>,
                 which can be used for directly performing calls to its
                 methods, or used as a parameter for calling some methods of
                 <link linkend="IWebsessionManager">IWebsessionManager</link>.
@@ -1255,7 +1255,7 @@ print version;</screen></para>
                 <link linkend="IWebsessionManager__getSessionObject">IWebsessionManager::getSessionObject()</link>.</para>
 
                 <para>(Technically, there is always only one
-                <link linkend="IVirtualBox">IVirtualBox</link> object, which
+                <link linkend="IVirtualAgent">IVirtualAgent</link> object, which
                 is shared between all websessions and clients, as it is a COM
                 singleton. However, each session receives its own managed
                 object reference to it.)</para>
@@ -1266,7 +1266,7 @@ print version;</screen></para>
                 whose COM implementation creates COM objects.</para>
 
                 <para>For example,
-                <link linkend="IVirtualBox__createMachine">IVirtualBox::createMachine()</link>
+                <link linkend="IVirtualAgent__createMachine">IVirtualAgent::createMachine()</link>
                 creates a new instance of
                 <link linkend="IMachine">IMachine</link>;
                 the COM object returned by the COM method call is then wrapped
@@ -1421,7 +1421,7 @@ string result = service.SayHello("Peter");  // invoke remote procedure</screen>
               <listitem>
                 <para>For <emphasis role="bold">C++, </emphasis> among many
                 others, the gSOAP toolkit is a good option. Parts of gSOAP are
-                also used in VirtualBox to implement the VirtualBox web
+                also used in VirtualAgent to implement the VirtualAgent web
                 service.</para>
               </listitem>
 
@@ -1456,9 +1456,9 @@ string result = service.SayHello("Peter");  // invoke remote procedure</screen>
       <title>Using COM/XPCOM directly</title>
 
       <para>If you do not require <emphasis>remote</emphasis> procedure calls
-      such as those offered by the VirtualBox web service, and if you know
+      such as those offered by the VirtualAgent web service, and if you know
       Python or C++ as well as COM, you might find it preferable to program
-      VirtualBox's Main API directly via COM.</para>
+      VirtualAgent's Main API directly via COM.</para>
 
       <para>COM stands for "Component Object Model" and is a standard
       originally introduced by Microsoft in the 1990s for Microsoft Windows.
@@ -1467,30 +1467,30 @@ string result = service.SayHello("Peter");  // invoke remote procedure</screen>
       process.</para>
 
       <para>COM has several advantages: it is language-neutral, meaning that
-      even though all of VirtualBox is internally written in C++, programs
+      even though all of VirtualAgent is internally written in C++, programs
       written in other languages can communicate with it. COM also cleanly
       separates interface from implementation, so that external programs do
       not need to know anything about the messy and complicated details of
-      VirtualBox internals.</para>
+      VirtualAgent internals.</para>
 
-      <para>On a Windows host, all parts of VirtualBox will use the COM
+      <para>On a Windows host, all parts of VirtualAgent will use the COM
       functionality that is native to Windows. On other hosts (including
-      Linux), VirtualBox comes with a built-in implementation of XPCOM, as
+      Linux), VirtualAgent comes with a built-in implementation of XPCOM, as
       originally created by the Mozilla project, which we have enhanced to
       support interprocess communication on a level comparable to Microsoft
-      COM. Internally, VirtualBox has an abstraction layer that allows the
-      same VirtualBox code to work both with native COM as well as our XPCOM
+      COM. Internally, VirtualAgent has an abstraction layer that allows the
+      same VirtualAgent code to work both with native COM as well as our XPCOM
       implementation.</para>
 
       <sect2 id="pycom">
         <title>Python COM API</title>
 
-        <para>On Windows, Python scripts can use COM and VirtualBox interfaces
+        <para>On Windows, Python scripts can use COM and VirtualAgent interfaces
         to control almost all aspects of virtual machine execution. For example,
-        you can use the following commands to instantiate the VirtualBox object
+        you can use the following commands to instantiate the VirtualAgent object
         and start a VM: <screen>
-       vbox = win32com.client.Dispatch("VirtualBox.VirtualBox")
-       session = win32com.client.Dispatch("VirtualBox.Session")
+       vbox = win32com.client.Dispatch("VirtualAgent.VirtualAgent")
+       session = win32com.client.Dispatch("VirtualAgent.Session")
        mach = vbox.findMachine("uuid or name  of machine to start")
        progress = mach.launchVMProcess(session, "gui", "")
        progress.waitForCompletion(-1)
@@ -1506,41 +1506,41 @@ string result = service.SayHello("Peter");  // invoke remote procedure</screen>
 
         <para>As different wrappers ultimately provide access to the same
         underlying API, and to simplify porting and development of Python
-        applications using the VirtualBox Main API, we developed a common glue
+        applications using the VirtualAgent Main API, we developed a common glue
         layer that abstracts out most platform-specific details from the
         application and allows the developer to focus on application logic.
-        The VirtualBox installer automatically sets up this glue layer for the
+        The VirtualAgent installer automatically sets up this glue layer for the
         system default Python installation.</para>
 
         <para>See <xref linkend="glue-python-setup"/> for details on how to
         set up the glue layer if you want to use a different Python installation,
-        or if the VirtualBox installer failed to detect and set it up accordingly.</para>
+        or if the VirtualAgent installer failed to detect and set it up accordingly.</para>
 
         <para>The minimum supported Python version is 2.6.</para>
 
         <para>In this layer, the class
-        <computeroutput>VirtualBoxManager</computeroutput> hides most
+        <computeroutput>VirtualAgentManager</computeroutput> hides most
         platform-specific details. It can be used to access both the local
         (COM) and the web service based API. The following code can be used by
         an application to use the glue layer.</para>
 
-        <screen># This code assumes vboxapi.py from VirtualBox distribution
+        <screen># This code assumes vboxapi.py from VirtualAgent distribution
 # being in PYTHONPATH, or installed system-wide
-from vboxapi import VirtualBoxManager
+from vboxapi import VirtualAgentManager
 
-# This code initializes VirtualBox manager with default style
+# This code initializes VirtualAgent manager with default style
 # and parameters
-virtualBoxManager = VirtualBoxManager(None, None)
+virtualBoxManager = VirtualAgentManager(None, None)
 
 # Alternatively, one can be more verbose, and initialize
 # glue with web service backend, and provide authentication
 # information
-virtualBoxManager = VirtualBoxManager("WEBSERVICE",
+virtualBoxManager = VirtualAgentManager("WEBSERVICE",
                                       {'url':'http://myhost.com::18083/',
                                       'user':'me',
                                       'password':'secret'})        </screen>
 
-        <para>We supply the <computeroutput>VirtualBoxManager</computeroutput>
+        <para>We supply the <computeroutput>VirtualAgentManager</computeroutput>
         constructor with 2 arguments: style and parameters. Style defines
         which bindings style to use (could be "MSCOM", "XPCOM" or
         "WEBSERVICE"), and if set to <computeroutput>None</computeroutput>
@@ -1551,13 +1551,13 @@ virtualBoxManager = VirtualBoxManager("WEBSERVICE",
         service.</para>
 
         <para>After obtaining the
-        <computeroutput>VirtualBoxManager</computeroutput> instance, one can
-        perform operations on the IVirtualBox class. For example, the
+        <computeroutput>VirtualAgentManager</computeroutput> instance, one can
+        perform operations on the IVirtualAgent class. For example, the
         following code will a start virtual machine by name or ID:</para>
 
-        <screen>from vboxapi import VirtualBoxManager
-mgr = VirtualBoxManager(None, None)
-vbox = mgr.getVirtualBox()
+        <screen>from vboxapi import VirtualAgentManager
+mgr = VirtualAgentManager(None, None)
+vbox = mgr.getVirtualAgent()
 name = "Linux"
 mach = vbox.findMachine(name)
 session = mgr.getSessionObject(vbox)
@@ -1569,9 +1569,9 @@ mgr.closeMachineSession(session)
           The following code will print all registered machines and their log
           folders:
         </para>
-        <screen>from vboxapi import VirtualBoxManager
-mgr = VirtualBoxManager(None, None)
-vbox = mgr.getVirtualBox()
+        <screen>from vboxapi import VirtualAgentManager
+mgr = VirtualAgentManager(None, None)
+vbox = mgr.getVirtualAgent()
 
 for m in mgr.getArray(vbox, 'machines'):
     print "Machine '%s' logs in '%s'" %(m.name, m.logFolder)
@@ -1591,7 +1591,7 @@ for m in mgr.getArray(vbox, 'machines'):
             installation or the installer failed to set it up, then use these steps
             in a shell to install the necessary files:</para>
 
-        <screen>    # cd VBOX_INSTALL_PATH/sdk/installer
+        <screen>    # cd VRA_INSTALL_PATH/sdk/installer
     # python vboxapisetup.py install</screen>
 
            <note> <para>On Windows hosts, a Python distribution along with the
@@ -1603,12 +1603,12 @@ for m in mgr.getArray(vbox, 'machines'):
       <sect2 id="cppcom">
         <title>C++ COM API</title>
 
-        <para>C++ is the language that VirtualBox itself is written in, so C++
+        <para>C++ is the language that VirtualAgent itself is written in, so C++
         is the most direct way to use the Main API -- but it is not
         necessarily the easiest, as using COM and XPCOM has its own set of
         complications.</para>
 
-        <para>VirtualBox ships with sample programs that demonstrate how to
+        <para>VirtualAgent ships with sample programs that demonstrate how to
         use the Main API to implement a number of tasks on your host platform.
         These samples can be found in the
         <computeroutput>sdk/bindings/xpcom/samples</computeroutput> directory for
@@ -1620,7 +1620,7 @@ for m in mgr.getArray(vbox, 'machines'):
 
         <para>Since COM and XPCOM are conceptually very similar but vary in
         the implementation details, we have created a "glue" layer that
-        shields COM client code from these differences. All VirtualBox uses is
+        shields COM client code from these differences. All VirtualAgent uses is
         this glue layer, so the same code written once works on both Windows
         hosts (with native COM) as well as on other hosts (with our XPCOM
         implementation). It is recommended to always use this glue code
@@ -1645,18 +1645,18 @@ for m in mgr.getArray(vbox, 'machines'):
               return the attribute's value. Unless the attribute has been
               marked as "readonly", a "set" attribute is also provided.</para>
 
-              <para>To illustrate, the IVirtualBox interface has a "version"
+              <para>To illustrate, the IVirtualAgent interface has a "version"
               attribute, which is read-only and of the "wstring" type (the
               standard string type in COM). As a result, you can call the
               "get" method for this attribute to retrieve the version number
-              of VirtualBox.</para>
+              of VirtualAgent.</para>
 
               <para>Unfortunately, the implementation differs between COM and
               XPCOM. Microsoft COM names the "get" method like this:
               <computeroutput>get_Attribute()</computeroutput>, whereas XPCOM
               uses this syntax:
               <computeroutput>GetAttribute()</computeroutput> (and accordingly
-              for "set" methods). To hide these differences, the VirtualBox
+              for "set" methods). To hide these differences, the VirtualAgent
               glue code provides the
               <computeroutput>COMGETTER(attrib)</computeroutput> and
               <computeroutput>COMSETTER(attrib)</computeroutput> macros. So,
@@ -1672,10 +1672,10 @@ for m in mgr.getArray(vbox, 'machines'):
               While the rest of the modern world has pretty much settled on
               encoding strings in UTF-8, COM, unfortunately, uses UCS-16
               encoding. This requires a lot of conversions, in particular
-              between the VirtualBox Main API and the Qt GUI, which, like the
+              between the VirtualAgent Main API and the Qt GUI, which, like the
               rest of Qt, likes to use UTF-8.</para>
 
-              <para>To facilitate these conversions, VirtualBox provides the
+              <para>To facilitate these conversions, VirtualAgent provides the
               <computeroutput>com::Bstr</computeroutput> and
               <computeroutput>com::Utf8Str</computeroutput> classes, which
               support all kinds of conversions back and forth.</para>
@@ -1695,29 +1695,29 @@ for m in mgr.getArray(vbox, 'machines'):
       <sect2 id="event-queue">
         <title>Event queue processing</title>
 
-        <para>Both VirtualBox client programs and front-ends should
+        <para>Both VirtualAgent client programs and front-ends should
         periodically perform processing of the main event queue, and do that
         on the application's main thread. In the case of a typical GUI
         Windows/Mac OS application this happens automatically in the GUI's
         dispatch loop. However, for CLI only application, the appropriate actions
-        have to be taken. For C++ applications, the VirtualBox SDK provided glue
+        have to be taken. For C++ applications, the VirtualAgent SDK provided glue
         method
         <screen>
             int EventQueue::processEventQueue(uint32_t cMsTimeout)
          </screen> can be used for both blocking and non-blocking operations.
         For the Python bindings, a common layer provides the method <screen>
-          VirtualBoxManager.waitForEvents(ms)
+          VirtualAgentManager.waitForEvents(ms)
          </screen> with similar semantics.</para>
 
         <para>Things get somewhat more complicated for situations where an
-        application using VirtualBox cannot directly control the main event
+        application using VirtualAgent cannot directly control the main event
         loop and the main event queue is separated from the event queue of the
         programming library (for example in case of Qt on Unix platforms). In
         such a case, the application developer is advised to use a
         platform/toolkit specific event injection mechanism to force event
         queue checks either based on periodic timer events delivered to the
         main thread, or by using custom platform messages to notify the main
-        thread when events are available. See the Qt (VirtualBox) front-end as
+        thread when events are available. See the Qt (VirtualAgent) front-end as
         an example.</para>
       </sect2>
 
@@ -1725,7 +1725,7 @@ for m in mgr.getArray(vbox, 'machines'):
         <title>Visual Basic and Visual Basic Script (VBS) on Windows
         hosts</title>
 
-        <para>On Windows hosts, one can control some of the VirtualBox Main
+        <para>On Windows hosts, one can control some of the VirtualAgent Main
         API functionality from VBS scripts, and pretty much everything from
         Visual Basic programs.<footnote>
             <para>The difference results from the way VBS treats COM
@@ -1739,9 +1739,9 @@ for m in mgr.getArray(vbox, 'machines'):
 
         <para>VBS is a scripting language available in any recent Windows
         environment. As an example, the following VBS code will print the
-        VirtualBox version: <screen>
-         set vb = CreateObject("VirtualBox.VirtualBox")
-         Wscript.Echo "VirtualBox version " &amp; vb.version
+        VirtualAgent version: <screen>
+         set vb = CreateObject("VirtualAgent.VirtualAgent")
+         Wscript.Echo "VirtualAgent version " &amp; vb.version
        </screen> See
         <computeroutput>sdk/bindings/mscom/vbs/sample/vboxinfo.vbs</computeroutput>
         for the complete sample.</para>
@@ -1749,9 +1749,9 @@ for m in mgr.getArray(vbox, 'machines'):
         <para>Visual Basic is a popular high level language capable of
         accessing COM objects. The following VB code will iterate over all
         available virtual machines:<screen>
-         Dim vb As VirtualBox.IVirtualBox
+         Dim vb As VirtualAgent.IVirtualAgent
 
-         vb = CreateObject("VirtualBox.VirtualBox")
+         vb = CreateObject("VirtualAgent.VirtualAgent")
          machines = ""
          For Each m In vb.Machines
             m = m &amp; " " &amp; m.Name
@@ -1762,18 +1762,18 @@ for m in mgr.getArray(vbox, 'machines'):
       </sect2>
 
       <sect2 id="cbinding">
-        <title>C bindings to the VirtualBox API</title>
+        <title>C bindings to the VirtualAgent API</title>
 
-        <para>The VirtualBox API was originally designed to be object oriented
+        <para>The VirtualAgent API was originally designed to be object oriented
         and leverages XPCOM or COM as the middleware to natively map the API to
-        C++.  This means that in order to use the VirtualBox API from C there
+        C++.  This means that in order to use the VirtualAgent API from C there
         needs to be some helper code to bridge the language differences and
         reduce the differences between platforms.</para>
 
         <sect3 id="capi_glue">
-          <title>Cross-platform C bindings to the VirtualBox API</title>
+          <title>Cross-platform C bindings to the VirtualAgent API</title>
 
-            <para>Starting with version 4.3, VirtualBox offers C bindings
+            <para>Starting with version 4.3, VirtualAgent offers C bindings
             which allows using the same C client sources for all platforms,
             covering Windows, Linux, Mac OS X and Solaris. It is the
             preferred way to write API clients, even though the old style
@@ -1784,7 +1784,7 @@ for m in mgr.getArray(vbox, 'machines'):
         <sect3 id="c-gettingstarted">
           <title>Getting started</title>
 
-          <para>The following sections describe how to use the VirtualBox API
+          <para>The following sections describe how to use the VirtualAgent API
           in a C program. The necessary files are included in the SDK, in the
           directories <computeroutput>sdk/bindings/c/include</computeroutput>
           and <computeroutput>sdk/bindings/c/glue</computeroutput>.</para>
@@ -1794,7 +1794,7 @@ for m in mgr.getArray(vbox, 'machines'):
           directory <computeroutput>sdk/bindings/c/samples</computeroutput>
           which demonstrates
           using the C bindings to initialize the API, get handles for
-          VirtualBox and Session objects, make calls to list and start virtual
+          VirtualAgent and Session objects, make calls to list and start virtual
           machines, monitor events, and uninitialize resources when done. The
           sample program is trying to illustrate all relevant concepts, so it
           is a great source of detail information. Among many other generally
@@ -1814,7 +1814,7 @@ for m in mgr.getArray(vbox, 'machines'):
           locates the necessary dynamic library, using a known working way
           which works on all platforms. If you encounter problems with this
           glue code in <computeroutput>VBoxCAPIGlue.c</computeroutput>, let the
-          VirtualBox developers know, rather than inventing incompatible
+          VirtualAgent developers know, rather than inventing incompatible
           solutions.</para>
 
           <para>The following sections document the important concepts needed
@@ -1826,20 +1826,20 @@ for m in mgr.getArray(vbox, 'machines'):
         </sect3>
 
         <sect3 id="c-initialization">
-          <title>VirtualBox C API initialization</title>
+          <title>VirtualAgent C API initialization</title>
 
           <para>Just like in C++, the API and the underlying middleware needs
           to be initialized before it can be used. The
-          <computeroutput>VBoxCAPI_v&VBOX_VERSION_MAJOR;_&VBOX_VERSION_MINOR;.h</computeroutput>
+          <computeroutput>VBoxCAPI_v&VRA_VERSION_MAJOR;_&VRA_VERSION_MINOR;.h</computeroutput>
           header file provides the interface to the C bindings, but you can
           alternatively and more conveniently just include
           <computeroutput>VBoxCAPIGlue.h</computeroutput>,
-          as this avoids the VirtualBox version dependent header file name and
+          as this avoids the VirtualAgent version dependent header file name and
           makes sure that the global variable <code>g_pVBoxFuncs</code> contains a
           pointer to the structure which contains the helper function pointers.
           Here's how to initialize the C API:<screen>#include "VBoxCAPIGlue.h"
 ...
-IVirtualBoxClient *vboxclient   = NULL;
+IVirtualAgentClient *vboxclient   = NULL;
 
 /*
  * VBoxCGlueInit() loads the necessary dynamic library, handles errors
@@ -1850,7 +1850,7 @@ IVirtualBoxClient *vboxclient   = NULL;
  * to use is explained below.
  *
  * g_pVBoxFuncs-&gt;pfnClientInitialize does all the necessary startup
- * action and provides us with pointers to an IVirtualBoxClient instance.
+ * action and provides us with pointers to an IVirtualAgentClient instance.
  * It should be matched by a call to g_pVBoxFuncs-&gt;pfnClientUninitialize()
  * when done.
  */
@@ -1865,17 +1865,17 @@ if (VBoxCGlueInit())
 g_pVBoxFuncs-&gt;pfnClientInitialize(NULL, &amp;vboxclient);
 if (!vboxclient)
 {
-    fprintf(stderr, "%s: FATAL: could not get VirtualBoxClient reference\n",
+    fprintf(stderr, "%s: FATAL: could not get VirtualAgentClient reference\n",
             argv[0]);
     return EXIT_FAILURE;
 }</screen></para>
 
           <para>If <computeroutput>vboxclient</computeroutput> is still
           <computeroutput>NULL</computeroutput> this means the initializationi
-          failed and the VirtualBox C API cannot be used.</para>
+          failed and the VirtualAgent C API cannot be used.</para>
 
           <para>It is possible to write C applications using multiple threads
-          which all use the VirtualBox API, as long as you're initializing
+          which all use the VirtualAgent API, as long as you're initializing
           the C API in each thread which your application creates. This is done
           with <code>g_pVBoxFuncs->pfnClientThreadInitialize()</code> and
           likewise before the thread is terminated the API must be
@@ -1917,32 +1917,32 @@ if (!vboxclient)
           of <computeroutput>get_</computeroutput> followed by the capitalized
           attribute name. Unless the attribute is read-only, an analogous
           <computeroutput>set_</computeroutput> method exists. Let's apply
-          these rules to get the <computeroutput>IVirtualBox</computeroutput>
+          these rules to get the <computeroutput>IVirtualAgent</computeroutput>
           reference, an <computeroutput>ISession</computeroutput> instance
           reference and read the
-          <link linkend="IVirtualBox__revision">IVirtualBox::revision</link>
+          <link linkend="IVirtualAgent__revision">IVirtualAgent::revision</link>
           attribute:
           <screen>
-IVirtualBox *vbox               = NULL;
+IVirtualAgent *vbox               = NULL;
 ISession *session               = NULL;
 HRESULT rc;
 ULONG revision;
 
-rc = IVirtualBoxClient_get_VirtualBox(vboxclient, &amp;vbox);
+rc = IVirtualAgentClient_get_VirtualAgent(vboxclient, &amp;vbox);
 
 if (FAILED(rc) || !vbox)
 {
-    PrintErrorInfo(argv[0], "FATAL: could not get VirtualBox reference", rc);
+    PrintErrorInfo(argv[0], "FATAL: could not get VirtualAgent reference", rc);
     return EXIT_FAILURE;
 }
-rc = IVirtualBoxClient_get_Session(vboxclient, &amp;session);
+rc = IVirtualAgentClient_get_Session(vboxclient, &amp;session);
 if (FAILED(rc) || !session)
 {
     PrintErrorInfo(argv[0], "FATAL: could not get Session reference", rc);
     return EXIT_FAILURE;
 }
 
-rc = IVirtualBox_get_Revision(vbox, &amp;revision);
+rc = IVirtualAgent_get_Revision(vbox, &amp;revision);
 if (SUCCEEDED(rc))
 {
     printf("Revision: %u\n", revision);
@@ -1960,7 +1960,7 @@ BSTR vmname = ...;
 /*
  * Calling IMachine::findMachine(...)
  */
-rc = IVirtualBox_FindMachine(vbox, vmname, &amp;machine);</screen></para>
+rc = IVirtualAgent_FindMachine(vbox, vmname, &amp;machine);</screen></para>
 
           <para>As a more complicated example of a method invocation, let's
           call
@@ -2046,7 +2046,7 @@ g_pVBoxFuncs->pfnSafeArrayDestroy(psa);</screen></para>
 IMachine **machines = NULL;
 ULONG machineCnt = 0;
 ULONG i;
-IVirtualBox_get_Machines(virtualBox, ComSafeArrayAsOutIfaceParam(machinesSA, IMachine *));
+IVirtualAgent_get_Machines(virtualBox, ComSafeArrayAsOutIfaceParam(machinesSA, IMachine *));
 g_pVBoxFuncs->pfnSafeArrayCopyOutIfaceParamHelper((IUnknown ***)&amp;machines, &amp;machineCnt, machinesSA);
 g_pVBoxFuncs->pfnSafeArrayDestroy(machinesSA);
 /* Now "machines" contains the IMachine references, and machineCnt the
@@ -2054,7 +2054,7 @@ g_pVBoxFuncs->pfnSafeArrayDestroy(machinesSA);
 ...
 SAFEARRAY *psa = g_pVBoxFuncs->pfnSafeArrayCreateVector(VT_IUNKNOWN, 0, 1);
 g_pVBoxFuncs->pfnSafeArrayCopyInParamHelper(psa, (void *)&amp;machines[0], sizeof(machines[0]));
-IVirtualBox_GetMachineStates(ComSafeArrayAsInParam(psa), ...);
+IVirtualAgent_GetMachineStates(ComSafeArrayAsInParam(psa), ...);
 ...
 g_pVBoxFuncs->pfnSafeArrayDestroy(psa);
 for (i = 0; i &lt; machineCnt; ++i)
@@ -2072,7 +2072,7 @@ free(machines);</screen></para>
         <sect3 id="c-eventhandling">
           <title>Event handling</title>
 
-          <para>The VirtualBox API offers two types of event handling, active
+          <para>The VirtualAgent API offers two types of event handling, active
           and passive, and consequently there is support for both with the
           C API binding. Active event handling (based on asynchronous
           callback invocation for event delivery) is more difficult, as it
@@ -2124,7 +2124,7 @@ free(machines);</screen></para>
           use both types of event handling, active and passive, from a C
           application. Additional hints are in the comments documenting
           the helper methods in
-          <computeroutput>VBoxCAPI_v&VBOX_VERSION_MAJOR;_&VBOX_VERSION_MINOR;.h</computeroutput>.
+          <computeroutput>VBoxCAPI_v&VRA_VERSION_MAJOR;_&VRA_VERSION_MINOR;.h</computeroutput>.
           The code complexity of active event handling (and its inherently
           platform/compiler specific aspects) should be motivation to use passive
           event handling wherever possible.</para>
@@ -2204,7 +2204,7 @@ VBoxCAPIGlue.o: $(GLUE_DIR)/VBoxCAPIGlue.c
     $(CC) $(CFLAGS) $(CAPI_INC) $(PLATFORM_INC) $(GLUE_INC) -o $@ -c $&lt;
 
 # Compile interface ID list
-VirtualBox_i.o: $(PLATFORM_LIB)/VirtualBox_i.c
+VirtualAgent_i.o: $(PLATFORM_LIB)/VirtualAgent_i.c
     $(CC) $(CFLAGS) $(CAPI_INC) $(PLATFORM_INC) $(GLUE_INC) -o $@ -c $&lt;
 
 # Compile program code
@@ -2212,7 +2212,7 @@ program.o: program.c
     $(CC) $(CFLAGS) $(CAPI_INC) $(PLATFORM_INC) $(GLUE_INC) -o $@ -c $&lt;
 
 # Link program.
-program: program.o VBoxCAPICGlue.o VirtualBox_i.o
+program: program.o VBoxCAPICGlue.o VirtualAgent_i.o
     $(CC) -o $@ $^ -ldl -lpthread</screen></para>
         </sect3>
 
@@ -2228,16 +2228,16 @@ program: program.o VBoxCAPICGlue.o VirtualBox_i.o
           are now three relevant include directories.  The XPCOM include directory
           is still relevant for platforms where the XPCOM middleware is used but
           most of its include files live elsewhere now so it's good to have it
-          last. Additionally the <computeroutput>VirtualBox_i.c</computeroutput>
+          last. Additionally the <computeroutput>VirtualAgent_i.c</computeroutput>
           file needs to be compiled and linked to the program since it contains
-          the interface IDs (IIDs) relevant for the VirtualBox API, making sure
+          the interface IDs (IIDs) relevant for the VirtualAgent API, making sure
           they are not replicated endlessly if the code refers to them
           frequently.</para>
 
           <para>The C API client code should include
           <computeroutput>VBoxCAPIGlue.h</computeroutput> instead of
           <computeroutput>VBoxXPCOMCGlue.h</computeroutput> or
-          <computeroutput>VBoxCAPI_v&VBOX_VERSION_MAJOR;_&VBOX_VERSION_MINOR;.h</computeroutput>,
+          <computeroutput>VBoxCAPI_v&VRA_VERSION_MAJOR;_&VRA_VERSION_MINOR;.h</computeroutput>,
           as this makes sure the correct macros and internal translations are
           selected.</para>
 
@@ -2266,14 +2266,14 @@ program: program.o VBoxCAPICGlue.o VirtualBox_i.o
         </sect3>
 
         <sect3 id="xpcom_cbinding">
-          <title>Legacy C bindings to VirtualBox API for XPCOM</title>
+          <title>Legacy C bindings to VirtualAgent API for XPCOM</title>
 
           <note>
             <para>This section applies to Linux, Mac OS X and Solaris
             hosts only and describes deprecated use of the API from C.</para>
           </note>
 
-          <para>Starting with version 2.2, VirtualBox offers C bindings for
+          <para>Starting with version 2.2, VirtualAgent offers C bindings for
           its API which works only on platforms using XPCOM. Refer to the
           old SDK documentation (included in the SDK packages for version 4.3.6
           or earlier) since it still applies unchanged. The fundamental concepts
@@ -2287,10 +2287,10 @@ program: program.o VBoxCAPICGlue.o VirtualBox_i.o
   </chapter>
 
   <chapter id="concepts">
-    <title>Basic VirtualBox concepts; some examples</title>
+    <title>Basic VirtualAgent concepts; some examples</title>
 
-    <para>The following explains some basic VirtualBox concepts such as the
-    VirtualBox object, sessions and how virtual machines are manipulated and
+    <para>The following explains some basic VirtualAgent concepts such as the
+    VirtualAgent object, sessions and how virtual machines are manipulated and
     launched using the Main API. The coding examples use a pseudo-code style
     closely related to the object-oriented web service (OOWS) for JAX-WS.
     Depending on which environment you are using, you will need to adjust the
@@ -2300,16 +2300,16 @@ program: program.o VBoxCAPICGlue.o VirtualBox_i.o
       <title>Obtaining basic machine information. Reading attributes</title>
 
       <para>Any program using the Main API will first need access to the
-      global VirtualBox object (see
-      <link linkend="IVirtualBox">IVirtualBox</link>), from which all other
+      global VirtualAgent object (see
+      <link linkend="IVirtualAgent">IVirtualAgent</link>), from which all other
       functionality of the API is derived. With the OOWS for JAX-WS, this is
       returned from the
       <link linkend="IWebsessionManager__logon">IWebsessionManager::logon()</link>
       call.</para>
 
       <para>To enumerate virtual machines, one would look at the "machines"
-      array attribute in the VirtualBox object (see
-      <link linkend="IVirtualBox__machines">IVirtualBox::machines</link>).
+      array attribute in the VirtualAgent object (see
+      <link linkend="IVirtualAgent__machines">IVirtualAgent::machines</link>).
       This array contains all virtual machines currently registered with the
       host, each of them being an instance of
       <link linkend="IMachine">IMachine</link>.
@@ -2342,7 +2342,7 @@ String name = machine.getName();</screen>
       call <computeroutput>setMemorySize(1024)</computeroutput>. Try that, and
       you will get an error: "The machine is not mutable."</para>
 
-      <para>So unfortunately, things are not that easy. VirtualBox is a
+      <para>So unfortunately, things are not that easy. VirtualAgent is a
       complicated environment in which multiple processes compete for possibly
       the same resources, especially machine settings. As a result, machines
       must be "locked" before they can either be modified or started. This is
@@ -2356,7 +2356,7 @@ String name = machine.getName();</screen>
       <para>These requirements are implemented in the Main API by way of
       "sessions", in particular, the <link linkend="ISession">ISession</link>
       interface. Each process which talks to
-      VirtualBox needs its own instance of ISession. In the web service, you
+      VirtualAgent needs its own instance of ISession. In the web service, you
       can request the creation of such an object by calling
       <link linkend="IWebsessionManager__getSessionObject">IWebsessionManager::getSessionObject()</link>.
       More complex management tasks might need multiple instances of ISession,
@@ -2388,7 +2388,7 @@ String name = machine.getName();</screen>
 
       <para>So, as an example, the sequence to change a machine's memory to
       1024 MB is something like this:<screen>IWebsessionManager mgr ...;
-IVirtualBox vbox = mgr.logon(user, pass);
+IVirtualAgent vbox = mgr.logon(user, pass);
 ...
 IMachine machine = ...;  // read-only machine
 ISession session = mgr.getSessionObject();
@@ -2404,7 +2404,7 @@ session.unlockMachine();</screen></para>
 
       <para>To launch a virtual machine, you call
       <link linkend="IMachine__launchVMProcess">IMachine::launchVMProcess()</link>.
-      This instructs the VirtualBox engine to start a new process containing the
+      This instructs the VirtualAgent engine to start a new process containing the
       virtual machine. The host system sees each virtual machine as a single
       process, even if the virtual machine has hundreds of its own processes
       running inside it. (This new VM process in turn obtains a write lock on
@@ -2414,7 +2414,7 @@ session.unlockMachine();</screen></para>
 
       <para>Starting a machine looks something like this:
       <screen>IWebsessionManager mgr ...;
-IVirtualBox vbox = mgr.logon(user, pass);
+IVirtualAgent vbox = mgr.logon(user, pass);
 ...
 IMachine machine = ...;  // read-only machine
 ISession session = mgr.getSessionObject();
@@ -2433,23 +2433,23 @@ if (prog.getResultCode() != 0)  // check success
     </sect1>
 
     <sect1 id="events">
-      <title>VirtualBox events</title>
+      <title>VirtualAgent events</title>
 
-      <para>In VirtualBox, "events" provide a uniform mechanism to register
-      for and consume specific events. A VirtualBox client can register an
+      <para>In VirtualAgent, "events" provide a uniform mechanism to register
+      for and consume specific events. A VirtualAgent client can register an
       "event listener" (represented by the
       <link linkend="IEventListener">IEventListener</link> interface), which
       will then get notified by the server when an event (represented by the
       <link linkend="IEvent">IEvent</link> interface) happens.</para>
 
       <para>The IEvent interface is an abstract parent interface for all
-      events that can occur in VirtualBox. The actual events that the server
+      events that can occur in VirtualAgent. The actual events that the server
       sends out belong to one of the specific subclasses, for example
       <link linkend="IMachineStateChangedEvent">IMachineStateChangedEvent</link>
       or
       <link linkend="IMediumChangedEvent">IMediumChangedEvent</link>.</para>
 
-      <para>As an example, the VirtualBox GUI waits for machine events so it can
+      <para>As an example, the VirtualAgent GUI waits for machine events so it can
       update its display when the machine state changes or machine settings are
       modified, even if this happens in another client. This is how the GUI can
       automatically refresh its display even if you manipulate a machine from
@@ -2478,7 +2478,7 @@ es.unregisterListener(listener); </screen></para>
       <para>A graphical user interface application would most likely want to start
       its own thread to wait for events and then process these in a loop.</para>
 
-      <para>The events mechanism was introduced with VirtualBox 3.3 and
+      <para>The events mechanism was introduced with VirtualAgent 3.3 and
       replaces various callback interfaces which were called for each event in
       the interface. The callback mechanism was not compatible with scripting
       languages, local Java bindings, and remote web services as they do not
@@ -2489,10 +2489,10 @@ es.unregisterListener(listener); </screen></para>
       an event aggregator was introduced. Essentially it's a mechanism to
       aggregate multiple event sources into one single event source, and then work
       with this single aggregated event source instead of the original sources. As
-      an example, one can try out the VirtualBox Python shell's
+      an example, one can try out the VirtualAgent Python shell's
       <computeroutput>recordDemo</computeroutput> option which records mouse and
       keyboard events using an event aggregator and displays them as separate event
-      sources. The VirtualBox Python shell (vboxshell.py) is shipped with the SDK.
+      sources. The VirtualAgent Python shell (vboxshell.py) is shipped with the SDK.
       The <computeroutput>recordDemo</computeroutput> code is essentially:<screen>
           listener = console.eventSource.createListener()
           agg = console.eventSource.createAggregator([console.keyboard.eventSource, console.mouse.eventSource])
@@ -2509,19 +2509,19 @@ es.unregisterListener(listener); </screen></para>
   </chapter>
 
   <chapter id="vboxshell">
-    <title>The VirtualBox shell</title>
+    <title>The VirtualAgent shell</title>
 
-    <para>VirtualBox comes with an extensible shell which allows you to
+    <para>VirtualAgent comes with an extensible shell which allows you to
     control your virtual machines from the command line. It is also a
-    non-trivial example of how to use the VirtualBox APIs from Python for all
+    non-trivial example of how to use the VirtualAgent APIs from Python for all
     three styles of the API (COM/XPCOM/WS).</para>
 
     <para>You can easily extend this shell with your own commands.  Simply create
     a subdirectory named
-    <computeroutput>.config/VirtualBox/shexts</computeroutput> in your home
-    directory (<computeroutput>.VirtualBox/shexts</computeroutput>
+    <computeroutput>.config/VirtualAgent/shexts</computeroutput> in your home
+    directory (<computeroutput>.VirtualAgent/shexts</computeroutput>
     on Windows systems and
-    <computeroutput>Library/VirtualBox/shexts</computeroutput> on macOS systems)
+    <computeroutput>Library/VirtualAgent/shexts</computeroutput> on macOS systems)
     and put a Python file implementing your shell extension commands in this
     directory.  This file must have an array named
     <computeroutput>commands</computeroutput> which contains your command
@@ -2547,7 +2547,7 @@ es.unregisterListener(listener); </screen></para>
             # And provide some meaningful defaults
             format = "vdi"
 
-        # Call VirtualBox API, using context's fields
+        # Call VirtualAgent API, using context's fields
         hdd = ctx['vb'].createMedium(format, loc, ctx['global'].constants.AccessMode_ReadWrite, \
                                      ctx['global'].constants.DeviceType_HardDisk)
         # Access constants using ctx['global'].constants
@@ -2573,7 +2573,7 @@ es.unregisterListener(listener); </screen></para>
       </screen> Just store the above text in a file named
     <computeroutput>createHdd</computeroutput> (or any other meaningful name)
     in the <computeroutput>shexts</computeroutput> directory located as
-    described above and then start the VirtualBox shell or just issue the
+    described above and then start the VirtualAgent shell or just issue the
     <computeroutput>reloadExts</computeroutput> command if the shell is
     already running. Your new command will now be available.</para>
   </chapter>
@@ -2581,8 +2581,8 @@ es.unregisterListener(listener); </screen></para>
   <chapter id="vboxarm">
     <title>Main API changes to support the ARM64 architecture</title>
 
-    <para>VirtualBox 7.1 introduces support for running virtual machines on
-    hosts containing an ARM CPU. Since VirtualBox has been designed and
+    <para>VirtualAgent 7.1 introduces support for running virtual machines on
+    hosts containing an ARM CPU. Since VirtualAgent has been designed and
     developed for virtualizing x86 hardware since its inception adding
     support for ARM CPUs required a variety of changes to the Main API to
     accommodate two different CPU architectures.</para>
@@ -2591,12 +2591,12 @@ es.unregisterListener(listener); </screen></para>
       <title>Overview of the Changes to the Main API</title>
 
       <para>In order to support two different types of processor architecture
-      in the VirtualBox Main API the key abstraction was the addition of a new
+      in the VirtualAgent Main API the key abstraction was the addition of a new
       interface named <link linkend="IPlatform">IPlatform</link> which contains
       the details which relate to the operating environment of a VM.  The
       <link linkend="IPlatform">IPlatform</link> interface is distinct from the
       VM itself (the <link linkend="IMachine">IMachine</link> interface), the VM
-      management interfaces (<link linkend="IVirtualBox">IVirtualBox</link> and
+      management interfaces (<link linkend="IVirtualAgent">IVirtualAgent</link> and
       <link linkend="IConsole">IConsole</link>), as well as the global properties of
       the VM (the <link linkend="ISystemProperties">ISystemProperties</link> interface).
       The contents of the <link linkend="IPlatform">IPlatform</link> interface can be
@@ -2645,7 +2645,7 @@ es.unregisterListener(listener); </screen></para>
       </screen>
 
       The value of the <link linkend="PlatformArchitecture">PlatformArchitecture</link> enumeration
-      can also be used when creating a new VM using <link linkend="IVirtualBox__createMachine">IVirtualBox::createMachine</link>.
+      can also be used when creating a new VM using <link linkend="IVirtualAgent__createMachine">IVirtualAgent::createMachine</link>.
       </para>
 
       <para>The CPU architecture-neutral properties in (<link linkend="IPlatformProperties">IPlatformProperties</link>)
@@ -2660,8 +2660,8 @@ es.unregisterListener(listener); </screen></para>
           attribute.</para>
         </listitem>
         <listitem>
-          <para>They can retrieved from the <link linkend="IVirtualBox">IVirtualBox</link> interface
-          using the new <link linkend="IVirtualBox__getPlatformProperties">IVirtualBox::getPlatformProperties</link> method.
+          <para>They can retrieved from the <link linkend="IVirtualAgent">IVirtualAgent</link> interface
+          using the new <link linkend="IVirtualAgent__getPlatformProperties">IVirtualAgent::getPlatformProperties</link> method.
           </para>
         </listitem>
       </itemizedlist>
@@ -2994,8 +2994,8 @@ es.unregisterListener(listener); </screen></para>
       <itemizedlist>
         <listitem>
           <para><link
-          linkend="IPlatformProperties">IPlatformProperties</link> <link linkend="IVirtualBox__getPlatformProperties">IVirtualBox::getPlatformProperties</link></para>
-          <para>The new IVirtualBox::getPlatformProperties method returns
+          linkend="IPlatformProperties">IPlatformProperties</link> <link linkend="IVirtualAgent__getPlatformProperties">IVirtualAgent::getPlatformProperties</link></para>
+          <para>The new IVirtualAgent::getPlatformProperties method returns
           an IPlatformProperties object which contains the platform-specific
           properties of a VM as described above.</para>
         </listitem>
@@ -3214,11 +3214,11 @@ es.unregisterListener(listener); </screen></para>
   <chapter id="cloud">
     <title>Working with the Cloud</title>
 
-    <para>VirtualBox supports and goes towards the Oracle tendencies like "move to the Cloud".</para>
+    <para>VirtualAgent supports and goes towards the CINASEEK tendencies like "move to the Cloud".</para>
 
     <sect1>
       <title>OCI features</title>
-      <para>VirtualBox supports the Oracle Cloud Infrastructure (OCI). See the interfaces:
+      <para>VirtualAgent supports the CINASEEK Cloud Infrastructure (OCI). See the interfaces:
       <link linkend="ICloudClient">ICloudClient</link>,
       <link linkend="ICloudProvider">ICloudProvider</link>,
       <link linkend="ICloudProfile">ICloudProfile</link>,
@@ -3426,9 +3426,9 @@ es.unregisterListener(listener); </screen></para>
   <chapter id="hgcm">
     <title>Host-Guest Communication Manager</title>
 
-    <para>The VirtualBox Host-Guest Communication Manager (HGCM) allows a
+    <para>The VirtualAgent Host-Guest Communication Manager (HGCM) allows a
     guest application or a guest driver to call a host shared library. The
-    following features of VirtualBox are implemented using HGCM: <itemizedlist>
+    following features of VirtualAgent are implemented using HGCM: <itemizedlist>
         <listitem>
           <para>Shared Folders</para>
         </listitem>
@@ -3627,7 +3627,7 @@ es.unregisterListener(listener); </screen></para>
                 </row>
 
                 <row>
-                  <entry>VBOX_HGCM_REQ_DONE
+                  <entry>VRA_HGCM_REQ_DONE
                   (<computeroutput>0x00000001</computeroutput>)</entry>
 
                   <entry>The request has been processed by the host
@@ -3635,7 +3635,7 @@ es.unregisterListener(listener); </screen></para>
                 </row>
 
                 <row>
-                  <entry>VBOX_HGCM_REQ_CANCELLED
+                  <entry>VRA_HGCM_REQ_CANCELLED
                   (<computeroutput>0x00000002</computeroutput>)</entry>
 
                   <entry>This request was cancelled.</entry>
@@ -3722,7 +3722,7 @@ es.unregisterListener(listener); </screen></para>
             </tgroup>
           </table> <note>
             <para>Currently preloaded HGCM services are hard-coded in
-            VirtualBox: <itemizedlist>
+            VirtualAgent: <itemizedlist>
                 <listitem>
                   <para>VBoxSharedFolders</para>
                 </listitem>
@@ -3957,7 +3957,7 @@ es.unregisterListener(listener); </screen></para>
       <sect2>
         <title>The guest driver interface</title>
 
-        <para>The driver interface is implemented in the VirtualBox guest
+        <para>The driver interface is implemented in the VirtualAgent guest
         additions driver (VBoxGuest) which works with the VMM virtual device.
         Drivers must use the VBox Guest Library (VBGL) which provides an API
         for HGCM clients (<computeroutput>VBox/VBoxGuestLib.h</computeroutput>
@@ -3967,7 +3967,7 @@ es.unregisterListener(listener); </screen></para>
         <para><screen>
 DECLR0VBGL(int) VbglR0HGCMConnect(VBGLHGCMHANDLE *pHandle, const char *pszServiceName, HGCMCLIENTID *pidClient);
           </screen> VbglR0HGCMConnect() connects to the HGCM service on the host. An
-          example of a guest driver connecting to the VirtualBox Shared Folder
+          example of a guest driver connecting to the VirtualAgent Shared Folder
           HGCM service follows:<screen>
     VBoxGuestHGCMConnectInfo data;
 
@@ -4087,7 +4087,7 @@ typedef struct _VBoxSFRead
       <sect2>
         <title>Guest application interface</title>
 
-        <para>Applications call the VirtualBox Guest Additions driver to
+        <para>Applications call the VirtualAgent Guest Additions driver to
         utilize the HGCM interface. The following IOCTLs correspond to the
         <computeroutput>VbglR0HGCM*</computeroutput> functions listed above:
         <itemizedlist>
@@ -4120,7 +4120,7 @@ typedef struct _VBoxSFRead
       <para>The HGCM service is a shared library with a specific set of entry
       points. The library must export the
       <computeroutput>VBoxHGCMSvcLoad</computeroutput> entry point: <screen>
-extern "C" DECLCALLBACK(DECLEXPORT(int)) VBoxHGCMSvcLoad(VBOXHGCMSVCFNTABLE *ptable)
+extern "C" DECLCALLBACK(DECLEXPORT(int)) VBoxHGCMSvcLoad(VRAHGCMSVCFNTABLE *ptable)
       </screen></para>
 
       <para>The service must check the
@@ -4139,7 +4139,7 @@ extern "C" DECLCALLBACK(DECLEXPORT(int)) VBoxHGCMSvcLoad(VBOXHGCMSVCFNTABLE *pta
 
       <para>Service entry points are listed in the
       <computeroutput>VBox/hgcmsvc.h</computeroutput> in the
-      <computeroutput>VBOXHGCMSVCFNTABLE</computeroutput> structure. <table>
+      <computeroutput>VRAHGCMSVCFNTABLE</computeroutput> structure. <table>
           <title>Service entry points</title>
 
           <tgroup cols="2">
@@ -4175,24 +4175,24 @@ extern "C" DECLCALLBACK(DECLEXPORT(int)) VBoxHGCMSvcLoad(VBOXHGCMSVCFNTABLE *pta
               </row>
 
               <row>
-                <entry>void pfnCall(void *pvService, VBOXHGCMCALLHANDLE callHandle,
+                <entry>void pfnCall(void *pvService, VRAHGCMCALLHANDLE callHandle,
                 uint32_t u32ClientID, void *pvClient, uint32_t function,
-                uint32_t cParms, VBOXHGCMSVCPARM paParms[],
+                uint32_t cParms, VRAHGCMSVCPARM paParms[],
                 uint64_t tsArrival)</entry>
 
                 <entry>A guest client calls a service function. The
                 <computeroutput>callHandle</computeroutput> must be used in
-                the VBOXHGCMSVCHELPERS::pfnCallComplete callback when the call
+                the VRAHGCMSVCHELPERS::pfnCallComplete callback when the call
                 has been processed.</entry>
               </row>
 
               <row>
                 <entry>int pfnHostCall(void *pvService, uint32_t function, uint32_t cParms,
-                VBOXHGCMSVCPARM paParms[])</entry>
+                VRAHGCMSVCPARM paParms[])</entry>
 
-                <entry>Called by the VirtualBox host components to perform
+                <entry>Called by the VirtualAgent host components to perform
                 functions which should be not accessible by the guest. Usually
-                this entry point is used by VirtualBox to configure the
+                this entry point is used by VirtualAgent to configure the
                 service.</entry>
               </row>
 
@@ -4222,7 +4222,7 @@ extern "C" DECLCALLBACK(DECLEXPORT(int)) VBoxHGCMSvcLoad(VBOXHGCMSVCFNTABLE *pta
   <chapter id="rdpweb">
     <title>RDP Web Control</title>
 
-    <para>The VirtualBox <emphasis>RDP Web Control</emphasis> (RDPWeb)
+    <para>The VirtualAgent <emphasis>RDP Web Control</emphasis> (RDPWeb)
     provides remote access to a running VM. RDPWeb is an RDP (Remote Desktop
     Protocol) client based on Flash technology and can be used from a Web
     browser with a Flash plugin.</para>
@@ -4250,7 +4250,7 @@ extern "C" DECLCALLBACK(DECLEXPORT(int)) VBoxHGCMSvcLoad(VBOXHGCMSVCFNTABLE *pta
           </listitem>
         </itemizedlist></para>
 
-      <para>The VirtualBox SDK contains sample HTML code
+      <para>The VirtualAgent SDK contains sample HTML code
       including:<itemizedlist>
           <listitem>
             <para>A JavaScript library for embedding Flash content:
@@ -4388,7 +4388,7 @@ extern "C" DECLCALLBACK(DECLEXPORT(int)) VBoxHGCMSvcLoad(VBOXHGCMSVCFNTABLE *pta
           </listitem>
 
           <listitem>
-            <para>Rebranding to Oracle.</para>
+            <para>Rebranding to CINASEEK.</para>
           </listitem>
         </itemizedlist>
       </sect2>
@@ -4428,26 +4428,26 @@ extern "C" DECLCALLBACK(DECLEXPORT(int)) VBoxHGCMSvcLoad(VBOXHGCMSVCFNTABLE *pta
   <chapter id="dnd">
     <title>Drag and Drop</title>
 
-    <para>As of VirtualBox 4.2 it's possible to transfer files from the host to
+    <para>As of VirtualAgent 4.2 it's possible to transfer files from the host to
     Linux, Solaris, and macOS guests by dragging files, directories, or text
     from the host into the guest's screen. This is called <emphasis>drag and drop
     (DnD)</emphasis>.</para>
 
-    <para>VirtualBox 5.0 added support for Windows guests as well as the ability
+    <para>VirtualAgent 5.0 added support for Windows guests as well as the ability
     to transfer data in the opposite direction, that is, from the guest to the
     host.</para>
 
-    <note><para>Currently only the VirtualBox Manager front-end supports drag and
+    <note><para>Currently only the VirtualAgent Manager front-end supports drag and
       drop.</para></note>
 
     <para>This chapter will show how to use the required interfaces provided
-    by VirtualBox for adding drag and drop functionality to third-party
+    by VirtualAgent for adding drag and drop functionality to third-party
     front-ends.</para>
 
     <sect1>
       <title>Basic concepts</title>
 
-      <para>In order to use the interfaces provided by VirtualBox, some basic
+      <para>In order to use the interfaces provided by VirtualAgent, some basic
       concepts need to be understood first: a drag and drop operation logically
       contains both a <emphasis>source</emphasis> and a
       <emphasis>target</emphasis>:</para>
@@ -4463,11 +4463,11 @@ extern "C" DECLCALLBACK(DECLEXPORT(int)) VBoxHGCMSvcLoad(VBOXHGCMSVCFNTABLE *pta
 
       <para>The source and the target have abstract interfaces called
       <link linkend="IDnDSource">IDnDSource</link> and
-      <link linkend="IDnDTarget">IDnDTarget</link>. VirtualBox also
+      <link linkend="IDnDTarget">IDnDTarget</link>. VirtualAgent also
       provides implementations of both interfaces, called
       <link linkend="IGuestDnDSource">IGuestDnDSource</link> and
       <link linkend="IGuestDnDTarget">IGuestDnDTarget</link>. Both
-      implementations are used in the VirtualBox Manager front-end.</para>
+      implementations are used in the VirtualAgent Manager front-end.</para>
     </sect1>
 
     <sect1>
@@ -4479,7 +4479,7 @@ extern "C" DECLCALLBACK(DECLEXPORT(int)) VBoxHGCMSvcLoad(VBOXHGCMSVCFNTABLE *pta
       data the target cannot (or intentionally does not want to)
       support.</para>
 
-      <para>VirtualBox describes the data types using
+      <para>VirtualAgent describes the data types using
       <emphasis>MIME types</emphasis> -- which were originally defined in
       <ulink url="https://tools.ietf.org/html/rfc2046">RFC 2046</ulink> and
       are also called <emphasis>Content-types</emphasis> or
@@ -4520,9 +4520,9 @@ extern "C" DECLCALLBACK(DECLEXPORT(int)) VBoxHGCMSvcLoad(VBOXHGCMSVCFNTABLE *pta
   </chapter>
 
   <chapter id="vbox-auth">
-    <title>VirtualBox external authentication modules</title>
+    <title>VirtualAgent external authentication modules</title>
 
-    <para>VirtualBox supports arbitrary external modules to perform
+    <para>VirtualAgent supports arbitrary external modules to perform
     authentication. External authentication modules are used for remote
     desktop access to a VM when the VRDE authentication type is set to
     "external". VRDE authentication will then use the authentication module
@@ -4594,7 +4594,7 @@ AuthResult AUTHCALL AuthEntry(
 }</screen>
 
     <para>A note regarding the UUID implementation of the
-    <computeroutput>pUuid</computeroutput> argument: VirtualBox uses a
+    <computeroutput>pUuid</computeroutput> argument: VirtualAgent uses a
     consistent binary representation of UUIDs on all platforms. For this
     reason the integer fields comprising the UUID are stored as little endian
     values. If you want to pass such UUIDs to code which assumes that
@@ -4636,7 +4636,7 @@ AuthResult AUTHCALL AuthEntry(
     <sect1>
       <title>Introduction</title>
 
-      <para>VirtualBox can be controlled by a Java API, both locally using
+      <para>VirtualAgent can be controlled by a Java API, both locally using
       COM/XPCOM and remotely using SOAP. As with the Python bindings,
       a generic glue layer tries to hide all platform differences, allowing
       for source and binary compatibility on different platforms.</para>
@@ -4647,19 +4647,19 @@ AuthResult AUTHCALL AuthEntry(
 
       <para>To use the Java bindings, there are certain requirements depending
       on the platform. First of all, you need JDK 1.5 (Java 5) or later. Also
-      please make sure that the version of the VirtualBox API .jar file
-      exactly matches the version of VirtualBox in use. To avoid confusion,
-      the VirtualBox API provides versioning in the Java package name, e.g.
+      please make sure that the version of the VirtualAgent API .jar file
+      exactly matches the version of VirtualAgent in use. To avoid confusion,
+      the VirtualAgent API provides versioning in the Java package name, e.g.
       the package is named <computeroutput>org.virtualbox_3_2</computeroutput>
-      for VirtualBox version 3.2. <itemizedlist>
+      for VirtualAgent version 3.2. <itemizedlist>
           <listitem>
             <para><emphasis role="bold">XPCOM</emphasis> - for all platforms
             except Microsoft Windows. A Java bridge based on JavaXPCOM is shipped
-            with VirtualBox. The classpath must contain
+            with VirtualAgent. The classpath must contain
             <computeroutput>vboxjxpcom.jar</computeroutput> and the
             <computeroutput>vbox.home</computeroutput> property must be set to the
-            location where the VirtualBox binaries are. Please make sure that
-            the JVM bitness matches the bitness of VirtualBox in use as the XPCOM
+            location where the VirtualAgent binaries are. Please make sure that
+            the JVM bitness matches the bitness of VirtualAgent in use as the XPCOM
             bridge relies on native libraries.</para>
 
             <para>Start your application like this: <programlisting>
@@ -4673,7 +4673,7 @@ AuthResult AUTHCALL AuthEntry(
             generic Java to COM bridge - which has to be installed separately.
             See <ulink
             url="http://sourceforge.net/projects/jacob-project/">http://sourceforge.net/projects/jacob-project/</ulink>
-            for installation instructions. Also, the VirtualBox provided
+            for installation instructions. Also, the VirtualAgent provided
             <computeroutput>vboxjmscom.jar</computeroutput> file must be in the
             class path.</para>
 
@@ -4684,11 +4684,11 @@ AuthResult AUTHCALL AuthEntry(
           <listitem>
             <para><emphasis role="bold">SOAP</emphasis> - all platforms. Java
             6 is required as it comes with built-in support for SOAP via the
-            JAX-WS library. Also, the VirtualBox provided
+            JAX-WS library. Also, the VirtualAgent provided
             <computeroutput>vbojws.jar</computeroutput> must be in the class
             path. In the SOAP case it's possible to create several
-            VirtualBoxManager instances to communicate with multiple
-            VirtualBox hosts.</para>
+            VirtualAgentManager instances to communicate with multiple
+            VirtualAgent hosts.</para>
 
             <para>Start your application like this: <programlisting>
  java -cp vboxjws.jar MyProgram
@@ -4710,11 +4710,11 @@ AuthResult AUTHCALL AuthEntry(
       <para>This example shows a simple use case of the Java API. Differences
       for SOAP vs. local execution are minimal and limited to the connection
       setup phase (see <computeroutput>ws</computeroutput> variable). In the
-      SOAP case it's possible to create several VirtualBoxManager instances to
-      communicate with multiple VirtualBox hosts. <programlisting>
+      SOAP case it's possible to create several VirtualAgentManager instances to
+      communicate with multiple VirtualAgent hosts. <programlisting>
           import org.virtualbox_4_3.*;
           ....
-          VirtualBoxManager mgr = VirtualBoxManager.createInstance(null);
+          VirtualAgentManager mgr = VirtualAgentManager.createInstance(null);
           boolean ws = false; // or true, if we need the SOAP version
           if (ws)
           {
@@ -4723,8 +4723,8 @@ AuthResult AUTHCALL AuthEntry(
               String passwd = "test";
               mgr.connect(url, user, passwd);
           }
-          IVirtualBox vbox = mgr.getVBox();
-          System.out.println("VirtualBox version: " + vbox.getVersion() + "\n");
+          IVirtualAgent vbox = mgr.getVBox();
+          System.out.println("VirtualAgent version: " + vbox.getVersion() + "\n");
           // get first VM name
           String m =  vbox.getMachines().get(0).getName();
           System.out.println("\nAttempting to start VM '" + m + "'");
@@ -4787,9 +4787,9 @@ AuthResult AUTHCALL AuthEntry(
   <chapter>
     <title>Main API change log</title>
 
-    <para>Generally, VirtualBox will maintain API compatibility within a major
+    <para>Generally, VirtualAgent will maintain API compatibility within a major
     release; a major release occurs when the first or the second of the three
-    version components of VirtualBox change (that is, in the x.y.z scheme, a
+    version components of VirtualAgent change (that is, in the x.y.z scheme, a
     major release is one where x or y change, but not when only z
     changes).</para>
 
@@ -4798,14 +4798,14 @@ AuthResult AUTHCALL AuthEntry(
 
     <para>Migration between major releases most likely will lead to API
     breakage, so please make sure you updated code accordingly. The OOWS Java
-    wrappers enforce that mechanism by putting VirtualBox classes into
+    wrappers enforce that mechanism by putting VirtualAgent classes into
     version-specific packages such as
     <computeroutput>org.virtualbox_2_2</computeroutput>. This approach allows
-    for connecting to multiple VirtualBox versions simultaneously from the
+    for connecting to multiple VirtualAgent versions simultaneously from the
     same Java application.</para>
 
     <para>The following sections list incompatible changes that the Main API
-    underwent since the original release of this SDK Reference with VirtualBox
+    underwent since the original release of this SDK Reference with VirtualAgent
     2.0. A change is deemed "incompatible" only if it breaks existing client
     code (e.g. changes in method parameter lists, renamed or removed
     interfaces and similar). In other words, the list does not contain new
@@ -4924,13 +4924,13 @@ AuthResult AUTHCALL AuthEntry(
           <link linkend="IAudioSettings">IAudioSettings</link> for more information.</para>
         </listitem>
 
-        <listitem><para>The <link linkend="IVirtualBox__openMachine">IVirtualBox::openMachine</link> call now
+        <listitem><para>The <link linkend="IVirtualAgent__openMachine">IVirtualAgent::openMachine</link> call now
           requires an additional password parameter. If the machine is not encrypted the parameter is ignored.</para>
         </listitem>
 
         <listitem><para>When a new VM is being created, the default audio driver will be now
           <link linkend="AudioDriverType__Default">AudioDriverType_Default</link>. This driver
-          type will automatically choose the best audio driver (backend) for the host OS &VBOX_PRODUCT;
+          type will automatically choose the best audio driver (backend) for the host OS &VRA_PRODUCT;
           currently is running on.</para>
         </listitem>
 
@@ -5006,7 +5006,7 @@ AuthResult AUTHCALL AuthEntry(
               <link linkend="IGuestSession__processCreateEx">IGuestSession::processCreateEx()</link>,
               <link linkend="IGuestSession__directoryOpen">IGuestSession::directoryOpen()</link> and
               <link linkend="IGuestSession__fileOpen">IGuestSession::fileOpen()</link> now will
-              return the new error code VBOX_E_MAXIMUM_REACHED if the limit for the according object
+              return the new error code VRA_E_MAXIMUM_REACHED if the limit for the according object
               group has been reached.</para>
             </listitem>
 
@@ -5036,10 +5036,10 @@ AuthResult AUTHCALL AuthEntry(
         <listitem><para>The webservice version of the <link linkend="ISharedFolder">ISharedFolder</link>
           interface was changed from a struct to a managed object. This causes incompatibilities on the
           protocol level as the shared folder attributes are not returned in the responses of
-          <link linkend="IVirtualBox__sharedFolders">IVirtualBox::getSharedFolders</link> and
+          <link linkend="IVirtualAgent__sharedFolders">IVirtualAgent::getSharedFolders</link> and
           <link linkend="IMachine__sharedFolders">IMachine::getSharedFolders</link> anymore. They
           return object UUIDs instead which need be wrapped by stub objects. The change is not visible when
-          using the appropriate client bindings from the most recent VirtualBox SDK.
+          using the appropriate client bindings from the most recent VirtualAgent SDK.
         </para></listitem>
 
       </itemizedlist>
@@ -5082,13 +5082,13 @@ AuthResult AUTHCALL AuthEntry(
         <listitem><para>The Host-Guest Communication Manager (HGCM) guest
           application interface IOCTLs were renamed:
           <itemizedlist>
-            <listitem><para>VBOXGUEST_IOCTL_HGCM_CONNECT was renamed to
+            <listitem><para>VRAGUEST_IOCTL_HGCM_CONNECT was renamed to
               VBGL_IOCTL_HGCM_CONNECT
             </para></listitem>
-            <listitem><para>VBOXGUEST_IOCTL_HGCM_DISCONNECT was renamed to
+            <listitem><para>VRAGUEST_IOCTL_HGCM_DISCONNECT was renamed to
               VBGL_IOCTL_HGCM_DISCONNECT
             </para></listitem>
-            <listitem><para>VBOXGUEST_IOCTL_HGCM_CALL was renamed to
+            <listitem><para>VRAGUEST_IOCTL_HGCM_CALL was renamed to
               VBGL_IOCTL_HGCM_CALL
             </para></listitem>
           </itemizedlist>
@@ -5186,9 +5186,9 @@ AuthResult AUTHCALL AuthEntry(
 
         <listitem>
           <para>The method
-          <link linkend="IVirtualBox__createMedium">IVirtualBox::createMedium()</link>
+          <link linkend="IVirtualAgent__createMedium">IVirtualAgent::createMedium()</link>
           replaces
-          <computeroutput>VirtualBox::createHardDisk()</computeroutput>.
+          <computeroutput>VirtualAgent::createHardDisk()</computeroutput>.
           Adjusting existing code needs adding two parameters with
           value <computeroutput>AccessMode_ReadWrite</computeroutput>
           and <computeroutput>DeviceType_HardDisk</computeroutput>
@@ -5234,7 +5234,7 @@ AuthResult AUTHCALL AuthEntry(
               <computeroutput>IGuest::dragHGPutData()</computeroutput>,
               have been moved to an abstract base class called
               <link linkend="IDnDTarget">IDnDTarget</link>.
-              VirtualBox implements this base class in the
+              VirtualAgent implements this base class in the
               <link linkend="IGuestDnDTarget">IGuestDnDTarget</link>
               interface. The implementation can be used by using the
               <link linkend="IGuest__dnDTarget">IGuest::dnDTarget()</link>
@@ -5246,7 +5246,7 @@ AuthResult AUTHCALL AuthEntry(
               <computeroutput>IGuest::dragGHGetData()</computeroutput>,
               have been moved to an abstract base class called
               <link linkend="IDnDSource">IDnDSource</link>.
-              VirtualBox implements this base class in the
+              VirtualAgent implements this base class in the
               <link linkend="IGuestDnDSource">IGuestDnDSource</link>
               interface. The implementation can be used by using the
               <link linkend="IGuest__dnDSource">IGuest::dnDSource()</link>
@@ -5678,7 +5678,7 @@ AuthResult AUTHCALL AuthEntry(
           <link linkend="IGuestSessionEvent">IGuestSessionEvent</link> acts as
           an abstract base class for all guest control events. Certain guest
           events contain a
-          <link linkend="IVirtualBoxErrorInfo">IVirtualBoxErrorInfo</link>
+          <link linkend="IVirtualAgentErrorInfo">IVirtualAgentErrorInfo</link>
           member to provide more information in case of an error happened on
           the guest side.</para>
         </listitem>
@@ -5856,9 +5856,9 @@ AuthResult AUTHCALL AuthEntry(
           <para>Machines can be put in groups (actually an array of groups).
           The primary group affects the default placement of files belonging
           to a VM.
-          <link linkend="IVirtualBox__createMachine">IVirtualBox::createMachine()</link>
+          <link linkend="IVirtualAgent__createMachine">IVirtualAgent::createMachine()</link>
           and
-          <link linkend="IVirtualBox__composeMachineFilename">IVirtualBox::composeMachineFilename()</link>
+          <link linkend="IVirtualAgent__composeMachineFilename">IVirtualAgent::composeMachineFilename()</link>
           have been adjusted accordingly, the former taking an array of groups
           as an additional parameter and the latter taking a group as an
           additional parameter. The create option handling has been changed for
@@ -5866,9 +5866,9 @@ AuthResult AUTHCALL AuthEntry(
         </listitem>
 
         <listitem>
-          <para>The method IVirtualBox::findMedium() has been removed, since
+          <para>The method IVirtualAgent::findMedium() has been removed, since
           it provides a subset of the functionality of
-          <link linkend="IVirtualBox__openMedium">IVirtualBox::openMedium()</link>.</para>
+          <link linkend="IVirtualAgent__openMedium">IVirtualAgent::openMedium()</link>.</para>
         </listitem>
 
         <listitem>
@@ -5876,7 +5876,7 @@ AuthResult AUTHCALL AuthEntry(
           and method names has been made much more consistent, previously they
           sometimes were lowercase and sometimes mixed case. They are now
           consistently all caps:<table>
-          <title>Renamed identifiers in VirtualBox 4.2</title>
+          <title>Renamed identifiers in VirtualAgent 4.2</title>
 
           <tgroup cols="2" style="verywide">
             <tbody>
@@ -6076,7 +6076,7 @@ AuthResult AUTHCALL AuthEntry(
 
         <listitem>
           <para>The method
-          <link linkend="IVirtualBox__openMedium">IVirtualBox::openMedium()</link>
+          <link linkend="IVirtualAgent__openMedium">IVirtualAgent::openMedium()</link>
           has one more parameter now, which allows resolving duplicate medium
           UUIDs without the need for external tools.</para>
         </listitem>
@@ -6181,7 +6181,7 @@ AuthResult AUTHCALL AuthEntry(
           bindings was introduced. The new library allows for uniform code
           targeting both local (COM/XPCOM) and remote (SOAP) transports. Now,
           instead of <computeroutput>IWebsessionManager</computeroutput>, the
-          new class <computeroutput>VirtualBoxManager</computeroutput> must be
+          new class <computeroutput>VirtualAgentManager</computeroutput> must be
           used. See <xref linkend="javaapi"/> for details.</para>
         </listitem>
 
@@ -6191,7 +6191,7 @@ AuthResult AUTHCALL AuthEntry(
           made:<itemizedlist>
               <listitem>
                 <para>Replace any
-                <computeroutput>IVirtualBox::openSession(uuidMachine,
+                <computeroutput>IVirtualAgent::openSession(uuidMachine,
                 ...)</computeroutput> API call with the machine's
                 <link linkend="IMachine__lockMachine">IMachine::lockMachine()</link>
                 call and a
@@ -6204,7 +6204,7 @@ AuthResult AUTHCALL AuthEntry(
 
               <listitem>
                 <para>Similarly, replace any
-                <computeroutput>IVirtualBox::openExistingSession(uuidMachine,
+                <computeroutput>IVirtualAgent::openExistingSession(uuidMachine,
                 ...)</computeroutput> call with the machine's
                 <link linkend="IMachine__lockMachine">IMachine::lockMachine()</link>
                 call and a <computeroutput>LockType.Shared</computeroutput>
@@ -6220,7 +6220,7 @@ AuthResult AUTHCALL AuthEntry(
 
               <listitem>
                 <para>Third, replace any
-                <computeroutput>IVirtualBox::openRemoteSession(uuidMachine,
+                <computeroutput>IVirtualAgent::openRemoteSession(uuidMachine,
                 ...)</computeroutput> call with the machine's
                 <link linkend="IMachine__launchVMProcess">IMachine::launchVMProcess()</link>
                 call. The functionality is unchanged.</para>
@@ -6235,17 +6235,17 @@ AuthResult AUTHCALL AuthEntry(
         </listitem>
 
         <listitem>
-          <para>Virtual machines created with VirtualBox 4.0 or later no
+          <para>Virtual machines created with VirtualAgent 4.0 or later no
           longer register their media in the global media registry in the
-          <computeroutput>VirtualBox.xml</computeroutput> file. Instead, such
+          <computeroutput>VirtualAgent.xml</computeroutput> file. Instead, such
           machines list all their media in their own machine XML files. As a
           result, a number of media-related APIs had to be modified again.
           <itemizedlist>
               <listitem>
                 <para>Neither
-                <computeroutput>IVirtualBox::createHardDisk()</computeroutput>
+                <computeroutput>IVirtualAgent::createHardDisk()</computeroutput>
                 nor
-                <link linkend="IVirtualBox__openMedium">IVirtualBox::openMedium()</link>
+                <link linkend="IVirtualAgent__openMedium">IVirtualAgent::openMedium()</link>
                 register media automatically any more.</para>
               </listitem>
 
@@ -6255,7 +6255,7 @@ AuthResult AUTHCALL AuthEntry(
                 <link linkend="IMachine__mountMedium">IMachine::mountMedium()</link>
                 now take an IMedium object instead of a UUID as an argument. It
                 is these two calls which add media to a registry now (either a
-                machine registry for machines created with VirtualBox 4.0 or
+                machine registry for machines created with VirtualAgent 4.0 or
                 later or the global registry otherwise). As a consequence, if a
                 medium is opened but never attached to a machine, it is no
                 longer added to any registry any more.</para>
@@ -6263,12 +6263,12 @@ AuthResult AUTHCALL AuthEntry(
 
               <listitem>
                 <para>To reduce code duplication, the APIs
-                IVirtualBox::findHardDisk(), getHardDisk(), findDVDImage(),
+                IVirtualAgent::findHardDisk(), getHardDisk(), findDVDImage(),
                 getDVDImage(), findFloppyImage() and getFloppyImage() have all
-                been merged into IVirtualBox::findMedium(), and
-                IVirtualBox::openHardDisk(), openDVDImage() and
+                been merged into IVirtualAgent::findMedium(), and
+                IVirtualAgent::openHardDisk(), openDVDImage() and
                 openFloppyImage() have all been merged into
-                <link linkend="IVirtualBox__openMedium">IVirtualBox::openMedium()</link>.</para>
+                <link linkend="IVirtualAgent__openMedium">IVirtualAgent::openMedium()</link>.</para>
               </listitem>
 
               <listitem>
@@ -6297,7 +6297,7 @@ AuthResult AUTHCALL AuthEntry(
         <listitem>
           <para>Machine management APIs were enhanced as follows:<itemizedlist>
               <listitem>
-                <para><link linkend="IVirtualBox__createMachine">IVirtualBox::createMachine()</link>
+                <para><link linkend="IVirtualAgent__createMachine">IVirtualAgent::createMachine()</link>
                 is no longer restricted to creating machines in the default
                 "Machines" folder, but can now create machines at arbitrary
                 locations. For this to work, the parameter list had to be
@@ -6306,16 +6306,16 @@ AuthResult AUTHCALL AuthEntry(
 
               <listitem>
                 <para>The long-deprecated
-                <computeroutput>IVirtualBox::createLegacyMachine()</computeroutput>
+                <computeroutput>IVirtualAgent::createLegacyMachine()</computeroutput>
                 API has been removed.</para>
               </listitem>
 
               <listitem>
                 <para>To reduce code duplication and for consistency with the
                 aforementioned media APIs,
-                <computeroutput>IVirtualBox::getMachine()</computeroutput> has
+                <computeroutput>IVirtualAgent::getMachine()</computeroutput> has
                 been merged with
-                <link linkend="IVirtualBox__findMachine">IVirtualBox::findMachine()</link>,
+                <link linkend="IVirtualAgent__findMachine">IVirtualAgent::findMachine()</link>,
                 and
                 <computeroutput>IMachine::getSnapshot()</computeroutput> has
                 been merged with
@@ -6323,7 +6323,7 @@ AuthResult AUTHCALL AuthEntry(
               </listitem>
 
               <listitem>
-                <para><computeroutput>IVirtualBox::unregisterMachine()</computeroutput>
+                <para><computeroutput>IVirtualAgent::unregisterMachine()</computeroutput>
                 was replaced with
                 <link linkend="IMachine__unregister">IMachine::unregister()</link>
                 with additional functionality for cleaning up machine
@@ -6376,7 +6376,7 @@ AuthResult AUTHCALL AuthEntry(
           APIs were extended to require an additional
           <computeroutput>automount</computeroutput> parameter: <itemizedlist>
               <listitem>
-                <para><link linkend="IVirtualBox__createSharedFolder">IVirtualBox::createSharedFolder()</link></para>
+                <para><link linkend="IVirtualAgent__createSharedFolder">IVirtualAgent::createSharedFolder()</link></para>
               </listitem>
 
               <listitem>
@@ -6423,9 +6423,9 @@ AuthResult AUTHCALL AuthEntry(
         <listitem>
           <para>Support for remote desktop access to virtual machines has been
           cleaned up to allow third party implementations of the remote
-          desktop server. This is called the VirtualBox Remote Desktop
-          Extension (VRDE) and can be added to VirtualBox by installing the
-          corresponding extension package; see the VirtualBox User Guide for
+          desktop server. This is called the VirtualAgent Remote Desktop
+          Extension (VRDE) and can be added to VirtualAgent by installing the
+          corresponding extension package; see the VirtualAgent User Guide for
           details.</para>
 
           <para>The following API changes were made to support the VRDE
@@ -6523,7 +6523,7 @@ AuthResult AUTHCALL AuthEntry(
         </listitem>
 
         <listitem>
-          <para>The VirtualBox external authentication module interface has
+          <para>The VirtualAgent external authentication module interface has
           been updated and made more generic. Because of that,
           <computeroutput>VRDPAuthType</computeroutput> enumeration has been
           renamed to <link linkend="AuthType">AuthType</link>.</para>
@@ -6567,15 +6567,15 @@ AuthResult AUTHCALL AuthEntry(
               </listitem>
 
               <listitem>
-                <para>IVirtualBoxCallback::onSnapshotDiscarded() is now
-                IVirtualBoxCallback::onSnapshotDeleted.</para>
+                <para>IVirtualAgentCallback::onSnapshotDiscarded() is now
+                IVirtualAgentCallback::onSnapshotDeleted.</para>
               </listitem>
             </itemizedlist></para>
         </listitem>
 
         <listitem>
           <para>When creating a VM configuration with
-          <link linkend="IVirtualBox__createMachine">IVirtualBox::createMachine()</link>
+          <link linkend="IVirtualAgent__createMachine">IVirtualAgent::createMachine()</link>
           it is now possible to ignore existing configuration files which would
           previously have caused a failure. For this the
           <computeroutput>override</computeroutput> parameter was added.</para>
@@ -6782,19 +6782,19 @@ AuthResult AUTHCALL AuthEntry(
         <listitem>
           <para>Accidentally, the <code>TSBool</code> interface still appeared
           in 3.0.0, and was removed in 3.0.2. This is an SDK bug, do not use
-          the SDK for VirtualBox 3.0.0 for developing clients.</para>
+          the SDK for VirtualAgent 3.0.0 for developing clients.</para>
         </listitem>
 
         <listitem>
           <para>The type of
-          <link linkend="IVirtualBoxErrorInfo__resultCode">IVirtualBoxErrorInfo::resultCode</link>
+          <link linkend="IVirtualAgentErrorInfo__resultCode">IVirtualAgentErrorInfo::resultCode</link>
           changed from
           <computeroutput>result</computeroutput> to
           <computeroutput>long</computeroutput>.</para>
         </listitem>
 
         <listitem>
-          <para>The parameter list of IVirtualBox::openHardDisk was
+          <para>The parameter list of IVirtualAgent::openHardDisk was
           changed.</para>
         </listitem>
 
@@ -6871,7 +6871,7 @@ AuthResult AUTHCALL AuthEntry(
         <listitem>
           <para>Added explicit version number into JAX-WS Java package names,
           such as <computeroutput>org.virtualbox_2_2</computeroutput>,
-          allowing connect to multiple VirtualBox clients from single Java
+          allowing connect to multiple VirtualAgent clients from single Java
           application.</para>
         </listitem>
 
@@ -6890,7 +6890,7 @@ AuthResult AUTHCALL AuthEntry(
         </listitem>
 
         <listitem>
-          <para>IVirtualBox::openHardDisk has an extra parameter for opening a
+          <para>IVirtualAgent::openHardDisk has an extra parameter for opening a
           disk read/write or read-only.</para>
         </listitem>
 
@@ -6984,7 +6984,7 @@ AuthResult AUTHCALL AuthEntry(
 
       <itemizedlist>
         <listitem>
-          <para>With VirtualBox 2.1, error codes were added to many error
+          <para>With VirtualAgent 2.1, error codes were added to many error
           infos that give the caller a machine-readable (numeric) feedback in
           addition to the error string that has always been available. This is
           an ongoing process, and future versions of this SDK reference will
@@ -7003,7 +7003,7 @@ AuthResult AUTHCALL AuthEntry(
               <para>Previously, the old IHardDisk interface had several
               derivatives called IVirtualDiskImage, IVMDKImage, IVHDImage,
               IISCSIHardDisk and ICustomHardDisk for the various disk formats
-              supported by VirtualBox. The new IHardDisk2 interface that comes
+              supported by VirtualAgent. The new IHardDisk2 interface that comes
               with version 2.1 now supports all hard disk image formats
               itself.</para>
             </listitem>
@@ -7042,8 +7042,8 @@ AuthResult AUTHCALL AuthEntry(
             </listitem>
 
             <listitem>
-              <para>In particular, the IVirtualBox::hardDisks2 array replaces
-              the earlier IVirtualBox::hardDisks collection.</para>
+              <para>In particular, the IVirtualAgent::hardDisks2 array replaces
+              the earlier IVirtualAgent::hardDisks collection.</para>
             </listitem>
           </itemizedlist>
         </listitem>
@@ -7058,13 +7058,13 @@ AuthResult AUTHCALL AuthEntry(
           <para>The
           <link linkend="IHostNetworkInterface">IHostNetworkInterface</link>
           interface was completely rewritten to account for the changes in how
-          Host Interface Networking is now implemented in VirtualBox
+          Host Interface Networking is now implemented in VirtualAgent
           2.1.</para>
         </listitem>
 
         <listitem>
-          <para>The IVirtualBox::machines2[] array replaces the former
-          IVirtualBox::machines collection.</para>
+          <para>The IVirtualAgent::machines2[] array replaces the former
+          IVirtualAgent::machines collection.</para>
         </listitem>
 
         <listitem>
@@ -7076,7 +7076,7 @@ AuthResult AUTHCALL AuthEntry(
 
         <listitem>
           <para>The parameter list for
-          <link linkend="IVirtualBox__createMachine">IVirtualBox::createMachine()</link>
+          <link linkend="IVirtualAgent__createMachine">IVirtualAgent::createMachine()</link>
           was modified.</para>
         </listitem>
 

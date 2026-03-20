@@ -6,9 +6,9 @@ Autostart testcase using <please-tell-what-I-am-doing>.
 
 __copyright__ = \
 """
-Copyright (C) 2013-2026 Oracle and/or its affiliates.
+Copyright (C) 2013-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -140,7 +140,7 @@ class tdAutostartOs(vboxtestvms.BaseTestVm):
 
     def _createAutostartCfg(self, sDefaultPolicy = 'allow', asUserAllow = (), asUserDeny = ()):
         """
-        Creates a autostart config for VirtualBox
+        Creates a autostart config for VirtualAgent
         """
         sVBoxCfg = 'default_policy=' + sDefaultPolicy + '\n';
         for sUserAllow in asUserAllow:
@@ -557,9 +557,9 @@ class tdAutostartOs(vboxtestvms.BaseTestVm):
         reporter.error('Not implemented');
         return False;
 
-    def installVirtualBox(self, oGuestSession):
+    def installVirtualAgent(self, oGuestSession):
         """
-        Install VirtualBox in the guest.
+        Install VirtualAgent in the guest.
         """
         _ = oGuestSession;
         reporter.error('Not implemented');
@@ -659,7 +659,7 @@ class tdAutostartOsLinux(tdAutostartOs):
                  eNic0Type = None, cMbRam = None, cCpus = 1, fPae = None, sGuestAdditionsIso = None):
         tdAutostartOs.__init__(self, oSet, oTstDrv, sVmName, sKind, sHdd, eNic0Type, cMbRam,
                                cCpus, fPae, sGuestAdditionsIso);
-        try:    self.sVBoxInstaller = '^VirtualBox-.*\\.run$';
+        try:    self.sVBoxInstaller = '^VirtualAgent-.*\\.run$';
         except: pass;
         return;
 
@@ -687,7 +687,7 @@ class tdAutostartOsLinux(tdAutostartOs):
                 if not fRc:
                     reporter.error('Error installing additional installer dependencies');
         elif oVM.OSTypeId.startswith('OL') \
-          or oVM.OSTypeId.startswith('Oracle') \
+          or oVM.OSTypeId.startswith('CINASEEK') \
           or oVM.OSTypeId.startswith('RHEL') \
           or oVM.OSTypeId.startswith('Redhat') \
           or oVM.OSTypeId.startswith('Cent'):
@@ -739,9 +739,9 @@ class tdAutostartOsLinux(tdAutostartOs):
         reporter.testDone();
         return (fRc, oGuestSession);
 
-    def installVirtualBox(self, oGuestSession):
+    def installVirtualAgent(self, oGuestSession):
         """
-        Install VirtualBox in the guest.
+        Install VirtualAgent in the guest.
         """
         reporter.testStart('Install Virtualbox into the guest VM');
         sTestBuild = self._findFile(self.sVBoxInstaller, self.asTestBuildDirs);
@@ -751,7 +751,7 @@ class tdAutostartOsLinux(tdAutostartOs):
             fRc = self.uploadFile(oGuestSession, sTestBuild,
                                   '/tmp/' + os.path.basename(sTestBuild));
         else:
-            reporter.error("VirtualBox install package is not defined");
+            reporter.error("VirtualAgent install package is not defined");
 
         if not fRc:
             reporter.error('Upload the vbox installer into guest VM failed');
@@ -789,8 +789,8 @@ class tdAutostartOsLinux(tdAutostartOs):
             reporter.error('Creating autostart database failed');
         # Create /etc/default/virtualbox
         if fRc:
-            sVBoxCfg =   'VBOXAUTOSTART_CONFIG=/etc/vbox/autostart.cfg\n' \
-                       + 'VBOXAUTOSTART_DB=/etc/vbox/autostart.d\n';
+            sVBoxCfg =   'VRAAUTOSTART_CONFIG=/etc/vbox/autostart.cfg\n' \
+                       + 'VRAAUTOSTART_DB=/etc/vbox/autostart.d\n';
             fRc = self.uploadString(oGuestSession, sVBoxCfg, '/tmp/virtualbox');
             if not fRc:
                 reporter.error('Upload to /tmp/virtualbox failed');
@@ -859,7 +859,7 @@ class tdAutostartOsLinux(tdAutostartOs):
         reporter.testStart('Create test VM for user %s' % sUser);
         (fRc, _, _, _) = self.guestProcessExecute(oGuestSession, 'Configuring autostart database',
                                                   30 * 1000, '/usr/bin/sudo',
-                                                  ['/usr/bin/sudo', '-u', sUser, '-H', '/opt/VirtualBox/VBoxManage',
+                                                  ['/usr/bin/sudo', '-u', sUser, '-H', '/opt/VirtualAgent/VBoxManage',
                                                    'setproperty', 'autostartdbpath', '/etc/vbox/autostart.d'],
                                                   False, True);
         if not fRc:
@@ -868,7 +868,7 @@ class tdAutostartOsLinux(tdAutostartOs):
             (fRc, _, _, _) = self.guestProcessExecute(oGuestSession, 'Create VM ' + sVmName,
                                                       30 * 1000, '/usr/bin/sudo',
                                                       ['/usr/bin/sudo', '-u', sUser, '-H',
-                                                       '/opt/VirtualBox/VBoxManage', 'createvm',
+                                                       '/opt/VirtualAgent/VBoxManage', 'createvm',
                                                        '--name', sVmName, '--register'], False, True);
             if not fRc:
                 reporter.error('Create VM %s failed' % sVmName);
@@ -876,7 +876,7 @@ class tdAutostartOsLinux(tdAutostartOs):
             (fRc, _, _, _) = self.guestProcessExecute(oGuestSession, 'Enabling autostart for test VM',
                                                       30 * 1000, '/usr/bin/sudo',
                                                       ['/usr/bin/sudo', '-u', sUser, '-H',
-                                                       '/opt/VirtualBox/VBoxManage', 'modifyvm',
+                                                       '/opt/VirtualAgent/VBoxManage', 'modifyvm',
                                                       sVmName, '--autostart-enabled', 'on'], False, True);
             if not fRc:
                 reporter.error('Enabling autostart for %s failed' % sVmName);
@@ -895,7 +895,7 @@ class tdAutostartOsLinux(tdAutostartOs):
         (fRc, _, _, aBuf) = self.guestProcessExecute(oGuestSession, 'Check for running VM',
                                                      30 * 1000, '/usr/bin/sudo',
                                                      ['/usr/bin/sudo', '-u', sUser, '-H',
-                                                      '/opt/VirtualBox/VBoxManage',
+                                                      '/opt/VirtualAgent/VBoxManage',
                                                       'list', 'runningvms'], True, True);
         if not fRc:
             reporter.error('Checking the VM %s is running for user %s failed' % (sVmName, sUser));
@@ -934,7 +934,7 @@ class tdAutostartOsWin(tdAutostartOs):
                  eNic0Type = None, cMbRam = None, cCpus = 1, fPae = None, sGuestAdditionsIso = None):
         tdAutostartOs.__init__(self, oSet, oTstDrv, sVmName, sKind, sHdd, eNic0Type, cMbRam,
                                cCpus, fPae, sGuestAdditionsIso);
-        try:    self.sVBoxInstaller = '^VirtualBox-.*\\.(exe|msi)$';
+        try:    self.sVBoxInstaller = '^VirtualAgent-.*\\.(exe|msi)$';
         except: pass;
         return;
 
@@ -1039,7 +1039,7 @@ class tdAutostartOsWin(tdAutostartOs):
             if fRc is True:
                 # Add the Windows Guest Additions installer files to the files we want to download
                 # from the guest.
-                sGuestAddsDir = 'C:/Program Files/Oracle/VirtualBox Guest Additions/';
+                sGuestAddsDir = 'C:/Program Files/CINASEEK/VirtualAgent Guest Additions/';
                 asLogFiles.append(sGuestAddsDir + 'install.log');
                 # Note: There won't be a install_ui.log because of the silent installation.
                 asLogFiles.append(sGuestAddsDir + 'install_drivers.log');
@@ -1055,9 +1055,9 @@ class tdAutostartOsWin(tdAutostartOs):
         reporter.testDone();
         return (fRc and fGaRc, oGuestSession);
 
-    def installVirtualBox(self, oGuestSession):
+    def installVirtualAgent(self, oGuestSession):
         """
-        Install VirtualBox in the guest.
+        Install VirtualAgent in the guest.
         """
         reporter.testStart('Install Virtualbox into the guest VM');
         # Used windows image already contains the C:\Temp
@@ -1068,7 +1068,7 @@ class tdAutostartOsWin(tdAutostartOs):
             fRc = self.uploadFile(oGuestSession, sTestBuild,
                               'C:\\Temp\\' + os.path.basename(sTestBuild));
         else:
-            reporter.error("VirtualBox install package is not defined");
+            reporter.error("VirtualAgent install package is not defined");
 
         if not fRc:
             reporter.error('Upload the installing into guest VM failed');
@@ -1097,7 +1097,7 @@ class tdAutostartOsWin(tdAutostartOs):
                     (_, _, _, aBuf) = self.guestProcessExecute(oGuestSession, 'Check installation',
                                                                240 * 1000, 'C:\\Windows\\System32\\cmd.exe',
                                                                ['c:\\Windows\\System32\\cmd.exe', '/c',
-                                                                'dir', 'C:\\Program Files\\Oracle\\VirtualBox\\*.*'],
+                                                                'dir', 'C:\\Program Files\\CINASEEK\\VirtualAgent\\*.*'],
                                                                True, True);
                     reporter.log('Content of  VirtualBxox folder:');
                     reporter.log(str(aBuf));
@@ -1117,7 +1117,7 @@ class tdAutostartOsWin(tdAutostartOs):
                                      30 * 1000, 'C:\\Windows\\System32\\reg.exe',
                                      ['reg', 'add',
                                       'HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',
-                                      '/v', 'VBOXAUTOSTART_CONFIG', '/d',
+                                      '/v', 'VRAAUTOSTART_CONFIG', '/d',
                                       'C:\\ProgramData\\autostart.cfg', '/f'],
                                      False, True);
         if fRc:
@@ -1143,16 +1143,16 @@ class tdAutostartOsWin(tdAutostartOs):
         else:
             (fRc, _, _, _) = \
                 self.guestProcessExecute(oGuestSession, 'Create VM ' + sVmName,
-                                         30 * 1000, 'C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe',
-                                         ['C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe', 'createvm',
+                                         30 * 1000, 'C:\\Program Files\\CINASEEK\\VirtualAgent\\VBoxManage.exe',
+                                         ['C:\\Program Files\\CINASEEK\\VirtualAgent\\VBoxManage.exe', 'createvm',
                                           '--name', sVmName, '--register'], False, True);
             if not fRc:
                 reporter.error('Create VM %s for user %s failed' % (sVmName, sUser));
             else:
                 (fRc, _, _, _) = \
                     self.guestProcessExecute(oGuestSession, 'Enabling autostart for test VM',
-                                             30 * 1000, 'C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe',
-                                             ['C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe',
+                                             30 * 1000, 'C:\\Program Files\\CINASEEK\\VirtualAgent\\VBoxManage.exe',
+                                             ['C:\\Program Files\\CINASEEK\\VirtualAgent\\VBoxManage.exe',
                                               'modifyvm', sVmName, '--autostart-enabled', 'on'], False, True);
                 if not fRc:
                     reporter.error('Enabling autostart for VM %s for user %s failed' % (sVmName, sUser));
@@ -1163,8 +1163,8 @@ class tdAutostartOsWin(tdAutostartOs):
             if fRc:
                 (fRc, _, _, _) = \
                     self.guestProcessExecute(oGuestSession, 'Install autostart service for the user',
-                                             30 * 1000, 'C:\\Program Files\\Oracle\\VirtualBox\\VBoxAutostartSvc.exe',
-                                             ['C:\\Program Files\\Oracle\\VirtualBox\\VBoxAutostartSvc.exe',
+                                             30 * 1000, 'C:\\Program Files\\CINASEEK\\VirtualAgent\\VBoxAutostartSvc.exe',
+                                             ['C:\\Program Files\\CINASEEK\\VirtualAgent\\VBoxAutostartSvc.exe',
                                               'install', '--user=' + sUser,
                                               '--password-file=C:\\ProgramData\\password.cfg'],
                                              False, True);
@@ -1190,8 +1190,8 @@ class tdAutostartOsWin(tdAutostartOs):
             reporter.error('Create session for user %s failed' % sUser);
         else:
             (fRc, _, _, aBuf) = self.guestProcessExecute(oGuestSession, 'Check for running VM',
-                                                         60 * 1000, 'C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe',
-                                                         [ 'C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe',
+                                                         60 * 1000, 'C:\\Program Files\\CINASEEK\\VirtualAgent\\VBoxManage.exe',
+                                                         [ 'C:\\Program Files\\CINASEEK\\VirtualAgent\\VBoxManage.exe',
                                                            'list', 'runningvms' ], True, True);
             if not fRc:
                 reporter.error('Checking the VM %s is running for user %s failed' % (sVmName, sUser));
@@ -1329,7 +1329,7 @@ class tdAutostart(vbox.TestDriver):                                      # pylin
         reporter.log('');
         reporter.log('tdAutostart Options:');
         reporter.log('  --test-build-dirs <path1[,path2[,...]]>');
-        reporter.log('      The list of directories with VirtualBox distros. Overrides default path.');
+        reporter.log('      The list of directories with VirtualAgent distros. Overrides default path.');
         reporter.log('      Default path is $TESTBOX_SCRATCH_PATH/bin.');
         reporter.log('  --vbox-<os>-build <path>');
         reporter.log('      The path to vbox build for the specified OS.');
@@ -1392,7 +1392,7 @@ class tdAutostart(vbox.TestDriver):                                      # pylin
             fRc = fRc and oTestVm.createUser(oGuestSession, sTestUserDeny);
             if fRc is True:
                 # Install VBox first
-                fRc = oTestVm.installVirtualBox(oGuestSession);
+                fRc = oTestVm.installVirtualAgent(oGuestSession);
                 if fRc is True:
                     fRc = oTestVm.configureAutostart(oGuestSession, 'allow', (sTestUserAllow,), (sTestUserDeny,));
                     if fRc is True:
@@ -1420,7 +1420,7 @@ class tdAutostart(vbox.TestDriver):                                      # pylin
                     else:
                         reporter.error('Configuring autostart in the guest failed');
                 else:
-                    reporter.error('Installing VirtualBox in the guest failed');
+                    reporter.error('Installing VirtualAgent in the guest failed');
             else:
                 reporter.error('Creating test users failed');
             if oGuestSession is not None:

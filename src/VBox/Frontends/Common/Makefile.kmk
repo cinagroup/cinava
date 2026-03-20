@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2010-2026 Oracle and/or its affiliates.
+# Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ SUB_DEPTH = ../../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 # Include Sub-Makefiles
-ifneq ($(VBOX_WITH_QTGUI)$(VBOX_WITH_VBOXSDL),)
+ifneq ($(VRA_WITH_QTGUI)$(VRA_WITH_VRASDL),)
  ifeq ($(filter-out freebsd linux openbsd netbsd solaris,$(KBUILD_TARGET)),) # X11
   include $(PATH_SUB_CURRENT)/VBoxKeyboard/Makefile.kmk
  endif

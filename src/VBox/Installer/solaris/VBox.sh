@@ -1,12 +1,12 @@
 #!/bin/sh
 ## @file
-# Oracle VirtualBox startup script, Solaris hosts.
+# CINA VirtualAgent startup script, Solaris hosts.
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -27,18 +27,18 @@
 
 CURRENT_ISA=`isainfo -k`
 if test "$CURRENT_ISA" = "amd64"; then
-    INSTALL_DIR="/opt/VirtualBox/amd64"
+    INSTALL_DIR="/opt/VirtualAgent/amd64"
 else
-    INSTALL_DIR="/opt/VirtualBox/i386"
+    INSTALL_DIR="/opt/VirtualAgent/i386"
 fi
 
 APP=`basename $0`
 case "$APP" in
-    VirtualBox|virtualbox)
-        exec "$INSTALL_DIR/VirtualBox" "$@"
+    VirtualAgent|virtualbox)
+        exec "$INSTALL_DIR/VirtualAgent" "$@"
         ;;
-    VirtualBoxVM|virtualboxvm)
-        exec "$INSTALL_DIR/VirtualBoxVM" "$@"
+    VirtualAgentVM|virtualboxvm)
+        exec "$INSTALL_DIR/VirtualAgentVM" "$@"
         ;;
     VBoxManage|vboxmanage)
         exec "$INSTALL_DIR/VBoxManage" "$@"

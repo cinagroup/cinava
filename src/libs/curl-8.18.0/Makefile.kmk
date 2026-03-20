@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 
 SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
-VBOX_PATH_LIBCURL = $(PATH_ROOT)/src/libs/curl-8.18.0
+VRA_PATH_LIBCURL = $(PATH_ROOT)/src/libs/curl-8.18.0
 
 LIBRARIES += VBox-libcurl
 VBox-libcurl_TEMPLATE       = VBoxR3RuntimeDllNonPedantic
@@ -55,13 +55,13 @@ VBox-libcurl_CFLAGS.win    += -wd4311 # formdata.c(388): warning C4311: 'type ca
 VBox-libcurl_CFLAGS.win    += -wd4090 # openssl/lhash.h(198) : warning C4090: 'function' : different 'const' qualifiers
 VBox-libcurl_CFLAGS.win    += -wd4060 # curl-7.87.0/lib/connect.c(1588): warning C4060: switch statement contains no 'case' or 'default' labels
 VBox-libcurl_CFLAGS.win    += -wd4005 # curl_config.h(444): warning C4005: '_CRT_NONSTDC_NO_DEPRECATE': macro redefinition
-if "$(VBOX_VCC_TOOL_STEM)" >= "VCC140"
+if "$(VRA_VCC_TOOL_STEM)" >= "VCC140"
  VBox-libcurl_CFLAGS.win   += -wd4774 # mprintf.c(949): warning C4774: 'sprintf' : format string expected in argument 2 is not a string literal
 endif
 VBox-libcurl_INCS           = \
 	include \
 	$(VBox-libcurl_0_OUTDIR)/lib \
-	$(VBOX_PATH_LIBCURL)/lib
+	$(VRA_PATH_LIBCURL)/lib
 VBox-libcurl_SOURCES        = \
 	lib/asyn-base.c \
 	lib/curlx/base64.c \
@@ -181,20 +181,20 @@ VBox-libcurl_SOURCES.darwin = \
 # Use checked in config.h instead of running ./configure for it.
 VBox-libcurl_DEPS  = $(VBox-libcurl_0_OUTDIR)/lib/curl_config.h
 VBox-libcurl_CLEAN = $(VBox-libcurl_DEPS)
-$$(VBox-libcurl_0_OUTDIR)/lib/curl_config.h: $(VBOX_PATH_LIBCURL)/config.h.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) | $$(dir $$@)
+$$(VBox-libcurl_0_OUTDIR)/lib/curl_config.h: $(VRA_PATH_LIBCURL)/config.h.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) | $$(dir $$@)
 	$(INSTALL_STAGING) -- "$^" "$@"
 
-ifdef VBOX_WITH_32_ON_64_MAIN_API # 32-bit edition.
+ifdef VRA_WITH_32_ON_64_MAIN_API # 32-bit edition.
  LIBRARIES += VBox-libcurl-x86
  VBox-libcurl-x86_TEMPLATE = VBoxR3DllNonPedantic-x86
  VBox-libcurl-x86_EXTENDS  = VBox-libcurl
  VBox-libcurl-x86_INCS     = \
  	include \
  	$(VBox-libcurl-x86_0_OUTDIR)/lib \
- 	$(VBOX_PATH_LIBCURL)/lib
+ 	$(VRA_PATH_LIBCURL)/lib
  VBox-libcurl-x86_DEPS     = $(VBox-libcurl-x86_0_OUTDIR)/lib/curl_config.h
  VBox-libcurl-x86_CLEAN    = $(VBox-libcurl-x86_DEPS)
- $$(VBox-libcurl-x86_0_OUTDIR)/lib/curl_config.h: $(VBOX_PATH_LIBCURL)/config.h.$(KBUILD_TARGET).x86 | $$(dir $$@)
+ $$(VBox-libcurl-x86_0_OUTDIR)/lib/curl_config.h: $(VRA_PATH_LIBCURL)/config.h.$(KBUILD_TARGET).x86 | $$(dir $$@)
 	$(INSTALL_STAGING) -- "$^" "$@"
 
 endif

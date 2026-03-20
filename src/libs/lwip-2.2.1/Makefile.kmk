@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2025-2026 Oracle and/or its affiliates.
+# Copyright (C) 2025-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -96,6 +96,6 @@ VBox-lwip_SOURCES = \
 
 LIBRARIES += VBox-lwip-dhcp
 VBox-lwip-dhcp_EXTENDS := VBox-lwip
-VBox-lwip-dhcp_DEFS += VBOX_LWIP_DHCP
+VBox-lwip-dhcp_DEFS += VRA_LWIP_DHCP
 
 include $(FILE_KBUILD_SUB_FOOTER)

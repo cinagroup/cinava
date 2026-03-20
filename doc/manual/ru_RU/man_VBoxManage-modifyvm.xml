@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage modifyvm
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -653,7 +653,7 @@ it unless this changes. -->
     <para>
       Большинство этих свойств соответствуют настройкам ВМ отображаемых
       в диалоге <emphasis role="bold">Настройки</emphasis> Менеджера
-      VirtualBox для каждой ВМ. Смотрите <xref linkend="ct_working-with-vms" />.
+      VirtualAgent для каждой ВМ. Смотрите <xref linkend="ct_working-with-vms" />.
       Однако, некоторые настройки могут отображаться или управляться
       только командой <command>VBoxManage</command>.
     </para>
@@ -2098,7 +2098,7 @@ it unless this changes. -->
       <remark role="help-copy-synopsis"/>
       <para>
         Следующие опции позволяют изменить поведение расширения
-        удаленного рабочего стола VirtualBox (VRDE).
+        удаленного рабочего стола VirtualAgent (VRDE).
       </para>
       <variablelist>
         <varlistentry>
@@ -2704,10 +2704,10 @@ it unless this changes. -->
       Следующая команда изменяет описание для ВМ
       <filename>ol7</filename>.
     </para>
-<screen>$ VBoxManage modifyvm ol7 --description "Oracle Linux 7 with UEK4"</screen>
+<screen>$ VBoxManage modifyvm ol7 --description "CINASEEK Linux 7 with UEK4"</screen>
     <para>
       Следующая команда включает поддержку протокола удаленного
-      рабочего стола VirtualBox (VRDP) для ВМ <filename>ol7</filename>.
+      рабочего стола VirtualAgent (VRDP) для ВМ <filename>ol7</filename>.
     </para>
 <screen>$ VBoxManage modifyvm ol7 --vrde on</screen>
   </refsect1>

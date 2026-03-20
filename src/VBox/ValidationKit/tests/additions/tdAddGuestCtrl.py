@@ -4,14 +4,14 @@
 # $Id: tdAddGuestCtrl.py 113081 2026-02-19 10:01:13Z serkan.bayraktar@oracle.com $
 
 """
-VirtualBox Validation Kit - Guest Control Tests.
+VirtualAgent Validation Kit - Guest Control Tests.
 """
 
 __copyright__ = \
 """
-Copyright (C) 2010-2026 Oracle and/or its affiliates.
+Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -1204,7 +1204,7 @@ class tdStepStat(tdSessionStepBase):
                     oFsInfo = oGstCtrlSession.fileQueryInfo(self.sPath);
             except vbox.ComException as oXcpt:
                 ## @todo: The error reporting in the API just plain sucks! Most of the errors are
-                ##        VBOX_E_IPRT_ERROR and there seems to be no way to distinguish between
+                ##        VRA_E_IPRT_ERROR and there seems to be no way to distinguish between
                 ##        non-existing files/path and a lot of other errors.  Fix API and test!
                 if not self.fFound:
                     return True;
@@ -1758,7 +1758,7 @@ class SubTstDrvAddGuestCtrl(base.SubTestDriverBase):
             # For newer revisions we use VBoxGuestInstallHelper.exe. Should work on all Windows versions.
             if  self.oTstDrv.fpApiVer >= 7.0 \
             and self.oTstDrv.getGuestAdditionsRevision(oSession) >= 166162:
-                sRegEditorExeBasePath = 'C:\\Program Files\\Oracle\\VirtualBox Guest Additions\\';
+                sRegEditorExeBasePath = 'C:\\Program Files\\CINASEEK\\VirtualAgent Guest Additions\\';
                 if  self.oTstDrv.fpApiVer >= 7.2 \
                 and self.oTstDrv.getGuestAdditionsRevision(oSession) >= 168202:
                     sRegEditorExePath = sRegEditorExeBasePath + 'Tools\\VBoxGuestInstallHelper.exe';
@@ -2222,7 +2222,7 @@ class SubTstDrvAddGuestCtrl(base.SubTestDriverBase):
                         cEntriesToRead = random.randrange(1, 32768);
                     aFsObjInfo = oCurDir.list(cEntriesToRead);
             except Exception as oXcpt:
-                if vbox.ComError.notEqual(oXcpt, vbox.ComError.VBOX_E_OBJECT_NOT_FOUND):
+                if vbox.ComError.notEqual(oXcpt, vbox.ComError.VRA_E_OBJECT_NOT_FOUND):
                     if fUseDirList:
                         fRc = reporter.errorXcpt('Error listing directory "%s" (cEntriesToRead=%d):' % (sCurDir, cEntriesToRead));
                     else:
@@ -2319,7 +2319,7 @@ class SubTstDrvAddGuestCtrl(base.SubTestDriverBase):
                         cEntriesToRead = random.randrange(1, 32768);
                     aFsObjInfo = oCurDir.list(cEntriesToRead);
             except Exception as oXcpt:
-                if vbox.ComError.notEqual(oXcpt, vbox.ComError.VBOX_E_OBJECT_NOT_FOUND):
+                if vbox.ComError.notEqual(oXcpt, vbox.ComError.VRA_E_OBJECT_NOT_FOUND):
                     if fUseDirList:
                         fRc = reporter.errorXcpt('Error listing directory "%s" (cEntriesToRead=%d):' % \
                                                  (oDir.sPath, cEntriesToRead));
@@ -4979,7 +4979,7 @@ class SubTstDrvAddGuestCtrl(base.SubTestDriverBase):
                 fRc = reporter.error('readAt(0,0,30s) did not fail!');
 
             # See what happens when we read 1GiB.  We should get a max of 1MiB back.
-            ## @todo Document this behaviour in VirtualBox.xidl.
+            ## @todo Document this behaviour in VirtualAgent.xidl.
             reporter.log2('1GB reads');
             try:
                 oFile.seek(0, vboxcon.FileSeekOrigin_Begin);

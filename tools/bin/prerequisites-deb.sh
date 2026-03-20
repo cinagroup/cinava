@@ -5,9 +5,9 @@
 #
 
 #
-# Copyright (C) 2018-2026 Oracle and/or its affiliates.
+# Copyright (C) 2018-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 usage_msg="\
 Usage: `basename ${0}` [--with-docs]
 
-Install the dependencies needed for building VirtualBox on an deb-based Linux
+Install the dependencies needed for building VirtualAgent on an deb-based Linux
 system.  Additional distributions will be added as needed.  There are no plans
 to add support for or to accept patches for distributions we do not package.
 The \`--with-docs\' parameter is to install the packages needed for building

@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage storageattach
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -197,7 +197,7 @@
               <listitem><para>
                   For a virtual DVD drive only.
                 </para><para>
-                  Attaches the VirtualBox Guest Additions image to the
+                  Attaches the VirtualAgent Guest Additions image to the
                   specified device slot.
                 </para></listitem>
             </varlistentry>
@@ -456,7 +456,7 @@
               encrypted form.
             </para>
           </note><remark>
-            This design does not conform to Oracle's security
+            This design does not conform to CINASEEK's security
             guidelines. You should not be able to specify a password on
             the command line because the password can be seen in a
             process listing.
@@ -532,7 +532,7 @@
       <filename>ol7</filename> VM.
     </para>
 <screen>$ storageattach ol7 --storagectl "SATA Controller" --port 0 --device 0 \
---type hdd --medium /VirtualBox/ol7/ol7.vdi</screen>
+--type hdd --medium /VirtualAgent/ol7/ol7.vdi</screen>
     <para>
       The following command attaches the
       <filename>o7-r6-dvd.iso</filename> DVD image to the specified IDE

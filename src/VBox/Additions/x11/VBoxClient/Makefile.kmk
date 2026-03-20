@@ -1,12 +1,12 @@
 # $Id: Makefile.kmk 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# Sub-Makefile for the VirtualBox Guest Addition X11 Client.
+# Sub-Makefile for the VirtualAgent Guest Addition X11 Client.
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -30,13 +30,13 @@ include $(KBUILD_PATH)/subheader.kmk
 
 # Use header files from our tree for randr and xinerama. and don't link but rather dlopen libXrand
 # This is mostly because the GA build boxes can have a very old xrandr lib, so instead of linking we dlopen.
-VBOX_WITH_DISTRO_XRAND_XINERAMA =
+VRA_WITH_DISTRO_XRAND_XINERAMA =
 
 # We want to lazy load as much stuff as possible. See #10427.
-VBOX_WITH_VBOXCLIENT_LAZY_LOAD := 1
+VRA_WITH_VRACLIENT_LAZY_LOAD := 1
 
 # We don't yet have a seamless mode compilation flag, so define it here unconditionally.
-VBOX_WITH_SEAMLESS := 1
+VRA_WITH_SEAMLESS := 1
 
 #
 # VBoxClient - clipboard and seamless.
@@ -48,27 +48,27 @@ PROGRAMS += VBoxClient
 #
 PROGRAMS.linux += VBoxDRMClient
 
-ifdef VBOX_WITH_WAYLAND_ADDITIONS
+ifdef VRA_WITH_WAYLAND_ADDITIONS
  PROGRAMS.linux += vboxwl
 endif
 
 # Common Guest / Host sources.
-VBOX_GH_SOURCES := \
+VRA_GH_SOURCES := \
 	$(PATH_ROOT)/src/VBox/GuestHost/DisplayServerType.cpp
 
 VBoxClient_TEMPLATE = VBoxGuestR3Exe
-VBoxClient_DEFS += VBOX_X11_CLIPBOARD VBOX_WITH_HGCM
-ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
- VBoxClient_DEFS += VBOX_BUILD_TARGET="$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)"
+VBoxClient_DEFS += VRA_X11_CLIPBOARD VRA_WITH_HGCM
+ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
+ VBoxClient_DEFS += VRA_BUILD_TARGET="$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)"
 else
- VBoxClient_DEFS += VBOX_BUILD_TARGET=\"$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)\"
+ VBoxClient_DEFS += VRA_BUILD_TARGET=\"$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)\"
 endif
-ifdef VBOX_WITH_DBUS
- VBoxClient_DEFS += VBOX_WITH_DBUS
+ifdef VRA_WITH_DBUS
+ VBoxClient_DEFS += VRA_WITH_DBUS
 endif
 
 VBoxClient_DEFS.linux += _GNU_SOURCE
-VBoxClient_INCS = $(VBOX_GRAPHICS_INCS)
+VBoxClient_INCS = $(VRA_GRAPHICS_INCS)
 VBoxClient_INCS += ../x11include/panoramiXproto-1.1
 VBoxClient_INCS += ../x11include/libXrandr-1.5.2
 VBoxClient_INCS += ../x11include/randrproto-1.5.0
@@ -77,24 +77,24 @@ VBoxClient_SOURCES = \
 	logging.cpp
 
 
-VBoxClient_SOURCES += $(VBOX_GH_SOURCES)
+VBoxClient_SOURCES += $(VRA_GH_SOURCES)
 
 VBoxDRMClient_TEMPLATE = VBoxGuestR3Exe
-ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
- VBoxDRMClient_DEFS += VBOX_BUILD_TARGET="$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)"
+ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
+ VBoxDRMClient_DEFS += VRA_BUILD_TARGET="$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)"
 else
- VBoxDRMClient_DEFS += VBOX_BUILD_TARGET=\"$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)\"
+ VBoxDRMClient_DEFS += VRA_BUILD_TARGET=\"$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)\"
 endif
 VBoxDRMClient_SOURCES = \
 	display-drm.cpp \
 	display-ipc.cpp \
 	logging.cpp
-VBoxDRMClient_SOURCES += $(VBOX_GH_SOURCES)
+VBoxDRMClient_SOURCES += $(VRA_GH_SOURCES)
 
 VBoxClient_SOURCES.linux = \
 	chk_stubs.c
 VBoxClient_LIBPATH = \
-	$(VBOX_LIBPATH32_X11)
+	$(VRA_LIBPATH32_X11)
 VBoxClient_LIBS.freebsd = \
 	iconv
 VBoxClient_LIBS.linux = \
@@ -103,13 +103,13 @@ VBoxClient_LIBS.netbsd = \
 	crypt
 VBoxClient_LIBS.solaris = \
 	dl
-ifndef VBOX_WITH_VBOXCLIENT_LAZY_LOAD
+ifndef VRA_WITH_VRACLIENT_LAZY_LOAD
  VBoxClient_LIBS = \
  	X11 Xt Xext Xmu
 endif
-ifdef VBOX_WITH_DISTRO_XRAND_XINERAMA
+ifdef VRA_WITH_DISTRO_XRAND_XINERAMA
  VBoxClient_DEFS += WITH_DISTRO_XRAND_XINERAMA
- ifndef VBOX_WITH_VBOXCLIENT_LAZY_LOAD
+ ifndef VRA_WITH_VRACLIENT_LAZY_LOAD
   VBoxClient_LIBS += Xrandr
  endif
 endif
@@ -118,9 +118,9 @@ endif
 VBoxClient_LDFLAGS.netbsd = \
 	-Wl,-rpath /usr/X11R7/lib
 
-ifdef VBOX_WITH_DRAG_AND_DROP
- ifdef VBOX_DND_WITH_XTEST
-  VBoxClient_DEFS += VBOX_DND_WITH_XTEST
+ifdef VRA_WITH_DRAG_AND_DROP
+ ifdef VRA_DND_WITH_XTEST
+  VBoxClient_DEFS += VRA_DND_WITH_XTEST
   VBoxClient_LIBS += \
   	Xtst
  endif
@@ -134,34 +134,34 @@ ifeq ($(KBUILD_TARGET),linux)
  	-Wl,--wrap=memcpy
 endif
 
-ifdef VBOX_WITH_GUEST_PROPS
- VBoxClient_DEFS    += VBOX_WITH_GUEST_PROPS
+ifdef VRA_WITH_GUEST_PROPS
+ VBoxClient_DEFS    += VRA_WITH_GUEST_PROPS
  VBoxClient_SOURCES += \
  	hostversion.cpp
- VBoxDRMClient_DEFS += VBOX_WITH_GUEST_PROPS
+ VBoxDRMClient_DEFS += VRA_WITH_GUEST_PROPS
 endif
 
-ifdef VBOX_WITH_DRAG_AND_DROP
+ifdef VRA_WITH_DRAG_AND_DROP
  VBoxClient_DEFS     += \
- 	VBOX_WITH_DRAG_AND_DROP \
- 	$(if $(VBOX_WITH_DRAG_AND_DROP_GH),VBOX_WITH_DRAG_AND_DROP_GH,)
+ 	VRA_WITH_DRAG_AND_DROP \
+ 	$(if $(VRA_WITH_DRAG_AND_DROP_GH),VRA_WITH_DRAG_AND_DROP_GH,)
  VBoxClient_SOURCES  += \
  	draganddrop.cpp \
  	draganddrop-x11.cpp
  VBoxClient_LIBS     += \
- 	$(VBOX_LIB_VBGL_R3) \
- 	$(PATH_STAGE_LIB)/additions/VBoxDnDGuestR3Lib$(VBOX_SUFF_LIB)
+ 	$(VRA_LIB_VBGL_R3) \
+ 	$(PATH_STAGE_LIB)/additions/VBoxDnDGuestR3Lib$(VRA_SUFF_LIB)
 endif
 
-ifdef VBOX_WITH_SEAMLESS
- VBoxClient_DEFS    += VBOX_WITH_SEAMLESS
+ifdef VRA_WITH_SEAMLESS
+ VBoxClient_DEFS    += VRA_WITH_SEAMLESS
  VBoxClient_SOURCES += \
  	seamless.cpp \
  	seamless-x11.cpp
 endif
 
-ifdef VBOX_WITH_VMSVGA
- VBoxClient_DEFS    += VBOX_WITH_VMSVGA
+ifdef VRA_WITH_VMSVGA
+ VBoxClient_DEFS    += VRA_WITH_VMSVGA
  VBoxClient_SOURCES += \
  	display.cpp \
  	display-svga-x11.cpp \
@@ -175,21 +175,21 @@ ifdef VBOX_WITH_VMSVGA
  ### include $(PATH_SUB_CURRENT)/helpers/Makefile.kmk
 endif
 
-ifdef VBOX_WITH_SHARED_CLIPBOARD
+ifdef VRA_WITH_SHARED_CLIPBOARD
 
- ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
-  SharedClipboardTransfersDefs = VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS VBOX_WITH_SHARED_CLIPBOARD_GUEST
+ ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
+  SharedClipboardTransfersDefs = VRA_WITH_SHARED_CLIPBOARD_TRANSFERS VRA_WITH_SHARED_CLIPBOARD_GUEST
   SharedClipboardTransfersSources = \
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-transfers.cpp \
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/ClipboardPath.cpp
-  ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
-   SharedClipboardTransfersDefs += VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
+  ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
+   SharedClipboardTransfersDefs += VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
    SharedClipboardTransfersSources += \
    	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-transfers-http.cpp
   endif
  endif
 
- VBoxClient_DEFS     += VBOX_WITH_SHARED_CLIPBOARD
+ VBoxClient_DEFS     += VRA_WITH_SHARED_CLIPBOARD
  VBoxClient_SOURCES  += \
  	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-common.cpp \
  	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-x11.cpp \
@@ -200,8 +200,8 @@ ifdef VBOX_WITH_SHARED_CLIPBOARD
  VBoxClient_DEFS += $(SharedClipboardTransfersDefs)
  VBoxClient_SOURCES += $(SharedClipboardTransfersSources)
 
- ifdef VBOX_WITH_WAYLAND_ADDITIONS
-  VBoxClient_DEFS.linux += VBOX_WITH_WAYLAND_ADDITIONS
+ ifdef VRA_WITH_WAYLAND_ADDITIONS
+  VBoxClient_DEFS.linux += VRA_WITH_WAYLAND_ADDITIONS
   VBoxClient_INCS.linux += ../wlInclude/
   VBoxClient_SOURCES.linux += \
   	wayland-helper-dcp.cpp \
@@ -215,7 +215,7 @@ ifdef VBOX_WITH_SHARED_CLIPBOARD
  endif
 endif
 
-ifdef VBOX_WITH_VBOXCLIENT_LAZY_LOAD
+ifdef VRA_WITH_VRACLIENT_LAZY_LOAD
  # Macro for generating the lazy loading assembly stub loader for a specific .def file.
  #
  # @param 1  Absolute path of the .def file to use as a template.
@@ -226,54 +226,54 @@ ifdef VBOX_WITH_VBOXCLIENT_LAZY_LOAD
   	$$(VBoxClient_0_OUTDIR)/$(2)LazyLoad.asm
   VBoxClient_CLEAN         += \
   	$$(VBoxClient_0_OUTDIR)/$(2)LazyLoad.asm
-  $$$$(VBoxClient_0_OUTDIR)/$(2)LazyLoad.asm: $$(PATH_ROOT)/src/VBox/GuestHost/$(2).def $(VBOX_DEF_2_LAZY_LOAD) | $$$$(dir $$@)
+  $$$$(VBoxClient_0_OUTDIR)/$(2)LazyLoad.asm: $$(PATH_ROOT)/src/VBox/GuestHost/$(2).def $(VRA_DEF_2_LAZY_LOAD) | $$$$(dir $$@)
 	$$(call MSG_TOOL,VBoxDef2LazyLoad,$$(PATH_ROOT)/src/VBox/GuestHost/$(2).def,$$@)
 	$$(QUIET)$$(RM) -f -- "$$@"
-	$$(VBOX_DEF_2_LAZY_LOAD) --system --library $(2)$$(SUFF_DLL)$$(if $(3),.$(3),) --output "$$@" $$(PATH_ROOT)/src/VBox/GuestHost/$(2).def
- endef # VBOXCLIENT_LAZYLOAD_GEN_ASM_FN
+	$$(VRA_DEF_2_LAZY_LOAD) --system --library $(2)$$(SUFF_DLL)$$(if $(3),.$(3),) --output "$$@" $$(PATH_ROOT)/src/VBox/GuestHost/$(2).def
+ endef # VRACLIENT_LAZYLOAD_GEN_ASM_FN
 
- VBoxClient_DEFS    += VBOX_WITH_VBOXCLIENT_LAZY_LOAD
+ VBoxClient_DEFS    += VRA_WITH_VRACLIENT_LAZY_LOAD
 
  # Define library versions to use, depending on the OS we build for.
  # Note: Solaris does *not* have any of those libs with a version suffix, so simply keep those empty (= unset) then.
  if1of ($(KBUILD_TARGET), linux)
-  VBOX_VBOXCLIENT_LIBX11_VER = 6
-  VBOX_VBOXCLIENT_LIBXT_VER = 6
-  VBOX_VBOXCLIENT_LIBXMU_VER = 6
-  VBOX_VBOXCLIENT_LIBXRANDR_VER = 2
-  VBOX_VBOXCLIENT_LIBWAYLANDCLIENT_VER = 0
+  VRA_VRACLIENT_LIBX11_VER = 6
+  VRA_VRACLIENT_LIBXT_VER = 6
+  VRA_VRACLIENT_LIBXMU_VER = 6
+  VRA_VRACLIENT_LIBXRANDR_VER = 2
+  VRA_VRACLIENT_LIBWAYLANDCLIENT_VER = 0
  endif
  ## Dynamic import no. 1: libX11.so
- $(evalcall2 def_libToLazyLoad,$(PATH_ROOT)/src/VBox/GuestHost/libX11.def,libX11,$(VBOX_VBOXCLIENT_LIBX11_VER))
+ $(evalcall2 def_libToLazyLoad,$(PATH_ROOT)/src/VBox/GuestHost/libX11.def,libX11,$(VRA_VRACLIENT_LIBX11_VER))
  ## Dynamic import no. 2: libXt.so
- $(evalcall2 def_libToLazyLoad,$(PATH_ROOT)/src/VBox/GuestHost/libXt.def,libXt,$(VBOX_VBOXCLIENT_LIBXT_VER))
+ $(evalcall2 def_libToLazyLoad,$(PATH_ROOT)/src/VBox/GuestHost/libXt.def,libXt,$(VRA_VRACLIENT_LIBXT_VER))
  ## Dynamic import no. 3: libXmu.so
- $(evalcall2 def_libToLazyLoad,$(PATH_ROOT)/src/VBox/GuestHost/libXmu.def,libXmu,$(VBOX_VBOXCLIENT_LIBXMU_VER))
+ $(evalcall2 def_libToLazyLoad,$(PATH_ROOT)/src/VBox/GuestHost/libXmu.def,libXmu,$(VRA_VRACLIENT_LIBXMU_VER))
  ## Dynamic import no. 4: libXrandr.so
- $(evalcall2 def_libToLazyLoad,$(PATH_ROOT)/src/VBox/GuestHost/libXrandr.def,libXrandr,$(VBOX_VBOXCLIENT_LIBXRANDR_VER))
+ $(evalcall2 def_libToLazyLoad,$(PATH_ROOT)/src/VBox/GuestHost/libXrandr.def,libXrandr,$(VRA_VRACLIENT_LIBXRANDR_VER))
  ## Dynamic import no. 5: libwayland-client.so
- $(evalcall2 def_libToLazyLoad,$(PATH_ROOT)/src/VBox/GuestHost/libwayland-client.def,libwayland-client,$(VBOX_VBOXCLIENT_LIBWAYLANDCLIENT_VER))
+ $(evalcall2 def_libToLazyLoad,$(PATH_ROOT)/src/VBox/GuestHost/libwayland-client.def,libwayland-client,$(VRA_VRACLIENT_LIBWAYLANDCLIENT_VER))
 endif
 
-ifdef VBOX_WITH_WAYLAND_ADDITIONS
+ifdef VRA_WITH_WAYLAND_ADDITIONS
  define def_libToLazyLoad2
   vboxwl_SOURCES       += \
   	$$(vboxwl_0_OUTDIR)/$(2)LazyLoad.asm
   vboxwl_CLEAN         += \
   	$$(vboxwl_0_OUTDIR)/$(2)LazyLoad.asm
-  $$$$(vboxwl_0_OUTDIR)/$(2)LazyLoad.asm: $$(PATH_ROOT)/src/VBox/GuestHost/$(2).def $(VBOX_DEF_2_LAZY_LOAD) | $$$$(dir $$@)
+  $$$$(vboxwl_0_OUTDIR)/$(2)LazyLoad.asm: $$(PATH_ROOT)/src/VBox/GuestHost/$(2).def $(VRA_DEF_2_LAZY_LOAD) | $$$$(dir $$@)
 	$$(call MSG_TOOL,VBoxDef2LazyLoad,$$(PATH_ROOT)/src/VBox/GuestHost/$(2).def,$$@)
-	$$(eval VBOX_VBOXWL_LIB_TO_LAZYLOAD_SUFF=$$$$(if $(3),$(SUFF_DLL).$(3),$(SUFF_DLL)))
+	$$(eval VRA_VRAWL_LIB_TO_LAZYLOAD_SUFF=$$$$(if $(3),$(SUFF_DLL).$(3),$(SUFF_DLL)))
 	$$(QUIET)$$(RM) -f -- "$$@"
-	$$(VBOX_DEF_2_LAZY_LOAD) --system --library $(2)$$(VBOX_VBOXWL_LIB_TO_LAZYLOAD_SUFF) --output "$$@" $$(PATH_ROOT)/src/VBox/GuestHost/$(2).def
+	$$(VRA_DEF_2_LAZY_LOAD) --system --library $(2)$$(VRA_VRAWL_LIB_TO_LAZYLOAD_SUFF) --output "$$@" $$(PATH_ROOT)/src/VBox/GuestHost/$(2).def
  endef
 
  vboxwl_TEMPLATE = VBoxGuestR3Exe
- vboxwl_DEFS += VBOX_WITH_SHARED_CLIPBOARD
- ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
-  vboxwl_DEFS += VBOX_BUILD_TARGET="$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)"
+ vboxwl_DEFS += VRA_WITH_SHARED_CLIPBOARD
+ ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
+  vboxwl_DEFS += VRA_BUILD_TARGET="$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)"
  else
-  vboxwl_DEFS += VBOX_BUILD_TARGET=\"$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)\"
+  vboxwl_DEFS += VRA_BUILD_TARGET=\"$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)\"
  endif
  vboxwl_SOURCES = \
  	vboxwl.cpp \
@@ -283,30 +283,30 @@ ifdef VBOX_WITH_WAYLAND_ADDITIONS
  	wayland-helper.cpp \
  	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-common.cpp \
  	$(PATH_ROOT)/src/VBox/GuestHost/common/mime-type-converter.cpp
- vboxwl_SOURCES += $(VBOX_GH_SOURCES)
+ vboxwl_SOURCES += $(VRA_GH_SOURCES)
 
  vboxwl_DEFS += $(SharedClipboardTransfersDefs)
  vboxwl_SOURCES += $(SharedClipboardTransfersSources)
 
- VBOX_VBOXWL_LIBWAYLANDCLIENT_VER = 0
- VBOX_VBOXWL_LIBGTK3_VER = 0
- VBOX_VBOXWL_LIBGIO20_VER = 0
- VBOX_VBOXWL_LIBGOBJECT20_VER = 0
- VBOX_VBOXWL_LIBGLIB20_VER = 0
+ VRA_VRAWL_LIBWAYLANDCLIENT_VER = 0
+ VRA_VRAWL_LIBGTK3_VER = 0
+ VRA_VRAWL_LIBGIO20_VER = 0
+ VRA_VRAWL_LIBGOBJECT20_VER = 0
+ VRA_VRAWL_LIBGLIB20_VER = 0
 
  ## Dynamic import no. 5: libwayland-client.so
- $(evalcall2 def_libToLazyLoad2,$(PATH_ROOT)/src/VBox/GuestHost/libwayland-client.def,libwayland-client,$(VBOX_VBOXWL_LIBWAYLANDCLIENT_VER))
+ $(evalcall2 def_libToLazyLoad2,$(PATH_ROOT)/src/VBox/GuestHost/libwayland-client.def,libwayland-client,$(VRA_VRAWL_LIBWAYLANDCLIENT_VER))
  ## Dynamic import no. 6: libgtk-3.so
- $(evalcall2 def_libToLazyLoad2,$(PATH_ROOT)/src/VBox/GuestHost/libgtk-3.def,libgtk-3,$(VBOX_VBOXWL_LIBGTK3_VER))
+ $(evalcall2 def_libToLazyLoad2,$(PATH_ROOT)/src/VBox/GuestHost/libgtk-3.def,libgtk-3,$(VRA_VRAWL_LIBGTK3_VER))
  ## Dynamic import no. 7: libgio-2.0.so
- $(evalcall2 def_libToLazyLoad2,$(PATH_ROOT)/src/VBox/GuestHost/libgio-2.0.def,libgio-2.0,$(VBOX_VBOXWL_LIBGIO20_VER))
+ $(evalcall2 def_libToLazyLoad2,$(PATH_ROOT)/src/VBox/GuestHost/libgio-2.0.def,libgio-2.0,$(VRA_VRAWL_LIBGIO20_VER))
  ## Dynamic import no. 8: libgobject-2.0.so
- $(evalcall2 def_libToLazyLoad2,$(PATH_ROOT)/src/VBox/GuestHost/libgobject-2.0.def,libgobject-2.0,$(VBOX_VBOXWL_LIBGOBJECT20_VER))
+ $(evalcall2 def_libToLazyLoad2,$(PATH_ROOT)/src/VBox/GuestHost/libgobject-2.0.def,libgobject-2.0,$(VRA_VRAWL_LIBGOBJECT20_VER))
  ## Dynamic import no. 9: libglib-2.0.so
- $(evalcall2 def_libToLazyLoad2,$(PATH_ROOT)/src/VBox/GuestHost/libglib-2.0.def,libglib-2.0,$(VBOX_VBOXWL_LIBGLIB20_VER))
+ $(evalcall2 def_libToLazyLoad2,$(PATH_ROOT)/src/VBox/GuestHost/libglib-2.0.def,libglib-2.0,$(VRA_VRAWL_LIBGLIB20_VER))
 endif
 
-if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBOX_ONLY_SDK)
+if defined(VRA_WITH_TESTCASES) && !defined(VRA_ONLY_ADDITIONS) && !defined(VRA_ONLY_SDK)
  if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd solaris)
 
   # Set this in LocalConfig.kmk if you are working on the X11 clipboard service
@@ -325,7 +325,7 @@ if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBO
   TESTING  += $(tstSeamlessX11-auto_0_OUTDIR)/tstSeamlessX11-auto
   $$(tstSeamlessX11-auto_0_OUTDIR)/tstSeamlessX11-auto.run: \
   		$$(tstSeamlessX11-auto_1_STAGE_TARGET)
-	export VBOX_LOG_DEST=nofile; $(tstSeamlessX11-auto_1_STAGE_TARGET) quiet
+	export VRA_LOG_DEST=nofile; $(tstSeamlessX11-auto_1_STAGE_TARGET) quiet
 	$(QUIET)$(APPEND) -t "$@" "done"
 
   #
@@ -339,13 +339,13 @@ if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBO
   	testcase/tstSeamlessX11.cpp \
   	seamless.cpp \
   	seamless-x11.cpp
-  ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
-   tstSeamlessX11_DEFS  += VBOX_BUILD_TARGET="$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)"
+  ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
+   tstSeamlessX11_DEFS  += VRA_BUILD_TARGET="$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)"
   else
-   tstSeamlessX11_DEFS  += VBOX_BUILD_TARGET=\"$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)\"
+   tstSeamlessX11_DEFS  += VRA_BUILD_TARGET=\"$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)\"
   endif
   tstSeamlessX11_LIBPATH = \
-  	$(VBOX_LIBPATH_X11)
+  	$(VRA_LIBPATH_X11)
   tstSeamlessX11_LIBS = \
   	$(LIB_RUNTIME) \
   	Xext \

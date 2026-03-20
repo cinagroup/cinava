@@ -1,7 +1,7 @@
 $Id: vboxtxs-runvm-readme.txt 72521 2018-06-12 04:49:39Z ramshankar.venkataraman@oracle.com $
 
 
-VirtualBox Test eXecution Service
+VirtualAgent Test eXecution Service
 =================================
 
 This readme briefly describes how to install the Test eXecution Service (TXS)
@@ -13,7 +13,7 @@ the regular TXS service in the VM to report success or failure to the host.
 Linux Installation
 ------------------
 
-1.  scp/download latest release build of VirtualBox and install it in the VM.
+1.  scp/download latest release build of VirtualAgent and install it in the VM.
 2.  scp/download the required smoke test VDI from remote test-resource to
     /home/vbox/testrsrc/3.0/tcp/win2k3ent-acpi.vdi
 3.  cd /root

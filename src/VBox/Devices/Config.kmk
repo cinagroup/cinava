@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,21 +25,21 @@
 # SPDX-License-Identifier: GPL-3.0-only
 #
 
-VBOX_DEVICES_CONFIG_KMK_INCLUDED = 1
+VRA_DEVICES_CONFIG_KMK_INCLUDED = 1
 
 # Include the top-level configure file.
-ifndef VBOX_ROOT_CONFIG_KMK_INCLUDED
+ifndef VRA_ROOT_CONFIG_KMK_INCLUDED
  include $(PATH_ROOT)/Config.kmk
 endif
 
 # We need the VMM/Config.kmk one for the VMM_COMMON_DEFS variable.
-ifndef VBOX_VMM_CONFIG_KMK_INCLUDED
+ifndef VRA_VMM_CONFIG_KMK_INCLUDED
  include $(PATH_ROOT)/src/VBox/VMM/Config.kmk
 endif
 
-VBOX_PATH_DEVICES_SRC := $(PATH_ROOT)/src/VBox/Devices
+VRA_PATH_DEVICES_SRC := $(PATH_ROOT)/src/VBox/Devices
 
-VBOX_PATH_VMSVGA_DEVICE_INC := $(VBOX_PATH_DEVICES_SRC)/Graphics/vmsvga_include
+VRA_PATH_VMSVGA_DEVICE_INC := $(VRA_PATH_DEVICES_SRC)/Graphics/vmsvga_include
 
 #
 # VBoxBios - Template for building 16-bit BIOS code.
@@ -71,20 +71,20 @@ TEMPLATE_VBoxBios_BLD_TRG_ARCH = x86
 TEMPLATE_VBoxBios_BINSUFF      = .rom
 TEMPLATE_VBoxBios_CDEFS        = IN_RING0
 TEMPLATE_VBoxBios_CXXDEFS      = IN_RING0
-TEMPLATE_VBoxBios_INCS         = . $(VBOX_PATH_DEVICES_SRC)/BiosCommonCode
+TEMPLATE_VBoxBios_INCS         = . $(VRA_PATH_DEVICES_SRC)/BiosCommonCode
 TEMPLATE_VBoxBios_ASFLAGS      = -q -wx -d1 -0
 TEMPLATE_VBoxBios_CFLAGS       = -q -0 -wx -zl -zu -s -oafs -ms -hc -d1+
 TEMPLATE_VBoxBios_CXXFLAGS     = $(TEMPLATE_VBoxBios_CFLAGS)
-TEMPLATE_VBoxBios_DEPS         = $(VBOX_VERSION_HEADER)
+TEMPLATE_VBoxBios_DEPS         = $(VRA_VERSION_HEADER)
 TEMPLATE_VBoxBios_LDFLAGS      = system dos \
 	debug codeview all \
 	option quiet, nofarcalls, map, verbose, statics, symfile \
 	disable 1014, 1023, 2120, 1080
-TEMPLATE_VBoxBios_LNK_DEPS = $(VBOX_BIOSSUMS) $(VBOX_PATH_DEVICES_SRC)/BiosCommonCode/biosorg_check.sed
+TEMPLATE_VBoxBios_LNK_DEPS = $(VRA_BIOSSUMS) $(VRA_PATH_DEVICES_SRC)/BiosCommonCode/biosorg_check.sed
 TEMPLATE_VBoxBios_POST_CMDS = \
-	$(QUIET)$(SED_EXT) -n -f $(VBOX_PATH_DEVICES_SRC)/BiosCommonCode/biosorg_check.sed $(outbase).map \
+	$(QUIET)$(SED_EXT) -n -f $(VRA_PATH_DEVICES_SRC)/BiosCommonCode/biosorg_check.sed $(outbase).map \
 	&& $(MV_EXT) -f $(out) $(out).tmp \
-	&& $(VBOX_BIOSSUMS) -s $(out).tmp $(out) \
+	&& $(VRA_BIOSSUMS) -s $(out).tmp $(out) \
 	&& $(RM_EXT) -f $(out).tmp
 
 #
@@ -110,50 +110,50 @@ TEMPLATE_VBoxBios32Lib_POST_CMDS  = $(NO_SUCH_VARIABLE)
 # Audio configuration.
 # This must live here because of testcase/
 #
-VBOX_AUDIO_DEFS :=
+VRA_AUDIO_DEFS :=
 if 0 # Not stable yet.
  # Enable dedicated microphone-in support for HDA. Otherwise only line-in is supported.
- VBOX_AUDIO_DEFS += VBOX_WITH_AUDIO_HDA_MIC_IN
+ VRA_AUDIO_DEFS += VRA_WITH_AUDIO_HDA_MIC_IN
 
  # Enable interleavig streams support for HDA. Needed for 5.1 surround support.
- VBOX_AUDIO_DEFS  += VBOX_WITH_AUDIO_HDA_INTERLEAVING_STREAMS_SUPPORT
+ VRA_AUDIO_DEFS  += VRA_WITH_AUDIO_HDA_INTERLEAVING_STREAMS_SUPPORT
 
  # Enable 5.1 surround support (Front, Center/LFE, Rear) for HDA.
  # Without this, only stereo output (Front) is supported.
- VBOX_AUDIO_DEFS += VBOX_WITH_AUDIO_HDA_51_SURROUND
+ VRA_AUDIO_DEFS += VRA_WITH_AUDIO_HDA_51_SURROUND
 endif
 
 # If dedicated microphone-in support for HDA isn't enabled, treat mic-in as line-in to
 # propagate the volume (+ mute) settings appropriately.
-ifndef VBOX_WITH_AUDIO_HDA_MIC_IN
- VBOX_AUDIO_DEFS  += VBOX_AUDIO_HDA_MIC_IN_AS_LINE_IN
+ifndef VRA_WITH_AUDIO_HDA_MIC_IN
+ VRA_AUDIO_DEFS  += VRA_AUDIO_HDA_MIC_IN_AS_LINE_IN
 endif
 
-if defined(VBOX_WITH_AUDIO_HDA_MIC_IN) && defined(VBOX_AUDIO_HDA_MIC_IN_AS_LINE_IN)
- $(error Defining VBOX_WITH_AUDIO_HDA_MIC_IN and VBOX_AUDIO_HDA_MIC_IN_AS_LINE_IN at the same time makes no sense!)
+if defined(VRA_WITH_AUDIO_HDA_MIC_IN) && defined(VRA_AUDIO_HDA_MIC_IN_AS_LINE_IN)
+ $(error Defining VRA_WITH_AUDIO_HDA_MIC_IN and VRA_AUDIO_HDA_MIC_IN_AS_LINE_IN at the same time makes no sense!)
 endif
 
 # Enable backend-independent device enumeration support.
-VBOX_AUDIO_DEFS  += VBOX_WITH_AUDIO_ENUM
+VRA_AUDIO_DEFS  += VRA_WITH_AUDIO_ENUM
 
 # Enable backend callback support.
-VBOX_AUDIO_DEFS += VBOX_WITH_AUDIO_CALLBACKS
+VRA_AUDIO_DEFS += VRA_WITH_AUDIO_CALLBACKS
 
-ifdef VBOX_WITH_HP_HDA
- VBOX_AUDIO_DEFS += VBOX_WITH_HP_HDA
+ifdef VRA_WITH_HP_HDA
+ VRA_AUDIO_DEFS += VRA_WITH_HP_HDA
 endif
-ifdef VBOX_WITH_INTEL_HDA
- VBOX_AUDIO_DEFS += VBOX_WITH_INTEL_HDA
+ifdef VRA_WITH_INTEL_HDA
+ VRA_AUDIO_DEFS += VRA_WITH_INTEL_HDA
 endif
-ifdef VBOX_WITH_NVIDIA_HDA
- VBOX_AUDIO_DEFS += VBOX_WITH_NVIDIA_HDA
+ifdef VRA_WITH_NVIDIA_HDA
+ VRA_AUDIO_DEFS += VRA_WITH_NVIDIA_HDA
 endif
 
 # Not yet enabled: Callbacks for the device emulation to let the backends
 #                  tell the emulation when and how to process data.
 if 0
- VBOX_AUDIO_DEFS  += VBOX_WITH_AUDIO_SB16_CALLBACKS
- VBOX_AUDIO_DEFS  += VBOX_WITH_AUDIO_AC97_CALLBACKS
- VBOX_AUDIO_DEFS  += VBOX_WITH_AUDIO_HDA_CALLBACKS
+ VRA_AUDIO_DEFS  += VRA_WITH_AUDIO_SB16_CALLBACKS
+ VRA_AUDIO_DEFS  += VRA_WITH_AUDIO_AC97_CALLBACKS
+ VRA_AUDIO_DEFS  += VRA_WITH_AUDIO_HDA_CALLBACKS
 endif
 

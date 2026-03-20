@@ -1,13 +1,13 @@
 #!/bin/sh
 # $Id: vboxguest.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox Guest Additions kernel module control script for Solaris.
+# VirtualAgent Guest Additions kernel module control script for Solaris.
 #
 
 #
-# Copyright (C) 2008-2026 Oracle and/or its affiliates.
+# Copyright (C) 2008-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -71,7 +71,7 @@ check_if_installed()
     if test -f "$modulepath"; then
         return 0
     fi
-    abort "VirtualBox kernel module ($MODNAME) NOT installed."
+    abort "VirtualAgent kernel module ($MODNAME) NOT installed."
 }
 
 module_loaded()
@@ -127,34 +127,34 @@ start_module()
 {
     if test "$REMOTE_INST" -eq 1; then
         /usr/sbin/add_drv $BASEDIR_OPT -i'pci80ee,cafe' -m'* 0666 root sys' $MODNAME 2>/dev/null || \
-            abort "Failed to install VirtualBox guest kernel module into ${PKG_INSTALL_ROOT}."
-        info "VirtualBox guest kernel module installed."
+            abort "Failed to install VirtualAgent guest kernel module into ${PKG_INSTALL_ROOT}."
+        info "VirtualAgent guest kernel module installed."
         return
     fi
 
     /usr/sbin/add_drv -i'pci80ee,cafe' -m'* 0666 root sys' $MODNAME
     if test ! vboxguest_loaded; then
-        abort "Failed to load VirtualBox guest kernel module."
+        abort "Failed to load VirtualAgent guest kernel module."
     elif test -c "/devices/pci@0,0/pci80ee,cafe@4:$MODNAME"; then
-        info "VirtualBox guest kernel module loaded."
+        info "VirtualAgent guest kernel module loaded."
     else
-        info "VirtualBox guest kernel module failed to attach."
+        info "VirtualAgent guest kernel module failed to attach."
     fi
 }
 
 stop_module()
 {
     if test "$REMOTE_INST" -eq 1; then
-        /usr/sbin/rem_drv $BASEDIR_OPT $MODNAME || abort "Failed to uninstall VirtualBox guest kernel module."
-        info "VirtualBox guest kernel module uninstalled."
+        /usr/sbin/rem_drv $BASEDIR_OPT $MODNAME || abort "Failed to uninstall VirtualAgent guest kernel module."
+        info "VirtualAgent guest kernel module uninstalled."
         return
     fi
 
     if vboxguest_loaded; then
-        /usr/sbin/rem_drv $MODNAME || abort "Failed to unload VirtualBox guest kernel module."
-        info "VirtualBox guest kernel module unloaded."
+        /usr/sbin/rem_drv $MODNAME || abort "Failed to unload VirtualAgent guest kernel module."
+        info "VirtualAgent guest kernel module unloaded."
     elif test -z "$SILENTUNLOAD"; then
-        info "VirtualBox guest kernel module not loaded."
+        info "VirtualAgent guest kernel module not loaded."
     fi
 }
 
@@ -165,13 +165,13 @@ start_vboxfs()
     fi
 
     if vboxfs_loaded; then
-        info "VirtualBox FileSystem kernel module already loaded."
+        info "VirtualAgent FileSystem kernel module already loaded."
     else
-        /usr/sbin/modload -p fs/$VFSMODNAME || abort "Failed to load VirtualBox FileSystem kernel module."
+        /usr/sbin/modload -p fs/$VFSMODNAME || abort "Failed to load VirtualAgent FileSystem kernel module."
         if test ! vboxfs_loaded; then
-            info "Failed to load VirtualBox FileSystem kernel module."
+            info "Failed to load VirtualAgent FileSystem kernel module."
         else
-            info "VirtualBox FileSystem kernel module loaded."
+            info "VirtualAgent FileSystem kernel module loaded."
         fi
     fi
 }
@@ -185,11 +185,11 @@ stop_vboxfs()
     if vboxfs_loaded; then
         vboxfs_mod_id=`/usr/sbin/modinfo | grep $VFSMODNAME | cut -f 1 -d ' ' `
         if test -n "$vboxfs_mod_id"; then
-            /usr/sbin/modunload -i $vboxfs_mod_id || abort "Failed to unload VirtualBox FileSystem module."
-            info "VirtualBox FileSystem kernel module unloaded."
+            /usr/sbin/modunload -i $vboxfs_mod_id || abort "Failed to unload VirtualAgent FileSystem module."
+            info "VirtualAgent FileSystem kernel module unloaded."
         fi
     elif test -z "$SILENTUNLOAD"; then
-        info "VirtualBox FileSystem kernel module not loaded."
+        info "VirtualAgent FileSystem kernel module not loaded."
     fi
 }
 
@@ -197,34 +197,34 @@ start_vboxms()
 {
     if test "$REMOTE_INST" -eq 1; then
         /usr/sbin/add_drv $BASEDIR_OPT -m'* 0666 root sys' $VMSMODNAME 2>/dev/null ||
-            abort "Failed to install VirtualBox pointer integration module."
-        info "VirtualBox pointer integration module installed."
+            abort "Failed to install VirtualAgent pointer integration module."
+        info "VirtualAgent pointer integration module installed."
         return
     fi
 
     /usr/sbin/add_drv -m'* 0666 root sys' $VMSMODNAME
     if test ! vboxms_loaded; then
-        abort "Failed to load VirtualBox pointer integration module."
+        abort "Failed to load VirtualAgent pointer integration module."
     elif test -c "/devices/pseudo/$VMSMODNAME@0:$VMSMODNAME"; then
-        info "VirtualBox pointer integration module loaded."
+        info "VirtualAgent pointer integration module loaded."
     else
-        info "VirtualBox pointer integration module failed to attach."
+        info "VirtualAgent pointer integration module failed to attach."
     fi
 }
 
 stop_vboxms()
 {
     if test "$REMOTE_INST" -eq 1; then
-        /usr/sbin/rem_drv $BASEDIR_OPT $VMSMODNAME || abort "Failed to uninstall VirtualBox pointer integration module."
-        info "VirtualBox pointer integration module uninstalled."
+        /usr/sbin/rem_drv $BASEDIR_OPT $VMSMODNAME || abort "Failed to uninstall VirtualAgent pointer integration module."
+        info "VirtualAgent pointer integration module uninstalled."
         return
     fi
 
     if vboxms_loaded; then
-        /usr/sbin/rem_drv $VMSMODNAME || abort "Failed to unload VirtualBox pointer integration module."
-        info "VirtualBox pointer integration module unloaded."
+        /usr/sbin/rem_drv $VMSMODNAME || abort "Failed to unload VirtualAgent pointer integration module."
+        info "VirtualAgent pointer integration module unloaded."
     elif test -z "$SILENTUNLOAD"; then
-        info "VirtualBox pointer integration module not loaded."
+        info "VirtualAgent pointer integration module not loaded."
     fi
 }
 

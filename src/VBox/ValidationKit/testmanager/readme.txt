@@ -36,8 +36,8 @@ I.  Running a Test Manager instance with Docker:
        container. The initialization script will automatically pull the sources
        from the public OSE tree, so make sure this is what you want!
 
-    b. Edit the (hidden) .env file in this directory and change VBOX_TESTMGR_DATA
-       to point to your checked out VBox root, e.g. VBOX_TESTMGR_DATA=/path/to/VBox/trunk
+    b. Edit the (hidden) .env file in this directory and change VRA_TESTMGR_DATA
+       to point to your checked out VBox root, e.g. VRA_TESTMGR_DATA=/path/to/VBox/trunk
 
 
 II. Steps for manually setting up a local Test Manager instance for development:

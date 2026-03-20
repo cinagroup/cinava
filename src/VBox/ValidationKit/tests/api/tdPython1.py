@@ -3,14 +3,14 @@
 # $Id: tdPython1.py 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 
 """
-VirtualBox Validation Kit - Python Bindings Test #1
+VirtualAgent Validation Kit - Python Bindings Test #1
 """
 
 __copyright__ = \
 """
-Copyright (C) 2010-2026 Oracle and/or its affiliates.
+Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -120,12 +120,12 @@ class SubTstDrvPython1(base.SubTestDriverBase):
         # Check that we get an exception when trying to call the method from
         # a different thread.
         reporter.log('If running a debug build, you will see an ignored assertion now. Please ignore it.')
-        sVBoxAssertSaved = os.environ.get('VBOX_ASSERT', 'breakpoint');
-        os.environ['VBOX_ASSERT'] = 'ignore';
+        sVBoxAssertSaved = os.environ.get('VRA_ASSERT', 'breakpoint');
+        os.environ['VRA_ASSERT'] = 'ignore';
         oThread = threading.Thread(target=self.testEventQueueWaitingThreadProc);
         oThread.start();
         oThread.join();
-        os.environ['VBOX_ASSERT'] = sVBoxAssertSaved;
+        os.environ['VRA_ASSERT'] = sVBoxAssertSaved;
 
         return reporter.testDone()[1] == 0;
 

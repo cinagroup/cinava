@@ -8,9 +8,9 @@ Backtrace resolver using external debugging symbols and RTLdrFlt.
 
 __copyright__ = \
 """
-Copyright (C) 2016-2026 Oracle and/or its affiliates.
+Copyright (C) 2016-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -102,7 +102,7 @@ class BacktraceResolverOsLinux(BacktraceResolverOs):
         """
         fRc = False;
         try:
-            sDbgArchive = os.path.join(self.sBuildRoot, 'bin', 'VirtualBox-dbg.tar.bz2');
+            sDbgArchive = os.path.join(self.sBuildRoot, 'bin', 'VirtualAgent-dbg.tar.bz2');
 
             # Extract debug symbol archive if it was found.
             if os.path.exists(sDbgArchive):
@@ -169,7 +169,7 @@ class BacktraceResolverOsLinux(BacktraceResolverOs):
                and asCandidate[1].startswith('0x') \
                and asCandidate[2].startswith('0x') \
                and (asCandidate[3] == '0x0' or asCandidate[3] == '0')\
-               and 'VirtualBox' in asCandidate[4]:
+               and 'VirtualAgent' in asCandidate[4]:
                 asListBinaries.append((asCandidate[0], os.path.basename(asCandidate[4])));
 
         return asListBinaries;
@@ -303,10 +303,10 @@ class BacktraceResolverOsDarwin(BacktraceResolverOs):
             #     0x100042000 -        0x100095fff +VBoxDDU.dylib (4.3.15) <EB19C44D-F882-0803-DBDD-9995723111B7> /Application...
             # We need the start address and the library name.
             # To distinguish between our own libraries and ones from Apple we check whether the path at the end starts with
-            #     /Applications/VirtualBox.app/Contents/MacOS
-            oRegExpPath = re.compile(r'/VirtualBox.app/Contents/MacOS');
+            #     /Applications/VirtualAgent.app/Contents/MacOS
+            oRegExpPath = re.compile(r'/VirtualAgent.app/Contents/MacOS');
             oRegExpAddr = re.compile(r'0x\w+');
-            oRegExpBinPath = re.compile(r'VirtualBox.app/Contents/MacOS/\S*');
+            oRegExpBinPath = re.compile(r'VirtualAgent.app/Contents/MacOS/\S*');
             while iLine < len(asReport):
                 asMatches = oRegExpPath.findall(asReport[iLine]);
                 if asMatches:
@@ -339,7 +339,7 @@ class BacktraceResolverOsDarwin(BacktraceResolverOs):
         #     4   VBoxXPCOMIPCC.dylib                 0x00000001139f17ea 0x1139e4000 + 55274
         # We need the start address and the library name.
         # To distinguish between our own libraries and ones from Apple we check whether the library
-        # name contains VBox or VirtualBox
+        # name contains VBox or VirtualAgent
         iLine = 0;
         while iLine < len(asReport):
             asStackTrace = asReport[iLine].split();
@@ -347,7 +347,7 @@ class BacktraceResolverOsDarwin(BacktraceResolverOs):
             # Check whether the line is made up of 6 elements separated by whitespace
             # and the first one is a number.
             if     len(asStackTrace) == 6 and asStackTrace[0].isdigit() \
-               and (asStackTrace[1].find('VBox') != -1 or asStackTrace[1].find('VirtualBox') != -1) \
+               and (asStackTrace[1].find('VBox') != -1 or asStackTrace[1].find('VirtualAgent') != -1) \
                and asStackTrace[3].startswith('0x'):
 
                 # Check whether the library is already in our list an only add new ones
@@ -407,7 +407,7 @@ class BacktraceResolverOsSolaris(BacktraceResolverOs):
         """
         fRc = False;
         try:
-            sDbgArchive = os.path.join(self.sBuildRoot, 'bin', 'VirtualBoxDebug.tar.bz2');
+            sDbgArchive = os.path.join(self.sBuildRoot, 'bin', 'VirtualAgentDebug.tar.bz2');
 
             # Extract debug symbol archive if it was found.
             if os.path.exists(sDbgArchive):
@@ -470,7 +470,7 @@ class BacktraceResolverOsSolaris(BacktraceResolverOs):
         for sLine in asReport:
             asItems = sLine.split();
             if     len(asItems) == 4 \
-               and asItems[3].startswith('/opt/VirtualBox') \
+               and asItems[3].startswith('/opt/VirtualAgent') \
                and (   asItems[2] == 'r-x--' \
                     or asItems[2] == 'r-x----'):
                 fFound = False;

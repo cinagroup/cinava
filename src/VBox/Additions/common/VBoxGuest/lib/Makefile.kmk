@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -42,7 +42,7 @@ include $(PATH_SUB_CURRENT)/testcase/Makefile.kmk
 #
 # Target config.
 #
-if defined(VBOX_WITH_ADDITION_DRIVERS) && !defined(VBOX_ONLY_VALIDATIONKIT)
+if defined(VRA_WITH_ADDITION_DRIVERS) && !defined(VRA_ONLY_VALIDATIONKIT)
  LIBRARIES += \
  	VBoxGuestR0Lib \
  	VBoxGuestR0LibBase
@@ -50,9 +50,9 @@ endif
 LIBRARIES += \
 	VBoxGuestR3Lib \
 	VBoxGuestR3LibShared
-ifndef VBOX_ONLY_VALIDATIONKIT
+ifndef VRA_ONLY_VALIDATIONKIT
  if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd)
-  ifndef VBOX_USE_SYSTEM_XORG_HEADERS
+  ifndef VRA_USE_SYSTEM_XORG_HEADERS
    LIBRARIES += \
    	VBoxGuestR3LibXFree86
   endif
@@ -69,9 +69,9 @@ LIBRARIES.win.amd64 += VBoxGuestR3Lib-x86 VBoxGuestR3LibShared-x86
 # VBoxGuestR0Lib
 #
 VBoxGuestR0Lib_TEMPLATE     = VBoxGuestR0DrvLib
-VBoxGuestR0Lib_DEFS         = VBOX_WITH_HGCM \
-	$(if $(VBOX_WITH_DRAG_AND_DROP),VBOX_WITH_DRAG_AND_DROP,) \
-	$(if $(VBOX_WITH_DRAG_AND_DROP_GH),VBOX_WITH_DRAG_AND_DROP_GH,)
+VBoxGuestR0Lib_DEFS         = VRA_WITH_HGCM \
+	$(if $(VRA_WITH_DRAG_AND_DROP),VRA_WITH_DRAG_AND_DROP,) \
+	$(if $(VRA_WITH_DRAG_AND_DROP_GH),VRA_WITH_DRAG_AND_DROP_GH,)
 VBoxGuestR0Lib_INCS         = \
 	$(VBoxGuestR0Lib_0_OUTDIR)
 VBoxGuestR0Lib_SOURCES      = \
@@ -85,7 +85,7 @@ VBoxGuestR0Lib_SOURCES      = \
 	VBoxGuestR0LibIdc.cpp \
 	VBoxGuestR0LibSharedFolders.c \
 	VBoxGuestR0LibMouse.cpp
-ifdef VBOX_WITH_GUEST_PROPS
+ifdef VRA_WITH_GUEST_PROPS
  VBoxGuestR0Lib_SOURCES   += \
  	VBoxGuestLibGuestProp.cpp
 endif
@@ -100,9 +100,9 @@ endif
 # VBoxGuestR0LibBase
 #
 VBoxGuestR0LibBase_TEMPLATE = VBoxGuestR0DrvLib
-VBoxGuestR0LibBase_DEFS     = VBOX_WITH_HGCM VBGL_VBOXGUEST \
-	$(if $(VBOX_WITH_DRAG_AND_DROP),VBOX_WITH_DRAG_AND_DROP,) \
-	$(if $(VBOX_WITH_DRAG_AND_DROP_GH),VBOX_WITH_DRAG_AND_DROP_GH,)
+VBoxGuestR0LibBase_DEFS     = VRA_WITH_HGCM VBGL_VRAGUEST \
+	$(if $(VRA_WITH_DRAG_AND_DROP),VRA_WITH_DRAG_AND_DROP,) \
+	$(if $(VRA_WITH_DRAG_AND_DROP_GH),VRA_WITH_DRAG_AND_DROP_GH,)
 VBoxGuestR0LibBase_INCS     = $(VBoxGuestR0Lib_INCS)
 VBoxGuestR0LibBase_INCS.win = $(VBoxGuestR0Lib_INCS.win)
 VBoxGuestR0LibBase_SOURCES  = \
@@ -118,13 +118,13 @@ VBoxGuestR0LibBase_SOURCES  = \
 #
 VBoxGuestR3Lib_TEMPLATE   := VBoxGuestR3Lib
 VBoxGuestR3Lib_DEFS        = \
-	VBOX_WITH_HGCM \
-	$(if $(VBOX_WITH_GUEST_PROPS),VBOX_WITH_GUEST_PROPS,) \
-	$(if $(VBOX_WITH_SHARED_CLIPBOARD),VBOX_WITH_SHARED_CLIPBOARD,) \
-	$(if $(VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS),VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS,) \
-	$(if $(VBOX_WITH_SHARED_FOLDERS),VBOX_WITH_SHARED_FOLDERS,) \
-	$(if $(VBOX_WITH_GUEST_CONTROL),VBOX_WITH_GUEST_CONTROL,) \
-	$(if $(VBOX_WITH_GSTCTL_TOOLBOX_AS_CMDS),VBOX_WITH_GSTCTL_TOOLBOX_AS_CMDS,)
+	VRA_WITH_HGCM \
+	$(if $(VRA_WITH_GUEST_PROPS),VRA_WITH_GUEST_PROPS,) \
+	$(if $(VRA_WITH_SHARED_CLIPBOARD),VRA_WITH_SHARED_CLIPBOARD,) \
+	$(if $(VRA_WITH_SHARED_CLIPBOARD_TRANSFERS),VRA_WITH_SHARED_CLIPBOARD_TRANSFERS,) \
+	$(if $(VRA_WITH_SHARED_FOLDERS),VRA_WITH_SHARED_FOLDERS,) \
+	$(if $(VRA_WITH_GUEST_CONTROL),VRA_WITH_GUEST_CONTROL,) \
+	$(if $(VRA_WITH_GSTCTL_TOOLBOX_AS_CMDS),VRA_WITH_GSTCTL_TOOLBOX_AS_CMDS,)
 VBoxGuestR3Lib_SOURCES     = \
 	VBoxGuestR3Lib.cpp \
 	VBoxGuestR3LibAdditions.cpp \
@@ -153,38 +153,38 @@ ifneq ($(KBUILD_TARGET),win)
  VBoxGuestR3Lib_SOURCES   += \
  	VBoxGuestR3LibDaemonize.cpp
 endif
-ifdef VBOX_WITH_GUEST_PROPS
+ifdef VRA_WITH_GUEST_PROPS
  VBoxGuestR3Lib_SOURCES   += \
  	VBoxGuestLibGuestProp.cpp \
  	VBoxGuestR3LibHostVersion.cpp
 endif
-ifdef VBOX_WITH_SHARED_CLIPBOARD
- VBoxGuestR3Lib_DEFS      += VBOX_WITH_SHARED_CLIPBOARD_GUEST
+ifdef VRA_WITH_SHARED_CLIPBOARD
+ VBoxGuestR3Lib_DEFS      += VRA_WITH_SHARED_CLIPBOARD_GUEST
  VBoxGuestR3Lib_SOURCES   += \
  	VBoxGuestR3LibClipboard.cpp
- ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+ ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
   VBoxGuestR3Lib_SOURCES  += \
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-transfers-provider-local.cpp \
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/ClipboardMIME.cpp
  endif
 endif
-ifdef VBOX_WITH_SHARED_FOLDERS
+ifdef VRA_WITH_SHARED_FOLDERS
  VBoxGuestR3Lib_SOURCES   += \
  	VBoxGuestR3LibSharedFolders.cpp
 endif
-ifdef VBOX_WITH_GUEST_CONTROL
+ifdef VRA_WITH_GUEST_CONTROL
  VBoxGuestR3Lib_SOURCES   += \
  	VBoxGuestR3LibGuestCtrl.cpp
 endif
-ifdef VBOX_WITH_DRAG_AND_DROP
+ifdef VRA_WITH_DRAG_AND_DROP
  VBoxGuestR3Lib_DEFS      += \
- 	VBOX_WITH_DRAG_AND_DROP \
- 	$(if $(VBOX_WITH_DRAG_AND_DROP_GH),VBOX_WITH_DRAG_AND_DROP_GH,)
+ 	VRA_WITH_DRAG_AND_DROP \
+ 	$(if $(VRA_WITH_DRAG_AND_DROP_GH),VRA_WITH_DRAG_AND_DROP_GH,)
  VBoxGuestR3Lib_SOURCES   += \
  	VBoxGuestR3LibDragAndDrop.cpp
 endif
 
-VBoxGuestR3LibAdditions.cpp_DEFS = VBOX_SVN_REV=$(VBOX_SVN_REV)
+VBoxGuestR3LibAdditions.cpp_DEFS = VRA_SVN_REV=$(VRA_SVN_REV)
 
 #
 # VBoxGuestR3LibShared - a PIC variant of VBoxGuestR3Lib for linking into .so/.dll/.dylib.
@@ -216,26 +216,26 @@ VBoxGuestR3LibShared-x86_BLD_TRG_ARCH := x86
 #
 VBoxGuestR3LibXFree86_TEMPLATE = VBoxGuestR3XFree86Lib
 VBoxGuestR3LibXFree86_DEFS     = \
-	VBOX_WITH_HGCM \
-	VBOX_VBGLR3_XFREE86 \
+	VRA_WITH_HGCM \
+	VRA_VBGLR3_XFREE86 \
 	RTMEM_NO_WRAP_TO_EF_APIS \
-	$(if $(VBOX_WITH_GUEST_PROPS),VBOX_WITH_GUEST_PROPS,) \
-	$(if $(VBOX_WITH_DRAG_AND_DROP),VBOX_WITH_DRAG_AND_DROP,) \
-	$(if $(VBOX_WITH_DRAG_AND_DROP_GH),VBOX_WITH_DRAG_AND_DROP_GH,) \
-	$(if $(VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS),VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS,)
+	$(if $(VRA_WITH_GUEST_PROPS),VRA_WITH_GUEST_PROPS,) \
+	$(if $(VRA_WITH_DRAG_AND_DROP),VRA_WITH_DRAG_AND_DROP,) \
+	$(if $(VRA_WITH_DRAG_AND_DROP_GH),VRA_WITH_DRAG_AND_DROP_GH,) \
+	$(if $(VRA_WITH_SHARED_CLIPBOARD_TRANSFERS),VRA_WITH_SHARED_CLIPBOARD_TRANSFERS,)
 VBoxGuestR3LibXFree86_SOURCES  = \
 	VBoxGuestR3Lib.cpp \
 	VBoxGuestR3LibGR.cpp \
-	$(if $(VBOX_WITH_GUEST_PROPS),VBoxGuestLibGuestProp.cpp,) \
+	$(if $(VRA_WITH_GUEST_PROPS),VBoxGuestLibGuestProp.cpp,) \
 	VBoxGuestR3LibMouse.cpp \
 	VBoxGuestR3LibMisc.cpp \
 	VBoxGuestR3LibSeamless.cpp \
 	VBoxGuestR3LibVideo.cpp \
 	VBoxGuestR3LibRuntimeXF86.c
 VBoxGuestR3LibXFree86_INCS     = \
-	$(VBOX_PATH_X11_ROOT)/XFree86-4.3/Xserver \
-	$(VBOX_PATH_X11_ROOT)/XFree86-4.3 \
-	$(VBOX_PATH_X11_ROOT)/XFree86-4.3/X11
+	$(VRA_PATH_X11_ROOT)/XFree86-4.3/Xserver \
+	$(VRA_PATH_X11_ROOT)/XFree86-4.3 \
+	$(VRA_PATH_X11_ROOT)/XFree86-4.3/X11
 
 #
 # VBoxGuestR3LibXOrg - a reduced version of the guest library which uses
@@ -243,14 +243,14 @@ VBoxGuestR3LibXFree86_INCS     = \
 #
 VBoxGuestR3LibXOrg_TEMPLATE = VBoxGuestR3XOrgLib
 VBoxGuestR3LibXOrg_DEFS     = \
-	VBOX_WITH_HGCM \
-	VBOX_VBGLR3_XORG \
+	VRA_WITH_HGCM \
+	VRA_VBGLR3_XORG \
 	RTMEM_NO_WRAP_TO_EF_APIS \
 	IN_RT_STATIC \
-	$(if $(VBOX_WITH_GUEST_PROPS),VBOX_WITH_GUEST_PROPS,) \
-	$(if $(VBOX_WITH_DRAG_AND_DROP),VBOX_WITH_DRAG_AND_DROP,) \
-	$(if $(VBOX_WITH_DRAG_AND_DROP_GH),VBOX_WITH_DRAG_AND_DROP_GH,) \
-	$(if $(VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS),VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS,)
+	$(if $(VRA_WITH_GUEST_PROPS),VRA_WITH_GUEST_PROPS,) \
+	$(if $(VRA_WITH_DRAG_AND_DROP),VRA_WITH_DRAG_AND_DROP,) \
+	$(if $(VRA_WITH_DRAG_AND_DROP_GH),VRA_WITH_DRAG_AND_DROP_GH,) \
+	$(if $(VRA_WITH_SHARED_CLIPBOARD_TRANSFERS),VRA_WITH_SHARED_CLIPBOARD_TRANSFERS,)
 VBoxGuestR3LibXOrg_SOURCES  = $(VBoxGuestR3LibXFree86_SOURCES)
 
 include $(FILE_KBUILD_SUB_FOOTER)

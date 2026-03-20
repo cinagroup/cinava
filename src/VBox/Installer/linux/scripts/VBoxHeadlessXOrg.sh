@@ -1,13 +1,13 @@
 #!/bin/sh
 # $Id: VBoxHeadlessXOrg.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox X Server auto-start service.
+# VirtualAgent X Server auto-start service.
 #
 
 #
-# Copyright (C) 2012-2026 Oracle and/or its affiliates.
+# Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -121,7 +121,7 @@ leave all other settings unchanged.
 
   HEADLESS_X_ORG_USERS
     List of users who will have access to the X servers started and for whom we
-    will provide the configuration details via VirtualBox extra data.  This
+    will provide the configuration details via VirtualAgent extra data.  This
     variable is only used by the commands in the default configuration
     (\${HEADLESS_X_ORG_SERVER_PRE_COMMAND} and
     \${HEADLESS_X_ORG_SERVER_POST_COMMAND}), and not by the service itself.
@@ -146,7 +146,7 @@ leave all other settings unchanged.
     Command to execute once the X servers have been successfully started.  It
     will be passed a single parameter which is a space-separated list of the
     X server screen numbers.  By default this stores the service configuration
-    information to VirtualBox extra data for each of the users in the list
+    information to VirtualAgent extra data for each of the users in the list
     from the variable HEADLESS_X_ORG_USERS: the list of displays is set to the
     key "${EXTRA_DATA_KEY_DISPLAYS}" and the path of the authority file to
     "${EXTRA_DATA_KEY_AUTH}".
@@ -267,8 +267,8 @@ abort_usage() {
 # Print a banner message
 banner() {
   cat << EOF
-${VBOX_PRODUCT} VBoxHeadless X Server start-up service Version ${VBOX_VERSION_STRING}
-(C) 2005-${VBOX_C_YEAR} ${VBOX_VENDOR}
+${VRA_PRODUCT} VBoxHeadless X Server start-up service Version ${VRA_VERSION_STRING}
+(C) 2005-${VRA_C_YEAR} ${VRA_VENDOR}
 All rights reserved.
 
 EOF

@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage controlvm
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -948,7 +948,7 @@
               на портирование. Запрос удовлетворяется только если
               исходная машины указывает тот же самый пароль.
             </para><remark>
-              Такой дизайн не соответствует рекомендациям Oracle по безопасности.
+              Такой дизайн не соответствует рекомендациям CINASEEK по безопасности.
               Вы не должны указывать пароль в командной строке, потому что
               его можно увидеть в списке процессов.
             </remark><para>
@@ -1282,7 +1282,7 @@
       <para>
         Команда <command>VBoxManage controlvm
         <replaceable>имя-ВМ</replaceable> vrde</command> включает или
-        выключает сервер Расширения Удаленного Рабочего Стола VirtualBox (VRDE),
+        выключает сервер Расширения Удаленного Рабочего Стола VirtualAgent (VRDE),
         если он установлен. Допустимые значения: <literal>on</literal> и
         <literal>off</literal>. Значение по умолчанию <literal>off</literal>.
       </para>
@@ -1750,7 +1750,7 @@
             <option>--password=<replaceable>пароль</replaceable></option>
             задает пароль для <replaceable>имя-пользователя</replaceable>.
           </para><remark>
-            Такой дизайн не соответствует рекомендациям Oracle по
+            Такой дизайн не соответствует рекомендациям CINASEEK по
             безопасности. Вы не должны указывать пароль в командной
             строке, потому что он может быть виден в списке процессов.
           </remark><para>

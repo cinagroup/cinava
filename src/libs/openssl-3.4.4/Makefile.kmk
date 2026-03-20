@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 # Make sure our Config.kmk is included.
-ifndef VBOX_PATH_CRYPTO
+ifndef VRA_PATH_CRYPTO
  include $(PATH_SUB_CURRENT)/Config.kmk
 endif
 
@@ -107,9 +107,9 @@ openssl-mangling.h openssl-mangling-new.h: $(VBox-libcrypto_1_TARGET) $(VBox-lib
 		" */" \
 		"" \
 		"/*" \
-		" * Copyright (C) 2011$(if-expr $(date %Y) > 2011,-$(date %Y),) Oracle and/or its affiliates." \
+		" * Copyright (C) 2011$(if-expr $(date %Y) > 2011,-$(date %Y),) CINASEEK and/or its affiliates." \
 		" *" \
-		" * This file is part of VirtualBox base platform packages, as" \
+		" * This file is part of VirtualAgent base platform packages, as" \
 		" * available from https://www.virtualbox.org." \
 		" *" \
 		" * This program is free software; you can redistribute it and/or" \
@@ -130,9 +130,9 @@ openssl-mangling.h openssl-mangling-new.h: $(VBox-libcrypto_1_TARGET) $(VBox-lib
 		"" \
 		"#ifndef ___openssl_mangling_h___" \
 		"#define ___openssl_mangling_h___" \
-		"# ifdef VBOX_IN_EXTPACK" \
-		"#  define OPENSSL_MANGLER(a_Name) OracleExtPack_ ## a_Name" \
-		"#  define OPENSSL_MANGLER_ASM(a_Name) _OracleExtPack_ ## a_Name" \
+		"# ifdef VRA_IN_EXTPACK" \
+		"#  define OPENSSL_MANGLER(a_Name) CINASEEKExtPack_ ## a_Name" \
+		"#  define OPENSSL_MANGLER_ASM(a_Name) _CINASEEKExtPack_ ## a_Name" \
 		"# else" \
 		"#  define OPENSSL_MANGLER(a_Name) VBox_ ## a_Name" \
 		"#  define OPENSSL_MANGLER_ASM(a_Name) _VBox_ ## a_Name" \
@@ -171,5 +171,5 @@ check-openssl-mangling: \
 			-e '/^[[:xdigit:]][[:xdigit:]]* [TSDBC] /!d' \
 			-e 's/^[^ ]* [TSDBC] $(if $(intersects $(KBUILD_TARGET), darwin os2 win),_,)\([[:alpha:]_].*\)/\1/' \
 			-e 's/[[:space:]]*//g' \
-			-e '/^OracleExtPack_/d' \
+			-e '/^CINASEEKExtPack_/d' \
 		| sort

@@ -4,9 +4,9 @@
 '
 
 '
-' Copyright (C) 2009-2026 Oracle and/or its affiliates.
+' Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 '
-' This file is part of VirtualBox base platform packages, as
+' This file is part of VirtualAgent base platform packages, as
 ' available from https://www.virtualbox.org.
 '
 ' This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ End Sub
 Sub StartVm(vb, mach)
   Dim session, progress
 
-  Set session = CreateObject("VirtualBox.Session")
+  Set session = CreateObject("VirtualAgent.Session")
   Set progress = vb.openRemoteSession(session, mach.id, "gui", "")
   progress.waitForCompletion(-1)
   session.close()
@@ -42,7 +42,7 @@ End Sub
 Sub StopVm(vb, mach)
   Dim session, progress
 
-  Set session = CreateObject("VirtualBox.Session")
+  Set session = CreateObject("VirtualAgent.Session")
   vb.openExistingSession session, mach.id
   session.console.powerDown().waitForCompletion(-1)
   session.close()
@@ -52,8 +52,8 @@ End Sub
 Sub Main
    Dim vb, mach
 
-   set vb = CreateObject("VirtualBox.VirtualBox")
-   Print "VirtualBox version " & vb.version
+   set vb = CreateObject("VirtualAgent.VirtualAgent")
+   Print "VirtualAgent version " & vb.version
 
    ' Safe arrays not fully functional from Visual Basic Script, as we
    ' return real safe arrays, not ones wrapped to VARIANT and VBS engine

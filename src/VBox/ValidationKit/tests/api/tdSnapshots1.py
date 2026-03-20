@@ -3,14 +3,14 @@
 # $Id: tdSnapshots1.py 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 
 """
-VirtualBox Validation Kit - Nested Snapshot Restoration Test #1
+VirtualAgent Validation Kit - Nested Snapshot Restoration Test #1
 """
 
 __copyright__ = \
 """
-Copyright (C) 2023-2026 Oracle and/or its affiliates.
+Copyright (C) 2023-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -104,7 +104,7 @@ class SubTstDrvNestedLiveSnapshots1(base.SubTestDriverBase):
         # ValidationKit ISO be mounted in the VM so that TXS can auto-update if needed.
         reporter.log('Creating test VM: \'%s\'' % self.sVmName);
         oVM = self.oTstDrv.createTestVM(self.sVmName, 1, sHd = '7.1/ol-6u10-x86.vdi',
-                                        sKind = 'Oracle', fIoApic = True,
+                                        sKind = 'CINASEEK', fIoApic = True,
                                         sDvdImage = self.oTstDrv.sVBoxValidationKitIso);
         if oVM is None:
             reporter.error('Error creating test VM: \'%s\'' % self.sVmName);
@@ -235,7 +235,7 @@ class SubTstDrvNestedLiveSnapshots1(base.SubTestDriverBase):
         try:
             oSnapshot = oSession.findSnapshot('gamma');
         except vbox.ComException as oXcpt:
-            if vbox.ComError.notEqual(oXcpt, vbox.ComError.VBOX_E_OBJECT_NOT_FOUND):
+            if vbox.ComError.notEqual(oXcpt, vbox.ComError.VRA_E_OBJECT_NOT_FOUND):
                 return reporter.testFailure('Failed to delete snapshot \'gamma\' of test VM: \'%s\'' % self.sVmName);
 
         reporter.log('Verifying that the \'gamma\' snapshot\'s \'.sav\' file was deleted');

@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -38,6 +38,6 @@ crypto_async_SOURCES = \
 	async.c \
 	async_err.c \
 	async_wait.c
-$(evalcall VBOX_OPENSSL_X86,crypto_async)
+$(evalcall VRA_OPENSSL_X86,crypto_async)
 
 include $(FILE_KBUILD_SUB_FOOTER)

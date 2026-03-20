@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage guestcontrol
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -459,7 +459,7 @@
         <listitem><para>
             Используя команду <command>VBoxManage setproperty</command>
             для обновления значения гостевого свойства
-            <literal>/VirtualBox/GuestAdd/VBoxService/--control-procs-max-kept</literal>.
+            <literal>/VirtualAgent/GuestAdd/VBoxService/--control-procs-max-kept</literal>.
           </para></listitem>
         <listitem><para>
             Используя команду <command>VBoxService</command> и указывая
@@ -1214,7 +1214,7 @@
     <remark role="help-scope" condition="GLOBAL"/>
     <para>
       Следующая команда <command>VBoxManage guestcontrol run</command>
-      выполняет команду <command>ls -l /usr</command> в Oracle Linux ВМ
+      выполняет команду <command>ls -l /usr</command> в CINASEEK Linux ВМ
       <literal>My OL VM</literal> от имени пользователя
       <literal>user1</literal>.
     </para>
@@ -1276,7 +1276,7 @@ $ VBoxManage --nologo guestcontrol "My Win VM" run \
     </para>
     <para>
       Следующая команда <command>VBoxManage guestcontrol start</command>
-      выполняет команду <command>ls -l /usr</command> в Oracle Linux ВМ
+      выполняет команду <command>ls -l /usr</command> в CINASEEK Linux ВМ
       <literal>My OL VM</literal> до завершения программы.
     </para>
 <screen>

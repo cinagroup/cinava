@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2021-2026 Oracle and/or its affiliates.
+# Copyright (C) 2021-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
 
-VBOX_PATH_LIBTPMS = $(PATH_ROOT)/src/libs/libtpms-0.10.2
+VRA_PATH_LIBTPMS = $(PATH_ROOT)/src/libs/libtpms-0.10.2
 
 LIBRARIES += VBox-libtpms_tpm12 VBox-libtpms_tpm2 VBox-libtpms
 VBox-libtpms_tpm12_TEMPLATE       = VBoxR3DllNonPedantic
@@ -52,10 +52,10 @@ endif
 VBox-libtpms_tpm12_CFLAGS.win    += -wd4701
 VBox-libtpms_tpm12_CFLAGS.win    += -wd4703
 VBox-libtpms_tpm12_INCS           = \
-	$(VBOX_PATH_LIBTPMS) \
-	$(VBOX_PATH_LIBTPMS)/include/libtpms \
-	$(VBOX_PATH_LIBTPMS)/src \
-	$(VBOX_PATH_LIBTPMS)/src/tpm12
+	$(VRA_PATH_LIBTPMS) \
+	$(VRA_PATH_LIBTPMS)/include/libtpms \
+	$(VRA_PATH_LIBTPMS)/src \
+	$(VRA_PATH_LIBTPMS)/src/tpm12
 VBox-libtpms_tpm12_SOURCES        = \
 	src/tpm12/tpm_admin.c \
 	src/tpm12/tpm_audit.c \
@@ -117,12 +117,12 @@ VBox-libtpms_tpm2_CFLAGS.win     += -wd4701
 VBox-libtpms_tpm2_CFLAGS.win     += -wd4703
 VBox-libtpms_tpm2_CFLAGS.win     += -wd4005
 VBox-libtpms_tpm2_INCS           = \
-	$(VBOX_PATH_LIBTPMS) \
-	$(VBOX_PATH_LIBTPMS)/include/libtpms \
-	$(VBOX_PATH_LIBTPMS)/src \
-	$(VBOX_PATH_LIBTPMS)/src/tpm2 \
-	$(VBOX_PATH_LIBTPMS)/src/tpm2/crypto \
-	$(VBOX_PATH_LIBTPMS)/src/tpm2/crypto/openssl
+	$(VRA_PATH_LIBTPMS) \
+	$(VRA_PATH_LIBTPMS)/include/libtpms \
+	$(VRA_PATH_LIBTPMS)/src \
+	$(VRA_PATH_LIBTPMS)/src/tpm2 \
+	$(VRA_PATH_LIBTPMS)/src/tpm2/crypto \
+	$(VRA_PATH_LIBTPMS)/src/tpm2/crypto/openssl
 VBox-libtpms_tpm2_SOURCES        = \
 	src/tpm2/ACT_spt.c \
 	src/tpm2/ACTCommands.c \
@@ -268,17 +268,17 @@ VBox-libtpms_DEFS           = \
 	WITH_TPM2 \
 	TPM_LIBTPMS_CALLBACKS
 VBox-libtpms_INCS           = \
-	$(VBOX_PATH_LIBTPMS) \
-	$(VBOX_PATH_LIBTPMS)/include/libtpms \
-	$(VBOX_PATH_LIBTPMS)/src
+	$(VRA_PATH_LIBTPMS) \
+	$(VRA_PATH_LIBTPMS)/include/libtpms \
+	$(VRA_PATH_LIBTPMS)/src
 VBox-libtpms_SOURCES        = \
 	src/disabled_interface.c \
 	src/tpm_debug.c \
 	src/tpm_library.c \
 	src/tpm_memory.c \
 	src/tpm_nvfile.c \
-	$(PATH_STAGE_LIB)/VBox-libtpms_tpm12$(VBOX_SUFF_LIB) \
-	$(PATH_STAGE_LIB)/VBox-libtpms_tpm2$(VBOX_SUFF_LIB)
+	$(PATH_STAGE_LIB)/VBox-libtpms_tpm12$(VRA_SUFF_LIB) \
+	$(PATH_STAGE_LIB)/VBox-libtpms_tpm2$(VRA_SUFF_LIB)
 
 include $(FILE_KBUILD_SUB_FOOTER)
 

@@ -1,9 +1,9 @@
 #!/bin/sh
 
 #
-# Copyright (C) 2012-2026 Oracle and/or its affiliates.
+# Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -46,11 +46,11 @@ function vboxStartStopAllUserVms()
         case "${1}" in
             start)
                 # Start the daemon
-                su "${user}" -c "/Applications/VirtualBox.app/Contents/MacOS/VBoxAutostart --quiet --start --background --config ${CONFIG}"
+                su "${user}" -c "/Applications/VirtualAgent.app/Contents/MacOS/VBoxAutostart --quiet --start --background --config ${CONFIG}"
                 ;;
             stop)
                 # Stop the daemon
-                su "${user}" -c "/Applications/VirtualBox.app/Contents/MacOS/VBoxAutostart --quiet --stop --config ${CONFIG}"
+                su "${user}" -c "/Applications/VirtualAgent.app/Contents/MacOS/VBoxAutostart --quiet --stop --config ${CONFIG}"
                 ;;
                *)
                 echo "Usage: start|stop"

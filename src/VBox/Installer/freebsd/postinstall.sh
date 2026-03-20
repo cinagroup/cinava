@@ -1,13 +1,13 @@
 #!/bin/sh
 ## @file
 #
-# VirtualBox postinstall script for FreeBSD.
+# VirtualAgent postinstall script for FreeBSD.
 #
 
 #
-# Copyright (C) 2007-2026 Oracle and/or its affiliates.
+# Copyright (C) 2007-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,11 +29,11 @@
 PATH_TMP="/tmp"
 PATH_INST="/usr/local/lib/virtualbox"
 PATH_KERN_SRC="/usr/src/sys"
-FILE_VBOXDRV="$PATH_INST/vboxdrv.tar.gz"
+FILE_VRADRV="$PATH_INST/vboxdrv.tar.gz"
 
 
 if [ ! -f $PATH_KERN_SRC/Makefile ]; then
-    echo "Kernel sources are not installed. Please install them and reinstall VirtualBox"
+    echo "Kernel sources are not installed. Please install them and reinstall VirtualAgent"
     exit 1
 fi
 
@@ -54,7 +54,7 @@ while true; do
 done
 
 # Unpack archive
-tar -C $PATH_TMP_MODS -xf  $FILE_VBOXDRV
+tar -C $PATH_TMP_MODS -xf  $FILE_VRADRV
 
 # Compile
 cd $PATH_TMP_MODS

@@ -6,9 +6,9 @@
 #
 
 #
-# Copyright (C) 2020-2026 Oracle and/or its affiliates.
+# Copyright (C) 2020-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -38,13 +38,13 @@ MY_CDROM_NOCHROOT="/tmp/vboxcdrom"
 MY_EXITCODE=0
 MY_DEBUG="" # "yes"
 
-@@VBOX_COND_HAS_PROXY@@
-PROXY="@@VBOX_INSERT_PROXY@@"
+@@VRA_COND_HAS_PROXY@@
+PROXY="@@VRA_INSERT_PROXY@@"
 export http_proxy="${PROXY}"
 export https_proxy="${PROXY}"
 echo "HTTP proxy is ${http_proxy}" | tee -a "${MY_LOGFILE}"
 echo "HTTPS proxy is ${https_proxy}" | tee -a "${MY_LOGFILE}"
-@@VBOX_COND_END@@
+@@VRA_COND_END@@
 
 #
 # Do we need to exec using target bash?  If so, we must do that early
@@ -128,7 +128,7 @@ chroot_which()
 # Log header.
 #
 echo "******************************************************************************" >> "${MY_LOGFILE}"
-echo "** VirtualBox Unattended Guest Installation - Late installation actions" >> "${MY_LOGFILE}"
+echo "** VirtualAgent Unattended Guest Installation - Late installation actions" >> "${MY_LOGFILE}"
 echo "** Date:    `date -R`" >> "${MY_LOGFILE}"
 echo "** Started: $0 $*" >> "${MY_LOGFILE}"
 
@@ -180,10 +180,10 @@ fi
 #
 # Proxy hack for yum
 #
-@@VBOX_COND_HAS_PROXY@@
+@@VRA_COND_HAS_PROXY@@
 echo "" >> "${MY_TARGET}/etc/yum.conf"
-echo "proxy=@@VBOX_INSERT_PROXY@@" >> "${MY_TARGET}/etc/yum.conf"
-@@VBOX_COND_END@@
+echo "proxy=@@VRA_INSERT_PROXY@@" >> "${MY_TARGET}/etc/yum.conf"
+@@VRA_COND_END@@
 
 #
 # Packages needed for GAs.
@@ -204,16 +204,16 @@ log_command_in_target yum -y install perl
 #
 # GAs
 #
-@@VBOX_COND_IS_INSTALLING_ADDITIONS@@
+@@VRA_COND_IS_INSTALLING_ADDITIONS@@
 echo "--------------------------------------------------" >> "${MY_LOGFILE}"
-echo '** Installing VirtualBox Guest Additions...' | tee -a "${MY_LOGFILE}"
+echo '** Installing VirtualAgent Guest Additions...' | tee -a "${MY_LOGFILE}"
 MY_IGNORE_EXITCODE=2  # returned if modules already loaded and reboot required.
 log_command_in_target /bin/bash "${MY_CHROOT_CDROM}/vboxadditions/VBoxLinuxAdditions.run" --nox11
 log_command_in_target /bin/bash -c "udevadm control --reload-rules" # GAs doesn't yet do this.
 log_command_in_target /bin/bash -c "udevadm trigger"                 # (ditto)
 MY_IGNORE_EXITCODE=
-log_command_in_target usermod -a -G vboxsf "@@VBOX_INSERT_USER_LOGIN@@"
-@@VBOX_COND_END@@
+log_command_in_target usermod -a -G vboxsf "@@VRA_INSERT_USER_LOGIN@@"
+@@VRA_COND_END@@
 
 #
 # Local gateway support
@@ -222,10 +222,10 @@ log_command_in_target yum -y install https://dl.fedoraproject.org/pub/epel/epel-
 #log_command_in_target yum -y update
 log_command_in_target yum -y install openvpn
 log_command_in_target yum -y install connect-proxy
-log_command_in_target usermod -a -G wheel "@@VBOX_INSERT_USER_LOGIN@@"
+log_command_in_target usermod -a -G wheel "@@VRA_INSERT_USER_LOGIN@@"
 
-echo "** Creating ${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/cloud-bridge.conf..." | tee -a "${MY_LOGFILE}"
-cat >"${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/cloud-bridge.conf" <<'EOT'
+echo "** Creating ${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/cloud-bridge.conf..." | tee -a "${MY_LOGFILE}"
+cat >"${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/cloud-bridge.conf" <<'EOT'
 # port 1194
 # proto udp
 port 443
@@ -242,8 +242,8 @@ log-append /var/log/openvpn.log
 verb 3
 EOT
 
-echo "** Creating ${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/cloud-bridge.sh..." | tee -a "${MY_LOGFILE}"
-cat >"${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/cloud-bridge.sh" <<'EOT'
+echo "** Creating ${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/cloud-bridge.sh..." | tee -a "${MY_LOGFILE}"
+cat >"${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/cloud-bridge.sh" <<'EOT'
 # Initialize variables
 br="br0"
 tap="tap0"
@@ -281,10 +281,10 @@ sudo ip link set dev $tap up
 sudo ip link set dev $vnic1 up
 sudo ip link set dev $br up
 EOT
-log_command chmod +x "${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/cloud-bridge.sh"
+log_command chmod +x "${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/cloud-bridge.sh"
 
-echo "** Creating ${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/local-bridge.conf..." | tee -a "${MY_LOGFILE}"
-cat >"${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/local-bridge.conf" <<'EOT'
+echo "** Creating ${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/local-bridge.conf..." | tee -a "${MY_LOGFILE}"
+cat >"${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/local-bridge.conf" <<'EOT'
 dev tap0
 # proto udp
 # port 1194
@@ -298,8 +298,8 @@ log-append /var/log/openvpn.log
 verb 3
 EOT
 
-echo "** Creating ${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/local-bridge.sh..." | tee -a "${MY_LOGFILE}"
-cat >"${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/local-bridge.sh" <<'EOT'
+echo "** Creating ${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/local-bridge.sh..." | tee -a "${MY_LOGFILE}"
+cat >"${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/local-bridge.sh" <<'EOT'
 echo Complete command line for debugging purposes:
 echo $0 $*
 
@@ -395,17 +395,17 @@ sudo ip link set dev $tap up
 sudo ip link set dev $eth up
 sudo ip link set dev $br up
 EOT
-log_command chmod +x "${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/local-bridge.sh"
+log_command chmod +x "${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/local-bridge.sh"
 
-echo "** Creating ${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/.ssh/config..." | tee -a "${MY_LOGFILE}"
-log_command mkdir "${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/.ssh"
-cat >"${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/.ssh/config" <<'EOT'
+echo "** Creating ${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/.ssh/config..." | tee -a "${MY_LOGFILE}"
+log_command mkdir "${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/.ssh"
+cat >"${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/.ssh/config" <<'EOT'
 Host *
     StrictHostKeyChecking no
 EOT
-log_command chmod 400 "${MY_TARGET}/home/@@VBOX_INSERT_USER_LOGIN@@/.ssh/config"
+log_command chmod 400 "${MY_TARGET}/home/@@VRA_INSERT_USER_LOGIN@@/.ssh/config"
 
-log_command_in_target chown -R @@VBOX_INSERT_USER_LOGIN@@:@@VBOX_INSERT_USER_LOGIN@@ "/home/@@VBOX_INSERT_USER_LOGIN@@"
+log_command_in_target chown -R @@VRA_INSERT_USER_LOGIN@@:@@VRA_INSERT_USER_LOGIN@@ "/home/@@VRA_INSERT_USER_LOGIN@@"
 
 echo '** Creating /etc/systemd/system/keygen.service...' | tee -a "${MY_LOGFILE}"
 cat >"${MY_TARGET}/etc/systemd/system/keygen.service" <<'EOT'
@@ -415,7 +415,7 @@ After=vboxadd.service
 
 [Service]
 ExecStart=/bin/sh -c 'su - vbox -c "cat /dev/zero | ssh-keygen -q -N \\\"\\\""'
-ExecStartPost=/bin/sh -c 'VBoxControl guestproperty set "/VirtualBox/Gateway/PublicKey" "`cat ~vbox/.ssh/id_rsa.pub`" --flags TRANSIENT'
+ExecStartPost=/bin/sh -c 'VBoxControl guestproperty set "/VirtualAgent/Gateway/PublicKey" "`cat ~vbox/.ssh/id_rsa.pub`" --flags TRANSIENT'
 Type=oneshot
 RemainAfterExit=yes
 
@@ -426,15 +426,15 @@ log_command chmod 644 "${MY_TARGET}/etc/systemd/system/keygen.service"
 log_command_in_target systemctl enable keygen.service
 
 echo '** Creating /etc/sudoers.d/020_vbox_sudo...' | tee -a "${MY_LOGFILE}"
-echo "@@VBOX_INSERT_USER_LOGIN@@ ALL=(ALL) NOPASSWD: ALL" > "${MY_TARGET}/etc/sudoers.d/020_vbox_sudo"
+echo "@@VRA_INSERT_USER_LOGIN@@ ALL=(ALL) NOPASSWD: ALL" > "${MY_TARGET}/etc/sudoers.d/020_vbox_sudo"
 
 #
 # Test Execution Service.
 #
-@@VBOX_COND_IS_INSTALLING_TEST_EXEC_SERVICE@@
+@@VRA_COND_IS_INSTALLING_TEST_EXEC_SERVICE@@
 echo "--------------------------------------------------" >> "${MY_LOGFILE}"
 echo '** Installing Test Execution Service...' | tee -a "${MY_LOGFILE}"
-log_command_in_target test "${MY_CHROOT_CDROM}/vboxvalidationkit/linux/@@VBOX_INSERT_OS_ARCH@@/TestExecService"
+log_command_in_target test "${MY_CHROOT_CDROM}/vboxvalidationkit/linux/@@VRA_INSERT_OS_ARCH@@/TestExecService"
 log_command mkdir -p "${MY_TARGET}/opt/validationkit" "${MY_TARGET}/media/cdrom"
 log_command cp -R ${MY_CDROM_NOCHROOT}/vboxvalidationkit/* "${MY_TARGET}/opt/validationkit/"
 log_command chmod -R u+rw,a+xr "${MY_TARGET}/opt/validationkit/"
@@ -487,16 +487,16 @@ else
     echo "** error: Unknown init script system." | tee -a "${MY_LOGFILE}"
 fi
 
-@@VBOX_COND_END@@
+@@VRA_COND_END@@
 
 
 #
 # Run user command.
 #
-@@VBOX_COND_HAS_POST_INSTALL_COMMAND@@
+@@VRA_COND_HAS_POST_INSTALL_COMMAND@@
 echo '** Running custom user command ...'      | tee -a "${MY_LOGFILE}"
-log_command @@VBOX_INSERT_POST_INSTALL_COMMAND@@
-@@VBOX_COND_END@@
+log_command @@VRA_INSERT_POST_INSTALL_COMMAND@@
+@@VRA_COND_END@@
 
 
 #

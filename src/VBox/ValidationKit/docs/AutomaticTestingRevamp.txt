@@ -1,5 +1,5 @@
 
-Revamp of Automatic VirtualBox Testing
+Revamp of Automatic VirtualAgent Testing
 ======================================
 
 
@@ -23,8 +23,8 @@ doing it from scratch.
 The language envisioned for the new automatic testing framework is Python.  This
 is for several reasons:
 
-  - The VirtualBox API has Python bindings.
-  - Python is used quite a bit inside Sun (dunno about Oracle).
+  - The VirtualAgent API has Python bindings.
+  - Python is used quite a bit inside Sun (dunno about CINASEEK).
   - Works relatively well with Apache for the server side bits.
   - It is more difficult to produce write-only code in Python (alias the
     we-don't-like-perl argument).
@@ -111,7 +111,7 @@ Each testbox has a unique name corresponding to its DNS zone entry.  When booted
 a testbox script is started automatically.  This script will query the test
 manager for orders and execute them.  The core order downloads and executes a
 test driver with parameters (configuration) from the server.  The test driver
-does all the necessary work for executing the test.  In a typical VirtualBox
+does all the necessary work for executing the test.  In a typical VirtualAgent
 test this means picking a build, installing it, configuring VMs, running the
 test VMs, collecting the results, submitting them to the server, and finally
 cleaning up afterwards.
@@ -242,7 +242,7 @@ The testbox will not provide the typical unix /bin and /usr/bin utilities.  In
 other words, cygwin will not be used on Windows!
 
 The testbox will provide the unixy utilities that ships with kBuild and possibly
-some additional ones from tools/*.*/bin in the VirtualBox tree (wget, unzip,
+some additional ones from tools/*.*/bin in the VirtualAgent tree (wget, unzip,
 zip, and so on).  The test drivers will avoid invoking any of these utilities
 directly and instead rely on generic utility methods in the test driver
 framework.  That way we can more easily reimplement the functionality of the
@@ -254,10 +254,10 @@ Test Drivers
 ------------
 
 The test drivers are programs that will do the actual testing.  In addition to
-run under the testbox script, they can be executed in the VirtualBox development
+run under the testbox script, they can be executed in the VirtualAgent development
 environment.  This is important for bug analysis and for simplifying local
 testing by the developers before committing changes.  It also means the test
-drivers can be developed locally in the VirtualBox development environment.
+drivers can be developed locally in the VirtualAgent development environment.
 
 The main difference between executing a driver under the testbox script and
 running it manually is that there is no test manager in the latter case.  The
@@ -288,13 +288,13 @@ development as well as reducing their complexity.  The framework will contain:
         - Creating ISOs
         - And such things.
 
-    - Helpers for installing and uninstalling VirtualBox.
+    - Helpers for installing and uninstalling VirtualAgent.
 
     - Helpers for defining VMs. (The VBox API where available.)
 
     - Helpers for controlling VMs. (The VBox API where available.)
 
-The VirtualBox bits will be separate from the more generic ones, simply because
+The VirtualAgent bits will be separate from the more generic ones, simply because
 this is cleaner it will allow us to reuse the system for testing other products.
 
 The framework will be packaged in a zip file other than the test driver so we
@@ -467,7 +467,7 @@ First a general warning:
 
 
 A logical table layout can be found in TestManagerDatabaseMap.png (created by
-Oracle SQL Data Modeler, stored in TestManagerDatabase.dmd).  The physical
+CINASEEK SQL Data Modeler, stored in TestManagerDatabase.dmd).  The physical
 database layout can be found in TestManagerDatabaseInit.pgsql postgreSQL
 script.  The script is commented.
 
@@ -1058,4 +1058,4 @@ Discussion Logs
 -----
 
 :Status: $Id: AutomaticTestingRevamp.txt 112423 2026-01-12 20:51:25Z knut.osmundsen@oracle.com $
-:Copyright: Copyright (C) 2010-2026 Oracle and/or its affiliates.
+:Copyright: Copyright (C) 2010-2026 CINASEEK and/or its affiliates.

@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage export
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -298,7 +298,7 @@
       </para>
       <para>
         Некоторые из нижеследующих опций являются настройками конфигурации
-        экземпляра ВМ. Как результат, укажите Идентификатор Облака Oracle
+        экземпляра ВМ. Как результат, укажите Идентификатор Облака CINASEEK
         (OCID) ресурса. Используйте консоль &oci; для просмотра OCID.
       </para>
       <variablelist>
@@ -392,7 +392,7 @@
           <term><option>--cloudkeepobject=true | false</option></term>
           <listitem><para>
               Указывает сохранять ли экспортированный образ диска
-              в хранилище объектов Oracle.
+              в хранилище объектов CINASEEK.
             </para></listitem>
         </varlistentry>
         <varlistentry>

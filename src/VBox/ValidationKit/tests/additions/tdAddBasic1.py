@@ -3,14 +3,14 @@
 # $Id: tdAddBasic1.py 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 
 """
-VirtualBox Validation Kit - Additions Basics #1.
+VirtualAgent Validation Kit - Additions Basics #1.
 """
 
 __copyright__ = \
 """
-Copyright (C) 2010-2026 Oracle and/or its affiliates.
+Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -377,9 +377,9 @@ class tdAddBasic1(vbox.TestDriver):                                         # py
             reporter.log('Status of RebootRequired query is %s' % fGuestRequiresReboot);
 
         # Set system-wide env vars to enable release logging on some applications.
-        self.setGuestEnvVar(oSession, oTxsSession, oTestVm, 'VBOXTRAY_RELEASE_LOG', 'all.e.l.l2.l3.f');
-        self.setGuestEnvVar(oSession, oTxsSession, oTestVm, 'VBOXTRAY_RELEASE_LOG_FLAGS', 'time thread group append');
-        self.setGuestEnvVar(oSession, oTxsSession, oTestVm, 'VBOXTRAY_RELEASE_LOG_DEST',
+        self.setGuestEnvVar(oSession, oTxsSession, oTestVm, 'VRATRAY_RELEASE_LOG', 'all.e.l.l2.l3.f');
+        self.setGuestEnvVar(oSession, oTxsSession, oTestVm, 'VRATRAY_RELEASE_LOG_FLAGS', 'time thread group append');
+        self.setGuestEnvVar(oSession, oTxsSession, oTestVm, 'VRATRAY_RELEASE_LOG_DEST',
                             ('file=%s' % (self.getGuestVBoxTrayClientLogFile(oTestVm),)));
 
         #
@@ -453,7 +453,7 @@ class tdAddBasic1(vbox.TestDriver):                                         # py
 
         # Add the Windows Guest Additions installer files to the files we want to download
         # from the guest. Note: There won't be a install_ui.log because of the silent installation.
-        sGuestAddsDir = 'C:\\Program Files\\Oracle\\VirtualBox Guest Additions\\';
+        sGuestAddsDir = 'C:\\Program Files\\CINASEEK\\VirtualAgent Guest Additions\\';
         aasLogFiles.append((sGuestAddsDir + 'install.log',           'ga-install-%s.log' % (oTestVm.sVmName,),));
         aasLogFiles.append((sGuestAddsDir + 'install_drivers.log',   'ga-install_drivers-%s.log' % (oTestVm.sVmName,),));
         aasLogFiles.append((oTestVm.pathJoin(self.getGuestWinDir(oTestVm), 'setupapi.log'),

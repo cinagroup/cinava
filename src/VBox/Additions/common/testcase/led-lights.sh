@@ -1,13 +1,13 @@
 #!/bin/bash
 # $Id: led-lights.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox guest LED demonstration test
+# VirtualAgent guest LED demonstration test
 #
 
 #
-# Copyright (C) 2021-2026 Oracle and/or its affiliates.
+# Copyright (C) 2021-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
 #
 
 #
-# Test script to twiddle the console LEDs of a VirtualBox VM.
+# Test script to twiddle the console LEDs of a VirtualAgent VM.
 #
 # This is not an automated test, just something for humans to look
 # at, to convince themselves that the VM console LEDs are working.
@@ -78,7 +78,7 @@
 #                    writable, with at least 10MB free space)
 #
 # Boot the VM.  Open a shell, become root, optionally install
-# VirtualBox Guest Utilities to access Shared Folders, then extract
+# VirtualAgent Guest Utilities to access Shared Folders, then extract
 # and run this script:
 #
 #     $ sudo bash
@@ -211,7 +211,7 @@ done
 if ! lsmod | grep -q vboxsf; then
     echo
     echo "Note: to test the Shared Folders LED, install this"
-    echo "distro's VirtualBox Guest Utilities package, e.g.:"
+    echo "distro's VirtualAgent Guest Utilities package, e.g.:"
     echo
     echo "    # yum install virtualbox-guest-utils   (Red Hat family)"
     echo "    # apt install virtualbox-guest-utils   (Debian family)"

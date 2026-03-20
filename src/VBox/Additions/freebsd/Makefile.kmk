@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2008-2026 Oracle and/or its affiliates.
+# Copyright (C) 2008-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -39,19 +39,19 @@ include $(PATH_SUB_CURRENT)/drm/Makefile.kmk
 #
 # Globals
 #
-VBOX_FBSD_ADD_INS_OUT_DIR          := $(PATH_TARGET)/Additions/Installer/freebsd
+VRA_FBSD_ADD_INS_OUT_DIR          := $(PATH_TARGET)/Additions/Installer/freebsd
 BLDDIRS                            += \
-	$(VBOX_FBSD_ADD_INS_OUT_DIR) \
-	$(VBOX_FBSD_ADD_INS_OUT_DIR)/module
-VBOX_PATH_FREEBSD_ADDITION_INSTALLER := $(PATH_SUB_CURRENT)/Installer
-VBOX_PATH_X11_ADDITION_INSTALLER     := $(PATH_ROOT)/src/VBox/Additions/x11/Installer
+	$(VRA_FBSD_ADD_INS_OUT_DIR) \
+	$(VRA_FBSD_ADD_INS_OUT_DIR)/module
+VRA_PATH_FREEBSD_ADDITION_INSTALLER := $(PATH_SUB_CURRENT)/Installer
+VRA_PATH_X11_ADDITION_INSTALLER     := $(PATH_ROOT)/src/VBox/Additions/x11/Installer
 
 
 #
 # Targets
 #
-ifndef VBOX_OSE
- BLDDIRS     += $(VBOX_FBSD_ADD_INS_OUT_DIR) $(VBOX_FBSD_ADD_INS_OUT_DIR)/module
+ifndef VRA_OSE
+ BLDDIRS     += $(VRA_FBSD_ADD_INS_OUT_DIR) $(VRA_FBSD_ADD_INS_OUT_DIR)/module
  PACKING     += $(PATH_STAGE_BIN)/additions/VBoxFreeBSDAdditions.tbz
  OTHER_CLEAN += $(PACKING)
 endif
@@ -60,7 +60,7 @@ endif
 #
 # Files to install
 #
-VBOX_FBSD_ADD_STRIP_BIN = \
+VRA_FBSD_ADD_STRIP_BIN = \
 	VBoxService \
 	VBoxClient \
 	VBoxControl \
@@ -78,40 +78,40 @@ VBOX_FBSD_ADD_STRIP_BIN = \
 	vboxvideo_drv_16.so \
 	vboxvideo_drv_17.so
 
-VBOX_FBSD_ADD_MODULES = \
+VRA_FBSD_ADD_MODULES = \
 	vboxguest \
 	vboxvideo_drm
 
 #
 # All the bin files that go into the archives.
 #
-VBOX_FBSD_ADD_DBG_SYM_FILES := $(addsuffix .dbgsym,$(VBOX_FBSD_ADD_STRIP_BIN))
-VBOX_FBSD_ADD_INS_FILES := $(addprefix $(VBOX_FBSD_ADD_INS_OUT_DIR)/,$(VBOX_FBSD_ADD_STRIP_BIN) $(VBOX_FBSD_ADD_STRIP_OBJ) $(VBOX_FBSD_ADD_DBG_SYM_FILES))
-VBOX_FBSD_ADD_INS_MODULES := $(addprefix $(VBOX_FBSD_ADD_INS_OUT_DIR)/module/,$(VBOX_FBSD_ADD_MODULES))
+VRA_FBSD_ADD_DBG_SYM_FILES := $(addsuffix .dbgsym,$(VRA_FBSD_ADD_STRIP_BIN))
+VRA_FBSD_ADD_INS_FILES := $(addprefix $(VRA_FBSD_ADD_INS_OUT_DIR)/,$(VRA_FBSD_ADD_STRIP_BIN) $(VRA_FBSD_ADD_STRIP_OBJ) $(VRA_FBSD_ADD_DBG_SYM_FILES))
+VRA_FBSD_ADD_INS_MODULES := $(addprefix $(VRA_FBSD_ADD_INS_OUT_DIR)/module/,$(VRA_FBSD_ADD_MODULES))
 
 # Cleanup of the installer directory files
-OTHER_CLEAN += $(VBOX_FBSD_ADD_INS_FILES)) $(VBOX_FBSD_ADD_INS_MODULES)
+OTHER_CLEAN += $(VRA_FBSD_ADD_INS_FILES)) $(VRA_FBSD_ADD_INS_MODULES)
 
-# pattern rule for copying the debug info from the VBOX_FBSD_ADD_STRIP_BIN files to the installation directory
-$(addprefix $(VBOX_FBSD_ADD_INS_OUT_DIR)/,$(VBOX_FBSD_ADD_DBG_SYM_FILES)): \
-		$(VBOX_FBSD_ADD_INS_OUT_DIR)/%.dbgsym : $(PATH_STAGE_BIN)/additions/% | $$(dir $$@)
+# pattern rule for copying the debug info from the VRA_FBSD_ADD_STRIP_BIN files to the installation directory
+$(addprefix $(VRA_FBSD_ADD_INS_OUT_DIR)/,$(VRA_FBSD_ADD_DBG_SYM_FILES)): \
+		$(VRA_FBSD_ADD_INS_OUT_DIR)/%.dbgsym : $(PATH_STAGE_BIN)/additions/% | $$(dir $$@)
 	$(call MSG_TOOL,copydbg,$<,$@)
 	$(QUIET)objcopy --only-keep-debug $< $@
 
-# pattern rule for stripping and copying the VBOX_FBSD_ADD_STRIP_BIN files to the installation directory
-$(addprefix $(VBOX_FBSD_ADD_INS_OUT_DIR)/,$(VBOX_FBSD_ADD_STRIP_BIN)): \
-		$(VBOX_FBSD_ADD_INS_OUT_DIR)/% : $(PATH_STAGE_BIN)/additions/% \
-		$(VBOX_FBSD_ADD_INS_OUT_DIR)/%.dbgsym \
+# pattern rule for stripping and copying the VRA_FBSD_ADD_STRIP_BIN files to the installation directory
+$(addprefix $(VRA_FBSD_ADD_INS_OUT_DIR)/,$(VRA_FBSD_ADD_STRIP_BIN)): \
+		$(VRA_FBSD_ADD_INS_OUT_DIR)/% : $(PATH_STAGE_BIN)/additions/% \
+		$(VRA_FBSD_ADD_INS_OUT_DIR)/%.dbgsym \
 		| $$(dir $$@)
 	$(call MSG_INST_FILE,$<,$@)
-	$(QUIET)$(INSTALL) -m 0755 $(if $(VBOX_DO_STRIP),-s,) $< $@
+	$(QUIET)$(INSTALL) -m 0755 $(if $(VRA_DO_STRIP),-s,) $< $@
 	$(QUIET)objcopy --add-gnu-debuglink=$(addsuffix .dbgsym,$@) $@
 
-# pattern rule for stripping and copying the VBOX_FBSD_ADD_STRIP_OBJ files to the installation directory
-$(addprefix $(VBOX_FBSD_ADD_INS_OUT_DIR)/,$(VBOX_FBSD_ADD_STRIP_OBJ)): \
-		$(VBOX_FBSD_ADD_INS_OUT_DIR)/% : $(PATH_STAGE_BIN)/additions/% | $$(dir $$@)
+# pattern rule for stripping and copying the VRA_FBSD_ADD_STRIP_OBJ files to the installation directory
+$(addprefix $(VRA_FBSD_ADD_INS_OUT_DIR)/,$(VRA_FBSD_ADD_STRIP_OBJ)): \
+		$(VRA_FBSD_ADD_INS_OUT_DIR)/% : $(PATH_STAGE_BIN)/additions/% | $$(dir $$@)
 	$(call MSG_INST_FILE,$<,$@)
-ifeq ($(VBOX_DO_STRIP),)
+ifeq ($(VRA_DO_STRIP),)
 	$(QUIET)$(INSTALL) -m 0644 $< $@
 else # strip to temp file because of umask.
 	$(QUIET)objcopy --strip-unneeded -R .comment $< $@.tmp
@@ -119,17 +119,17 @@ else # strip to temp file because of umask.
 	$(QUIET)$(RM) -f -- $@.tmp
 endif
 
-# pattern rule for copying the VBOX_FBSD_ADD_MODULES files to the installation directory
-$(VBOX_FBSD_ADD_INS_MODULES): \
-		$(VBOX_FBSD_ADD_INS_OUT_DIR)/module/% : $(PATH_STAGE_BIN)/additions/src/% | $(VBOX_FBSD_ADD_INS_OUT_DIR)/module/
+# pattern rule for copying the VRA_FBSD_ADD_MODULES files to the installation directory
+$(VRA_FBSD_ADD_INS_MODULES): \
+		$(VRA_FBSD_ADD_INS_OUT_DIR)/module/% : $(PATH_STAGE_BIN)/additions/src/% | $(VRA_FBSD_ADD_INS_OUT_DIR)/module/
 	$(call MSG_INST_FILE,$<,$@)
 # Remove target directories first, otherwise the behaviour of cp will not be
 # what we want if it already exists. See the cp manual page for more details.
 	$(QUIET)$(RM) -Rf $@
-	$(QUIET)cp -af $< $(VBOX_FBSD_ADD_INS_OUT_DIR)/module
+	$(QUIET)cp -af $< $(VRA_FBSD_ADD_INS_OUT_DIR)/module
 
 
-INSTALLS += $(if $(VBOX_OSE),, fbsd_add_inst-nobin)
+INSTALLS += $(if $(VRA_OSE),, fbsd_add_inst-nobin)
 fbsd_add_inst-nobin_INST = obj/Additions/Installer/freebsd
 fbsd_add_inst-nobin_MODE = a+r,u+w
 fbsd_add_inst-nobin_SOURCES = \
@@ -146,19 +146,19 @@ GuestDrivers-src_MODE = a+r,u+w
 GuestDrivers-src_SOURCES = Makefile
 
 # this file needs editing before it can be included in the generic installer.
-$(VBOX_FBSD_ADD_INS_OUT_DIR)/install.sh: \
-		$(VBOX_PATH_FREEBSD_ADDITION_INSTALLER)/install.sh | $$(dir $$@)
+$(VRA_FBSD_ADD_INS_OUT_DIR)/install.sh: \
+		$(VRA_PATH_FREEBSD_ADDITION_INSTALLER)/install.sh | $$(dir $$@)
 	$(QUIET)$(SED) \
-	    -e "s;_VERSION_;$(VBOX_VERSION_STRING);g" \
+	    -e "s;_VERSION_;$(VRA_VERSION_STRING);g" \
 	    -e "s;_BUILD_;$(shell date);g" \
-	    -e "s;_OSE_;$(VBOX_OSE);g" \
+	    -e "s;_OSE_;$(VRA_OSE);g" \
 	    -e "s;_BUILDTYPE_;$(KBUILD_TYPE);g" \
 	    -e "s;_ARCH_;$(KBUILD_TARGET_ARCH);g" \
-	    --output $(VBOX_FBSD_ADD_INS_OUT_DIR)/install_.sh \
+	    --output $(VRA_FBSD_ADD_INS_OUT_DIR)/install_.sh \
 	    $<
-	$(QUIET)$(INSTALL) -m 0755 $(VBOX_FBSD_ADD_INS_OUT_DIR)/install_.sh $@
-	$(QUIET)$(RM) $(VBOX_FBSD_ADD_INS_OUT_DIR)/install_.sh
-OTHERS_CLEAN += $(VBOX_FBSD_ADD_INS_OUT_DIR)/install.sh
+	$(QUIET)$(INSTALL) -m 0755 $(VRA_FBSD_ADD_INS_OUT_DIR)/install_.sh $@
+	$(QUIET)$(RM) $(VRA_FBSD_ADD_INS_OUT_DIR)/install_.sh
+OTHERS_CLEAN += $(VRA_FBSD_ADD_INS_OUT_DIR)/install.sh
 
 
 include $(FILE_KBUILD_SUB_FOOTER)
@@ -178,18 +178,18 @@ include $(FILE_KBUILD_SUB_FOOTER)
 $(PATH_STAGE_BIN)/additions/VBoxFreeBSDAdditions.tbz: \
 		$$(fbsd_add_inst-nobin_2_STAGE_TARGETS) \
 		$$(fbsd_add_inst-bin_2_STAGE_TARGETS) \
-		$(VBOX_FBSD_ADD_INS_FILES) \
-		$(VBOX_FBSD_ADD_INS_MODULES) \
-		$(VBOX_FBSD_ADD_INS_OUT_DIR)/install.sh \
+		$(VRA_FBSD_ADD_INS_FILES) \
+		$(VRA_FBSD_ADD_INS_MODULES) \
+		$(VRA_FBSD_ADD_INS_OUT_DIR)/install.sh \
 		$(wildcard $(PATH_STAGE_BIN)/additions/src/*) \
 		$(wildcard $(PATH_STAGE_BIN)/additions/src/*/*) \
 		$(wildcard $(PATH_STAGE_BIN)/additions/src/*/*/*) \
 		$(wildcard $(PATH_STAGE_BIN)/additions/src/*/*/*/*) \
-		$(VBOX_VERSION_STAMP) $(VBOX_SVN_REV_HEADER)
+		$(VRA_VERSION_STAMP) $(VRA_SVN_REV_HEADER)
 	pkg_create \
-		-I $(VBOX_PATH_FREEBSD_ADDITION_INSTALLER)/install.sh \
-		-c $(VBOX_PATH_FREEBSD_ADDITION_INSTALLER)/pkg-comment \
-		-d $(VBOX_PATH_FREEBSD_ADDITION_INSTALLER)/pkg-descr \
-		-f $(VBOX_PATH_FREEBSD_ADDITION_INSTALLER)/pkg-plist \
+		-I $(VRA_PATH_FREEBSD_ADDITION_INSTALLER)/install.sh \
+		-c $(VRA_PATH_FREEBSD_ADDITION_INSTALLER)/pkg-comment \
+		-d $(VRA_PATH_FREEBSD_ADDITION_INSTALLER)/pkg-descr \
+		-f $(VRA_PATH_FREEBSD_ADDITION_INSTALLER)/pkg-plist \
 		$@
 

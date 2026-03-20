@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2023-2026 Oracle and/or its affiliates.
+# Copyright (C) 2023-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -167,7 +167,7 @@ VBox-liblzma_SOURCES := \
 	simple/sparc.c
 
 
-ifdef VBOX_WITH_32_ON_64_MAIN_API # 32-bit edition.
+ifdef VRA_WITH_32_ON_64_MAIN_API # 32-bit edition.
  LIBRARIES += VBox-liblzma-x86
  VBox-liblzma-x86_TEMPLATE := VBoxR3RuntimeDllNonPedantic-x86
  VBox-liblzma-x86_EXTENDS  := VBox-liblzma
@@ -177,12 +177,12 @@ endif
 LIBRARIES += VBox-liblzma-static
 VBox-liblzma-static_TEMPLATE := VBoxR3StaticNonPedantic
 VBox-liblzma-static_EXTENDS  := VBox-liblzma
-ifdef VBOX_WITH_NOCRT_STATIC
+ifdef VRA_WITH_NOCRT_STATIC
  VBox-liblzma-static_DEFS     = $(VBox-liblzma_DEFS) IPRT_NO_CRT_FOR_3RD_PARTY
 endif
 
 
-if !defined(VBOX_ONLY_BUILD) || defined(VBOX_ONLY_EXTPACKS)
+if !defined(VRA_ONLY_BUILD) || defined(VRA_ONLY_EXTPACKS)
  # For bldRTTar.
  LIBRARIES += VBoxBldProg-liblzma
  VBoxBldProg-liblzma_TEMPLATE := VBoxAdvBldProgNonPedantic

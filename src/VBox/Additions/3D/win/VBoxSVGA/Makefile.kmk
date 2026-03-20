@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2016-2026 Oracle and/or its affiliates.
+# Copyright (C) 2016-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -42,11 +42,11 @@ VBoxSVGA_TEMPLATE = VBoxMesa3DGuestR3DllMinVista
 #  -wd4668: 'something' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 VBoxSVGA_CFLAGS   = -wd4005 -wd4100 -wd4200 -wd4204 -wd4211 -wd4245 -wd4255 -wd4668
 VBoxSVGA_INCS     = \
-	$(VBoxSVGA_0_OUTDIR)/../VBoxMesaUtilLib/$(VBOX_MESA)/src \
-	$(VBOX_PATH_3D)/win/include \
-	$(VBOX_PATH_MESA)/src/gallium/drivers/svga \
-	$(VBOX_PATH_MESA)/src/gallium/drivers/svga/include \
-	$(VBOX_PATH_MESA)/src/gallium/winsys/svga/drm
+	$(VBoxSVGA_0_OUTDIR)/../VBoxMesaUtilLib/$(VRA_MESA)/src \
+	$(VRA_PATH_3D)/win/include \
+	$(VRA_PATH_MESA)/src/gallium/drivers/svga \
+	$(VRA_PATH_MESA)/src/gallium/drivers/svga/include \
+	$(VRA_PATH_MESA)/src/gallium/winsys/svga/drm
 VBoxSVGA_SOURCES  = \
 	winsys/vmw_screen.c \
 	winsys/vmw_screen_wddm.c \
@@ -55,14 +55,14 @@ VBoxSVGA_SOURCES  = \
 	VBoxSVGA.rc \
 	VBoxSVGA.def
 VBoxSVGA_LIBS     = \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaGalliumAuxLib$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaUtilLib$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaLib$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaSVGAWinsysLib$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaSVGALib$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxWddmUmHlp$(VBOX_SUFF_LIB)
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaGalliumAuxLib$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaUtilLib$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaLib$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaSVGAWinsysLib$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaSVGALib$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxWddmUmHlp$(VRA_SUFF_LIB)
 
-if defined(VBOX_SIGNING_MODE) && defined(VBOX_SIGN_ADDITIONS)
+if defined(VRA_SIGNING_MODE) && defined(VRA_SIGN_ADDITIONS)
  VBoxSVGA_INSTTYPE       = none
  VBoxSVGA_DEBUG_INSTTYPE = both
 endif
@@ -73,13 +73,13 @@ endif
 VBoxSVGA-x86_EXTENDS      = VBoxSVGA
 VBoxSVGA-x86_BLD_TRG_ARCH = x86
 VBoxSVGA-x86_LIBS         = \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxWddmUmHlp-x86$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaGalliumAuxLib-x86$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaUtilLib-x86$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaLib-x86$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaSVGAWinsysLib-x86$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaSVGALib-x86$(VBOX_SUFF_LIB)
-VBoxSVGA-x86_DEFS         = $(VBoxSVGA_DEFS) VBOX_WOW64
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxWddmUmHlp-x86$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaGalliumAuxLib-x86$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaUtilLib-x86$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaLib-x86$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaSVGAWinsysLib-x86$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaSVGALib-x86$(VRA_SUFF_LIB)
+VBoxSVGA-x86_DEFS         = $(VBoxSVGA_DEFS) VRA_WOW64
 
 include $(FILE_KBUILD_SUB_FOOTER)
 

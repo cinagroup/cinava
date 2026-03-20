@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2015-2026 Oracle and/or its affiliates.
+# Copyright (C) 2015-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,21 +25,21 @@
 # SPDX-License-Identifier: GPL-3.0-only
 #
 
-VBOX_INSTALLER_CONFIG_KMK_INCLUDED = 1
+VRA_INSTALLER_CONFIG_KMK_INCLUDED = 1
 
 # Include the top-level configure file.
-ifndef VBOX_ROOT_CONFIG_KMK_INCLUDED
+ifndef VRA_ROOT_CONFIG_KMK_INCLUDED
  include $(PATH_ROOT)/Config.kmk
 endif
 
 #
 # Generic stuff.
 #
-VBOX_PATH_INST_COMMON_SRC := $(PATH_ROOT)/src/VBox/Installer/common
+VRA_PATH_INST_COMMON_SRC := $(PATH_ROOT)/src/VBox/Installer/common
 
 
-ifdef VBOX_WITH_PYTHON
- VBOXINST_SDK_BINDINGS_XPCOM_PYTHON_FILES = \
+ifdef VRA_WITH_PYTHON
+ VRAINST_SDK_BINDINGS_XPCOM_PYTHON_FILES = \
  	sdk/bindings/xpcom/python/xpcom/__init__.py \
  	sdk/bindings/xpcom/python/xpcom/primitives.py \
  	sdk/bindings/xpcom/python/xpcom/xpcom_consts.py \
@@ -54,12 +54,12 @@ ifdef VBOX_WITH_PYTHON
  	sdk/bindings/xpcom/python/xpcom/server/loader.py \
  	sdk/bindings/xpcom/python/xpcom/server/module.py \
  	sdk/bindings/xpcom/python/xpcom/server/policy.py
- VBOXINST_SDK_INSTALLER_PYTHON_FILES = \
+ VRAINST_SDK_INSTALLER_PYTHON_FILES = \
  	sdk/installer/python/vboxapisetup.py \
  	sdk/installer/python/vboxapi/setup.py \
  	sdk/installer/python/vboxapi/pyproject.toml \
  	sdk/installer/python/vboxapi/src/vboxapi/__init__.py \
- 	sdk/installer/python/vboxapi/src/vboxapi/VirtualBox_constants.py
+ 	sdk/installer/python/vboxapi/src/vboxapi/VirtualAgent_constants.py
 endif
 
 
@@ -67,8 +67,8 @@ endif
 # List of unattended installation script templates (lives in
 # src/VBox/Main/UnattendedTemplates).
 #
-ifdef VBOX_WITH_UNATTENDED
- VBOX_UNATTENDED_TEMPLATES := \
+ifdef VRA_WITH_UNATTENDED
+ VRA_UNATTENDED_TEMPLATES := \
  	debian_preseed.cfg \
  	ubuntu_preseed.cfg \
  	ubuntu_autoinstall_user_data \
@@ -93,22 +93,22 @@ ifdef VBOX_WITH_UNATTENDED
  	win_postinstall.cmd \
  	\
  	os2_util.exe
- ifndef VBOX_OSE
-  VBOX_UNATTENDED_TEMPLATES += \
+ ifndef VRA_OSE
+  VRA_UNATTENDED_TEMPLATES += \
   	lgw_ks.cfg \
   	lgw_postinstall.sh
  endif
 else
- VBOX_UNATTENDED_TEMPLATES :=
+ VRA_UNATTENDED_TEMPLATES :=
 endif
 
 
 #
 # DTrace globals.
 #
-ifdef VBOX_WITH_DTRACE
+ifdef VRA_WITH_DTRACE
  ## List of files in the per arch DTrace library directory.
- VBOXINST_DTRACE_LIB_ARCH_FILES := \
+ VRAINST_DTRACE_LIB_ARCH_FILES := \
  	vbox-types.d \
  	vbox-arch-types.d \
  	vm.d \
@@ -116,14 +116,14 @@ ifdef VBOX_WITH_DTRACE
  	CPUMInternal.d \
  	x86.d
  ## List of files in the per arch DTrace testcase directory.
- VBOXINST_DTRACE_TESTCASE_ARCH_FILES := \
+ VRAINST_DTRACE_TESTCASE_ARCH_FILES := \
  	vbox-vm-struct-test.d
  ## List of file in the DTrace scripts directory.
- VBOXINST_DTRACE_SCRIPTS_FILES :=
+ VRAINST_DTRACE_SCRIPTS_FILES :=
 else
- VBOXINST_DTRACE_LIB_ARCH_FILES :=
- VBOXINST_DTRACE_TESTCASE_ARCH_FILES :=
- VBOXINST_DTRACE_SCRIPTS_FILES :=
+ VRAINST_DTRACE_LIB_ARCH_FILES :=
+ VRAINST_DTRACE_TESTCASE_ARCH_FILES :=
+ VRAINST_DTRACE_SCRIPTS_FILES :=
 endif
 
 
@@ -131,22 +131,22 @@ endif
 # Some combined package (CP) globals.
 #
 ifeq ($(KBUILD_TARGET_ARCH),x86)
- VBOX_CP_THIS_BITS   := 32
- ifdef VBOX_WITH_COMBINED_PACKAGE
-  VBOX_CP_OTHER_ARCH := amd64
-  VBOX_CP_OTHER_BITS := 64
+ VRA_CP_THIS_BITS   := 32
+ ifdef VRA_WITH_COMBINED_PACKAGE
+  VRA_CP_OTHER_ARCH := amd64
+  VRA_CP_OTHER_BITS := 64
  else
-  VBOX_CP_OTHER_ARCH = $(error VBOX_CP_OTHER_ARCH used in without VBOX_WITH_COMBINED_PACKAGE set)
-  VBOX_CP_OTHER_BITS = $(error VBOX_CP_OTHER_ARCH used in without VBOX_CP_OTHER_BITS set)
+  VRA_CP_OTHER_ARCH = $(error VRA_CP_OTHER_ARCH used in without VRA_WITH_COMBINED_PACKAGE set)
+  VRA_CP_OTHER_BITS = $(error VRA_CP_OTHER_ARCH used in without VRA_CP_OTHER_BITS set)
  endif
 else
- VBOX_CP_THIS_BITS   := 64
- ifdef VBOX_WITH_COMBINED_PACKAGE
-  VBOX_CP_OTHER_ARCH := x86
-  VBOX_CP_OTHER_BITS := 32
+ VRA_CP_THIS_BITS   := 64
+ ifdef VRA_WITH_COMBINED_PACKAGE
+  VRA_CP_OTHER_ARCH := x86
+  VRA_CP_OTHER_BITS := 32
  else
-  VBOX_CP_OTHER_ARCH = $(error VBOX_CP_OTHER_ARCH used in without VBOX_WITH_COMBINED_PACKAGE set)
-  VBOX_CP_OTHER_BITS = $(error VBOX_CP_OTHER_ARCH used in without VBOX_CP_OTHER_BITS set)
+  VRA_CP_OTHER_ARCH = $(error VRA_CP_OTHER_ARCH used in without VRA_WITH_COMBINED_PACKAGE set)
+  VRA_CP_OTHER_BITS = $(error VRA_CP_OTHER_ARCH used in without VRA_CP_OTHER_BITS set)
  endif
 endif
 

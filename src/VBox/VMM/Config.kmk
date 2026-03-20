@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,10 +25,10 @@
 # SPDX-License-Identifier: GPL-3.0-only
 #
 
-VBOX_VMM_CONFIG_KMK_INCLUDED = 1
+VRA_VMM_CONFIG_KMK_INCLUDED = 1
 
 # Include the top-level configure file.
-ifndef VBOX_ROOT_CONFIG_KMK_INCLUDED
+ifndef VRA_ROOT_CONFIG_KMK_INCLUDED
  include $(PATH_ROOT)/Config.kmk
 endif
 
@@ -36,27 +36,27 @@ endif
 # Globals
 #
 
-VBOX_PATH_SRC_VMM := $(PATH_ROOT)/src/VBox/VMM
+VRA_PATH_SRC_VMM := $(PATH_ROOT)/src/VBox/VMM
 
 ## DEFS variable that is picked up by all three VMM targets (R0, R3, RC).
 # Can be prepended to by setting it in LocalConfig.kmk
 VMM_COMMON_DEFS := USING_VMM_COMMON_DEFS
-ifdef VBOX_WITH_R0_MODULES
- VMM_COMMON_DEFS += VBOX_WITH_R0_MODULES
- ifdef VBOX_WITH_MINIMAL_R0
-  VMM_COMMON_DEFS += VBOX_WITH_MINIMAL_R0 VBOX_WITH_ONLY_PGM_NEM_MODE
+ifdef VRA_WITH_R0_MODULES
+ VMM_COMMON_DEFS += VRA_WITH_R0_MODULES
+ ifdef VRA_WITH_MINIMAL_R0
+  VMM_COMMON_DEFS += VRA_WITH_MINIMAL_R0 VRA_WITH_ONLY_PGM_NEM_MODE
  endif
 else
- VMM_COMMON_DEFS += VBOX_WITH_ONLY_PGM_NEM_MODE
+ VMM_COMMON_DEFS += VRA_WITH_ONLY_PGM_NEM_MODE
 endif
-ifdef VBOX_WITH_HWVIRT
- VMM_COMMON_DEFS += VBOX_WITH_HWVIRT
+ifdef VRA_WITH_HWVIRT
+ VMM_COMMON_DEFS += VRA_WITH_HWVIRT
 endif
-ifdef VBOX_WITH_NESTED_HWVIRT_SVM
- VMM_COMMON_DEFS += VBOX_WITH_NESTED_HWVIRT_SVM
+ifdef VRA_WITH_NESTED_HWVIRT_SVM
+ VMM_COMMON_DEFS += VRA_WITH_NESTED_HWVIRT_SVM
 endif
-ifdef VBOX_WITH_DEBUGGER
- VMM_COMMON_DEFS += VBOX_WITH_DEBUGGER
+ifdef VRA_WITH_DEBUGGER
+ VMM_COMMON_DEFS += VRA_WITH_DEBUGGER
 endif
 
 # IEM config:
@@ -80,29 +80,29 @@ ifndef IEM_WITHOUT_VEX
 else
  VMM_COMMON_DEFS += IEM_WITHOUT_VEX
 endif
-ifdef VBOX_WITH_IEM_RECOMPILER # Selectely removing hwvirt doesn't work yet with the recompiler. Python code doesn't check #ifdefs.
- VMM_COMMON_DEFS += VBOX_WITH_IEM_RECOMPILER IEM_WITH_CODE_TLB IEM_WITH_DATA_TLB
- ifdef VBOX_WITH_IEM_NATIVE_RECOMPILER
-  VMM_COMMON_DEFS += VBOX_WITH_IEM_NATIVE_RECOMPILER
+ifdef VRA_WITH_IEM_RECOMPILER # Selectely removing hwvirt doesn't work yet with the recompiler. Python code doesn't check #ifdefs.
+ VMM_COMMON_DEFS += VRA_WITH_IEM_RECOMPILER IEM_WITH_CODE_TLB IEM_WITH_DATA_TLB
+ ifdef VRA_WITH_IEM_NATIVE_RECOMPILER
+  VMM_COMMON_DEFS += VRA_WITH_IEM_NATIVE_RECOMPILER
  endif
- VMM_COMMON_DEFS += VBOX_WITH_NESTED_HWVIRT_VMX
- #ifdef VBOX_WITH_NESTED_HWVIRT_VMX_EPT # Busted with TLB enabled.
- # VMM_COMMON_DEFS += VBOX_WITH_NESTED_HWVIRT_VMX_EPT
+ VMM_COMMON_DEFS += VRA_WITH_NESTED_HWVIRT_VMX
+ #ifdef VRA_WITH_NESTED_HWVIRT_VMX_EPT # Busted with TLB enabled.
+ # VMM_COMMON_DEFS += VRA_WITH_NESTED_HWVIRT_VMX_EPT
  #endif
- ifdef VBOX_WITH_NESTED_HWVIRT_ONLY_IN_IEM
-  VMM_COMMON_DEFS += VBOX_WITH_NESTED_HWVIRT_ONLY_IN_IEM
+ ifdef VRA_WITH_NESTED_HWVIRT_ONLY_IN_IEM
+  VMM_COMMON_DEFS += VRA_WITH_NESTED_HWVIRT_ONLY_IN_IEM
  endif
-else ifdef VBOX_WITH_IEM_TLB ## @todo VMX code doesn't compile with TLBs enabled.
+else ifdef VRA_WITH_IEM_TLB ## @todo VMX code doesn't compile with TLBs enabled.
  VMM_COMMON_DEFS  += IEM_WITH_CODE_TLB IEM_WITH_DATA_TLB
 else
- ifdef VBOX_WITH_NESTED_HWVIRT_VMX
-  VMM_COMMON_DEFS += VBOX_WITH_NESTED_HWVIRT_VMX
+ ifdef VRA_WITH_NESTED_HWVIRT_VMX
+  VMM_COMMON_DEFS += VRA_WITH_NESTED_HWVIRT_VMX
  endif
- ifdef VBOX_WITH_NESTED_HWVIRT_VMX_EPT
-  VMM_COMMON_DEFS += VBOX_WITH_NESTED_HWVIRT_VMX_EPT
+ ifdef VRA_WITH_NESTED_HWVIRT_VMX_EPT
+  VMM_COMMON_DEFS += VRA_WITH_NESTED_HWVIRT_VMX_EPT
  endif
- ifdef VBOX_WITH_NESTED_HWVIRT_ONLY_IN_IEM
-  VMM_COMMON_DEFS += VBOX_WITH_NESTED_HWVIRT_ONLY_IN_IEM
+ ifdef VRA_WITH_NESTED_HWVIRT_ONLY_IN_IEM
+  VMM_COMMON_DEFS += VRA_WITH_NESTED_HWVIRT_ONLY_IN_IEM
  endif
 endif
 ifdef IEM_WITHOUT_ASSEMBLY
@@ -110,35 +110,35 @@ ifdef IEM_WITHOUT_ASSEMBLY
 endif
 
 # part of global DEFS
-ifdef VBOX_WITH_MULTI_CORE
- VMM_COMMON_DEFS += VBOX_WITH_MULTI_CORE
+ifdef VRA_WITH_MULTI_CORE
+ VMM_COMMON_DEFS += VRA_WITH_MULTI_CORE
 endif
-ifdef VBOX_WITH_R0_LOGGING
- VMM_COMMON_DEFS += VBOX_WITH_R0_LOGGING
+ifdef VRA_WITH_R0_LOGGING
+ VMM_COMMON_DEFS += VRA_WITH_R0_LOGGING
 endif
-ifdef VBOX_WITH_DTRACE_RC
- VMM_COMMON_DEFS += VBOX_WITH_DTRACE_RC
+ifdef VRA_WITH_DTRACE_RC
+ VMM_COMMON_DEFS += VRA_WITH_DTRACE_RC
 endif
-ifdef VBOX_WITH_64ON32_CMOS_DEBUG
- VMM_COMMON_DEFS += VBOX_WITH_64ON32_CMOS_DEBUG
+ifdef VRA_WITH_64ON32_CMOS_DEBUG
+ VMM_COMMON_DEFS += VRA_WITH_64ON32_CMOS_DEBUG
 endif
-ifdef VBOXSTRICTRC_STRICT_ENABLED
- VMM_COMMON_DEFS += VBOXSTRICTRC_STRICT_ENABLED
+ifdef VRASTRICTRC_STRICT_ENABLED
+ VMM_COMMON_DEFS += VRASTRICTRC_STRICT_ENABLED
 endif
-if defined(VBOX_WITH_NATIVE_NEM) || !defined(VBOX_WITHOUT_PGM_NEM_MODE)
- VMM_COMMON_DEFS += VBOX_WITH_PGM_NEM_MODE
+if defined(VRA_WITH_NATIVE_NEM) || !defined(VRA_WITHOUT_PGM_NEM_MODE)
+ VMM_COMMON_DEFS += VRA_WITH_PGM_NEM_MODE
 endif
-ifdef VBOX_WITH_NATIVE_NEM
+ifdef VRA_WITH_NATIVE_NEM
  if1of ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH), darwin.amd64 linux.amd64 win.amd64)
-  VMM_COMMON_DEFS += VBOX_WITH_NATIVE_NEM VBOX_WITH_NEM_R0
+  VMM_COMMON_DEFS += VRA_WITH_NATIVE_NEM VRA_WITH_NEM_R0
  endif
 endif
 if1of ($(KBUILD_TARGET), freebsd linux solaris) # Hosts that implements SUPR0HCPhysToVirt.
- VMM_COMMON_DEFS += VBOX_WITH_LINEAR_HOST_PHYS_MEM
+ VMM_COMMON_DEFS += VRA_WITH_LINEAR_HOST_PHYS_MEM
 endif
 
 
-# VMM_COMMON_DEFS += VBOX_WITH_NS_ACCOUNTING_STATS
+# VMM_COMMON_DEFS += VRA_WITH_NS_ACCOUNTING_STATS
 
 
 #
@@ -155,15 +155,15 @@ define def_VBoxGenIEMInstructionStatisticsTmpl_Header
  $$(call KB_FN_AUTO_CMD_DEPS,$(2)/IEMInstructionStatisticsTmpl.h.ts)
  $(2)/IEMInstructionStatisticsTmpl.h.ts \
  +| $(2)/IEMInstructionStatisticsTmpl.h: \
- 		$$(VBOX_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstCommon-x86.cpp.h \
- 		$$(VBOX_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstOneByte-x86.cpp.h \
- 		$$(VBOX_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstTwoByte0f-x86.cpp.h \
- 		$$(VBOX_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstThree0f38-x86.cpp.h \
- 		$$(VBOX_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstThree0f3a-x86.cpp.h \
- 		$$(VBOX_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstVexMap1-x86.cpp.h \
- 		$$(VBOX_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstVexMap2-x86.cpp.h \
- 		$$(VBOX_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstVexMap3-x86.cpp.h \
- 		$$(VBOX_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInst3DNow-x86.cpp.h
+ 		$$(VRA_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstCommon-x86.cpp.h \
+ 		$$(VRA_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstOneByte-x86.cpp.h \
+ 		$$(VRA_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstTwoByte0f-x86.cpp.h \
+ 		$$(VRA_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstThree0f38-x86.cpp.h \
+ 		$$(VRA_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstThree0f3a-x86.cpp.h \
+ 		$$(VRA_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstVexMap1-x86.cpp.h \
+ 		$$(VRA_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstVexMap2-x86.cpp.h \
+ 		$$(VRA_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInstVexMap3-x86.cpp.h \
+ 		$$(VRA_PATH_SRC_VMM)/VMMAll/target-x86/IEMAllInst3DNow-x86.cpp.h
 	$$(QUIET)$(call MSG_GENERATE,$(1),$$@,VMMAll/IEMAllInst*.cpp.h)
 	$$(QUIET)$$(RM) -f -- "$$@.tmp" "$$@.tmp" "$$@.sorted"
 	$$(QUIET)$$(MKDIR) -p -- "$$(dir $$@)"

@@ -1,13 +1,13 @@
 #!/bin/sh
 # $Id: autorun.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox Guest Additions installation script for *nix guests
+# VirtualAgent Guest Additions installation script for *nix guests
 #
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -101,7 +101,7 @@ if test "$ostype" = "Linux"; then
     if test -f "$installer"; then
         getxterm
         case "$gxtpath" in ?*)
-            TITLE="VirtualBox Guest Additions installation"
+            TITLE="VirtualAgent Guest Additions installation"
             BINARY="`quotify "$installer"`"
             exec "$gxtpath" "$gxttitle" "$TITLE" "$gxtexec" /bin/sh "$path/runasroot.sh" --has-terminal "$TITLE" "/bin/sh $BINARY --xwin" "Please try running "\""$installer"\"" manually."
             exit
@@ -189,16 +189,16 @@ mail=
         if test -f "/usr/bin/gnome-terminal"; then
             # use su/pfexec
             if test -z "$subin"; then
-                /usr/bin/gnome-terminal --title "Installing VirtualBox Additions" --command "/bin/sh -c '$pfexecbin $pkgaddbin -G -d $installfile -n -a $TMPFILE SUNWvboxguest; /bin/echo press ENTER to close this window; /bin/read'"
+                /usr/bin/gnome-terminal --title "Installing VirtualAgent Additions" --command "/bin/sh -c '$pfexecbin $pkgaddbin -G -d $installfile -n -a $TMPFILE SUNWvboxguest; /bin/echo press ENTER to close this window; /bin/read'"
             else
-                /usr/bin/gnome-terminal --title "Installing VirtualBox Additions: Root password required." --command "/bin/sh -c '$subin - root -c \"$pkgaddbin -G -d $installfile -n -a $TMPFILE SUNWvboxguest\"; /bin/echo press ENTER to close this window; /bin/read'"
+                /usr/bin/gnome-terminal --title "Installing VirtualAgent Additions: Root password required." --command "/bin/sh -c '$subin - root -c \"$pkgaddbin -G -d $installfile -n -a $TMPFILE SUNWvboxguest\"; /bin/echo press ENTER to close this window; /bin/read'"
             fi
         elif test -f "/usr/X11/bin/xterm"; then
             # use xterm
             if test -z "$subin"; then
-                /usr/X11/bin/xterm -title "Installing VirtualBox Additions" -e "$pfexecbin $pkgaddbin -G -d $installfile -n -a $TMPFILE SUNWvboxguest; /bin/echo press ENTER to close this window; /bin/read"
+                /usr/X11/bin/xterm -title "Installing VirtualAgent Additions" -e "$pfexecbin $pkgaddbin -G -d $installfile -n -a $TMPFILE SUNWvboxguest; /bin/echo press ENTER to close this window; /bin/read"
             else
-                /usr/X11/bin/xterm -title "Installing VirtualBox Additions: Root password required." -e "$subin - root -c \"$pkgaddbin -G -d $installfile -n -a $TMPFILE SUNWvboxguest\"; /bin/echo press ENTER to close this window; /bin/read"
+                /usr/X11/bin/xterm -title "Installing VirtualAgent Additions: Root password required." -e "$subin - root -c \"$pkgaddbin -G -d $installfile -n -a $TMPFILE SUNWvboxguest\"; /bin/echo press ENTER to close this window; /bin/read"
             fi
         else
             echo "No suitable terminal not found. -- install additions using pkgadd -d."

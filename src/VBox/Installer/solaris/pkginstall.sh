@@ -2,16 +2,16 @@
 # $Id: pkginstall.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
 #
-# VirtualBox postinstall script for Solaris.
+# VirtualAgent postinstall script for Solaris.
 #
-# If you just installed VirtualBox using IPS/pkg(5), you should run this
-# script once to avoid rebooting the system before using VirtualBox.
+# If you just installed VirtualAgent using IPS/pkg(5), you should run this
+# script once to avoid rebooting the system before using VirtualAgent.
 #
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -47,11 +47,11 @@ fi
 DEBUGOPT=`set -o 2>/dev/null | sed -ne 's/^xtrace *on$/--sh-trace/p'` # propagate pkgadd -v
 
 # If PKG_INSTALL_ROOT is undefined or NULL, redefine to '/' and carry on.
-${PKG_INSTALL_ROOT:=/}/opt/VirtualBox/vboxconfig.sh --preremove --fatal ${ISIPS} ${DEBUGOPT}
+${PKG_INSTALL_ROOT:=/}/opt/VirtualAgent/vboxconfig.sh --preremove --fatal ${ISIPS} ${DEBUGOPT}
 
 if test "$?" -eq 0; then
     echo "Installing new ones..."
-    $PKG_INSTALL_ROOT/opt/VirtualBox/vboxconfig.sh --postinstall ${DEBUGOPT}
+    $PKG_INSTALL_ROOT/opt/VirtualAgent/vboxconfig.sh --postinstall ${DEBUGOPT}
     rc=$?
     if test "$rc" -ne 0; then
         echo 1>&2 "## Completed but with errors."

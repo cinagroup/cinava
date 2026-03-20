@@ -1,12 +1,12 @@
 #!/bin/sh
 #
-# Oracle VirtualBox
-# VirtualBox linux uninstallation script
+# CINA VirtualAgent
+# VirtualAgent linux uninstallation script
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -34,9 +34,9 @@ if [ -z "$ro_LOG_FILE" ]; then
     create_log "/var/log/vbox-uninstall.log"
 fi
 
-if [ -z "VBOX_NO_UNINSTALL_MESSAGE" ]; then
-    info "Uninstalling VirtualBox"
-    log "Uninstalling VirtualBox"
+if [ -z "VRA_NO_UNINSTALL_MESSAGE" ]; then
+    info "Uninstalling VirtualAgent"
+    log "Uninstalling VirtualAgent"
     log ""
 fi
 
@@ -55,8 +55,8 @@ fi
 
 # Remove previous installation
 if [ "$PREV_INSTALLATION" = "" ]; then
-    log "Unable to find a VirtualBox installation, giving up."
-    abort "Couldn't find a VirtualBox installation to uninstall."
+    log "Unable to find a VirtualAgent installation, giving up."
+    abort "Couldn't find a VirtualAgent installation to uninstall."
 fi
 
 # Do pre-removal common to all installer types, currently service script
@@ -64,7 +64,7 @@ fi
 "${MY_PATH}/prerm-common.sh" || exit 1
 
 # Remove kernel module installed
-if [ -z "$VBOX_DONT_REMOVE_OLD_MODULES" ]; then
+if [ -z "$VRA_DONT_REMOVE_OLD_MODULES" ]; then
     rm -f "/usr/src/vboxhost-$INSTALL_VER" 2> /dev/null
     rm -f "/usr/src/vboxdrv-$INSTALL_VER" 2> /dev/null
     rm -f "/usr/src/vboxnetflt-$INSTALL_VER" 2> /dev/null
@@ -74,8 +74,8 @@ fi
 
 # Remove symlinks
 rm -f \
-  /usr/bin/VirtualBox \
-  /usr/bin/VirtualBoxVM \
+  /usr/bin/VirtualAgent \
+  /usr/bin/VirtualAgentVM \
   /usr/bin/VBoxManage \
   /usr/bin/VBoxSDL \
   /usr/bin/VBoxVRDP \
@@ -160,8 +160,8 @@ rmdir "$CONFIG_DIR" 2> /dev/null
 
 update-mime-database /usr/share/mime >/dev/null 2>&1
 
-if [ -z "$VBOX_NO_UNINSTALL_MESSAGE" ]; then
+if [ -z "$VRA_NO_UNINSTALL_MESSAGE" ]; then
     [ -n "$INSTALL_REV" ] && INSTALL_REV=" r$INSTALL_REV"
-    info "VirtualBox $INSTALL_VER$INSTALL_REV has been removed successfully."
-    log "Successfully $INSTALL_VER$INSTALL_REV removed VirtualBox."
+    info "VirtualAgent $INSTALL_VER$INSTALL_REV has been removed successfully."
+    log "Successfully $INSTALL_VER$INSTALL_REV removed VirtualAgent."
 fi

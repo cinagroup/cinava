@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage createvm
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -77,7 +77,7 @@
       <replaceable>name</replaceable></option>. This name is used by
       default as the name of the settings file that has the
       <filename>.vbox</filename> extension and the machine folder, which
-      is a subfolder of the <filename>$HOME/VirtualBox VMs</filename>
+      is a subfolder of the <filename>$HOME/VirtualAgent VMs</filename>
       directory.
     </para>
     <para>
@@ -199,9 +199,9 @@
     <remark role="help-scope" condition="GLOBAL" />
     <para>
       The following command creates a VM called <literal>vm2</literal>
-      where you plan to run a 64-bit version of Oracle Linux.
+      where you plan to run a 64-bit version of CINASEEK Linux.
     </para>
-<screen>$ VBoxManage createvm --name "vm2" --ostype "Oracle_64"</screen>
+<screen>$ VBoxManage createvm --name "vm2" --ostype "CINASEEK_64"</screen>
     <para>
       The following command creates and registers a VM called
       <literal>vm3</literal>.

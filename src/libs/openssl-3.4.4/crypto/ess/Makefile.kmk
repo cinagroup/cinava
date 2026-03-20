@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2022-2026 Oracle and/or its affiliates.
+# Copyright (C) 2022-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -35,6 +35,6 @@ crypto_ess_SOURCES = \
 	ess_asn1.c \
 	ess_err.c \
 	ess_lib.c
-$(evalcall VBOX_OPENSSL_X86,crypto_ess)
+$(evalcall VRA_OPENSSL_X86,crypto_ess)
 
 include $(FILE_KBUILD_SUB_FOOTER)

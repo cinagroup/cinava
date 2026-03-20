@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2011-2026 Oracle and/or its affiliates.
+# Copyright (C) 2011-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -33,12 +33,12 @@ include $(KBUILD_PATH)/subheader.kmk
 #
 SYSMODS                += VBoxMouse
 VBoxMouse_TEMPLATE     := VBoxGuestR0Drv
-if defined(VBOX_SIGNING_MODE) && defined(VBOX_SIGN_ADDITIONS)
+if defined(VRA_SIGNING_MODE) && defined(VRA_SIGN_ADDITIONS)
  VBoxMouse_INSTTYPE    := none
  VBoxMouse_DEBUG_INSTTYPE := both
 endif
 VBoxMouse_DEFS          = LOG_TO_BACKDOOR
-VBoxMouse_SDKS.x86      = ReorderCompilerIncs $(VBOX_WINDDK_GST_W2K)
+VBoxMouse_SDKS.x86      = ReorderCompilerIncs $(VRA_WINDDK_GST_W2K)
 #VBoxMouse_DEFS         += LOG_ENABLED
 VBoxMouse_CXXFLAGS      = -Od
 VBoxMouse_CFLAGS        = -Od
@@ -50,20 +50,20 @@ VBoxMouse_SOURCES       = \
 	VBoxMFInternal.cpp \
 	VBoxMF.rc
 VBoxMouse_LIBS          = \
-	$(VBOX_LIB_IPRT_GUEST_R0) \
-	$(VBOX_LIB_VBGL_R0) \
-	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/ntoskrnl.lib \
-	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/hal.lib
-ifneq ($(VBOX_VCC_CC_GUARD_CF),)
+	$(VRA_LIB_IPRT_GUEST_R0) \
+	$(VRA_LIB_VBGL_R0) \
+	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/ntoskrnl.lib \
+	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/hal.lib
+ifneq ($(VRA_VCC_CC_GUARD_CF),)
  VBoxMouse_LATE_LIBS.x86 = \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/BufferOverflowK.lib
+ 	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/BufferOverflowK.lib
 endif
 VBoxMouse_LATE_LIBS.arm64 = \
-	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/BufferOverflowFastFailK.lib
+	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/BufferOverflowFastFailK.lib
 VBoxMouse_USES.win += vboximportchecker
-VBoxMouse_VBOX_IMPORT_CHECKER.win.x86 = w2k/r0
-VBoxMouse_VBOX_IMPORT_CHECKER.win.amd64 = xp64/r0
-VBoxMouse_VBOX_IMPORT_CHECKER.win.arm64 = w10-1709/r0
+VBoxMouse_VRA_IMPORT_CHECKER.win.x86 = w2k/r0
+VBoxMouse_VRA_IMPORT_CHECKER.win.amd64 = xp64/r0
+VBoxMouse_VRA_IMPORT_CHECKER.win.arm64 = w10-1709/r0
 
 
 #
@@ -79,9 +79,9 @@ VBoxMouse-inf_BLDDIRS = $(PATH_TARGET)/VBoxMouseCat.dir
 
 $(PATH_TARGET)/VBoxMouseCat.dir/VBoxMouse.inf: $(PATH_SUB_CURRENT)/VBoxMouse.inf $(MAKEFILE_CURRENT) | $$(dir $$@)
 	$(call MSG_GENERATE,VBoxMouse-inf,$@,$<)
-	$(call VBOX_EDIT_INF_FN,$<,$@)
+	$(call VRA_EDIT_INF_FN,$<,$@)
 
-if defined(VBOX_SIGNING_MODE) && defined(VBOX_SIGN_ADDITIONS)
+if defined(VRA_SIGNING_MODE) && defined(VRA_SIGN_ADDITIONS)
  VBoxMouse-inf_SOURCES += \
  	$(PATH_TARGET)/VBoxMouseCat.dir/VBoxMouse.sys \
  	$(PATH_TARGET)/VBoxMouseCat.dir/VBoxMouse.cat
@@ -97,7 +97,7 @@ if defined(VBOX_SIGNING_MODE) && defined(VBOX_SIGN_ADDITIONS)
  		$(PATH_TARGET)/VBoxMouseCat.dir/VBoxMouse.inf \
  		$(PATH_TARGET)/VBoxMouseCat.dir/VBoxMouse.sys
 	$(call MSG_TOOL,Inf2Cat,VBoxMouse-inf,$@,$<)
-	$(call VBOX_MAKE_CAT_FN, $(@D),$@)
+	$(call VRA_MAKE_CAT_FN, $(@D),$@)
 endif # signing
 
 include $(FILE_KBUILD_SUB_FOOTER)

@@ -1,7 +1,7 @@
 """
-Copyright (C) 2018-2026 Oracle and/or its affiliates.
+Copyright (C) 2018-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ def GeneratePfns():
         c_file.write('FARPROC g_pfn_%s;\n' % fn) # init this to a dummy that returns 0?
     c_file.write('\n')
 
-    c_file.write("struct VBOXWDDMDLLPROC g_aIcdProcs[] =\n")
+    c_file.write("struct VRAWDDMDLLPROC g_aIcdProcs[] =\n")
     c_file.write('{\n')
     for sFnNm in names:
         c_file.write('    { "%s", &g_pfn_%s },\n' % (sFnNm, sFnNm) )

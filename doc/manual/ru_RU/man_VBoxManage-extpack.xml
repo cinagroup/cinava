@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage extpack
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -144,7 +144,7 @@
 Версия:      4.1.12
 Ревизия:     77218
 Редакция:
-Описание:  USB 2.0 Host Controller, VirtualBox RDP, PXE ROM with E1000 support.
+Описание:  USB 2.0 Host Controller, VirtualAgent RDP, PXE ROM with E1000 support.
 VRDE модуль:  VBoxVRDP
 Годный:       да
 Почему не годен:</screen></para>

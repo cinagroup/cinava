@@ -1,12 +1,12 @@
 # $Id: Makefile.kmk 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# Sub-Makefile for the VirtualBox Windows Guest Shared Folders Network Provider.
+# Sub-Makefile for the VirtualAgent Windows Guest Shared Folders Network Provider.
 #
 
 #
-# Copyright (C) 2012-2026 Oracle and/or its affiliates.
+# Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ DLLS += VBoxMRXNP
 VBoxMRXNP_TEMPLATE    = VBoxGuestR3Dll
 VBoxMRXNP_DEFS        = LOG_TO_BACKDOOR UNICODE WIN32_LEAN_AND_MEAN=1
 #VBoxMRXNP_DEFS       += LOG_ENABLED
-VBoxMRXNP_SDKS        = ReorderCompilerIncs $(VBOX_WINDDK_GST_W2K)
+VBoxMRXNP_SDKS        = ReorderCompilerIncs $(VRA_WINDDK_GST_W2K)
 
 VBoxMRXNP_SOURCES     = \
 	vboxmrxnp.cpp \
@@ -40,9 +40,9 @@ VBoxMRXNP_SOURCES     = \
 	vboxmrxnp.def
 
 VBoxMRXNP_LIBS     = \
-	$(VBOX_LIB_IPRT_GUEST_R3_SHARED) \
-	$(VBOX_LIB_VBGL_R3_SHARED) \
-	$(VBOX_LIB_IPRT_GUEST_R3_SHARED)
+	$(VRA_LIB_IPRT_GUEST_R3_SHARED) \
+	$(VRA_LIB_VBGL_R3_SHARED) \
+	$(VRA_LIB_IPRT_GUEST_R3_SHARED)
 
 #
 # VBoxMRXNP-x86 - x86 version of VBoxMRXNP built for amd64 build
@@ -51,9 +51,9 @@ DLLS.win.amd64 += VBoxMRXNP-x86
 VBoxMRXNP-x86_EXTENDS = VBoxMRXNP
 VBoxMRXNP-x86_BLD_TRG_ARCH = x86
 VBoxMRXNP-x86_LIBS = \
-	$(VBOX_LIB_IPRT_GUEST_R3_SHARED_X86) \
-	$(VBOX_LIB_VBGL_R3_SHARED_X86) \
-	$(VBOX_LIB_IPRT_GUEST_R3_SHARED_X86)
-VBoxMRXNP-x86_DEFS = $(VBoxMRXNP_DEFS) VBOX_WOW64
+	$(VRA_LIB_IPRT_GUEST_R3_SHARED_X86) \
+	$(VRA_LIB_VBGL_R3_SHARED_X86) \
+	$(VRA_LIB_IPRT_GUEST_R3_SHARED_X86)
+VBoxMRXNP-x86_DEFS = $(VBoxMRXNP_DEFS) VRA_WOW64
 
 include $(FILE_KBUILD_SUB_FOOTER)

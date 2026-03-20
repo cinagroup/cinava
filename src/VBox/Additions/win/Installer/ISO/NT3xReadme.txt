@@ -1,4 +1,4 @@
-While the VirtualBox guest additions does not officially support NT 3.x some
+While the VirtualAgent guest additions does not officially support NT 3.x some
 of the core drivers and tools happens to work.  However, the installer binary
 (VBoxWindowsAdditions-x86.exe) does not run on anything older than NT 4,
 making it hard to extract (VBoxWindowsAdditions-x86.exe /extract /D=C:\dir)
@@ -31,7 +31,7 @@ Add VBoxGuest using registry editor (regedt32.exe):
 
 Install VBoxService by copying it to %SystemRoot%\system32 and run
 "VBoxService --register".  Go to "Services" in the "Control Panel" and modify
-the "VirtualBox Guest Additions Service" to startup "Automatic".  If VBoxGuest
+the "VirtualAgent Guest Additions Service" to startup "Automatic".  If VBoxGuest
 is already started you can start the service (also possible using
 "net start VBoxService").
 

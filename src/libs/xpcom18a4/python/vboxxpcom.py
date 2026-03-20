@@ -1,7 +1,7 @@
 """
-Copyright (C) 2008-2026 Oracle and/or its affiliates.
+Copyright (C) 2008-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -56,11 +56,11 @@ if platform.system() in [ 'SunOS', ] and sys.maxsize <= 2**32:
     del _asNew
 
 # On Darwin (aka Mac OS X) we know exactly where things are in a normal
-# VirtualBox installation.
+# VirtualAgent installation.
 ## @todo Edit this at build time to the actual VBox location set in the make files.
 ## @todo We know the location for most hardened builds, not just darwin!
 if platform.system() == 'Darwin':
-    sys.path.append('/Applications/VirtualBox.app/Contents/MacOS')
+    sys.path.append('/Applications/VirtualAgent.app/Contents/MacOS')
 
 _oVBoxPythonMod = None
 for m in _asVBoxPythons:
@@ -73,7 +73,7 @@ for m in _asVBoxPythons:
     #    print('m=%s x=%s' % (m, x))
 
 if platform.system() == 'Darwin':
-    sys.path.remove('/Applications/VirtualBox.app/Contents/MacOS')
+    sys.path.remove('/Applications/VirtualAgent.app/Contents/MacOS')
 
 if _oVBoxPythonMod == None:
     raise Exception('Cannot find VBoxPython module (tried: %s)' % (', '.join(_asVBoxPythons),))

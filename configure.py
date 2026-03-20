@@ -31,16 +31,16 @@ exit 1
 ':'''
 
 #
-# Configuration script for building VirtualBox.
+# Configuration script for building VirtualAgent.
 #
 # Requires >= Python 3.6.
 #
 
 __copyright__ = \
 """
-Copyright (C) 2025-2026 Oracle and/or its affiliates.
+Copyright (C) 2025-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -60,16 +60,16 @@ SPDX-License-Identifier: GPL-3.0-only
 """
 
 #
-# The script is designed to check for the presence of various libraries and tools required for building VirtualBox.
+# The script is designed to check for the presence of various libraries and tools required for building VirtualAgent.
 # It uses a modular approach with classes like `LibraryCheck`, `ToolCheck` and 'FeatureCheck' to verify the availability
 # of dependencies. Those classes are derived from a common CheckBase class.
 #
 # Each class instance represents a specific library, tool or feature and contains methods to check for its presence,
 # validates its version, and provides appropriate feedback.
 #
-# - LibraryCheck: A class which checks for a certain (system or third-party library) required for building VirtualBox.
-# - ToolCheck   : A third party tool (binary, script, ...) required for building VirtualBox or one of its dependencies.
-# - FeatureCheck: A feature of VirtualBox which needs further checking in order to get built.
+# - LibraryCheck: A class which checks for a certain (system or third-party library) required for building VirtualAgent.
+# - ToolCheck   : A third party tool (binary, script, ...) required for building VirtualAgent or one of its dependencies.
+# - FeatureCheck: A feature of VirtualAgent which needs further checking in order to get built.
 #                 Only use this as a last resort if our regular (in-tree) Makefiles can't (or won't) handle this!
 #
 # To add a new library check:
@@ -1413,7 +1413,7 @@ class LibraryCheck(CheckBase):
         #
         elif self.enmBuildTarget == BuildTarget.DARWIN:
             asPaths.extend([ '/opt/homebrew/include',
-                             os.path.join(g_oEnv['VBOX_PATH_MACOSX_SDK'], 'usr', 'include', 'c++', 'v1') ]);
+                             os.path.join(g_oEnv['VRA_PATH_MACOSX_SDK'], 'usr', 'include', 'c++', 'v1') ]);
 
         #
         # Linux
@@ -1729,8 +1729,8 @@ class LibraryCheck(CheckBase):
         # Note: This is a weird one, as the dev tools package
         #        only contains Windows binaries of mixed libraries and no sources. Don't ask me why.
         mapFiles = {
-             'xmllint': [ 'VBOX_XMLLINT', 'VBOX_HAVE_XMLLINT' ],
-             'xsltproc': [ 'VBOX_XSLTPROC', 'VBOX_HAVE_XSLTPROC' ]
+             'xmllint': [ 'VRA_XMLLINT', 'VRA_HAVE_XMLLINT' ],
+             'xsltproc': [ 'VRA_XSLTPROC', 'VRA_HAVE_XSLTPROC' ]
         }
 
         for sCurFile, asDefs in mapFiles.items():
@@ -1766,7 +1766,7 @@ class LibraryCheck(CheckBase):
         sPathBase = self.getToolPath();
         if sPathBase:
             self.asLibFiles = [ 'libQt6CoreVBox' ];
-            g_oEnv.set('VBOX_WITH_ORACLE_QT', '1');
+            g_oEnv.set('VRA_WITH_ORACLE_QT', '1');
 
         else:
 
@@ -1834,7 +1834,7 @@ class LibraryCheck(CheckBase):
 
         sPkgName = 'Qt6Core'; ## @todo Make the code generic once we have similar SDKs.
         if sPathBase:
-            g_oEnv.set( 'VBOX_PATH_QT', sPathBase);
+            g_oEnv.set( 'VRA_PATH_QT', sPathBase);
             g_oEnv.set(f'PATH_SDK_{self.sSdkName}', sPathBase);
             sPathBin     = os.path.join(sPathBase, 'bin');
             sPathInc     = os.path.join(sPathBase, 'include');
@@ -1893,7 +1893,7 @@ class ToolCheck(CheckBase):
         # Will be executed before anything else. The success value (True / False) will decide whether the
         # tool checking process will continue or not.
         self.fnCallback = fnCallback;
-        # Defines set set (e.g. { "VBOX_WITH_MYFEATURE : '' }) if the library check failed.
+        # Defines set set (e.g. { "VRA_WITH_MYFEATURE : '' }) if the library check failed.
         # The key contains the define, the value the value to set.
         # A non-empty dictonary makes the library optional.
         self.dictArgsToSetIfFailed = dictArgsToSetIfFailed or {};
@@ -2055,7 +2055,7 @@ class ToolCheck(CheckBase):
 
         sPath = self.sRootPath; # Acts as the 'found' beacon.
         if not sPath:
-            sPath = os.environ.get('VBOX_PATH_GSOAP');
+            sPath = os.environ.get('VRA_PATH_GSOAP');
 
         if not sPath:
             _, sPath = getPackagePath('gsoapssl++');
@@ -2081,10 +2081,10 @@ class ToolCheck(CheckBase):
                 if self.sCmdPath:
                     break;
 
-        g_oEnv.set('VBOX_WITH_GSOAP', '1' if sPath else '');
-        g_oEnv.set('VBOX_GSOAP_INSTALLED', '1' if sPath else '');
-        g_oEnv.set('VBOX_PATH_GSOAP', sPath);
-        g_oEnv.set('VBOX_PATH_GSOAP_BIN', sPathBin if sPathBin else None);
+        g_oEnv.set('VRA_WITH_GSOAP', '1' if sPath else '');
+        g_oEnv.set('VRA_GSOAP_INSTALLED', '1' if sPath else '');
+        g_oEnv.set('VRA_PATH_GSOAP', sPath);
+        g_oEnv.set('VRA_PATH_GSOAP_BIN', sPathBin if sPathBin else None);
 
         return True; # Optional, just skip.
 
@@ -2095,7 +2095,7 @@ class ToolCheck(CheckBase):
         This is needed for linking to functions which are needed when building
         the webservices.
         """
-        sPath        = self.sRootPath if self.sRootPath else g_oEnv['VBOX_PATH_GSOAP'];
+        sPath        = self.sRootPath if self.sRootPath else g_oEnv['VRA_PATH_GSOAP'];
         sPathImport  = None;
         sPathSource  = None;
         sPathInclude = None;
@@ -2140,17 +2140,17 @@ class ToolCheck(CheckBase):
             self.sCmdPath = sLibs; # To show the library path in the summary table.
             sPathSource = ''; # Force setting the environment variable below to empty.
         else:
-            if not g_oEnv['VBOX_WITH_WEBSERVICES'] \
-            or     g_oEnv['VBOX_WITH_WEBSERVICES'] == '1':
+            if not g_oEnv['VRA_WITH_WEBSERVICES'] \
+            or     g_oEnv['VRA_WITH_WEBSERVICES'] == '1':
                 self.printWarn('GSOAP source package not found for building webservices, disabling');
-                g_oEnv.set('VBOX_WITH_WEBSERVICES', '');
+                g_oEnv.set('VRA_WITH_WEBSERVICES', '');
                 return True; # Optional, just skip.
 
-        g_oEnv.set('VBOX_GSOAP_CXX_SOURCES', sPathSource);
-        g_oEnv.set('VBOX_GSOAP_CXX_INCS', sPathInclude);
+        g_oEnv.set('VRA_GSOAP_CXX_SOURCES', sPathSource);
+        g_oEnv.set('VRA_GSOAP_CXX_INCS', sPathInclude);
         if sLibs:
-            g_oEnv.set('VBOX_GSOAP_CXX_LIBS', stripPrefixFromWhitespaceSeparatedString(sLibs, '-l'));
-        g_oEnv.set('VBOX_PATH_GSOAP_IMPORT', sPathImport);
+            g_oEnv.set('VRA_GSOAP_CXX_LIBS', stripPrefixFromWhitespaceSeparatedString(sLibs, '-l'));
+        g_oEnv.set('VRA_PATH_GSOAP_IMPORT', sPathImport);
         return True;
 
     def checkCallback_Java(self):
@@ -2232,7 +2232,7 @@ class ToolCheck(CheckBase):
                 if uVerMaj:
                     self.sVer = str(uVerMaj);
                 self.sCmdPath = sJavaHome;
-                g_oEnv.set('VBOX_JAVA_HOME', sJavaHome);
+                g_oEnv.set('VRA_JAVA_HOME', sJavaHome);
         else:
             self.printWarn('Unable to detect Java home directory');
 
@@ -2259,7 +2259,7 @@ class ToolCheck(CheckBase):
                     break;
 
         if self.sCmdPath:
-            g_oEnv.set('VBOX_MAKESELF', self.sCmdPath);
+            g_oEnv.set('VRA_MAKESELF', self.sCmdPath);
         return True if self.sCmdPath else False;
 
     def checkCallback_MacOSSDK(self):
@@ -2309,7 +2309,7 @@ class ToolCheck(CheckBase):
             if plistData:
                 self.sVer = plistData.get('Version');
             if self.sVer:
-                g_oEnv.set('VBOX_PATH_MACOSX_SDK', self.sCmdPath);
+                g_oEnv.set('VRA_PATH_MACOSX_SDK', self.sCmdPath);
                 self.print(f"Using SDK {self.sVer} at '{self.sCmdPath}'");
                 return True;
 
@@ -2414,7 +2414,7 @@ class ToolCheck(CheckBase):
                     if int(sScheme.replace("VCC", "")) < 140:
                         self.printWarn(f'Warning: Found unsupported {sDesc} ({sVCPPVer}), but it may work');
 
-                    g_oEnv.set( 'VBOX_VCC_TOOL_STEM', sScheme);
+                    g_oEnv.set( 'VRA_VCC_TOOL_STEM', sScheme);
                     g_oEnv.set(f'PATH_TOOL_{sScheme}', sVCPPBasePath);
 
                     fFound = False;
@@ -2529,7 +2529,7 @@ class ToolCheck(CheckBase):
         Checks for the Windows DDK/WDK.
         """
 
-        if g_oEnv['VBOX_PATH_WIN_DDK_ROOT']:
+        if g_oEnv['VRA_PATH_WIN_DDK_ROOT']:
             self.printVerbose(1, 'Path already set, skipping check');
             return True;
 
@@ -2891,8 +2891,8 @@ int main()
 
         if compileAndRun('Python C API', [ asPathInc ], asLibDir, [ ], asLib, sCode, \
                          enmBuildTarget = self.enmBuildTarget, enmBuildArch = self.enmBuildArch):
-            g_oEnv.set('VBOX_PATH_PYTHON_INC', asPathInc);
-            g_oEnv.set('VBOX_LIB_PYTHON', asLibDir[0] if len(asLibDir) > 0 else None);
+            g_oEnv.set('VRA_PATH_PYTHON_INC', asPathInc);
+            g_oEnv.set('VRA_LIB_PYTHON', asLibDir[0] if len(asLibDir) > 0 else None);
             return True;
 
         return False;
@@ -2907,7 +2907,7 @@ int main()
             self.printVerbose(1, 'Python disbled, skipping');
             return True;
 
-        asModulesToCheck = [ 'packaging' ]; # Required by VirtualBox API bindings (both COM and XPCOM).
+        asModulesToCheck = [ 'packaging' ]; # Required by VirtualAgent API bindings (both COM and XPCOM).
 
         self.printVerbose(1, 'Checking modules ...');
 
@@ -2964,7 +2964,7 @@ int main()
         if fRc:
             self.sCmdPath, self.sVer = checkWhich('xcodebuild');
             if self.sCmdPath: # Note: Does not emit a version.
-                g_oEnv.set('VBOX_WITH_EVEN_NEWER_XCODE', '1');
+                g_oEnv.set('VRA_WITH_EVEN_NEWER_XCODE', '1');
                 return True;
 
         self.printError('CommandLineTools not found.');
@@ -3070,7 +3070,7 @@ int main()
 
 class FeatureCheck(CheckBase):
     """
-    Describes and checks for a VirtualBox feature.
+    Describes and checks for a VirtualAgent feature.
     """
     def __init__(self, sName, fnCallback, aeTargets = None, aeArchs = None,
                  enmBuildTarget = g_enmHostOS, enmBuildArch = g_enmHostArch,
@@ -3572,7 +3572,7 @@ g_aoFeatures = [
 def write_autoconfig_kmk(sFilePath, enmBuildTarget, oEnv, aoLibs, aoTools):
     """
     Writes the AutoConfig.kmk file with SDK paths and enable/disable flags.
-    Each library/tool gets VBOX_WITH_<NAME>.
+    Each library/tool gets VRA_WITH_<NAME>.
     """
 
     _ = enmBuildTarget, aoTools; # Unused for now.
@@ -3592,7 +3592,7 @@ def write_autoconfig_kmk(sFilePath, enmBuildTarget, oEnv, aoLibs, aoTools):
 #
 \n""");
     # General stuff
-    w.write_all(asPrefixInclude = ['VBOX_' ], asPrefixExclude= ['VBOX_WITH_']);
+    w.write_all(asPrefixInclude = ['VRA_' ], asPrefixExclude= ['VRA_WITH_']);
     w.write_raw('\n');
 
     # Features
@@ -3601,11 +3601,11 @@ def write_autoconfig_kmk(sFilePath, enmBuildTarget, oEnv, aoLibs, aoTools):
         if      oLibCur.isInTarget() \
         and not oLibCur.fHave:
             sVarBase = oLibCur.sName.upper().replace("+", "PLUS").replace("-", "_");
-            w.write_raw(f"VBOX_WITH_{sVarBase.ljust(26)} :=");
+            w.write_raw(f"VRA_WITH_{sVarBase.ljust(26)} :=");
     w.write_raw('\n');
 
     w.write_raw('# Features derived from arguments');
-    w.write_all(asPrefixInclude = ['VBOX_WITH_', 'VBOX_ONLY_' ]);
+    w.write_all(asPrefixInclude = ['VRA_WITH_', 'VRA_ONLY_' ]);
     w.write_raw('\n');
 
     # Tools
@@ -3897,7 +3897,7 @@ def main():
         print(__revision__);
         return 0;
 
-    print(f'VirtualBox configuration script - r{__revision__ }');
+    print(f'VirtualAgent configuration script - r{__revision__ }');
     print();
     print(f'Running on {platform.system()} {platform.release()} ({platform.machine()})');
     print(f'Using Python {sys.version} (platform: {sysconfig.get_platform()})');
@@ -3945,9 +3945,9 @@ def main():
 
     # If hardening is not explicitly enabled or disabled, use the default from the source tree.
     if g_oArgs.config_with_hardening == '2':
-        g_oEnv.set('VBOX_WITH_HARDENING', '2'); # Set to 2 as an indicator that our script has modified it.
+        g_oEnv.set('VRA_WITH_HARDENING', '2'); # Set to 2 as an indicator that our script has modified it.
     elif g_oArgs.config_without_hardening:
-        g_oEnv.set('VBOX_WITHOUT_HARDENING', '1');
+        g_oEnv.set('VRA_WITHOUT_HARDENING', '1');
 
     # Handle the configure out directory.
     if  g_oArgs.config_out_dir \
@@ -4036,7 +4036,7 @@ def main():
         fOSE = True; # Default
 
     if fOSE:
-        g_oEnv.set('VBOX_OSE', '1' if fOSE else '');
+        g_oEnv.set('VRA_OSE', '1' if fOSE else '');
 
     print('Building %s version' % ('OSE' if (fOSE is None or fOSE is True) else 'PUEL'));
     print();
@@ -4133,100 +4133,100 @@ def main():
         # Generic
         #
         # Only build the Guest Additions if explicitly specified.
-        lambda env: { 'VBOX_ONLY_ADDITIONS': '1' } if g_oArgs.config_only_additions else {},
+        lambda env: { 'VRA_ONLY_ADDITIONS': '1' } if g_oArgs.config_only_additions else {},
         # Only build the documentation if explicitly specified.
-        lambda env: { 'VBOX_ONLY_DOCS': '1' } if g_oArgs.config_only_additions else {},
+        lambda env: { 'VRA_ONLY_DOCS': '1' } if g_oArgs.config_only_additions else {},
         # Disabling building the docs when only building Additions or explicitly disabled building the docs.
-        lambda env: { 'VBOX_WITH_DOCS_PACKING': '' } if g_oArgs.config_only_additions
+        lambda env: { 'VRA_WITH_DOCS_PACKING': '' } if g_oArgs.config_only_additions
                                                      or g_oArgs.config_disable_docs else {},
-        lambda env: { 'VBOX_WITH_WEBSERVICES': '' } if g_oArgs.config_only_additions else {},
-        lambda env: { 'VBOX_WITH_WEBSERVICES': '1' } if g_oArgs.config_with_webservice else {},
+        lambda env: { 'VRA_WITH_WEBSERVICES': '' } if g_oArgs.config_only_additions else {},
+        lambda env: { 'VRA_WITH_WEBSERVICES': '1' } if g_oArgs.config_with_webservice else {},
         # Disable stuff which aren't available in OSE or if building the Validation Kit is disabled.
-        lambda env: { 'VBOX_WITH_VALIDATIONKIT': '' , 'VBOX_WITH_WIN32_ADDITIONS': '' } if g_oArgs.config_ose
+        lambda env: { 'VRA_WITH_VALIDATIONKIT': '' , 'VRA_WITH_WIN32_ADDITIONS': '' } if g_oArgs.config_ose
                                                                                         or g_oArgs.config_disable_validationkit else {},
         # Disable building the Extension Pack VNC feature when only building Additions.
-        lambda env: { 'VBOX_WITH_EXTPACK_VNC': '' } if g_oArgs.config_only_additions
+        lambda env: { 'VRA_WITH_EXTPACK_VNC': '' } if g_oArgs.config_only_additions
                                                     or g_oArgs.config_ose else {},
         # Disable Extension Pack PUEL features when building OSE.
-        lambda env: { 'VBOX_WITH_EXTPACK_PUEL': '',
-                      'VBOX_WITH_EXTPACK_PUEL_BUILD': '' } if g_oArgs.config_ose else {},
+        lambda env: { 'VRA_WITH_EXTPACK_PUEL': '',
+                      'VRA_WITH_EXTPACK_PUEL_BUILD': '' } if g_oArgs.config_ose else {},
         # Disable Extension Pack feature (plus PUEL stuff) when building only Guest Additions
         # or with Extension Pack feature disabled.
-        lambda env: { 'VBOX_WITH_EXTPACK_PUEL_BUILD': '' } if g_oArgs.config_only_additions
+        lambda env: { 'VRA_WITH_EXTPACK_PUEL_BUILD': '' } if g_oArgs.config_only_additions
                                                            or g_oArgs.config_disable_extpack else {},
-        lambda env: { 'VBOX_WITH_DXMT': '' } if g_oArgs.config_libs_disable_dxmt else {},
-        lambda env: { 'VBOX_WITH_DXVK': '' } if g_oArgs.config_libs_disable_dxvk else {},
+        lambda env: { 'VRA_WITH_DXMT': '' } if g_oArgs.config_libs_disable_dxmt else {},
+        lambda env: { 'VRA_WITH_DXVK': '' } if g_oArgs.config_libs_disable_dxvk else {},
         # Disable FE/Qt + NLS translations (requires lrelease) if Qt is disabled.
-        lambda env: { 'VBOX_WITH_QTGUI': '',
-                      'VBOX_WITH_NLS': '',
-                      'VBOX_WITH_MAIN_NLS': '',
-                      'VBOX_WITH_PUEL_NLS': '',
-                      'VBOX_WITH_VBOXMANAGE_NLS': '' } if g_oArgs.config_libs_disable_qt else {},
-        lambda env: { 'VBOX_WITH_VBOXSDL': '' } if g_oArgs.config_libs_disable_libsdl2 else {},
-        lambda env: { 'VBOX_WITH_SECURE_LABEL': '' } if g_oArgs.config_libs_disable_libsdl2_ttf else {},
-        lambda env: { 'VBOX_WITH_LIBSSH': '' } if g_oArgs.config_libs_disable_libssh else {},
-        lambda env: { 'VBOX_WITH_EXTPACK_VNC': '' } if g_oArgs.config_libs_disable_libvncserver else {},
+        lambda env: { 'VRA_WITH_QTGUI': '',
+                      'VRA_WITH_NLS': '',
+                      'VRA_WITH_MAIN_NLS': '',
+                      'VRA_WITH_PUEL_NLS': '',
+                      'VRA_WITH_VRAMANAGE_NLS': '' } if g_oArgs.config_libs_disable_qt else {},
+        lambda env: { 'VRA_WITH_VRASDL': '' } if g_oArgs.config_libs_disable_libsdl2 else {},
+        lambda env: { 'VRA_WITH_SECURE_LABEL': '' } if g_oArgs.config_libs_disable_libsdl2_ttf else {},
+        lambda env: { 'VRA_WITH_LIBSSH': '' } if g_oArgs.config_libs_disable_libssh else {},
+        lambda env: { 'VRA_WITH_EXTPACK_VNC': '' } if g_oArgs.config_libs_disable_libvncserver else {},
         # Disable components if we want to build headless.
-        lambda env: { 'VBOX_WITH_HEADLESS': '1',
-                      'VBOX_WITH_QTGUI': '',
-                      'VBOX_WITH_SECURELABEL': '',
-                      'VBOX_WITH_VMSVGA3D': '',
-                      'VBOX_WITH_3D_ACCELERATION' : '',
-                      'VBOX_GUI_USE_QGL' : '' } if g_oArgs.config_build_headless else {},
+        lambda env: { 'VRA_WITH_HEADLESS': '1',
+                      'VRA_WITH_QTGUI': '',
+                      'VRA_WITH_SECURELABEL': '',
+                      'VRA_WITH_VMSVGA3D': '',
+                      'VRA_WITH_3D_ACCELERATION' : '',
+                      'VRA_GUI_USE_QGL' : '' } if g_oArgs.config_build_headless else {},
         # Disable building the Guest Additions.
-        lambda env: { 'VBOX_WITH_ADDITIONS': '' } if g_oArgs.config_disable_additions else {},
+        lambda env: { 'VRA_WITH_ADDITIONS': '' } if g_oArgs.config_disable_additions else {},
         # Disable features when OpenGL is disabled.
-        lambda env: { 'VBOX_WITH_VMSVGA3D': '',
-                      'VBOX_WITH_3D_ACCELERATION' : '',
-                      'VBOX_GUI_USE_QGL' : '' } if g_oArgs.config_disable_opengl else {},
+        lambda env: { 'VRA_WITH_VMSVGA3D': '',
+                      'VRA_WITH_3D_ACCELERATION' : '',
+                      'VRA_GUI_USE_QGL' : '' } if g_oArgs.config_disable_opengl else {},
         # Disable recording if libvpx is disabled.
-        lambda env: { 'VBOX_WITH_LIBVPX': '',
-                      'VBOX_WITH_RECORDING': '' } if g_oArgs.config_libs_disable_libvpx else {},
+        lambda env: { 'VRA_WITH_LIBVPX': '',
+                      'VRA_WITH_RECORDING': '' } if g_oArgs.config_libs_disable_libvpx else {},
         # Disable audio recording if libvpx is disabled.
-        lambda env: { 'VBOX_WITH_LIBOGG': '',
-                      'VBOX_WITH_LIBVORBIS': '',
-                      'VBOX_WITH_AUDIO_RECORDING': '' } if  g_oArgs.config_libs_disable_libogg
+        lambda env: { 'VRA_WITH_LIBOGG': '',
+                      'VRA_WITH_LIBVORBIS': '',
+                      'VRA_WITH_AUDIO_RECORDING': '' } if  g_oArgs.config_libs_disable_libogg
                                                         and g_oArgs.config_libs_disable_libvorbis else {},
         # Disable building the documentation.
-        lambda env: { 'VBOX_WITH_DOCS': '' } if g_oArgs.config_disable_docs else {},
+        lambda env: { 'VRA_WITH_DOCS': '' } if g_oArgs.config_disable_docs else {},
         # Disable building with pylint.
-        lambda env: { 'VBOX_WITH_PYLINT': '' } if g_oArgs.config_disable_pylint else {},
+        lambda env: { 'VRA_WITH_PYLINT': '' } if g_oArgs.config_disable_pylint else {},
         # Disable building the udptunnel feature.
-        lambda env: { 'VBOX_WITH_UDPTUNNEL': '' } if g_oArgs.config_disable_udptunnel else {},
+        lambda env: { 'VRA_WITH_UDPTUNNEL': '' } if g_oArgs.config_disable_udptunnel else {},
         # Disable DXVK if glslangValidator is disabled.
-        lambda env: { 'VBOX_WITH_DXVK': '' } if g_oArgs.config_tools_disable_glslang else {},
+        lambda env: { 'VRA_WITH_DXVK': '' } if g_oArgs.config_tools_disable_glslang else {},
         # Disable building webservices if GSOAP is disabled.
-        lambda env: { 'VBOX_WITH_GSOAP': '',
-                      'VBOX_WITH_WEBSERVICES': '' } if g_oArgs.config_tools_disable_gsoap else {},
+        lambda env: { 'VRA_WITH_GSOAP': '',
+                      'VRA_WITH_WEBSERVICES': '' } if g_oArgs.config_tools_disable_gsoap else {},
         # Disable building documentation (requires ant) + Java webservices if java is disabled.
-        lambda env: { 'VBOX_WITH_DOCS' : '',
-                      'VBOX_WITH_JWS' : '',
-                      'VBOX_WITH_JMSCOM': '',
-                      'VBOX_WITH_JXPCOM' : '' } if g_oArgs.config_tools_disable_java else {},
+        lambda env: { 'VRA_WITH_DOCS' : '',
+                      'VRA_WITH_JWS' : '',
+                      'VRA_WITH_JMSCOM': '',
+                      'VRA_WITH_JXPCOM' : '' } if g_oArgs.config_tools_disable_java else {},
         # Disable Open Watcom if specified.
-        lambda env: { 'VBOX_WITH_OPEN_WATCOM': '' } if g_oArgs.config_tools_disable_openwatcom else {},
+        lambda env: { 'VRA_WITH_OPEN_WATCOM': '' } if g_oArgs.config_tools_disable_openwatcom else {},
         # Disable components which require COM.
-        lambda env: { 'VBOX_WITH_MAIN': '',
-                      'VBOX_WITH_QTGUI': '',
-                      'VBOX_WITH_VBOXSDL': '',
-                      'VBOX_WITH_DEBUGGER_GUI': '' } if g_oArgs.config_disable_com else {},
+        lambda env: { 'VRA_WITH_MAIN': '',
+                      'VRA_WITH_QTGUI': '',
+                      'VRA_WITH_VRASDL': '',
+                      'VRA_WITH_DEBUGGER_GUI': '' } if g_oArgs.config_disable_com else {},
         # Disable components which require Python. Most likely this will blow up the build, as Python is mandatory nowadays.
-        lambda env: { 'VBOX_WITH_PYTHON': '' } if g_oArgs.config_tools_disable_python else {},
+        lambda env: { 'VRA_WITH_PYTHON': '' } if g_oArgs.config_tools_disable_python else {},
         # Python is mandatory nowadays.
-        lambda env: { 'VBOX_BLD_PYTHON': os.path.join(g_oArgs.config_python_path, 'python' + getExeSuff() ) } if g_oArgs.config_python_path else {},
+        lambda env: { 'VRA_BLD_PYTHON': os.path.join(g_oArgs.config_python_path, 'python' + getExeSuff() ) } if g_oArgs.config_python_path else {},
         # Disable DTrace stuff if specified.
-        lambda env: { 'VBOX_WITH_EXTPACK_VBOXDTRACE': '',
-                      'VBOX_WITH_DTRACE': ''  } if g_oArgs.config_disable_dtrace else {},
+        lambda env: { 'VRA_WITH_EXTPACK_VRADTRACE': '',
+                      'VRA_WITH_DTRACE': ''  } if g_oArgs.config_disable_dtrace else {},
         # Disable other stuff depending on SDL if SDL is disabled (like libsdl2_ttf).
-        lambda env: { 'VBOX_WITH_SDL': '',
-                      'VBOX_WITH_SECURE_LABEL': '' } if g_oArgs.config_libs_disable_libsdl2 else {},
+        lambda env: { 'VRA_WITH_SDL': '',
+                      'VRA_WITH_SECURE_LABEL': '' } if g_oArgs.config_libs_disable_libsdl2 else {},
 
         #
         # Windows
         #
-        lambda env: { 'VBOX_PATH_WIN_DDK_ROOT': g_oArgs.config_tools_path_win_ddk } if g_oArgs.config_tools_path_win_ddk else {},
-        lambda env: { 'VBOX_PATH_WIN_SDK_ROOT': g_oArgs.config_tools_path_win_sdk10 } if g_oArgs.config_tools_path_win_sdk10 else {},
-        lambda env: { 'VBOX_PATH_WIN_SDK10_ROOT': g_oArgs.config_tools_path_win_sdk10 } if g_oArgs.config_tools_path_win_sdk10 else {},
+        lambda env: { 'VRA_PATH_WIN_DDK_ROOT': g_oArgs.config_tools_path_win_ddk } if g_oArgs.config_tools_path_win_ddk else {},
+        lambda env: { 'VRA_PATH_WIN_SDK_ROOT': g_oArgs.config_tools_path_win_sdk10 } if g_oArgs.config_tools_path_win_sdk10 else {},
+        lambda env: { 'VRA_PATH_WIN_SDK10_ROOT': g_oArgs.config_tools_path_win_sdk10 } if g_oArgs.config_tools_path_win_sdk10 else {},
         # Note: Pre-defined environment variable by vcpkg. Do not change.
         lambda env: { 'VCPKG_ROOT': g_oArgs.config_win_vcpkg_root } if g_oArgs.config_win_vcpkg_root else {},
 
@@ -4234,7 +4234,7 @@ def main():
         # macOS
         #
         # Sets the macOS SDK path.
-        lambda env: { 'VBOX_PATH_MACOSX_SDK_ROOT': g_oArgs.config_macos_sdk_path } if g_oArgs.config_macos_sdk_path else {},
+        lambda env: { 'VRA_PATH_MACOSX_SDK_ROOT': g_oArgs.config_macos_sdk_path } if g_oArgs.config_macos_sdk_path else {},
     ];
     g_oEnv.transform(aEnvTransformations);
 
@@ -4286,11 +4286,11 @@ def main():
                 print();
                 if g_oArgs.config_build_target == BuildTarget.WINDOWS:
                     print();
-                    print('Execute env.bat once before you starting to build VirtualBox:');
+                    print('Execute env.bat once before you starting to build VirtualAgent:');
                     print();
                     print('  env.bat');
                 else:
-                    print(f'Source {g_oArgs.config_file_env} once before you starting to build VirtualBox:');
+                    print(f'Source {g_oArgs.config_file_env} once before you starting to build VirtualAgent:');
                     print();
                     print(f'  source "{g_oArgs.config_file_env}"');
 

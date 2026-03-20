@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2012-2026 Oracle and/or its affiliates.
+# Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ SUB_DEPTH = ../../../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 
-ifdef VBOX_WITH_OPEN_WATCOM
+ifdef VRA_WITH_OPEN_WATCOM
 
  #
  # VBoxPcBios - The PC BIOS.
@@ -39,8 +39,8 @@ ifdef VBOX_WITH_OPEN_WATCOM
  VBoxPcBiosAll_TEMPLATE = VBoxBios
  VBoxPcBiosAll_BLD_TYPE = release
  VBoxPcBiosAll_DEFS = \
- 	VBOX_PC_BIOS \
- 	VBOX_LANBOOT_SEG=0xE200
+ 	VRA_PC_BIOS \
+ 	VRA_LANBOOT_SEG=0xE200
  #VBoxPcBiosAll_DEFS.debug = DEBUG_ATA DEBUG_POST DEBUG_INT13
  VBoxPcBiosAll_LDFLAGS = \
  	output raw offset=0xF0000 \
@@ -92,10 +92,10 @@ ifdef VBOX_WITH_OPEN_WATCOM
  VBoxPcBios386_EXTENDS = VBoxPcBiosAll
  VBoxPcBios386_CFLAGS  = -3
  VBoxPcBios386_BSFLAGS = -3 -p -s
- VBoxPcBios386_DEFS    = $(VBoxPcBiosAll_DEFS) VBOX_BIOS_CPU=80386 \
- 	VBOX_WITH_AHCI \
- 	VBOX_WITH_SCSI \
- 	VBOX_WITH_VIRTIO_SCSI
+ VBoxPcBios386_DEFS    = $(VBoxPcBiosAll_DEFS) VRA_BIOS_CPU=80386 \
+ 	VRA_WITH_AHCI \
+ 	VRA_WITH_SCSI \
+ 	VRA_WITH_VIRTIO_SCSI
  VBoxPcBios386_SOURCES = $(VBoxPcBiosAll_SOURCES) \
  	pcibios.c \
  	pciutil.c \
@@ -112,7 +112,7 @@ ifdef VBOX_WITH_OPEN_WATCOM
  MISCBINS += VBoxPcBios286
  VBoxPcBios286_EXTENDS = VBoxPcBiosAll
  VBoxPcBios286_CFLAGS  = -2
- VBoxPcBios286_DEFS    = $(VBoxPcBiosAll_DEFS) VBOX_BIOS_CPU=80286
+ VBoxPcBios286_DEFS    = $(VBoxPcBiosAll_DEFS) VRA_BIOS_CPU=80286
  VBoxPcBios286_SOURCES = $(VBoxPcBiosAll_SOURCES) \
  	apm_pm.asm \
  	../../BiosCommonCode/DoUInt32Div.c \
@@ -121,7 +121,7 @@ ifdef VBOX_WITH_OPEN_WATCOM
  MISCBINS += VBoxPcBios8086
  VBoxPcBios8086_EXTENDS = VBoxPcBiosAll
  VBoxPcBios8086_CFLAGS  = -0
- VBoxPcBios8086_DEFS    = $(VBoxPcBiosAll_DEFS) VBOX_BIOS_CPU=8086
+ VBoxPcBios8086_DEFS    = $(VBoxPcBiosAll_DEFS) VRA_BIOS_CPU=8086
  VBoxPcBios8086_BSFLAGS = -3 -p -s
  VBoxPcBios8086_SOURCES = $(VBoxPcBiosAll_SOURCES) \
  	../../BiosCommonCode/DoUInt32Div.c \
@@ -135,17 +135,17 @@ ifdef VBOX_WITH_OPEN_WATCOM
 
   $$(PATH_SUB_CURRENT)/VBoxBiosAlternative$(1).asm +| $$(PATH_SUB_CURRENT)/VBoxBiosAlternative$(1).md5sum: \
   		$$$$(VBoxPcBios$(1)_1_TARGET) \
-  		$$(VBOX_MAKE_ALTERNATIVE_SOURCE) \
-  		$$(VBOX_VBOXCMP)
+  		$$(VRA_MAKE_ALTERNATIVE_SOURCE) \
+  		$$(VRA_VRACMP)
   if1of ($(KBUILD_TYPE), release)
-	$$(VBOX_MAKE_ALTERNATIVE_SOURCE) \
+	$$(VRA_MAKE_ALTERNATIVE_SOURCE) \
        	--bios-image $$< \
        	--bios-map $$(basename $$<).map \
        	--bios-sym $$(basename $$<).sym \
        	--bios-type system \
        	--output $$(VBoxPcBios$(1)_0_OUTDIR)/VBoxBiosAlternative$(1).asm
 	$$(QUIET)$$(TOOL_YASM_AS) -f bin -o $$(VBoxPcBios$(1)_0_OUTDIR)/VBoxBiosAlternative$(1).bin $$(VBoxPcBios$(1)_0_OUTDIR)/VBoxBiosAlternative$(1).asm
-	$$(VBOX_VBOXCMP) $$< $$(VBoxPcBios$(1)_0_OUTDIR)/VBoxBiosAlternative$(1).bin
+	$$(VRA_VRACMP) $$< $$(VBoxPcBios$(1)_0_OUTDIR)/VBoxBiosAlternative$(1).bin
 	$$(CP) --changed -- $$(VBoxPcBios$(1)_0_OUTDIR)/VBoxBiosAlternative$(1).asm $$(PATH_ROOT)/src/VBox/Devices/PC/BIOS/VBoxBiosAlternative$(1).asm
 	$$(REDIRECT) -C $$(dir $$(VBoxPcBios$(1)_1_TARGET)) -- \
        	$$(MD5SUM_EXT) -bo $$(VBoxPcBios$(1)_0_OUTDIR)/VBoxBiosAlternative$(1).md5sum $$(notdir $$(VBoxPcBios$(1)_1_TARGET))
@@ -167,7 +167,7 @@ ifdef VBOX_WITH_OPEN_WATCOM
  		$(PATH_SUB_CURRENT)/VBoxBiosAlternative286.asm \
  		$(PATH_SUB_CURRENT)/VBoxBiosAlternative8086.asm
 
-endif # VBOX_WITH_OPEN_WATCOM
+endif # VRA_WITH_OPEN_WATCOM
 
 
 #
@@ -175,28 +175,28 @@ endif # VBOX_WITH_OPEN_WATCOM
 #
 LIBRARIES += PcBiosBin
 PcBiosBin_TEMPLATE  = VBoxR3Dll
-PcBiosBin_DEFS      = IN_VBOXDD2
+PcBiosBin_DEFS      = IN_VRADD2
 
 define def_VBoxPcBiosBin
  PcBiosBin_CLEAN   += $$(PcBiosBin_0_OUTDIR)/PcBiosBin$(1).c
  PcBiosBin_SOURCES += $$(PcBiosBin_0_OUTDIR)/PcBiosBin$(1).c
 
- ifdef VBOX_WITH_OPEN_WATCOM
-  $$$$(PcBiosBin_0_OUTDIR)/PcBiosBin$(1).c: $$$$(VBoxPcBios$(1)_1_TARGET) $$(VBOX_BIN2C) | $$$$(dir $$$$@)
+ ifdef VRA_WITH_OPEN_WATCOM
+  $$$$(PcBiosBin_0_OUTDIR)/PcBiosBin$(1).c: $$$$(VBoxPcBios$(1)_1_TARGET) $$(VRA_BIN2C) | $$$$(dir $$$$@)
 	$$(call MSG_TOOL,bin2c,PcBiosBin,$$<,$$@)
-	$$(QUIET)$$(VBOX_BIN2C) -min 64 -max 256 -mask 0xffff -ascii -export PcBiosBinary$(1) $$< $$@
+	$$(QUIET)$$(VRA_BIN2C) -min 64 -max 256 -mask 0xffff -ascii -export PcBiosBinary$(1) $$< $$@
  else
   PcBiosBin_CLEAN    += $$(PcBiosBin_0_OUTDIR)/VBoxPcBios$(1).rom
 
   $$$$(PcBiosBin_0_OUTDIR)/PcBiosBin$(1).c + $$$$(PcBiosBin_0_OUTDIR)/VBoxPcBios$(1).rom: \
   		$$(PATH_SUB_CURRENT)/VBoxBiosAlternative$(1).asm \
   		$$(PATH_SUB_CURRENT)/VBoxBiosAlternative$(1).md5sum \
-  		$$(VBOX_BIN2C) | $$$$(dir $$$$@)
+  		$$(VRA_BIN2C) | $$$$(dir $$$$@)
 	$$(call MSG_TOOL,bin2c,PcBiosBin,$$<,$$@)
 	$$(QUIET)$$(TOOL_YASM_AS) -f bin -o $$(PcBiosBin_0_OUTDIR)/VBoxPcBios$(1).rom $$<
 	$$(QUIET)$$(REDIRECT) -C $$(PcBiosBin_0_OUTDIR) -- \
 		$$(MD5SUM_EXT) -c $$(basename $$<).md5sum
-	$$(QUIET)$$(VBOX_BIN2C) -min 64 -max 256 -mask 0xffff -ascii -export PcBiosBinary$(1) $$(PcBiosBin_0_OUTDIR)/VBoxPcBios$(1).rom $$@
+	$$(QUIET)$$(VRA_BIN2C) -min 64 -max 256 -mask 0xffff -ascii -export PcBiosBinary$(1) $$(PcBiosBin_0_OUTDIR)/VBoxPcBios$(1).rom $$@
 	$$(QUIET)$$(RM) -f -- $$$$(PcBiosBin_0_OUTDIR)/VBoxPcBios$(1).rom
  endif
 endef
@@ -206,7 +206,7 @@ $(evalcall2 def_VBoxPcBiosBin,8086)
 
 
 
-ifdef VBOX_WITH_OPEN_WATCOM
+ifdef VRA_WITH_OPEN_WATCOM
  #
  # Install the symbol file for the BIOS.
  #

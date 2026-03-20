@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage import
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -381,9 +381,9 @@ Virtual system 0:
     (change with "--vsys 0 --vmname &lt;name&gt;")
  2: Suggested VM group "/"
     (change with "--vsys 0 --group &lt;group&gt;")
- 3: Suggested VM settings file name "/home/user1/VirtualBox VMs/win10-appliance/win10-appliance.vbox"
+ 3: Suggested VM settings file name "/home/user1/VirtualAgent VMs/win10-appliance/win10-appliance.vbox"
     (change with "--vsys 0 --settingsfile &lt;filename&gt;")
- 4: Suggested VM base folder "/home/user1/VirtualBox VMs"
+ 4: Suggested VM base folder "/home/user1/VirtualAgent VMs"
     (change with "--vsys 0 --basefolder &lt;path&gt;")
  5: End-user license agreement
     (display with "--vsys 0 --eula show";

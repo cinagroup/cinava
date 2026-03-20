@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2022-2026 Oracle and/or its affiliates.
+# Copyright (C) 2022-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -37,44 +37,44 @@ DLLS      += VBoxDxVk
 #
 # Globals.
 #
-VBOX_PATH_DXVK := $(PATH_SUB_CURRENT)
+VRA_PATH_DXVK := $(PATH_SUB_CURRENT)
 ifeq ($(KBUILD_TARGET),win)
- VBOX_DXVK_PLATFORM = DXVK_PLATFORM_WINDOWS
- VBOX_DXVK_CXXFLAGS_WIN  = -wd4101 # 'e': unreferenced local variable
- VBOX_DXVK_CXXFLAGS_WIN += -wd4146 # unary minus operator applied to unsigned type, result still unsigned
- VBOX_DXVK_CXXFLAGS_WIN += -wd4265 # 'dxvk::DxgiMonitorInfo': class has virtual functions, but its non-trivial destructor is not virtual; instances of this class may not be destructed correctly
- VBOX_DXVK_CXXFLAGS_WIN += -wd4355 # 'this': used in base member initializer list
- VBOX_DXVK_CXXFLAGS_WIN += -wd4456 # declaration of 'deviceId' hides previous local declaration
- VBOX_DXVK_CXXFLAGS_WIN += -wd4457 # declaration of 'extent' hides function parameter
- VBOX_DXVK_CXXFLAGS_WIN += -wd4458 # declaration of 'Srgb' hides class member
- VBOX_DXVK_CXXFLAGS_WIN += -wd4701 # potentially uninitialized local variable 'vec0' used
- VBOX_DXVK_CXXFLAGS_WIN += -wd4800 # Implicit conversion from 'VkBool32' to bool. Possible information loss
- VBOX_DXVK_CXXFLAGS_WIN += -wd4805 # '&=': unsafe mix of type 'bool' and type 'BOOL' in operation
- VBOX_DXVK_CXXFLAGS_WIN += -wd4946 # reinterpret_cast used between related classes: 'dxvk::D3D9DeviceEx' and 'IDirect3DDevice9Ex'
- VBOX_DXVK_CXXFLAGS_WIN += -wd5039 # pointer or reference to potentially throwing function passed to 'extern "C"' function under -EHc. Undefined behavior may occur if this function throws an exception.
- VBOX_DXVK_CXXFLAGS_WIN += -wd5041 # 'DefaultFrameLatency': out-of-line definition for constexpr static data member is not needed and is deprecated in C++17
- VBOX_DXVK_CXXFLAGS_WIN += -wd5204 # class has virtual functions, but its trivial destructor is not virtual
- VBOX_DXVK_CXXFLAGS_WIN += -wd5219 # implicit conversion from 'int' to 'float', possible loss of data
- VBOX_DXVK_CXXFLAGS_WIN += -wd5246 # 'anonymous struct or union': the initialization of a subobject should be wrapped in braces
- VBOX_DXVK_CXXFLAGS_WIN += -wd5249 # '_DXVA_ExtendedFormat::NominalRange' of type 'DXVA_NominalRange' has named enumerators with values that cannot be represented in the given bit field width of '3'.
- VBOX_DXVK_CXXFLAGS_WIN += -wd5264 # 'MaxPendingSubmits': 'const' variable is not used
- VBOX_DXVK_CXXFLAGS_WIN += -wd5267 # definition of implicit copy constructor for 'dxvk::DxvkSparseBindSubmission' is deprecated because it has a user-provided destructor
+ VRA_DXVK_PLATFORM = DXVK_PLATFORM_WINDOWS
+ VRA_DXVK_CXXFLAGS_WIN  = -wd4101 # 'e': unreferenced local variable
+ VRA_DXVK_CXXFLAGS_WIN += -wd4146 # unary minus operator applied to unsigned type, result still unsigned
+ VRA_DXVK_CXXFLAGS_WIN += -wd4265 # 'dxvk::DxgiMonitorInfo': class has virtual functions, but its non-trivial destructor is not virtual; instances of this class may not be destructed correctly
+ VRA_DXVK_CXXFLAGS_WIN += -wd4355 # 'this': used in base member initializer list
+ VRA_DXVK_CXXFLAGS_WIN += -wd4456 # declaration of 'deviceId' hides previous local declaration
+ VRA_DXVK_CXXFLAGS_WIN += -wd4457 # declaration of 'extent' hides function parameter
+ VRA_DXVK_CXXFLAGS_WIN += -wd4458 # declaration of 'Srgb' hides class member
+ VRA_DXVK_CXXFLAGS_WIN += -wd4701 # potentially uninitialized local variable 'vec0' used
+ VRA_DXVK_CXXFLAGS_WIN += -wd4800 # Implicit conversion from 'VkBool32' to bool. Possible information loss
+ VRA_DXVK_CXXFLAGS_WIN += -wd4805 # '&=': unsafe mix of type 'bool' and type 'BOOL' in operation
+ VRA_DXVK_CXXFLAGS_WIN += -wd4946 # reinterpret_cast used between related classes: 'dxvk::D3D9DeviceEx' and 'IDirect3DDevice9Ex'
+ VRA_DXVK_CXXFLAGS_WIN += -wd5039 # pointer or reference to potentially throwing function passed to 'extern "C"' function under -EHc. Undefined behavior may occur if this function throws an exception.
+ VRA_DXVK_CXXFLAGS_WIN += -wd5041 # 'DefaultFrameLatency': out-of-line definition for constexpr static data member is not needed and is deprecated in C++17
+ VRA_DXVK_CXXFLAGS_WIN += -wd5204 # class has virtual functions, but its trivial destructor is not virtual
+ VRA_DXVK_CXXFLAGS_WIN += -wd5219 # implicit conversion from 'int' to 'float', possible loss of data
+ VRA_DXVK_CXXFLAGS_WIN += -wd5246 # 'anonymous struct or union': the initialization of a subobject should be wrapped in braces
+ VRA_DXVK_CXXFLAGS_WIN += -wd5249 # '_DXVA_ExtendedFormat::NominalRange' of type 'DXVA_NominalRange' has named enumerators with values that cannot be represented in the given bit field width of '3'.
+ VRA_DXVK_CXXFLAGS_WIN += -wd5264 # 'MaxPendingSubmits': 'const' variable is not used
+ VRA_DXVK_CXXFLAGS_WIN += -wd5267 # definition of implicit copy constructor for 'dxvk::DxvkSparseBindSubmission' is deprecated because it has a user-provided destructor
 else
- VBOX_DXVK_PLATFORM = DXVK_PLATFORM_LINUX
+ VRA_DXVK_PLATFORM = DXVK_PLATFORM_LINUX
 endif
 
-VBOX_DXVK_COMMON_DEFINES =
-ifdef VBOX_WITH_DXVK_VIDEO
- VBOX_DXVK_COMMON_DEFINES += \
- 	VBOX_WITH_DXVK_VIDEO
+VRA_DXVK_COMMON_DEFINES =
+ifdef VRA_WITH_DXVK_VIDEO
+ VRA_DXVK_COMMON_DEFINES += \
+ 	VRA_WITH_DXVK_VIDEO
 endif
 
 # The HLSL to Spir-V shader compiler
-VBOX_GLSLANGVALIDATOR_PATH ?= $(lastword $(sort $(wildcard $(KBUILD_DEVTOOLS_TRG)/glslang/v11*)))
-ifeq ($(VBOX_GLSLANGVALIDATOR_PATH),)
- VBOX_GLSLANGVALIDATOR ?= glslangValidator$(HOSTSUFF_EXE)
+VRA_GLSLANGVALIDATOR_PATH ?= $(lastword $(sort $(wildcard $(KBUILD_DEVTOOLS_TRG)/glslang/v11*)))
+ifeq ($(VRA_GLSLANGVALIDATOR_PATH),)
+ VRA_GLSLANGVALIDATOR ?= glslangValidator$(HOSTSUFF_EXE)
 else
- VBOX_GLSLANGVALIDATOR ?= $(VBOX_GLSLANGVALIDATOR_PATH)/glslangValidator$(HOSTSUFF_EXE)
+ VRA_GLSLANGVALIDATOR ?= $(VRA_GLSLANGVALIDATOR_PATH)/glslangValidator$(HOSTSUFF_EXE)
 endif
 
 #
@@ -85,18 +85,18 @@ endif
 ## @param 1 full path to shader source.
 define def_VBoxDxVkCompileShader
  $(1)/shaders/$(basename $(notdir $(2))).h: $(2) | $$$$(dir $$$$@)
-	$(VBOX_GLSLANGVALIDATOR) -V --vn "$(basename $(notdir $(2)))" "$$<" -o "$$@"
+	$(VRA_GLSLANGVALIDATOR) -V --vn "$(basename $(notdir $(2)))" "$$<" -o "$$@"
 endef
 
-## Process the VBOX_SHADERS for a target.
+## Process the VRA_SHADERS for a target.
 ## @param 1 target name
 define def_VBoxDxVkCompilerShaders
  $$(call KB_FN_DO_PASS0_ON_TARGET,$(1))
  $(1)_INCS         += $$($(1)_0_OUTDIR)/shaders
  $(1)_BLDDIRS      += $$($(1)_0_OUTDIR)/shaders
- $(1)_INTERMEDIATES := $$(foreach shader,$$($(1)_VBOX_SHADERS) \
+ $(1)_INTERMEDIATES := $$(foreach shader,$$($(1)_VRA_SHADERS) \
  	,$$($(1)_0_OUTDIR)/shaders/$$(basename $$(notdir $$(shader))).h)
- $$(foreach shader,$$($(1)_VBOX_SHADERS),$$(evalcall2 def_VBoxDxVkCompileShader,$$($(1)_0_OUTDIR),$$(shader)))
+ $$(foreach shader,$$($(1)_VRA_SHADERS),$$(evalcall2 def_VBoxDxVkCompileShader,$$($(1)_0_OUTDIR),$$(shader)))
 endef
 
 
@@ -105,30 +105,30 @@ endef
 #
 VBox-DxVkNativeUtil_TEMPLATE       = VBoxR3DllNonPedantic
 VBox-DxVkNativeUtil_DEFS           = \
-	$(VBOX_DXVK_COMMON_DEFINES) \
+	$(VRA_DXVK_COMMON_DEFINES) \
 	DXVK_NATIVE \
 	NOMINMAX \
 	_WIN32_WINNT=0xa00
 VBox-DxVkNativeUtil_DEFS          += \
-	$(VBOX_DXVK_PLATFORM) \
+	$(VRA_DXVK_PLATFORM) \
 	DXVK_WSI_HEADLESS
 VBox-DxVkNativeUtil_CXXFLAGS.linux += \
 	-std=c++17 -Wno-deprecated-declarations # The latter is for std::iterator in util_bit.h.
 VBox-DxVkNativeUtil_CXXFLAGS.darwin += \
 	-std=c++17
 VBox-DxVkNativeUtil_CXXFLAGS.win += \
-	$(VBOX_DXVK_CXXFLAGS_WIN)
+	$(VRA_DXVK_CXXFLAGS_WIN)
 VBox-DxVkNativeUtil_INCS           = \
-	$(VBOX_PATH_DXVK) \
-	$(VBOX_PATH_DXVK)/include/ \
-	$(VBOX_PATH_DXVK)/src/util/ \
-	$(VBOX_PATH_DXVK)/include/vulkan/include \
-	$(VBOX_PATH_DXVK)/include/spirv/include
+	$(VRA_PATH_DXVK) \
+	$(VRA_PATH_DXVK)/include/ \
+	$(VRA_PATH_DXVK)/src/util/ \
+	$(VRA_PATH_DXVK)/include/vulkan/include \
+	$(VRA_PATH_DXVK)/include/spirv/include
 ifneq ($(KBUILD_TARGET),win)
  VBox-DxVkNativeUtil_INCS         += \
- 	$(VBOX_PATH_DXVK)/include/native/ \
- 	$(VBOX_PATH_DXVK)/include/native/windows \
- 	$(VBOX_PATH_DXVK)/include/native/directx
+ 	$(VRA_PATH_DXVK)/include/native/ \
+ 	$(VRA_PATH_DXVK)/include/native/windows \
+ 	$(VRA_PATH_DXVK)/include/native/directx
 endif
 VBox-DxVkNativeUtil_SOURCES        = \
 	src/util/util_env.cpp \
@@ -201,30 +201,30 @@ VBox-DxVkNativeUtil_SOURCES        = \
 #
 VBox-DxVkNativeDxVk_TEMPLATE       = VBoxR3DllNonPedantic
 VBox-DxVkNativeDxVk_DEFS           = \
-	$(VBOX_DXVK_COMMON_DEFINES) \
+	$(VRA_DXVK_COMMON_DEFINES) \
 	DXVK_NATIVE \
 	NOMINMAX \
 	_WIN32_WINNT=0xa00
 VBox-DxVkNativeDxVk_DEFS           += \
-	$(VBOX_DXVK_PLATFORM) \
+	$(VRA_DXVK_PLATFORM) \
 	DXVK_WSI_HEADLESS
 VBox-DxVkNativeDxVk_CXXFLAGS.linux += \
 	-std=c++17 -Wno-deprecated-declarations # The latter is for std::iterator in util_bit.h.
 VBox-DxVkNativeDxVk_CXXFLAGS.darwin += \
 	-std=c++17
 VBox-DxVkNativeDxVk_CXXFLAGS.win += \
-	$(VBOX_DXVK_CXXFLAGS_WIN)
+	$(VRA_DXVK_CXXFLAGS_WIN)
 VBox-DxVkNativeDxVk_INCS           = \
-	$(VBOX_PATH_DXVK) \
-	$(VBOX_PATH_DXVK)/include/ \
-	$(VBOX_PATH_DXVK)/src/util/ \
-	$(VBOX_PATH_DXVK)/include/vulkan/include \
-	$(VBOX_PATH_DXVK)/include/spirv/include
+	$(VRA_PATH_DXVK) \
+	$(VRA_PATH_DXVK)/include/ \
+	$(VRA_PATH_DXVK)/src/util/ \
+	$(VRA_PATH_DXVK)/include/vulkan/include \
+	$(VRA_PATH_DXVK)/include/spirv/include
 ifneq ($(KBUILD_TARGET),win)
  VBox-DxVkNativeDxVk_INCS         += \
- 	$(VBOX_PATH_DXVK)/include/native/ \
- 	$(VBOX_PATH_DXVK)/include/native/windows \
- 	$(VBOX_PATH_DXVK)/include/native/directx
+ 	$(VRA_PATH_DXVK)/include/native/ \
+ 	$(VRA_PATH_DXVK)/include/native/windows \
+ 	$(VRA_PATH_DXVK)/include/native/directx
 endif
 VBox-DxVkNativeDxVk_SOURCES        = \
 	src/dxvk/dxvk_access.cpp \
@@ -279,11 +279,11 @@ VBox-DxVkNativeDxVk_SOURCES        = \
 	src/dxvk/hud/dxvk_hud_font.cpp \
 	src/dxvk/hud/dxvk_hud_item.cpp \
 	src/dxvk/hud/dxvk_hud_renderer.cpp
-ifdef VBOX_WITH_DXVK_VIDEO
+ifdef VRA_WITH_DXVK_VIDEO
  VBox-DxVkNativeDxVk_SOURCES       += \
  	src/dxvk/dxvk_video_decoder.cpp
 endif
-VBox-DxVkNativeDxVk_VBOX_SHADERS := \
+VBox-DxVkNativeDxVk_VRA_SHADERS := \
 	$(PATH_SUB_CURRENT)/src/dxvk/shaders/dxvk_clear_buffer_u.comp \
 	$(PATH_SUB_CURRENT)/src/dxvk/shaders/dxvk_clear_image2d_u.comp \
 	$(PATH_SUB_CURRENT)/src/dxvk/shaders/dxvk_copy_buffer_image.comp \
@@ -352,30 +352,30 @@ $(evalcall2 def_VBoxDxVkCompilerShaders,VBox-DxVkNativeDxVk)
 #
 VBox-DxVkNativeD3D11_TEMPLATE        = VBoxR3DllNonPedantic
 VBox-DxVkNativeD3D11_DEFS            = \
-	$(VBOX_DXVK_COMMON_DEFINES) \
+	$(VRA_DXVK_COMMON_DEFINES) \
 	DXVK_NATIVE \
 	NOMINMAX \
 	_WIN32_WINNT=0xa00
 VBox-DxVkNativeD3D11_DEFS           += \
-	$(VBOX_DXVK_PLATFORM) \
+	$(VRA_DXVK_PLATFORM) \
 	DXVK_WSI_HEADLESS
 VBox-DxVkNativeD3D11_CXXFLAGS.linux += \
 	-std=c++17 -Wno-deprecated-declarations # The latter is for std::iterator in util_bit.h.
 VBox-DxVkNativeD3D11_CXXFLAGS.darwin += \
 	-std=c++17
 VBox-DxVkNativeD3D11_CXXFLAGS.win += \
-	$(VBOX_DXVK_CXXFLAGS_WIN)
+	$(VRA_DXVK_CXXFLAGS_WIN)
 VBox-DxVkNativeD3D11_INCS            = \
-	$(VBOX_PATH_DXVK) \
-	$(VBOX_PATH_DXVK)/include/ \
-	$(VBOX_PATH_DXVK)/src/util/ \
-	$(VBOX_PATH_DXVK)/include/vulkan/include \
-	$(VBOX_PATH_DXVK)/include/spirv/include
+	$(VRA_PATH_DXVK) \
+	$(VRA_PATH_DXVK)/include/ \
+	$(VRA_PATH_DXVK)/src/util/ \
+	$(VRA_PATH_DXVK)/include/vulkan/include \
+	$(VRA_PATH_DXVK)/include/spirv/include
 ifneq ($(KBUILD_TARGET),win)
  VBox-DxVkNativeD3D11_INCS          += \
- 	$(VBOX_PATH_DXVK)/include/native/ \
- 	$(VBOX_PATH_DXVK)/include/native/windows \
- 	$(VBOX_PATH_DXVK)/include/native/directx
+ 	$(VRA_PATH_DXVK)/include/native/ \
+ 	$(VRA_PATH_DXVK)/include/native/windows \
+ 	$(VRA_PATH_DXVK)/include/native/directx
 endif
 VBox-DxVkNativeD3D11_SOURCES        = \
 	src/dxgi/dxgi_format.cpp \
@@ -433,7 +433,7 @@ VBox-DxVkNativeD3D11_SOURCES        = \
 	src/d3d10/d3d10_view_dsv.cpp \
 	src/d3d10/d3d10_view_rtv.cpp \
 	src/d3d10/d3d10_view_srv.cpp
-VBox-DxVkNativeD3D11_VBOX_SHADERS := \
+VBox-DxVkNativeD3D11_VRA_SHADERS := \
 	$(PATH_SUB_CURRENT)/src/d3d11/shaders/d3d11_video_blit_frag.frag \
 	$(PATH_SUB_CURRENT)/src/d3d11/shaders/d3d11_video_blit_vert.vert
 $(evalcall2 def_VBoxDxVkCompilerShaders,VBox-DxVkNativeD3D11)
@@ -443,32 +443,32 @@ $(evalcall2 def_VBoxDxVkCompilerShaders,VBox-DxVkNativeD3D11)
 #
 VBoxDxVk_TEMPLATE = VBoxR3DllNonPedantic
 VBoxDxVk_DEFS     = \
-	$(VBOX_DXVK_COMMON_DEFINES) \
+	$(VRA_DXVK_COMMON_DEFINES) \
 	DXVK_NATIVE \
 	NOMINMAX \
 	_WIN32_WINNT=0xa00
 VBoxDxVk_INCS     = \
-	$(VBOX_PATH_DXVK) \
-	$(VBOX_PATH_DXVK)/include/ \
-	$(VBOX_PATH_DXVK)/src/util/
+	$(VRA_PATH_DXVK) \
+	$(VRA_PATH_DXVK)/include/ \
+	$(VRA_PATH_DXVK)/src/util/
 ifneq ($(KBUILD_TARGET),win)
  VBoxDxVk_INCS   += \
- 	$(VBOX_PATH_DXVK)/include/native/ \
- 	$(VBOX_PATH_DXVK)/include/native/windows \
- 	$(VBOX_PATH_DXVK)/include/native/directx
+ 	$(VRA_PATH_DXVK)/include/native/ \
+ 	$(VRA_PATH_DXVK)/include/native/windows \
+ 	$(VRA_PATH_DXVK)/include/native/directx
 endif
 VBoxDxVk_CXXFLAGS.linux += \
 	-std=c++17
 VBoxDxVk_CXXFLAGS.win += \
-	$(VBOX_DXVK_CXXFLAGS_WIN)
+	$(VRA_DXVK_CXXFLAGS_WIN)
 VBoxDxVk_SOURCES     = \
 	VBoxDxVkDeps.cpp
 VBoxDxVk_SOURCES.win = \
 	VBoxDxVk.def
 VBoxDxVk_LIBS     = \
-	$(PATH_STAGE_LIB)/VBox-DxVkNativeD3D11$(VBOX_SUFF_LIB) \
-	$(PATH_STAGE_LIB)/VBox-DxVkNativeDxVk$(VBOX_SUFF_LIB) \
-	$(PATH_STAGE_LIB)/VBox-DxVkNativeUtil$(VBOX_SUFF_LIB) \
+	$(PATH_STAGE_LIB)/VBox-DxVkNativeD3D11$(VRA_SUFF_LIB) \
+	$(PATH_STAGE_LIB)/VBox-DxVkNativeDxVk$(VRA_SUFF_LIB) \
+	$(PATH_STAGE_LIB)/VBox-DxVkNativeUtil$(VRA_SUFF_LIB) \
 	$(LIB_RUNTIME)
 
 include $(FILE_KBUILD_SUB_FOOTER)

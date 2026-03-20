@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage setproperty
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@
       изменить глобальные настройки влияющие на всю инсталляцию
       &product-name;. Некоторые из этих настроек соответствуют
       настройкам в диалоге <emphasis role="bold">Настройки</emphasis>
-      в Менеджере VirtualBox.
+      в Менеджере VirtualAgent.
     </para>
     <para>
       Доступны следующие свойства:
@@ -192,7 +192,7 @@
         <term><literal>vrdeextpack</literal></term>
         <listitem><para>
             Задает библиотеку, реализующую расширение удаленного
-            рабочего стола VirtualBox (RDE). Допустимые значения
+            рабочего стола VirtualAgent (RDE). Допустимые значения
             <literal>null</literal>, которое отключает RDE или имя
             используемой библиотеки.
           </para></listitem>
@@ -206,7 +206,7 @@
             по умолчанию, <literal>null</literal>, которое отключает
             аутентификацию или имя используемой библиотеки. Для
             дополнительной информации о веб службе &product-name;
-            Смотрите <xref linkend="VirtualBoxAPI" />.
+            Смотрите <xref linkend="VirtualAgentAPI" />.
           </para></listitem>
       </varlistentry>
     </variablelist>

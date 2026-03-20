@@ -29,7 +29,7 @@
 #
 
 ifneq ($(KBUILD_HOST),os2)
- VBOX_USE_WATCOM_FOR_OS2  = 1
+ VRA_USE_WATCOM_FOR_OS2  = 1
  KBUILD_TARGET      = os2
  BUILD_TARGET       = os2
  KBUILD_TARGET_ARCH = x86
@@ -95,7 +95,7 @@ dotseg_SOURCES = dotseg.cpp
 #
 TEMPLATE_VBoxR0DrvIFS = Hack to make sure we link a library. IFS must not be physical devices, but DLLs!
 TEMPLATE_VBoxR0DrvIFS_EXTENDS = VBoxGuestR0Drv
-ifdef VBOX_USE_WATCOM_FOR_OS2
+ifdef VRA_USE_WATCOM_FOR_OS2
  TEMPLATE_VBoxR0DrvIFS_LDFLAGS = $(subst physdevice,dll, $(TEMPLATE_VBoxGuestR0Drv_LDFLAGS))
 endif
 TEMPLATE_VBoxR0DrvIFS_SYSSUFF = .ifs
@@ -108,16 +108,16 @@ TEMPLATE_VBoxR0DrvIFS_ASTOOL = VBoxNasmDot
 #
 SYSMODS += VBoxSF
 VBoxSF_TEMPLATE      = VBoxR0DrvIFS
-VBoxSF_DEFS          = VBOX_WITH_HGCM
+VBoxSF_DEFS          = VRA_WITH_HGCM
 VBoxSF_INCS         := \
 	. \
 	$(PATH_ROOT)/src/VBox/Runtime/include
-ifdef VBOX_USE_WATCOM_FOR_OS2
+ifdef VRA_USE_WATCOM_FOR_OS2
  VBoxSF_LDFLAGS     := \
  	OPTION MODNAME='VBoxSF' \
  	SEG TYPE CODE PRELOAD DYNAMIC SHARED NONPERMANENT, \
  	TYPE DATA PRELOAD DYNAMIC
- #	OPTION DESCRIPTION "'VirtualBox Guest Additions Shared Folder FSD for OS/2.'" - quoting issues
+ #	OPTION DESCRIPTION "'VirtualAgent Guest Additions Shared Folder FSD for OS/2.'" - quoting issues
  # Data exports:
  VBoxSF_LDFLAGS += \
  	EXPORT 'FS_ATTRIBUTE' \
@@ -191,18 +191,18 @@ VBoxSF_SOURCES       = \
 	VBoxSFFile.cpp \
 	VBoxSFFind.cpp \
 	VBoxSFInit.cpp
-ifndef VBOX_USE_WATCOM_FOR_OS2
+ifndef VRA_USE_WATCOM_FOR_OS2
  VBoxSF_SOURCES     += \
  	VBoxSF.def
 endif
 
-VBoxSFA.asm_DEFS    = VBOX_SVN_REV_STR="$(VBOX_SVN_REV)" VBOX_VERSION_STRING="$(VBOX_VERSION_STRING)"
-VBoxSFInit.cpp_DEFS = VBOX_SVN_REV=$(VBOX_SVN_REV)
+VBoxSFA.asm_DEFS    = VRA_SVN_REV_STR="$(VRA_SVN_REV)" VRA_VERSION_STRING="$(VRA_VERSION_STRING)"
+VBoxSFInit.cpp_DEFS = VRA_SVN_REV=$(VRA_SVN_REV)
 
 VBoxSF_LIBS          = \
-	$(VBOX_LIB_VBGL_R0) \
-	$(VBOX_LIB_IPRT_GUEST_R0)
-ifdef VBOX_USE_WATCOM_FOR_OS2
+	$(VRA_LIB_VBGL_R0) \
+	$(VRA_LIB_IPRT_GUEST_R0)
+ifdef VRA_USE_WATCOM_FOR_OS2
  VBoxSF_LIBS        += $(PATH_IGCC)/lib/libend.lib
 else
  VBoxSF_LIBS        += end
@@ -213,7 +213,7 @@ endif
 # Simple utility for attaching a shared folder to a drive letter.
 #
 PROGRAMS += VBoxSFUtil
-ifdef VBOX_USE_WATCOM_FOR_OS2
+ifdef VRA_USE_WATCOM_FOR_OS2
  VBoxSFUtil_TEMPLATE = DUMMY
  VBoxSFUtil_TOOL    = OPENWATCOM
  VBoxSFUtil_ASTOOL  = NASM

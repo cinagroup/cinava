@@ -8,9 +8,9 @@
 #
 
 #
-# Copyright (C) 2017-2026 Oracle and/or its affiliates.
+# Copyright (C) 2017-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -46,13 +46,13 @@ MY_CDROM_NOCHROOT="/cdrom"
 MY_EXITCODE=0
 MY_DEBUG="" # "yes"
 
-@@VBOX_COND_HAS_PROXY@@
-PROXY="@@VBOX_INSERT_PROXY@@"
+@@VRA_COND_HAS_PROXY@@
+PROXY="@@VRA_INSERT_PROXY@@"
 export http_proxy="${PROXY}"
 export https_proxy="${PROXY}"
 echo "HTTP proxy is ${http_proxy}" | tee -a "${MY_LOGFILE}"
 echo "HTTPS proxy is ${https_proxy}" | tee -a "${MY_LOGFILE}"
-@@VBOX_COND_END@@
+@@VRA_COND_END@@
 
 #
 # Do we need to exec using target bash?  If so, we must do that early
@@ -145,7 +145,7 @@ chroot_which()
 # Log header.
 #
 echo "******************************************************************************" >> "${MY_LOGFILE}"
-echo "** VirtualBox Unattended Guest Installation - Late installation actions" >> "${MY_LOGFILE}"
+echo "** VirtualAgent Unattended Guest Installation - Late installation actions" >> "${MY_LOGFILE}"
 echo "** Date:    `date -R`" >> "${MY_LOGFILE}"
 echo "** Started: $0 $*" >> "${MY_LOGFILE}"
 
@@ -212,8 +212,8 @@ fi
 #
 # GAs
 #
-@@VBOX_COND_IS_INSTALLING_ADDITIONS@@
-@@VBOX_COND_AVOID_UPDATES_OVER_NETWORK@@
+@@VRA_COND_IS_INSTALLING_ADDITIONS@@
+@@VRA_COND_AVOID_UPDATES_OVER_NETWORK@@
 #
 # Offline APT setup (Debian-only) with diagnostics.
 #
@@ -291,26 +291,26 @@ apt-cache policy build-essential 2>&1 || true
 echo "--------------------------------------------------" >> "${MY_LOGFILE}"
 echo '** Installing packages for building kernel modules...' | tee -a "${MY_LOGFILE}"
 log_command_in_target apt-get -y install build-essential linux-headers-amd64
-@@VBOX_COND_END@@
+@@VRA_COND_END@@
 echo "--------------------------------------------------" >> "${MY_LOGFILE}"
-echo '** Installing VirtualBox Guest Additions...' | tee -a "${MY_LOGFILE}"
+echo '** Installing VirtualAgent Guest Additions...' | tee -a "${MY_LOGFILE}"
 MY_IGNORE_EXITCODE=2  # returned if modules already loaded and reboot required.
-log_command_in_target /bin/bash "${MY_CHROOT_CDROM}/vboxadditions/@@VBOX_INSERT_ADDITIONS_INSTALL_PACKAGE_NAME@@" --nox11
+log_command_in_target /bin/bash "${MY_CHROOT_CDROM}/vboxadditions/@@VRA_INSERT_ADDITIONS_INSTALL_PACKAGE_NAME@@" --nox11
 log_command_in_target /bin/bash -c "udevadm control --reload-rules" # GAs doesn't yet do this.
 log_command_in_target /bin/bash -c "udevadm trigger"                 # (ditto)
 MY_IGNORE_EXITCODE=
 log_command_in_target groupadd --force --system vboxsf
-log_command_in_target usermod -a -G vboxsf "@@VBOX_INSERT_USER_LOGIN@@"
-@@VBOX_COND_END@@
+log_command_in_target usermod -a -G vboxsf "@@VRA_INSERT_USER_LOGIN@@"
+@@VRA_COND_END@@
 
 
 #
 # Test Execution Service.
 #
-@@VBOX_COND_IS_INSTALLING_TEST_EXEC_SERVICE@@
+@@VRA_COND_IS_INSTALLING_TEST_EXEC_SERVICE@@
 echo "--------------------------------------------------" >> "${MY_LOGFILE}"
 echo '** Installing Test Execution Service...' | tee -a "${MY_LOGFILE}"
-log_command_in_target test "${MY_CHROOT_CDROM}/vboxvalidationkit/linux/@@VBOX_INSERT_OS_ARCH@@/TestExecService"
+log_command_in_target test "${MY_CHROOT_CDROM}/vboxvalidationkit/linux/@@VRA_INSERT_OS_ARCH@@/TestExecService"
 log_command mkdir -p "${MY_TARGET}/opt/validationkit" "${MY_TARGET}/media/cdrom"
 log_command cp -R ${MY_CDROM_NOCHROOT}/vboxvalidationkit/* "${MY_TARGET}/opt/validationkit/"
 log_command chmod -R u+rw,a+xr "${MY_TARGET}/opt/validationkit/"
@@ -363,15 +363,15 @@ else
     echo "** error: Unknown init script system." | tee -a "${MY_LOGFILE}"
 fi
 
-@@VBOX_COND_END@@
+@@VRA_COND_END@@
 
 #
 # Run user command.
 #
-@@VBOX_COND_HAS_POST_INSTALL_COMMAND@@
+@@VRA_COND_HAS_POST_INSTALL_COMMAND@@
 echo '** Running custom user command ...'      | tee -a "${MY_LOGFILE}"
-log_command @@VBOX_INSERT_POST_INSTALL_COMMAND@@
-@@VBOX_COND_END@@
+log_command @@VRA_INSERT_POST_INSTALL_COMMAND@@
+@@VRA_COND_END@@
 
 
 #

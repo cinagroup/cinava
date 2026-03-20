@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2008-2026 Oracle and/or its affiliates.
+# Copyright (C) 2008-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -31,20 +31,20 @@ include $(KBUILD_PATH)/subheader.kmk
 
 DLLS += VBoxInstallHelper
 VBoxInstallHelper_TEMPLATE = VBoxR3StaticDllNoAsan
-VBoxInstallHelper_SDKS     = ReorderCompilerIncs $(VBOX_WINPSDK) $(VBOX_WINDDK)
-VBoxInstallHelper_DEFS     = _WIN32_WINNT=0x0501 _UNICODE UNICODE VBOX_SVN_REV=$(VBOX_SVN_REV)
-if defined(VBOX_WITH_NETFLT) || defined(VBOX_WITH_NETADP)
+VBoxInstallHelper_SDKS     = ReorderCompilerIncs $(VRA_WINPSDK) $(VRA_WINDDK)
+VBoxInstallHelper_DEFS     = _WIN32_WINNT=0x0501 _UNICODE UNICODE VRA_SVN_REV=$(VRA_SVN_REV)
+if defined(VRA_WITH_NETFLT) || defined(VRA_WITH_NETADP)
  VBoxInstallHelper_SDKS   += VBoxWinNewDevLib
  VBoxInstallHelper_DEFS   += \
- 	$(if $(VBOX_WITH_NETFLT),VBOX_WITH_NETFLT,) \
- 	$(if $(VBOX_WITH_NETADP),VBOX_WITH_NETADP,)
+ 	$(if $(VRA_WITH_NETFLT),VRA_WITH_NETFLT,) \
+ 	$(if $(VRA_WITH_NETADP),VRA_WITH_NETADP,)
  VBoxInstallHelper_LIBS   += \
  	$(PATH_STAGE_LIB)/WinNetConfigSharedStatic.lib \
  	$(PATH_STAGE_LIB)/VBoxDrvCfgSharedStatic.lib \
- 	$(PATH_TOOL_$(VBOX_VCC_TOOL)_LIB)/comsupp.lib \
- 	$(PATH_SDK_$(VBOX_WINPSDK)_LIB)/WbemUuid.Lib
+ 	$(PATH_TOOL_$(VRA_VCC_TOOL)_LIB)/comsupp.lib \
+ 	$(PATH_SDK_$(VRA_WINPSDK)_LIB)/WbemUuid.Lib
 endif
-VBoxInstallHelper_DEPS     = $(VBOX_SVN_REV_KMK)
+VBoxInstallHelper_DEPS     = $(VRA_SVN_REV_KMK)
 VBoxInstallHelper_SOURCES  = \
 	VBoxInstallHelper.cpp \
 	VBoxInstallHelper.def \
@@ -55,14 +55,14 @@ VBoxInstallHelper_SOURCES  = \
 	$(PATH_ROOT)/src/VBox/GuestHost/installation/VBoxWinDrvStore.cpp
 VBoxInstallHelper_INCS    += \
 	$(PATH_ROOT)/src/VBox/GuestHost/installation
-ifndef VBOX_OSE
+ifndef VRA_OSE
  VBoxInstallHelper_SOURCES += \
  	internal/VBoxSerial.cpp
 endif
 VBoxInstallHelper_LIBS += \
-	$(PATH_SDK_$(VBOX_WINPSDK)_LIB)/Msi.lib
+	$(PATH_SDK_$(VRA_WINPSDK)_LIB)/Msi.lib
 
-if "$(KBUILD_TARGET)" == "win" && defined(VBOX_WITH_TESTCASES) && !defined(VBOX_OSE)
+if "$(KBUILD_TARGET)" == "win" && defined(VRA_WITH_TESTCASES) && !defined(VRA_OSE)
  include $(PATH_SUB_CURRENT)/testcase/Makefile.kmk
 endif
 

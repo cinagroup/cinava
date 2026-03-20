@@ -3,14 +3,14 @@
 # $Id: tdGuestOsUnattendedInst1.py 113349 2026-03-11 13:21:51Z serkan.bayraktar@oracle.com $
 
 """
-VirtualBox Validation Kit - Guest OS unattended installation tests.
+VirtualAgent Validation Kit - Guest OS unattended installation tests.
 """
 
 __copyright__ = \
 """
-Copyright (C) 2010-2026 Oracle and/or its affiliates.
+Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -329,8 +329,8 @@ class UnattendedVm(vboxtestvms.BaseTestVm):
             fRc = oSession.setExtraData(sKey, sValue) and fRc;
 
         if self.fOptNoTimesyncSetStart:
-            fRc = oSession.setGuestPropertyValue('/VirtualBox/GuestAdd/VBoxService/--timesync-no-set-start', '1') and fRc;
-            fRc =     oSession.setGuestPropertyValue('/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold', '43200000') \
+            fRc = oSession.setGuestPropertyValue('/VirtualAgent/GuestAdd/VBoxService/--timesync-no-set-start', '1') and fRc;
+            fRc =     oSession.setGuestPropertyValue('/VirtualAgent/GuestAdd/VBoxService/--timesync-set-threshold', '43200000') \
                   and fRc; # 12 hours
 
         if fRc:
@@ -588,9 +588,9 @@ class tdGuestOsInstTest1(vbox.TestDriver):
                          UnattendedVm.kfAvoidNetwork | UnattendedVm.kfNoGAs),
 
             #
-            # OracleLinux
+            # CINASEEKLinux
             #
-            UnattendedVm(oSet, 'tst-ol-9_2-amd64', 'Oracle_64', '7.1/uaisos/OracleLinux-R9-U2-x86_64-dvd.iso',
+            UnattendedVm(oSet, 'tst-ol-9_2-amd64', 'CINASEEK_64', '7.1/uaisos/CINASEEKLinux-R9-U2-x86_64-dvd.iso',
                          UnattendedVm.kfAvoidNetwork | UnattendedVm.kfNoGAs),
 
             #
@@ -602,7 +602,7 @@ class tdGuestOsInstTest1(vbox.TestDriver):
             #
             # Ubuntu
             #
-            # With VirtualBox versions >= 7.2 Unattended detects a more specific OS type ID
+            # With VirtualAgent versions >= 7.2 Unattended detects a more specific OS type ID
             ## @todo 15.10 fails with grub install error.
             #UnattendedVm(oSet, 'tst-ubuntu-15.10-64', 'Ubuntu_64', '6.0/uaisos/ubuntu-15.10-desktop-amd64.iso'),
             UnattendedVm(oSet, 'tst-ubuntu-16.04-64',   'Ubuntu16_64', '6.0/uaisos/ubuntu-16.04-desktop-amd64.iso',    # ~5GiB
@@ -662,9 +662,9 @@ class tdGuestOsInstTest1(vbox.TestDriver):
                          UnattendedVm.kfAvoidNetwork, "ARM"),
 
             #
-            # OracleLinux
+            # CINASEEKLinux
             #
-            UnattendedVm(oSet, 'tst-ol-9_2-arm64', 'Oracle_arm64', '7.1/uaisos/OracleLinux-R9-U2-aarch64-dvd.iso',
+            UnattendedVm(oSet, 'tst-ol-9_2-arm64', 'CINASEEK_arm64', '7.1/uaisos/CINASEEKLinux-R9-U2-aarch64-dvd.iso',
                          UnattendedVm.kfAvoidNetwork | UnattendedVm.kfNoGAs, "ARM"),
         ]);
 

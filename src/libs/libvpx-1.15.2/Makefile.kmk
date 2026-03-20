@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2018-2026 Oracle and/or its affiliates.
+# Copyright (C) 2018-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -166,7 +166,7 @@ ifeq ($(KBUILD_TARGET),win)
  VBox-libvpx_DEFS.amd64 += \
  	HAVE_SSE4_1=1 \
  	HAVE_AVX=1 \
- 	HAVE_AVX2=$(if-expr "$(VBOX_VCC_TOOL_STEM)" >= "VCC120",1,0)
+ 	HAVE_AVX2=$(if-expr "$(VRA_VCC_TOOL_STEM)" >= "VCC120",1,0)
 else
  # Note! GCC 4.3.x adds -msse4.1. GCC 4.4.x adds -mavx. GCC 4.7.x add -mavx2.
  # TODO: Add dynamic config check for: -mavx2, -mavx, -msse4.1
@@ -175,17 +175,17 @@ else
  	HAVE_PTHREAD_H=1 \
  	HAVE_UNISTD_H=1
  VBox-libvpx_DEFS.amd64 += \
- 	HAVE_SSE4_1=$(if-expr defined(VBOX_GCC_msse4.1),1,0) \
- 	HAVE_AVX=$(if-expr defined(VBOX_GCC_mavx),1,0) \
- 	HAVE_AVX2=$(if-expr defined(VBOX_GCC_mavx2),1,0)
+ 	HAVE_SSE4_1=$(if-expr defined(VRA_GCC_msse4.1),1,0) \
+ 	HAVE_AVX=$(if-expr defined(VRA_GCC_mavx),1,0) \
+ 	HAVE_AVX2=$(if-expr defined(VRA_GCC_mavx2),1,0)
 endif
 
 VBox-libvpx_CFLAGS.win += -wd4701 # vp8/encoder\denoising.c(619) : warning C4701: potentially uninitialized local variable 'motion_magnitude2' used
 VBox-libvpx_CFLAGS.win += -wd4204 # vpx_dsp\prob.c(39) : warning C4204: nonstandard extension used : non-constant aggregate initializer
 VBox-libvpx_CFLAGS.win += -wd4310 # vpx_dsp/x86/fwd_txfm_sse2.h(39): warning C4310: cast truncates constant value
 VBox-libvpx_CFLAGS.win += -wd4456 # vpx_subpixel_8t_intrin_avx2.c(583): warning C4456: declaration of 'src_reg' hides previous local declaration
-if "$(VBOX_VCC_TOOL_STEM)" >= "VCC140"
- ifeq ($(VBOX_VCC_TOOL_STEM),VCC140)
+if "$(VRA_VCC_TOOL_STEM)" >= "VCC140"
+ ifeq ($(VRA_VCC_TOOL_STEM),VCC140)
   VBox-libvpx_CFLAGS.win += -wd4752 # sad_avx2.c(173) : warning C4752: found Intel(R) Advanced Vector Extensions; consider using /arch:AVX
  endif
  VBox-libvpx_CFLAGS.win += -wd4459 # vpxenc.c(1778): warning C4459: declaration of 'width' hides global declaration
@@ -203,7 +203,7 @@ VBox-libvpx_INCS       := \
 	vp8 \
 	vpx
 
-ifdef VBOX_WITH_LIBVPX_VP9
+ifdef VRA_WITH_LIBVPX_VP9
  VBox-libvpx_INCS      += \
  	vp9 \
  	vpx_scale
@@ -407,7 +407,7 @@ VBox-libvpx_SOURCES.arm64 += \
 	vpx_dsp/arm/sse_neon.c \
 	vpx_dsp/arm/sse_neon_dotprod.c
 
-ifdef VBOX_WITH_LIBVPX_DECODER
+ifdef VRA_WITH_LIBVPX_DECODER
  VBox-libvpx_SOURCES += \
  	vp8/decoder/dboolhuff.c \
  	vp8/decoder/decodeframe.c \
@@ -420,7 +420,7 @@ ifdef VBOX_WITH_LIBVPX_DECODER
  #endif
 endif
 
-ifdef VBOX_WITH_LIBVPX_VP9
+ifdef VRA_WITH_LIBVPX_VP9
  VBox-libvpx_SOURCES += \
  	vpx_dsp/quantize.c \
  	vpx_dsp/psnrhvs.c \
@@ -544,7 +544,7 @@ ifdef VBOX_WITH_LIBVPX_VP9
  VBox-libvpx_SOURCES.amd64 += \
  	vp9/encoder/x86/vp9_quantize_ssse3_x86_64.asm
 
- ifdef VBOX_WITH_LIBVPX_DECODER
+ ifdef VRA_WITH_LIBVPX_DECODER
   VBox-libvpx_SOURCES += \
   	vp9/decoder/vp9_decodeframe.c \
   	vp9/decoder/vp9_decodemv.c \
@@ -553,7 +553,7 @@ ifdef VBOX_WITH_LIBVPX_VP9
   	vp9/decoder/vp9_dsubexp.c \
   	vp9/decoder/vp9_dthread.c
  endif
-endif # VBOX_WITH_LIBVPX_VP9
+endif # VRA_WITH_LIBVPX_VP9
 
 # Compiler flag tweaks.
 ifeq ($(KBUILD_TARGET),win)

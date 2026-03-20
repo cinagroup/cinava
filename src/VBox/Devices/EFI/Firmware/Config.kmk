@@ -7,9 +7,9 @@
 #
 
 #
-# Copyright (C) 2013-2026 Oracle and/or its affiliates.
+# Copyright (C) 2013-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -37,24 +37,24 @@
 # SPDX-License-Identifier: GPL-3.0-only OR CDDL-1.0
 #
 
-VBOX_EFI_FIRMWARE_CONFIG_KMK_INCLUDED = 1
+VRA_EFI_FIRMWARE_CONFIG_KMK_INCLUDED = 1
 
 # Include the next configure file above us.
-ifndef VBOX_DEVICES_CONFIG_KMK_INCLUDED
+ifndef VRA_DEVICES_CONFIG_KMK_INCLUDED
  include $(PATH_ROOT)/src/VBox/Devices/Config.kmk
 endif
 
 #
 # Globals.
 #
-VBOX_PATH_EFI_FIRMWARE = $(PATH_ROOT)/src/VBox/Devices/EFI/Firmware
-VBOX_PATH_STAGE_EFI_BLDPROGS = $(PATH_STAGE)/EfiBldProgs
-VBOX_EFI_BUILD_TARGET  = $(if-expr $(intersects release profile, $(KBUILD_TYPE)),RELEASE,DEBUG)
-VBOX_EFI_OUTPUT_SUBDIR = $(VBOX_EFI_BUILD_TARGET)_$(VBOX_EFI_TOOL_CHAIN.$1)
+VRA_PATH_EFI_FIRMWARE = $(PATH_ROOT)/src/VBox/Devices/EFI/Firmware
+VRA_PATH_STAGE_EFI_BLDPROGS = $(PATH_STAGE)/EfiBldProgs
+VRA_EFI_BUILD_TARGET  = $(if-expr $(intersects release profile, $(KBUILD_TYPE)),RELEASE,DEBUG)
+VRA_EFI_OUTPUT_SUBDIR = $(VRA_EFI_BUILD_TARGET)_$(VRA_EFI_TOOL_CHAIN.$1)
 
 # VBox Yasm command
 ## @todo r=andy Is this still needed? Or can we just use TOOL_YASM_AS?
-VBOX_YASMCMD   ?= $(firstword $(wildcard $(KBUILD_DEVTOOLS_HST)/bin/yasm$(HOSTSUFF_EXE)) yasm$(HOSTSUFF_EXE))
+VRA_YASMCMD   ?= $(firstword $(wildcard $(KBUILD_DEVTOOLS_HST)/bin/yasm$(HOSTSUFF_EXE)) yasm$(HOSTSUFF_EXE))
 
 # VBox nasm command (we share this with ValKit/bootsector/Config.kmk, thus the TOOL-style variable name).
 include $(KBUILD_PATH)/tools/NASM.kmk
@@ -65,9 +65,9 @@ ifndef TOOL_VBoxNasm_PATH
  endif
 endif
 ifneq ($(TOOL_VBoxNasm_PATH),)
- VBOX_NASMCMD     ?= $(TOOL_VBoxNasm_PATH)/nasm$(HOSTSUFF_EXE)
+ VRA_NASMCMD     ?= $(TOOL_VBoxNasm_PATH)/nasm$(HOSTSUFF_EXE)
 else
- VBOX_NASMCMD     ?= nasm$(HOSTSUFF_EXE)
+ VRA_NASMCMD     ?= nasm$(HOSTSUFF_EXE)
 endif
 
 
@@ -77,15 +77,15 @@ endif
 #
 ifeq ($(KBUILD_HOST),win)
  # The VS2019 template is the same as the VS2022 in upstream, so we stick with this till we upgrade.
- VBOX_EFI_TOOL_CHAIN.x86   := VS2019
- VBOX_EFI_TOOL_CHAIN.amd64 := VS2019
+ VRA_EFI_TOOL_CHAIN.x86   := VS2019
+ VRA_EFI_TOOL_CHAIN.amd64 := VS2019
 else
- VBOX_EFI_TOOL_CHAIN.x86   := GCC48
- VBOX_EFI_TOOL_CHAIN.amd64 := GCC48
+ VRA_EFI_TOOL_CHAIN.x86   := GCC48
+ VRA_EFI_TOOL_CHAIN.amd64 := GCC48
 endif
 
-VBOX_EFI_TOOL_CHAIN.arm32 := CLANGDWARF
-VBOX_EFI_TOOL_CHAIN.arm64 := CLANGDWARF
+VRA_EFI_TOOL_CHAIN.arm32 := CLANGDWARF
+VRA_EFI_TOOL_CHAIN.arm64 := CLANGDWARF
 
 
 #
@@ -107,7 +107,7 @@ TEMPLATE_VBoxEfiBldProg_CFLAGS.win += -wd4334 # warning C4334: '<<' : result of 
 TEMPLATE_VBoxEfiBldProg_CFLAGS.win += -wd4555 # warning C4555: expression has no effect; expected expression with side-effect
 TEMPLATE_VBoxEfiBldProg_CFLAGS.win += -wd4701 # warning C4701: potentially uninitialized local variable 'save_line' used
 TEMPLATE_VBoxEfiBldProg_CFLAGS.win += -wd4702 # warning C4702: unreachable code
-if "$(VBOX_VCC_TOOL_STEM)" >= "VCC140"
+if "$(VRA_VCC_TOOL_STEM)" >= "VCC140"
  TEMPLATE_VBoxEfiBldProg_CFLAGS.win += -wd4456 # antlr\gen.c(3000): warning C4456: declaration of 'f' hides previous local declaration
  TEMPLATE_VBoxEfiBldProg_CFLAGS.win += -wd4774 # antlr\main.c(1244): warning C4774: 'sprintf' : format string expected in argument 2 is not a string literal
  TEMPLATE_VBoxEfiBldProg_CFLAGS.win += -wd4703 # antlr\antlr.c(1403) : warning C4703: potentially uninitialized local pointer variable 'p' used
@@ -128,13 +128,13 @@ TEMPLATE_VBoxEfiBldProg_CXXFLAGS.win += -wd4625 # warning C4625: 'EfiVfrParser' 
 TEMPLATE_VBoxEfiBldProg_CXXFLAGS.win += -wd4626 # warning C4626: 'EfiVfrParser' : assignment operator could not be generated because a base class assignment operator is inaccessible
 TEMPLATE_VBoxEfiBldProg_CXXFLAGS.win += -wd4701 # warning C4701: potentially uninitialized local variable 'save_line' used
 TEMPLATE_VBoxEfiBldProg_CXXFLAGS.win += -wd4702 # warning C4702: unreachable code
-if "$(VBOX_VCC_TOOL_STEM)" >= "VCC140"
+if "$(VRA_VCC_TOOL_STEM)" >= "VCC140"
  TEMPLATE_VBoxEfiBldProg_CXXFLAGS.win += -wd5204 # Pccts\h\ATokenStream.h(49): warning C5204: 'ANTLRTokenStream': class has virtual functions, but its trivial destructor is not virtual; instances of objects derived from this class may not be destructed correctly
  TEMPLATE_VBoxEfiBldProg_CXXFLAGS.win += -wd4774 # Pccts\h\AParser.cpp(653): warning C4774: 'sprintf' : format string expected in argument 2 is not a string literal
  TEMPLATE_VBoxEfiBldProg_CXXFLAGS.win += -wd4703 # VfrCompile\VfrFormPkg.cpp(1344) : warning C4703: potentially uninitialized local pointer variable 'pNodeBeforeAdjust' used
  TEMPLATE_VBoxEfiBldProg_CXXFLAGS.win += -wd5033 # DLexer.h(68): warning C5033: 'register' is no longer a supported storage class (in c++17 or later mode)
 endif
-if "$(VBOX_VCC_TOOL_STEM)" >= "VCC143"
+if "$(VRA_VCC_TOOL_STEM)" >= "VCC143"
  TEMPLATE_VBoxEfiBldProg_CXXFLAGS.win += -wd5264 # AParser.cpp(57): warning C5264: 'zzINF_DEF_TOKEN_BUFFER_SIZE': 'const' variable is not used
  TEMPLATE_VBoxEfiBldProg_CXXFLAGS.win += -wd5262 # VfrUtilityLib.cpp(687): warning C5262: implicit fall-through occurs here; are you missing a break statement? Use [[fallthrough]] when a break statement is intentionally omitted between cases
  TEMPLATE_VBoxEfiBldProg_CXXFLAGS.win += -wd5267 # AToken.h(60): warning C5267: definition of implicit copy constructor for 'ANTLRAbstractToken' is deprecated because it has a user-provided destructor
@@ -150,25 +150,25 @@ TEMPLATE_VBoxEfiBldProg_CXXFLAGS.darwin.arm64 += -Wno-register # BaseTools/Sourc
 TEMPLATE_VBoxEfiBldProg_CXXFLAGS.darwin.arm64 += -Wno-deprecated-declarations # out/darwin.arm64/debug/obj/VfrCompile/VfrSyntax.cpp:11241:3: error: 'sprintf' is deprecated: This function is provided for compatibility reasons only
 
 TEMPLATE_VBoxEfiBldProg_INCS = $(TEMPLATE_VBoxBldProg_INCS) \
-	$(VBOX_PATH_EFI_FIRMWARE)/BaseTools/Source/C/Common \
-	$(VBOX_PATH_EFI_FIRMWARE)/BaseTools/Source/C/Include \
-	$(VBOX_PATH_EFI_FIRMWARE)/BaseTools/Source/C \
-	$(VBOX_PATH_EFI_FIRMWARE)/MdePkg/Include
+	$(VRA_PATH_EFI_FIRMWARE)/BaseTools/Source/C/Common \
+	$(VRA_PATH_EFI_FIRMWARE)/BaseTools/Source/C/Include \
+	$(VRA_PATH_EFI_FIRMWARE)/BaseTools/Source/C \
+	$(VRA_PATH_EFI_FIRMWARE)/MdePkg/Include
 
 TEMPLATE_VBoxEfiBldProg_INCS.x86 = $(TEMPLATE_VBoxBldProg_INCS.x86) \
-	$(VBOX_PATH_EFI_FIRMWARE)/MdePkg/Include/Ia32
+	$(VRA_PATH_EFI_FIRMWARE)/MdePkg/Include/Ia32
 
 TEMPLATE_VBoxEfiBldProg_INCS.amd64 = $(TEMPLATE_VBoxBldProg_INCS.amd64) \
-	$(VBOX_PATH_EFI_FIRMWARE)/MdePkg/Include/X64
+	$(VRA_PATH_EFI_FIRMWARE)/MdePkg/Include/X64
 
 TEMPLATE_VBoxEfiBldProg_INCS.arm = $(TEMPLATE_VBoxBldProg_INCS.arm) \
-	$(VBOX_PATH_EFI_FIRMWARE)/MdePkg/Include/Arm
+	$(VRA_PATH_EFI_FIRMWARE)/MdePkg/Include/Arm
 
 TEMPLATE_VBoxEfiBldProg_INCS.arm64 = $(TEMPLATE_VBoxBldProg_INCS.arm64) \
-	$(VBOX_PATH_EFI_FIRMWARE)/MdePkg/Include/AArch64
+	$(VRA_PATH_EFI_FIRMWARE)/MdePkg/Include/AArch64
 
 TEMPLATE_VBoxEfiBldProg_LATE_LIBS = \
-	$(VBOX_PATH_STAGE_EFI_BLDPROGS)/EfiBldCommonLib$(VBOX_SUFF_LIB) \
+	$(VRA_PATH_STAGE_EFI_BLDPROGS)/EfiBldCommonLib$(VRA_SUFF_LIB) \
 	$(TEMPLATE_VBoxBldProg_LATE_LIBS)
 ifn1of ($(KBUILD_HOST), win) # This stuff isn't up to our standard at all! :/
  TEMPLATE_VBoxEfiBldProg_CFLAGS = $(filter-out -pedantic,$(TEMPLATE_VBoxBldProg_CFLAGS)) \
@@ -193,25 +193,25 @@ TEMPLATE_VBoxEfiBldLib_BLD_TRG_CPU  := $(KBUILD_HOST_CPU)
 #
 # The debug info suffix.
 #
-if1of ($(VBOX_EFI_TOOL_CHAIN.x86), VS2017 VS2019 VS2022 CLANGPDB)
- VBOX_EFI_DBG_SUFF.x86   := .pdb
+if1of ($(VRA_EFI_TOOL_CHAIN.x86), VS2017 VS2019 VS2022 CLANGPDB)
+ VRA_EFI_DBG_SUFF.x86   := .pdb
 else
- VBOX_EFI_DBG_SUFF.x86   := .debug
+ VRA_EFI_DBG_SUFF.x86   := .debug
 endif
-if1of ($(VBOX_EFI_TOOL_CHAIN.amd64), VS2017 VS2019 VS2022 CLANGPDB)
- VBOX_EFI_DBG_SUFF.amd64 := .pdb
+if1of ($(VRA_EFI_TOOL_CHAIN.amd64), VS2017 VS2019 VS2022 CLANGPDB)
+ VRA_EFI_DBG_SUFF.amd64 := .pdb
 else
- VBOX_EFI_DBG_SUFF.amd64 := .debug
+ VRA_EFI_DBG_SUFF.amd64 := .debug
 endif
-if1of ($(VBOX_EFI_TOOL_CHAIN.arm32), VS2017 VS2019 VS2022 CLANGPDB)
- VBOX_EFI_DBG_SUFF.arm32 := .pdb
+if1of ($(VRA_EFI_TOOL_CHAIN.arm32), VS2017 VS2019 VS2022 CLANGPDB)
+ VRA_EFI_DBG_SUFF.arm32 := .pdb
 else
- VBOX_EFI_DBG_SUFF.arm32 := .debug
+ VRA_EFI_DBG_SUFF.arm32 := .debug
 endif
-if1of ($(VBOX_EFI_TOOL_CHAIN.arm64), VS2017 VS2019 VS2022 CLANGPDB)
- VBOX_EFI_DBG_SUFF.arm64 := .pdb
+if1of ($(VRA_EFI_TOOL_CHAIN.arm64), VS2017 VS2019 VS2022 CLANGPDB)
+ VRA_EFI_DBG_SUFF.arm64 := .pdb
 else
- VBOX_EFI_DBG_SUFF.arm64 := .debug
+ VRA_EFI_DBG_SUFF.arm64 := .debug
 endif
 
-include $(VBOX_PATH_EFI_FIRMWARE)/EfiModules.kmk
+include $(VRA_PATH_EFI_FIRMWARE)/EfiModules.kmk

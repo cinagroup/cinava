@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -28,28 +28,28 @@
 
 <book>
   <bookinfo>
-    <title>&VBOX_PRODUCT;</title>
+    <title>&VRA_PRODUCT;</title>
 
     <subtitle>Accessibility Reference</subtitle>
 
-    <edition>Version &VBOX_VERSION_STRING;</edition>
+    <edition>Version &VRA_VERSION_STRING;</edition>
 
-    <corpauthor>&VBOX_VENDOR;</corpauthor>
+    <corpauthor>&VRA_VENDOR;</corpauthor>
 
     <address>https://www.virtualbox.org</address>
 
     <copyright>
-      <year>2016-&VBOX_C_YEAR;</year>
+      <year>2016-&VRA_C_YEAR;</year>
 
-      <holder>&VBOX_VENDOR;</holder>
+      <holder>&VRA_VENDOR;</holder>
     </copyright>
   </bookinfo>
 
   <chapter>
     <title>Introduction</title>
     <para>
-      Welcome to the <emphasis role="bold">VirtualBox Accessibility Support</emphasis> documentation! This document is primarily
-      a reference to help people who are interested in our project accessibility support and will describe how to use VirtualBox
+      Welcome to the <emphasis role="bold">VirtualAgent Accessibility Support</emphasis> documentation! This document is primarily
+      a reference to help people who are interested in our project accessibility support and will describe how to use VirtualAgent
       user interface step-by-step. Since whole the application navigation will be explained here, this document will also be
       helpful for those who are not familiar with our product user interface and wish to learn more. It will be written in a bit
       excessive manner so that many obvious things will be explained too precisely to make it easier to understand by ear for a
@@ -73,9 +73,9 @@
       <itemizedlist>
         <listitem>
           <para>
-            First of them is <emphasis role="bold">VirtualBox Manager</emphasis> user interface, the main application window
+            First of them is <emphasis role="bold">VirtualAgent Manager</emphasis> user interface, the main application window
             which allows to manage and configure virtual machines and their groups. Besides that, this window provides user with
-            access to various global and machine related tools allowing to administrate some of VirtualBox objects and their
+            access to various global and machine related tools allowing to administrate some of VirtualAgent objects and their
             settings.
           </para>
         </listitem>

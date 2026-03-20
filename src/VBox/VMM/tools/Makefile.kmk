@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ include $(KBUILD_PATH)/subheader.kmk
 #
 # Targets.
 #
-ifdef VBOX_WITH_HARDENING
+ifdef VRA_WITH_HARDENING
  PROGRAMS += VBoxVMMPreloadHardened
  DLLS    += VBoxVMMPreload
 else
@@ -51,11 +51,11 @@ VBoxVMMPreloadHardened_NAME     = VBoxVMMPreload
 #
 # The real thing
 #
-VBoxVMMPreload_TEMPLATE  := $(if $(VBOX_WITH_HARDENING),VBoxR3Dll,VBoxR3SignedExe)
+VBoxVMMPreload_TEMPLATE  := $(if $(VRA_WITH_HARDENING),VBoxR3Dll,VBoxR3SignedExe)
 VBoxVMMPreload_SOURCES    = VBoxVMMPreload.cpp
 VBoxVMMPreload_LIBS = $(LIB_RUNTIME)
-ifdef VBOX_WITH_HARDENING
- VBoxVMMPreload_LDFLAGS.darwin += -install_name $(VBOX_DYLD_EXECUTABLE_PATH)/VBoxVMMPreload.dylib
+ifdef VRA_WITH_HARDENING
+ VBoxVMMPreload_LDFLAGS.darwin += -install_name $(VRA_DYLD_EXECUTABLE_PATH)/VBoxVMMPreload.dylib
 endif
 
 
@@ -66,10 +66,10 @@ if1of ($(KBUILD_TARGET_ARCH), amd64 x86 arm64)
  PROGRAMS += VBoxCpuReport
 endif
 VBoxCpuReport_TEMPLATE   := VBoxR3StaticSignedExe
-VBoxCpuReport_DEFS        = VBOX_IN_VMM IN_VMM_R3 IN_VBOX_CPU_REPORT $(VMM_COMMON_DEFS)
-VBoxCpuReport_DEFS.amd64 := VBOX_VMM_TARGET_X86
-VBoxCpuReport_DEFS.x86   := VBOX_VMM_TARGET_X86
-VBoxCpuReport_DEFS.arm64 := VBOX_VMM_TARGET_ARMV8
+VBoxCpuReport_DEFS        = VRA_IN_VMM IN_VMM_R3 IN_VRA_CPU_REPORT $(VMM_COMMON_DEFS)
+VBoxCpuReport_DEFS.amd64 := VRA_VMM_TARGET_X86
+VBoxCpuReport_DEFS.x86   := VRA_VMM_TARGET_X86
+VBoxCpuReport_DEFS.arm64 := VRA_VMM_TARGET_ARMV8
 VBoxCpuReport_INCS       := ../include
 VBoxCpuReport_SOURCES    := \
 	VBoxCpuReport.cpp \
@@ -96,8 +96,8 @@ VBoxCpuReport_SOURCES.arm64 := \
 	VBoxCpuReport-arm.cpp
 
 VBoxCpuReport_LIBS      = \
-	$(PATH_STAGE_LIB)/SUPR3Static$(VBOX_SUFF_LIB) \
-	$(VBOX_LIB_RUNTIME_STATIC)
+	$(PATH_STAGE_LIB)/SUPR3Static$(VRA_SUFF_LIB) \
+	$(VRA_LIB_RUNTIME_STATIC)
 VBoxCpuReport_LIBS.solaris = kstat contract
 
 VBoxCpuReport_LDFLAGS.darwin = \
@@ -105,10 +105,10 @@ VBoxCpuReport_LDFLAGS.darwin = \
 VBoxCpuReport_LDFLAGS.darwin.arm64 = \
 	-framework Hypervisor
 
-ifdef VBOX_SIGNING_MODE
- VBoxCpuReport_DEPS.darwin.arm64 = $(PATH_ROOT)/src/VBox/VMM/tools/VBoxCpuReport-arm-entitlements.plist #$(VBOX_DARWIN_ENTITLEMENTS_FILE_VM)
+ifdef VRA_SIGNING_MODE
+ VBoxCpuReport_DEPS.darwin.arm64 = $(PATH_ROOT)/src/VBox/VMM/tools/VBoxCpuReport-arm-entitlements.plist #$(VRA_DARWIN_ENTITLEMENTS_FILE_VM)
  VBoxCpuReport_POST_CMDS.darwin.arm64 = \
- 	$(call VBOX_SIGN_MACHO_FN,$(out),org.virtualbox.app.macos.VBoxCpuReport,--entitlements=$(VBoxCpuReport_DEPS.darwin.arm64))
+ 	$(call VRA_SIGN_MACHO_FN,$(out),org.virtualbox.app.macos.VBoxCpuReport,--entitlements=$(VBoxCpuReport_DEPS.darwin.arm64))
 endif
 
 

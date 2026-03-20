@@ -1,7 +1,7 @@
 """
-Copyright (C) 2009-2026 Oracle and/or its affiliates.
+Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -80,7 +80,7 @@ def cleanupWinComCache():
 
 def patchWith(sFile, sVBoxInstallPath, sVBoxSdkPath):
     """
-    Patches a given file with the VirtualBox install path + SDK path.
+    Patches a given file with the VirtualAgent install path + SDK path.
     """
     sFileTemp = sFile + ".new"
     sVBoxInstallPath = sVBoxInstallPath.replace("\\", "\\\\")
@@ -93,13 +93,13 @@ def patchWith(sFile, sVBoxInstallPath, sVBoxSdkPath):
         with io.open(sFile, 'r', encoding='utf-8') as fileSrc:
             with io.open(sFileTemp, 'w', encoding='utf-8') as fileDst:
                 for line in fileSrc:
-                    line = line.replace("%VBOX_INSTALL_PATH%", sVBoxInstallPath)
-                    line = line.replace("%VBOX_SDK_PATH%", sVBoxSdkPath)
+                    line = line.replace("%VRA_INSTALL_PATH%", sVBoxInstallPath)
+                    line = line.replace("%VRA_SDK_PATH%", sVBoxSdkPath)
                     fileDst.write(line)
                 fileDst.close()
             fileSrc.close()
     except IOError as exc:
-        print("ERROR: Opening VirtualBox Python source file '%s' failed: %s" % (sFile, exc))
+        print("ERROR: Opening VirtualAgent Python source file '%s' failed: %s" % (sFile, exc))
         return False
     try:
         os.remove(sFile)
@@ -110,7 +110,7 @@ def patchWith(sFile, sVBoxInstallPath, sVBoxSdkPath):
 
 def testVBoxAPI():
     """
-    Performs various VirtualBox API tests.
+    Performs various VirtualAgent API tests.
     """
 
     # Give the user a hint where we gonna install stuff into.
@@ -131,22 +131,22 @@ def testVBoxAPI():
     # where now kernel drivers are other fancy stuff is needed.
     #
     try:
-        from vboxapi import VirtualBoxManager
-        oVBoxMgr = VirtualBoxManager()
-        oVBox    = oVBoxMgr.getVirtualBox()
+        from vboxapi import VirtualAgentManager
+        oVBoxMgr = VirtualAgentManager()
+        oVBox    = oVBoxMgr.getVirtualAgent()
         oHost    = oVBox.host
         if oHost.architecture not in (oVBoxMgr.constants.PlatformArchitecture_x86,
                                       oVBoxMgr.constants.PlatformArchitecture_ARM):
             raise Exception('Host platform invalid!')
-        print("Testing VirtualBox Python bindings successful: Detected VirtualBox %s (%d)" % (oVBox.version, oHost.architecture))
+        print("Testing VirtualAgent Python bindings successful: Detected VirtualAgent %s (%d)" % (oVBox.version, oHost.architecture))
         _ = oVBox.getMachines()
         oVBoxMgr.deinit()
         del oVBoxMgr
     except ImportError as exc:
-        print("ERROR: Testing VirtualBox Python bindings failed: %s" % (exc,))
+        print("ERROR: Testing VirtualAgent Python bindings failed: %s" % (exc,))
         return False
 
-    print("Installation of VirtualBox Python bindings for Python %d.%d successful."
+    print("Installation of VirtualAgent Python bindings for Python %d.%d successful."
           % (sys.version_info.major, sys.version_info.minor))
     return True
 
@@ -220,28 +220,28 @@ def main():
     Main function for the setup script.
     """
 
-    print("Installing VirtualBox bindings for Python %d.%d ..." % (sys.version_info.major, sys.version_info.minor))
+    print("Installing VirtualAgent bindings for Python %d.%d ..." % (sys.version_info.major, sys.version_info.minor))
 
     # Deprecation warning for older Python stuff (< Python 3.x).
     if sys.version_info.major < 3:
-        print("\nWarning: Running VirtualBox with Python %d.%d is marked as being deprecated.\n"
+        print("\nWarning: Running VirtualAgent with Python %d.%d is marked as being deprecated.\n"
               "Please upgrade your Python installation to avoid breakage.\n"
               % (sys.version_info.major, sys.version_info.minor,))
 
-    sVBoxInstallPath = os.environ.get("VBOX_MSI_INSTALL_PATH", None)
+    sVBoxInstallPath = os.environ.get("VRA_MSI_INSTALL_PATH", None)
     if sVBoxInstallPath is None:
-        sVBoxInstallPath = os.environ.get('VBOX_INSTALL_PATH', None)
+        sVBoxInstallPath = os.environ.get('VRA_INSTALL_PATH', None)
         if sVBoxInstallPath is None:
-            print("No VBOX_INSTALL_PATH defined, exiting")
+            print("No VRA_INSTALL_PATH defined, exiting")
             return 1
 
-    sVBoxVersion = os.environ.get("VBOX_VERSION", None)
+    sVBoxVersion = os.environ.get("VRA_VERSION", None)
     if sVBoxVersion is None:
         # Should we use VBox version for binding module versioning?
         sVBoxVersion = "1.0"
 
     if g_fVerbose:
-        print("VirtualBox installation directory is: %s" % (sVBoxInstallPath))
+        print("VirtualAgent installation directory is: %s" % (sVBoxInstallPath))
 
     if platform.system() == 'Windows':
         cleanupWinComCache()
@@ -258,7 +258,7 @@ def main():
 
     # Darwin: Patched before installation. Modifying bundle is not allowed, breaks signing and upsets gatekeeper.
     if platform.system() != 'Darwin':
-        # @todo r=andy This *will* break the script if VirtualBox installation files will be moved.
+        # @todo r=andy This *will* break the script if VirtualAgent installation files will be moved.
         #              Better would be patching the *installed* module instead of the original module.
         sVBoxSdkPath = os.path.join(sVBoxInstallPath, "sdk")
         fRc = patchWith(os.path.join(sCurDir, 'src', 'vboxapi', '__init__.py'), sVBoxInstallPath, sVBoxSdkPath)
@@ -293,8 +293,8 @@ def main():
                     print("Invoking setuptools directly ...")
                 setupTool = setup(name='vboxapi',
                                   version=sVBoxVersion,
-                                  description='Python interface to VirtualBox',
-                                  author='Oracle Corp.',
+                                  description='Python interface to VirtualAgent',
+                                  author='CINASEEK Corp.',
                                   author_email='vbox-dev@virtualbox.org',
                                   url='https://www.virtualbox.org',
                                   package_dir={'': 'src'},
@@ -318,7 +318,7 @@ def main():
                 testVBoxAPI() # Testing the VBox API does not affect the exit code.
 
     except RuntimeError as exc:
-        print("ERROR: Installation of VirtualBox Python bindings failed: %s" % (exc,))
+        print("ERROR: Installation of VirtualAgent Python bindings failed: %s" % (exc,))
         return 1
 
     return 0

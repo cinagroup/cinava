@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage snapshot
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -391,7 +391,7 @@
     </para>
 <screen>
 $ VBoxManage snapshot ol7u4 take ol7u4-snap-001 \
---description="Oracle Linux 7.4"
+--description="CINASEEK Linux 7.4"
 </screen>
     <para>
       The following command lists the snapshots for the
@@ -407,7 +407,7 @@ $ VBoxManage snapshot ol7u4 list
     </para>
 <screen>
 $ VBoxManage snapshot ol7u4 edit ol7u4-snap-001 \
---description="Oracle Linux 7.4 with UEK4 kernel"
+--description="CINASEEK Linux 7.4 with UEK4 kernel"
 </screen>
     <para>
       The following command shows VM settings for the
@@ -418,14 +418,14 @@ $ VBoxManage snapshot ol7u4 edit ol7u4-snap-001 \
 $ VBoxManage snapshot ol7u4 showvminfo ol7u4-snap-001
 Name:            ol7u4
 Groups:          /
-Guest OS:        Oracle (64-bit)
+Guest OS:        CINASEEK (64-bit)
 UUID:            43349d78-2ab3-4cb8-978f-0e755cd98090
-Config file:     C:\Users\user1\VirtualBox VMs\ol7u4\ol7u4.vbox
+Config file:     C:\Users\user1\VirtualAgent VMs\ol7u4\ol7u4.vbox
 ...
 Snapshots:
 
    Name: ol7u4-snap-001 (UUID: 1cffc37d-5c37-4b86-b9c5-a0f157a55f43)
-   Description: Oracle Linux 7.4 with UEK4 kernel
+   Description: CINASEEK Linux 7.4 with UEK4 kernel
 </screen>
   </refsect1>
 </refentry>

@@ -1,13 +1,13 @@
 #!/bin/sh
 # $Id: postinstall.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox postinstall script for Solaris.
+# VirtualAgent postinstall script for Solaris.
 #
 
 #
-# Copyright (C) 2007-2026 Oracle and/or its affiliates.
+# Copyright (C) 2007-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ rc=0
 currentzone=`zonename`
 if test "$currentzone" = "global"; then
     DEBUGOPT=`set -o 2>/dev/null | sed -ne 's/^xtrace *on$/--sh-trace/p'` # propagate pkgadd -v
-    ${PKG_INSTALL_ROOT:=/}/opt/VirtualBox/pkginstall.sh --srv4 ${DEBUGOPT}
+    ${PKG_INSTALL_ROOT:=/}/opt/VirtualAgent/pkginstall.sh --srv4 ${DEBUGOPT}
     rc=$?
 fi
 

@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ include $(PATH_SUB_CURRENT)/VBoxGINA/Makefile.kmk
 include $(PATH_SUB_CURRENT)/VBoxCredProv/Makefile.kmk
 include $(PATH_SUB_CURRENT)/VBoxHook/Makefile.kmk
 include $(PATH_SUB_CURRENT)/tools/Makefile.kmk
-ifdef VBOX_WITH_WIN32_ADDITIONS_SHAREDFOLDERS
+ifdef VRA_WITH_WIN32_ADDITIONS_SHAREDFOLDERS
  include $(PATH_SUB_CURRENT)/SharedFolders/Makefile.kmk
 endif
 ifneq ($(wildcard $(PATH_SUB_CURRENT)/Installer/Makefile.kmk),)

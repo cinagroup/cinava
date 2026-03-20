@@ -3,14 +3,14 @@
 # $Id: tdGuestOsInstTest1.py 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 
 """
-VirtualBox Validation Kit - Guest OS installation tests.
+VirtualAgent Validation Kit - Guest OS installation tests.
 """
 
 __copyright__ = \
 """
-Copyright (C) 2010-2026 Oracle and/or its affiliates.
+Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -245,8 +245,8 @@ class tdGuestOsInstTest1(vbox.TestDriver):
             InstallTestVm(oSet, 'tst-fedora9',      'Fedora',           'fedora9-txs.iso',          InstallTestVm.ksSataController,  8, InstallTestVm.kf32Bit),
             InstallTestVm(oSet, 'tst-fedora18-64',  'Fedora_64',        'fedora18-x64-txs.iso',     InstallTestVm.ksSataController,  8, InstallTestVm.kf64Bit),
             InstallTestVm(oSet, 'tst-fedora18',     'Fedora',           'fedora18-txs.iso',         InstallTestVm.ksScsiController,  8, InstallTestVm.kf32Bit),
-            InstallTestVm(oSet, 'tst-ols6',         'Oracle',           'ols6-i386-txs.iso',        InstallTestVm.ksSataController, 12, InstallTestVm.kf32Bit | InstallTestVm.kfReqPae | InstallTestVm.kfLinuxIoApic),
-            InstallTestVm(oSet, 'tst-ols6-64',      'Oracle_64',        'ols6-x86_64-txs.iso',      InstallTestVm.ksSataController, 12, InstallTestVm.kf64Bit | InstallTestVm.kfLinuxIoApic),
+            InstallTestVm(oSet, 'tst-ols6',         'CINASEEK',           'ols6-i386-txs.iso',        InstallTestVm.ksSataController, 12, InstallTestVm.kf32Bit | InstallTestVm.kfReqPae | InstallTestVm.kfLinuxIoApic),
+            InstallTestVm(oSet, 'tst-ols6-64',      'CINASEEK_64',        'ols6-x86_64-txs.iso',      InstallTestVm.ksSataController, 12, InstallTestVm.kf64Bit | InstallTestVm.kfLinuxIoApic),
             InstallTestVm(oSet, 'tst-rhel5',        'RedHat',           'rhel5-txs.iso',            InstallTestVm.ksSataController,  8, InstallTestVm.kf32Bit | InstallTestVm.kfReqPae | InstallTestVm.kfReqIoApic | InstallTestVm.kfLinuxIoApic),
             InstallTestVm(oSet, 'tst-suse102',      'OpenSUSE',         'opensuse102-txs.iso',      InstallTestVm.ksIdeController,   8, InstallTestVm.kf32Bit | InstallTestVm.kfReqIoApic),
             ## @todo InstallTestVm(oSet, 'tst-ubuntu606',    'Ubuntu',           'ubuntu606-txs.iso',        InstallTestVm.ksSataController,  8, InstallTestVm.kf32Bit),

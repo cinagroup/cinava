@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -31,21 +31,21 @@ include $(KBUILD_PATH)/subheader.kmk
 #
 # The targets.
 #
-ifdef VBOX_WITH_DEBUGGER
+ifdef VRA_WITH_DEBUGGER
  LIBRARIES += Debugger
- ifdef VBOX_WITH_TESTCASES
+ ifdef VRA_WITH_TESTCASES
   PROGRAMS += tstDBGCParser
  endif
-endif # VBOX_WITH_DEBUGGER
+endif # VRA_WITH_DEBUGGER
 
 
 #
 # Debugger library - linked into VBoxVMM.
 #
 Debugger_TEMPLATE  = VBoxR3Dll
-Debugger_DEFS      = IN_VMM_R3 IN_DBG_R3 IN_DIS VBOX_WITH_DEBUGGER
+Debugger_DEFS      = IN_VMM_R3 IN_DBG_R3 IN_DIS VRA_WITH_DEBUGGER
 ifneq ($(KBUILD_TYPE),release)
- Debugger_DEFS    += VBOX_WITH_DEBUGGER_TCP_BY_DEFAULT
+ Debugger_DEFS    += VRA_WITH_DEBUGGER_TCP_BY_DEFAULT
 endif
 Debugger_SOURCES   = \
 	DBGConsole.cpp \
@@ -67,18 +67,18 @@ Debugger_SOURCES   = \
 	DBGCIoProvIpc.cpp \
 	DBGCScreenAscii.cpp
 
-ifdef VBOX_WITH_VIRT_ARMV8
+ifdef VRA_WITH_VIRT_ARMV8
  #
  # Debugger library - linked into VBoxVMM, ARMv8 variant.
  #
  # @todo Can this be merged into one library later maybe?
- ifdef VBOX_WITH_DEBUGGER
+ ifdef VRA_WITH_DEBUGGER
   LIBRARIES += Debugger-armv8
  endif
  Debugger-armv8_TEMPLATE  = VBoxR3Dll
- Debugger-armv8_DEFS      = VBOX_VMM_TARGET_ARMV8 IN_VMM_R3 IN_DBG_R3 IN_DIS VBOX_WITH_DEBUGGER
+ Debugger-armv8_DEFS      = VRA_VMM_TARGET_ARMV8 IN_VMM_R3 IN_DBG_R3 IN_DIS VRA_WITH_DEBUGGER
  ifneq ($(KBUILD_TYPE),release)
-  Debugger-armv8_DEFS    += VBOX_WITH_DEBUGGER_TCP_BY_DEFAULT
+  Debugger-armv8_DEFS    += VRA_WITH_DEBUGGER_TCP_BY_DEFAULT
  endif
  Debugger-armv8_SOURCES   = \
  	DBGConsole.cpp \
@@ -99,7 +99,7 @@ ifdef VBOX_WITH_VIRT_ARMV8
  	DBGCIoProvUdp.cpp \
  	DBGCIoProvIpc.cpp \
  	DBGCScreenAscii.cpp
-endif # VBOX_WITH_VIRT_ARMV8
+endif # VRA_WITH_VIRT_ARMV8
 
 
 #
@@ -109,7 +109,7 @@ PROGRAMS += VBoxDumpImage
 VBoxDumpImage_TEMPLATE = VBoxR3Tool
 VBoxDumpImage_DEFS    := DBGC_DUMP_IMAGE_TOOL
 VBoxDumpImage_SOURCES := DBGCDumpImage.cpp
-$(call VBOX_SET_VER_INFO_DLL,VBoxDumpImage,VirtualBox Executable Image Dumper Utility)
+$(call VRA_SET_VER_INFO_DLL,VBoxDumpImage,VirtualAgent Executable Image Dumper Utility)
 
 
 #
@@ -128,9 +128,9 @@ DbgPlugInDiggers_SOURCES = \
 	DBGPlugInFreeBsd.cpp \
 	DBGPlugInCommonELF.cpp
 DbgPlugInDiggers_LIBS = \
-	$(PATH_STAGE_LIB)/DisasmR3$(VBOX_SUFF_LIB) \
+	$(PATH_STAGE_LIB)/DisasmR3$(VRA_SUFF_LIB) \
 	$(LIB_RUNTIME)
-$(call VBOX_SET_VER_INFO_DLL,DbgPlugInDiggers,VirtualBox Debugger Guest OS Digger Plug-in)
+$(call VRA_SET_VER_INFO_DLL,DbgPlugInDiggers,VirtualAgent Debugger Guest OS Digger Plug-in)
 
 
 #
@@ -139,7 +139,7 @@ $(call VBOX_SET_VER_INFO_DLL,DbgPlugInDiggers,VirtualBox Debugger Guest OS Digge
 #
 tstDBGCParser_TEMPLATE = VBoxR3TstExe
 tstDBGCParser_DEFS = IN_VMM_R3
-tstDBGCParser_CXXFLAGS = $(VBOX_C_CXX_FLAGS_NO_UNUSED_PARAMETERS)
+tstDBGCParser_CXXFLAGS = $(VRA_C_CXX_FLAGS_NO_UNUSED_PARAMETERS)
 tstDBGCParser_SOURCES = \
 	testcase/tstDBGCParser.cpp \
 	testcase/tstDBGCStubs.cpp
@@ -148,7 +148,7 @@ tstDBGCParser_LIBS = \
 	$(LIB_RUNTIME)
 
 
-if defined(VBOX_WITH_QTGUI) && defined(VBOX_WITH_DEBUGGER_GUI)
+if defined(VRA_WITH_QTGUI) && defined(VRA_WITH_DEBUGGER_GUI)
  #
  # Debugger GUI component (Qt).
  #
@@ -170,8 +170,8 @@ if defined(VBOX_WITH_QTGUI) && defined(VBOX_WITH_DEBUGGER_GUI)
  	VBoxDbgStatsQt.cpp
  VBoxDbg_CXXFLAGS.win += /permissive-
  VBoxDbg_LDFLAGS.darwin = \
- 	-install_name $(VBOX_DYLD_EXECUTABLE_PATH)/VBoxDbg.dylib
- $(call VBOX_SET_VER_INFO_DLL,VBoxDbg,VirtualBox Debugger GUI)
+ 	-install_name $(VRA_DYLD_EXECUTABLE_PATH)/VBoxDbg.dylib
+ $(call VRA_SET_VER_INFO_DLL,VBoxDbg,VirtualAgent Debugger GUI)
 endif # Qt
 
 

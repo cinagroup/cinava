@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,12 +29,12 @@ SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 # Include our Config.kmk if kmk is invoked from a parent directory.
-ifndef VBOX_VMM_CONFIG_KMK_INCLUDED
+ifndef VRA_VMM_CONFIG_KMK_INCLUDED
  include $(PATH_SUB_CURRENT)/Config.kmk
 endif
 
 # Include sub-makefiles.
-ifndef VBOX_ONLY_BUILD
+ifndef VRA_ONLY_BUILD
  include $(PATH_SUB_CURRENT)/tools/Makefile.kmk
  include $(PATH_SUB_CURRENT)/testcase/Makefile.kmk
 endif
@@ -43,11 +43,11 @@ endif
 # Fail on unsupported hosts.
 ifeq ($(KBUILD_TARGET_ARCH),x86)
  ifeq ($(KBUILD_TARGET),darwin)
-  $(error 32-bit darwin is no longer a supported VirtualBox host. Go back to 4.3 or older for 32-bit host support.)
+  $(error 32-bit darwin is no longer a supported VirtualAgent host. Go back to 4.3 or older for 32-bit host support.)
  else ifeq ($(KBUILD_TARGET),solaris)
-  $(error 32-bit solaris is no longer a supported VirtualBox host. Go back to 4.2 or older for 32-bit host support.)
- else ifn1of ($(KBUILD_TARGET_ARCH), $(VBOX_SUPPORTED_HOST_ARCHS))
-  $(error 32-bit builds of the VirtualBox host are no longer supported. Go back to 6.0 or older for 32-bit host support.)
+  $(error 32-bit solaris is no longer a supported VirtualAgent host. Go back to 4.2 or older for 32-bit host support.)
+ else ifn1of ($(KBUILD_TARGET_ARCH), $(VRA_SUPPORTED_HOST_ARCHS))
+  $(error 32-bit builds of the VirtualAgent host are no longer supported. Go back to 6.0 or older for 32-bit host support.)
  endif
 endif
 
@@ -55,36 +55,36 @@ endif
 #
 # The VMM DLL.
 #
-ifndef VBOX_ONLY_BUILD
+ifndef VRA_ONLY_BUILD
  DLLS += VBoxVMM
 endif
 VBoxVMM_TEMPLATE = VBoxR3DllNoPic
 VBoxVMM_SONAME.linux = VBoxVMM.so
 
-VBoxVMM_DEFS     = VBOX_VMM_TARGET_X86 VBOX_IN_VMM IN_VMM_R3 IN_DIS IN_DBG $(VMM_COMMON_DEFS)
-ifdef VBOX_WITH_PREALLOC_RAM_BY_DEFAULT
- VBoxVMM_DEFS   += VBOX_WITH_PREALLOC_RAM_BY_DEFAULT
+VBoxVMM_DEFS     = VRA_VMM_TARGET_X86 VRA_IN_VMM IN_VMM_R3 IN_DIS IN_DBG $(VMM_COMMON_DEFS)
+ifdef VRA_WITH_PREALLOC_RAM_BY_DEFAULT
+ VBoxVMM_DEFS   += VRA_WITH_PREALLOC_RAM_BY_DEFAULT
 endif
-ifdef VBOX_WITH_VUSB
- VBoxVMM_DEFS   += VBOX_WITH_USB
+ifdef VRA_WITH_VUSB
+ VBoxVMM_DEFS   += VRA_WITH_USB
 endif
-ifdef VBOX_WITH_PDM_ASYNC_COMPLETION
- VBoxVMM_DEFS   += VBOX_WITH_PDM_ASYNC_COMPLETION
+ifdef VRA_WITH_PDM_ASYNC_COMPLETION
+ VBoxVMM_DEFS   += VRA_WITH_PDM_ASYNC_COMPLETION
 endif
-ifdef VBOX_WITH_NETSHAPER
- VBoxVMM_DEFS   += VBOX_WITH_NETSHAPER
+ifdef VRA_WITH_NETSHAPER
+ VBoxVMM_DEFS   += VRA_WITH_NETSHAPER
 endif
-ifdef VBOX_WITH_IOMMU_AMD
- VBoxVMM_DEFS   += VBOX_WITH_IOMMU_AMD
+ifdef VRA_WITH_IOMMU_AMD
+ VBoxVMM_DEFS   += VRA_WITH_IOMMU_AMD
 endif
-ifdef VBOX_WITH_IOMMU_INTEL
- VBoxVMM_DEFS   += VBOX_WITH_IOMMU_INTEL
+ifdef VRA_WITH_IOMMU_INTEL
+ VBoxVMM_DEFS   += VRA_WITH_IOMMU_INTEL
 endif
-ifdef VBOX_WITH_DBGF_TRACING
- VBoxVMM_DEFS   += VBOX_WITH_DBGF_TRACING
+ifdef VRA_WITH_DBGF_TRACING
+ VBoxVMM_DEFS   += VRA_WITH_DBGF_TRACING
 endif
-ifdef VBOX_WITH_DBGF_FLOW_TRACING
- VBoxVMM_DEFS   += VBOX_WITH_DBGF_FLOW_TRACING
+ifdef VRA_WITH_DBGF_FLOW_TRACING
+ VBoxVMM_DEFS   += VRA_WITH_DBGF_FLOW_TRACING
 endif
 if "$(KBUILD_TYPE)" == "debug" && "$(USERNAME)" == "bird" && 0
  VBoxVMM_DEFS   += RTMEM_WRAP_TO_EF_APIS
@@ -102,7 +102,7 @@ VBoxVMM_INCS     = \
 VBoxVMM_ASINCS   = .
 VBoxVMM_ASFLAGS.amd64  = -Werror
 VBoxVMM_ASFLAGS.x86    = -Werror
-if "$(VBOX_VCC_TOOL_STEM)" >= "VCC142" && "$(KBUILD_TYPE)" != "debug" # Agressive inlining for IEM performance. Adds ~2.6 MB.
+if "$(VRA_VCC_TOOL_STEM)" >= "VCC142" && "$(KBUILD_TYPE)" != "debug" # Agressive inlining for IEM performance. Adds ~2.6 MB.
  VBoxVMM_CXXFLAGS.win  = -Ob3
 endif
 
@@ -136,14 +136,14 @@ VBoxVMM_SOURCES  = \
 	VMMR3/DBGFR3Reg.cpp \
 	VMMR3/DBGFR3Stack.cpp \
 	VMMR3/DBGFR3Flow.cpp \
-	$(if-expr defined(VBOX_WITH_DBGF_FLOW_TRACING), VMMR3/DBGFR3FlowTrace.cpp,) \
+	$(if-expr defined(VRA_WITH_DBGF_FLOW_TRACING), VMMR3/DBGFR3FlowTrace.cpp,) \
 	VMMR3/DBGFR3Trace.cpp \
-	$(if-expr defined(VBOX_WITH_DBGF_TRACING), VMMR3/DBGFR3Tracer.cpp,) \
+	$(if-expr defined(VRA_WITH_DBGF_TRACING), VMMR3/DBGFR3Tracer.cpp,) \
 	VMMR3/DBGFR3SampleReport.cpp \
 	VMMR3/DBGFR3Type.cpp \
 	VMMR3/EMR3.cpp \
 	VMMR3/EMR3Dbg.cpp \
-	$(if-expr defined(VBOX_WITH_HWVIRT),VMMR3/EMR3HM.cpp,) \
+	$(if-expr defined(VRA_WITH_HWVIRT),VMMR3/EMR3HM.cpp,) \
 	VMMR3/EMR3Nem.cpp \
 	VMMR3/GCMR3.cpp \
 	VMMR3/GIMR3.cpp \
@@ -163,7 +163,7 @@ VBoxVMM_SOURCES  = \
 	VMMR3/PDMR3BlkCache.cpp \
 	VMMR3/PDMR3Device.cpp \
 	VMMR3/PDMR3DevHlp.cpp \
-	$(if-expr defined(VBOX_WITH_DBGF_TRACING), VMMR3/PDMR3DevHlpTracing.cpp,) \
+	$(if-expr defined(VRA_WITH_DBGF_TRACING), VMMR3/PDMR3DevHlpTracing.cpp,) \
 	VMMR3/PDMR3DevMiscHlp.cpp \
 	VMMR3/PDMR3Driver.cpp \
 	VMMR3/PDMR3Ldr.cpp \
@@ -195,7 +195,7 @@ VBoxVMM_SOURCES  = \
 	VMMAll/CPUMAllMsrs.cpp \
 	VMMAll/DBGFAll.cpp \
 	VMMAll/DBGFAllBp.cpp \
-	$(if-expr defined(VBOX_WITH_DBGF_TRACING), VMMAll/DBGFAllTracer.cpp,) \
+	$(if-expr defined(VRA_WITH_DBGF_TRACING), VMMAll/DBGFAllTracer.cpp,) \
 	VMMAll/target-x86/HMAll-x86.cpp \
 	VMMAll/target-x86/HMAllSVM-x86.cpp \
 	VMMAll/target-x86/HMAllVMX-x86.cpp \
@@ -227,7 +227,7 @@ VBoxVMM_SOURCES  = \
 	VMMAll/PDMAllCritSect.cpp \
 	VMMAll/PDMAllCritSectRw.cpp \
 	VMMAll/PDMAllCritSectBoth.cpp \
-	$(if-expr defined(VBOX_WITH_IOMMU_AMD) || defined(VBOX_WITH_IOMMU_INTEL), VMMAll/target-x86/PDMAllIommu-x86.cpp,) \
+	$(if-expr defined(VRA_WITH_IOMMU_AMD) || defined(VRA_WITH_IOMMU_INTEL), VMMAll/target-x86/PDMAllIommu-x86.cpp,) \
 	VMMAll/PDMAllQueue.cpp \
 	VMMAll/PDMAllTask.cpp \
 	VMMAll/PGMAll.cpp \
@@ -246,7 +246,7 @@ VBoxVMM_SOURCES  = \
 	VMMAll/TRPMAll.cpp \
 	VMMAll/VMAll.cpp \
 	VMMAll/VMMAll.cpp
-ifn1of (VBOX_WITH_ONLY_PGM_NEM_MODE, $(VBoxVMM_DEFS))
+ifn1of (VRA_WITH_ONLY_PGM_NEM_MODE, $(VBoxVMM_DEFS))
  VBoxVMM_SOURCES += \
  	VMMR3/target-x86/PGMR3Pool-x86.cpp \
  	VMMAll/target-x86/PGMAllPool-x86.cpp
@@ -259,23 +259,23 @@ VBoxVMM_SOURCES.amd64 += \
 VBoxVMM_SOURCES.arm64 += \
 	VMMAll/target-x86/IEMAllAImpl-x86-arm64.S \
 	VMMR3/CPUMR3CpuIdInfo-armv8.cpp
-ifdef VBOX_WITH_VUSB
+ifdef VRA_WITH_VUSB
  VBoxVMM_SOURCES += VMMR3/PDMR3Usb.cpp
 endif
-ifdef VBOX_WITH_PDM_ASYNC_COMPLETION
+ifdef VRA_WITH_PDM_ASYNC_COMPLETION
  VBoxVMM_SOURCES += \
  	VMMR3/PDMR3AsyncCompletion.cpp \
  	VMMR3/PDMR3AsyncCompletionFile.cpp \
  	VMMR3/PDMR3AsyncCompletionFileFailsafe.cpp \
  	VMMR3/PDMR3AsyncCompletionFileNormal.cpp
 endif
-ifdef VBOX_WITH_NETSHAPER
+ifdef VRA_WITH_NETSHAPER
  VBoxVMM_SOURCES += \
  	VMMR3/PDMR3NetShaper.cpp \
  	VMMAll/PDMAllNetShaper.cpp
 endif
 
-ifdef VBOX_WITH_IEM_RECOMPILER
+ifdef VRA_WITH_IEM_RECOMPILER
  VBoxVMM_SOURCES += \
  	VMMAll/IEMAllThrdRecompiler.cpp \
  	VMMAll/target-x86/IEMAllThrdTables1-x86.cpp \
@@ -284,7 +284,7 @@ ifdef VBOX_WITH_IEM_RECOMPILER
  	VMMAll/target-x86/IEMAllThrdTables4-x86.cpp \
  	VMMAll/target-x86/IEMAllThrdFuncs-x86.cpp \
  	VMMAll/IEMAllThrdFuncsBltIn.cpp
- ifdef VBOX_WITH_IEM_NATIVE_RECOMPILER
+ ifdef VRA_WITH_IEM_NATIVE_RECOMPILER
   VBoxVMM_SOURCES += \
   	VMMAll/IEMAllN8veExecMem.cpp \
   	VMMAll/IEMAllN8veRecompiler.cpp \
@@ -305,8 +305,8 @@ ifdef VBOX_WITH_IEM_RECOMPILER
   	VMMAll/IEMAllN8veHlpA.asm
   VBoxVMM_SOURCES.arm64 += \
   	VMMAll/IEMAllN8veHlpA-arm64.S
-  if "$(KBUILD_TARGET_ARCH)" == "arm64" && defined(VBOX_WITH_IEM_USING_CAPSTONE_DISASSEMBLER) # temp hack
-   VBoxVMM_DEFS        += VBOX_WITH_IEM_USING_CAPSTONE_DISASSEMBLER
+  if "$(KBUILD_TARGET_ARCH)" == "arm64" && defined(VRA_WITH_IEM_USING_CAPSTONE_DISASSEMBLER) # temp hack
+   VBoxVMM_DEFS        += VRA_WITH_IEM_USING_CAPSTONE_DISASSEMBLER
    VBoxVMM_LIBS.darwin += /opt/local/lib/libcapstone.dylib
    VBoxVMM_LIBS.linux  += capstone
   endif
@@ -315,7 +315,7 @@ ifdef VBOX_WITH_IEM_RECOMPILER
  VMMAll/target-x86/IEMAllThrdFuncs-x86.cpp_CXXFLAGS.win := -bigobj
 endif
 
-ifdef VBOX_WITH_NATIVE_NEM
+ifdef VRA_WITH_NATIVE_NEM
  VBoxVMM_SOURCES.linux.amd64 += \
  	VMMR3/target-x86/NEMR3Native-linux-x86.cpp \
  	VMMR3/target-x86/APICR3Nem-linux-x86.cpp
@@ -324,7 +324,7 @@ ifdef VBOX_WITH_NATIVE_NEM
  	VMMR3/target-x86/NEMR3Native-win-x86.cpp \
  	VMMR3/target-x86/APICR3Nem-win-x86.cpp
 
- VBoxVMM_DEFS.win.amd64   += VBOX_WITH_NATIVE_NEM
+ VBoxVMM_DEFS.win.amd64   += VRA_WITH_NATIVE_NEM
  VBoxVMM_SDKS.win         += VBoxNtDll
  VMMR3/target-x86/NEMR3Native-win-x86.cpp_DEFS.amd64 = _AMD64_
  VMMR3/target-x86/NEMR3Native-win-x86.cpp_INCS = \
@@ -333,26 +333,26 @@ ifdef VBOX_WITH_NATIVE_NEM
 
  VBoxVMM_SOURCES.darwin.amd64 += \
  	VMMR3/target-x86/NEMR3Native-darwin-x86.cpp
- VBoxVMM_DEFS.darwin.amd64   += VBOX_WITH_NATIVE_NEM
+ VBoxVMM_DEFS.darwin.amd64   += VRA_WITH_NATIVE_NEM
 endif
 
 VBoxVMM_LIBS = \
-	$(PATH_STAGE_LIB)/DisasmR3$(VBOX_SUFF_LIB)
-ifdef VBOX_WITH_DEBUGGER
+	$(PATH_STAGE_LIB)/DisasmR3$(VRA_SUFF_LIB)
+ifdef VRA_WITH_DEBUGGER
  VBoxVMM_LIBS += \
- 	$(PATH_STAGE_LIB)/Debugger$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/Debugger$(VRA_SUFF_LIB)
 endif
 VBoxVMM_LIBS += \
 	$(LIB_REM) \
 	$(LIB_RUNTIME)
 
-VBoxVMM_LIBS.win = $(PATH_TOOL_$(VBOX_VCC_TOOL)_LIB)/delayimp.lib
-VBoxVMM_LDFLAGS.linux = $(VBOX_GCC_NO_UNDEFINED)
-VBoxVMM_LDFLAGS.darwin = -install_name $(VBOX_DYLD_EXECUTABLE_PATH)/VBoxVMM.dylib
+VBoxVMM_LIBS.win = $(PATH_TOOL_$(VRA_VCC_TOOL)_LIB)/delayimp.lib
+VBoxVMM_LDFLAGS.linux = $(VRA_GCC_NO_UNDEFINED)
+VBoxVMM_LDFLAGS.darwin = -install_name $(VRA_DYLD_EXECUTABLE_PATH)/VBoxVMM.dylib
 VBoxVMM_LDFLAGS.solaris = -mimpure-text
 
 # SSM wish to know the build type, host os and arch.
-ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
  VMMR3/SSMR3.cpp_DEFS += \
  	KBUILD_TYPE="$(KBUILD_TYPE)" \
  	KBUILD_TARGET="$(KBUILD_TARGET)" \
@@ -364,11 +364,11 @@ else
  	KBUILD_TARGET_ARCH=\"$(KBUILD_TARGET_ARCH)\"
 endif
 
-ifdef VBOX_WITH_GCC_SANITIZER
+ifdef VRA_WITH_GCC_SANITIZER
  VMMR3/target-x86/PGMR3Pool-x86.cpp_CXXFLAGS.linux += -fno-sanitize=address
 endif
 
-#ifdef VBOX_WITH_PDM_ASYNC_COMPLETION
+#ifdef VRA_WITH_PDM_ASYNC_COMPLETION
 # ifeq ($(KBUILD_HOST), linux)
 #VBoxVMM_LIBS += aio
 # endif
@@ -405,52 +405,52 @@ if "$(USERNAME)" == "bird" && "$(KBUILD_TARGET)" == "win"
  		IEMAllN8veRecompBltIn.cod IEMAllN8veLiveness1-x86.cod IEMAllN8veLiveness2-x86.cod PGMAll.cod PDMAllCritSect.cod)
 endif
 
-$(call VBOX_SET_VER_INFO_DLL,VBoxVMM,VirtualBox VMM) # Version info / description.
+$(call VRA_SET_VER_INFO_DLL,VBoxVMM,VirtualAgent VMM) # Version info / description.
 
-ifdef VBOX_WITH_VIRT_ARMV8
+ifdef VRA_WITH_VIRT_ARMV8
  #
  # The VMM DLL - ARMv8 variant.
  #
- ifndef VBOX_ONLY_BUILD
+ ifndef VRA_ONLY_BUILD
   DLLS += VBoxVMMArm
  endif
  VBoxVMMArm_TEMPLATE = VBoxR3DllNoPic
  VBoxVMMArm_SONAME.linux = VBoxVMMArm.so
 
- VBoxVMMArm_DEFS     = VBOX_VMM_TARGET_ARMV8 VBOX_DIS_WITH_ARMV8 VBOX_IN_VMM IN_VMM_R3 IN_DIS IN_DBG \
+ VBoxVMMArm_DEFS     = VRA_VMM_TARGET_ARMV8 VRA_DIS_WITH_ARMV8 VRA_IN_VMM IN_VMM_R3 IN_DIS IN_DBG \
  	$(filter-out \
- 		VBOX_WITH_HWVIRT \
- 		VBOX_WITH_PAGE_SHARING \
- 		$(if-expr "$(KBUILD_TARGET_ARCH)" != "arm64",VBOX_WITH_NATIVE_NEM,) \
- 		VBOX_WITH_IEM_RECOMPILER \
- 		VBOX_WITH_IEM_NATIVE_RECOMPILER \
- 		VBOX_WITH_NESTED_HWVIRT_SVM \
- 		VBOX_WITH_NESTED_HWVIRT_VMX \
- 		VBOX_WITH_NESTED_HWVIRT_VMX_EPT \
+ 		VRA_WITH_HWVIRT \
+ 		VRA_WITH_PAGE_SHARING \
+ 		$(if-expr "$(KBUILD_TARGET_ARCH)" != "arm64",VRA_WITH_NATIVE_NEM,) \
+ 		VRA_WITH_IEM_RECOMPILER \
+ 		VRA_WITH_IEM_NATIVE_RECOMPILER \
+ 		VRA_WITH_NESTED_HWVIRT_SVM \
+ 		VRA_WITH_NESTED_HWVIRT_VMX \
+ 		VRA_WITH_NESTED_HWVIRT_VMX_EPT \
  		IEM_WITH_3DNOW \
  		IEM_WITH_THREE_0F_38 \
  		IEM_WITH_THREE_0F_3A \
  		IEM_WITH_VEX \
  		,$(VMM_COMMON_DEFS))
- ifdef VBOX_WITH_VUSB
-  VBoxVMMArm_DEFS   += VBOX_WITH_USB
+ ifdef VRA_WITH_VUSB
+  VBoxVMMArm_DEFS   += VRA_WITH_USB
  endif
- ifdef VBOX_WITH_PDM_ASYNC_COMPLETION
-  VBoxVMMArm_DEFS   += VBOX_WITH_PDM_ASYNC_COMPLETION
+ ifdef VRA_WITH_PDM_ASYNC_COMPLETION
+  VBoxVMMArm_DEFS   += VRA_WITH_PDM_ASYNC_COMPLETION
  endif
- ifdef VBOX_WITH_NETSHAPER
-  VBoxVMMArm_DEFS   += VBOX_WITH_NETSHAPER
+ ifdef VRA_WITH_NETSHAPER
+  VBoxVMMArm_DEFS   += VRA_WITH_NETSHAPER
  endif
- #ifdef VBOX_WITH_DBGF_TRACING
- # VBoxVMMArm_DEFS   += VBOX_WITH_DBGF_TRACING
+ #ifdef VRA_WITH_DBGF_TRACING
+ # VBoxVMMArm_DEFS   += VRA_WITH_DBGF_TRACING
  #endif
- #ifdef VBOX_WITH_DBGF_FLOW_TRACING @todo Later
- # VBoxVMMArm_DEFS   += VBOX_WITH_DBGF_FLOW_TRACING
+ #ifdef VRA_WITH_DBGF_FLOW_TRACING @todo Later
+ # VBoxVMMArm_DEFS   += VRA_WITH_DBGF_FLOW_TRACING
  #endif
  if1of ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH), linux.arm64)
   VBoxVMMArm_DEFS   += VMM_HOST_PAGE_SIZE_DYNAMIC
  endif
- VBoxVMMArm_DEFS.amd64  = VBOX_WITH_ONLY_PGM_NEM_MODE VBOX_WITH_MINIMAL_R0 # Quick hacks to get the code working...
+ VBoxVMMArm_DEFS.amd64  = VRA_WITH_ONLY_PGM_NEM_MODE VRA_WITH_MINIMAL_R0 # Quick hacks to get the code working...
 
  VBoxVMMArm_INCS     = \
  	include \
@@ -537,7 +537,7 @@ ifdef VBOX_WITH_VIRT_ARMV8
  	VMMAll/CPUMAllSysRegs-armv8.cpp \
  	VMMAll/DBGFAll.cpp \
  	VMMAll/DBGFAllBp.cpp \
- 	$(if-expr defined(VBOX_WITH_DBGF_TRACING), VMMAll/DBGFAllTracer.cpp,) \
+ 	$(if-expr defined(VRA_WITH_DBGF_TRACING), VMMAll/DBGFAllTracer.cpp,) \
  	VMMAll/IOMAll.cpp \
  	VMMAll/IOMAllMmioNew.cpp \
  	VMMAll/MMAll.cpp \
@@ -564,22 +564,22 @@ ifdef VBOX_WITH_VIRT_ARMV8
  	VMMAll/TRPMAll.cpp \
  	VMMAll/VMAll.cpp \
  	VMMAll/VMMAll.cpp
- ifdef VBOX_WITH_VUSB
+ ifdef VRA_WITH_VUSB
   VBoxVMMArm_SOURCES += VMMR3/PDMR3Usb.cpp
  endif
- ifdef VBOX_WITH_PDM_ASYNC_COMPLETION
+ ifdef VRA_WITH_PDM_ASYNC_COMPLETION
   VBoxVMMArm_SOURCES += \
   	VMMR3/PDMR3AsyncCompletion.cpp \
   	VMMR3/PDMR3AsyncCompletionFile.cpp \
   	VMMR3/PDMR3AsyncCompletionFileFailsafe.cpp \
   	VMMR3/PDMR3AsyncCompletionFileNormal.cpp
  endif
- ifdef VBOX_WITH_NETSHAPER
+ ifdef VRA_WITH_NETSHAPER
   VBoxVMMArm_SOURCES += \
   	VMMR3/PDMR3NetShaper.cpp \
   	VMMAll/PDMAllNetShaper.cpp
  endif
- ifdef VBOX_WITH_IEM_TARGETING_ARM
+ ifdef VRA_WITH_IEM_TARGETING_ARM
   VBoxVMMArm_SOURCES += \
   	VMMAll/IEMAll.cpp \
   	VMMAll/IEMAllMem.cpp \
@@ -592,7 +592,7 @@ ifdef VBOX_WITH_VIRT_ARMV8
   	VMMAll/target-armv8/IEMAllCImpl-armv8.cpp \
   	VMMAll/target-armv8/IEMAllCImplA64SysRegsAndIns-armv8.cpp
   VMMAll/target-armv8/IEMAllIntprA64Tables-armv8.cpp_CXXFLAGS.win := -bigobj
-  VBoxVMMArm_DEFS += IEM_WITH_DATA_TLB IEM_WITH_CODE_TLB VBOX_WITH_IEM_TARGETING_ARM
+  VBoxVMMArm_DEFS += IEM_WITH_DATA_TLB IEM_WITH_CODE_TLB VRA_WITH_IEM_TARGETING_ARM
  else
   VBoxVMMArm_SOURCES += VMMAll/IEMAllStub.cpp
  endif
@@ -605,29 +605,29 @@ ifdef VBOX_WITH_VIRT_ARMV8
  VBoxVMMArm_SOURCES.darwin.arm64 += \
  	VMMR3/target-armv8/NEMR3Native-darwin-armv8.cpp \
  	VMMR3/target-armv8/GICR3Nem-darwin-armv8.cpp
- VBoxVMMArm_DEFS.darwin.arm64   += VBOX_WITH_NATIVE_NEM
+ VBoxVMMArm_DEFS.darwin.arm64   += VRA_WITH_NATIVE_NEM
  VBoxVMMArm_LDFLAGS.darwin.arm64 = -framework Hypervisor
 
  VBoxVMMArm_SOURCES.linux.arm64 += \
  	VMMR3/target-armv8/NEMR3Native-linux-armv8.cpp \
  	VMMR3/target-armv8/GICR3Nem-linux-armv8.cpp
- VBoxVMMArm_DEFS.linux.arm64    += VBOX_WITH_NATIVE_NEM
+ VBoxVMMArm_DEFS.linux.arm64    += VRA_WITH_NATIVE_NEM
 
  VBoxVMMArm_SOURCES.win.arm64 += \
  	VMMR3/target-armv8/NEMR3Native-win-armv8.cpp \
  	VMMR3/target-armv8/GICR3Nem-win-armv8.cpp
- VBoxVMMArm_DEFS.win.arm64   += VBOX_WITH_NATIVE_NEM
+ VBoxVMMArm_DEFS.win.arm64   += VRA_WITH_NATIVE_NEM
 
  VBoxVMMArm_LIBS = \
- 	$(PATH_STAGE_LIB)/DisasmR3$(VBOX_SUFF_LIB)
- ifdef VBOX_WITH_DEBUGGER
+ 	$(PATH_STAGE_LIB)/DisasmR3$(VRA_SUFF_LIB)
+ ifdef VRA_WITH_DEBUGGER
   VBoxVMMArm_LIBS += \
-  	$(PATH_STAGE_LIB)/Debugger-armv8$(VBOX_SUFF_LIB)
+  	$(PATH_STAGE_LIB)/Debugger-armv8$(VRA_SUFF_LIB)
  endif
  VBoxVMMArm_LIBS += \
  	$(LIB_RUNTIME)
 
- VBoxVMMArm_LDFLAGS.darwin = -install_name $(VBOX_DYLD_EXECUTABLE_PATH)/VBoxVMMArm.dylib
+ VBoxVMMArm_LDFLAGS.darwin = -install_name $(VRA_DYLD_EXECUTABLE_PATH)/VBoxVMMArm.dylib
 endif
 
 $(call KB_FN_DO_PASS0_ON_TARGET,VBoxVMM)
@@ -635,21 +635,21 @@ $(evalcall2 def_VBoxGenIEMInstructionStatisticsTmpl_Header,VBoxVMM,$(VBoxVMM_0_O
 foobar: $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMInstructionStatisticsTmpl.h
 
 
-ifdef VBOX_WITH_IEM_RECOMPILER
+ifdef VRA_WITH_IEM_RECOMPILER
  #
  # Generate functions for the threaded recompiler and a modified instruction decoded.
  # Note! Dependency order matters!
  #
- VBOX_IEM_NATIVE_GEN_SRC_PARTS := 1 2 3 4 5 6
+ VRA_IEM_NATIVE_GEN_SRC_PARTS := 1 2 3 4 5 6
  VBoxVMM_INTERMEDIATES += \
  	$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.h \
  	$(foreach x, 1 2 3 4, $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedInstructions${x}.cpp.h)
- ifdef VBOX_WITH_IEM_NATIVE_RECOMPILER
+ ifdef VRA_WITH_IEM_NATIVE_RECOMPILER
   VBoxVMM_INTERMEDIATES += \
   	$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions.h \
   	$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness.h \
-  	$(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions${x}.cpp.h) \
-  	$(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness${x}.cpp.h)
+  	$(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions${x}.cpp.h) \
+  	$(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness${x}.cpp.h)
  endif
  VBoxVMM_CLEAN         += \
  	$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.h.ts \
@@ -658,26 +658,26 @@ ifdef VBOX_WITH_IEM_RECOMPILER
  	$(foreach x, 1 2 3 4, $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedInstructions${x}.cpp.h) \
  	$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions.h \
  	$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness.h \
- 	$(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions${x}.cpp.h) \
- 	$(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness${x}.cpp.h)
+ 	$(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions${x}.cpp.h) \
+ 	$(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness${x}.cpp.h)
  $(call KB_FN_AUTO_CMD_DEPS,$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.h.ts)
  $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.h.ts \
  +| $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.h \
  +| $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.cpp.h \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions1.cpp.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions2.cpp.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions3.cpp.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions4.cpp.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions5.cpp.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions6.cpp.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness1.cpp.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness2.cpp.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness3.cpp.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness4.cpp.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness5.cpp.h,) \
- +| $(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness6.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions1.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions2.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions3.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions4.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions5.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions6.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness1.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness2.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness3.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness4.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness5.cpp.h,) \
+ +| $(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness6.cpp.h,) \
  +| $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedInstructions1.cpp.h \
  +| $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedInstructions2.cpp.h \
  +| $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedInstructions3.cpp.h \
@@ -702,11 +702,11 @@ ifdef VBOX_WITH_IEM_RECOMPILER
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.cpp.h.ts" \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions.h.ts" \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness.h.ts" \
-		$(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS),"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions${x}.cpp.h.ts") \
-		$(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS),"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness${x}.cpp.h.ts")
+		$(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS),"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions${x}.cpp.h.ts") \
+		$(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS),"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness${x}.cpp.h.ts")
 	$(QUIET)$(MKDIR) -p -- "$(dir $@)"
 	$(call KB_FN_AUTO_CMD_DEPS_COMMANDS)
-	$(REDIRECT) -0 /dev/null -- $(VBOX_BLD_PYTHON) $< $(filter %.cpp.h,$^) \
+	$(REDIRECT) -0 /dev/null -- $(VRA_BLD_PYTHON) $< $(filter %.cpp.h,$^) \
 		--host-arch "$(KBUILD_TARGET_ARCH)" \
 		--out-thrd-funcs-hdr "$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.h.ts" \
 		--out-thrd-funcs-cpp "$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.cpp.h.ts" \
@@ -714,13 +714,13 @@ ifdef VBOX_WITH_IEM_RECOMPILER
 		--out-mod-input2 "$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedInstructions2.cpp.h.ts" \
 		--out-mod-input3 "$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedInstructions3.cpp.h.ts" \
 		--out-mod-input4 "$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedInstructions4.cpp.h.ts" \
-		$(if-expr defined(VBOX_WITH_IEM_NATIVE_RECOMPILER), \
+		$(if-expr defined(VRA_WITH_IEM_NATIVE_RECOMPILER), \
 			--native \
 			--out-n8ve-funcs-hdr         "$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions.h.ts" \
 			--out-n8ve-liveness-hdr      "$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness.h.ts" \
-                       $(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS) \
+                       $(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS) \
                        ,--out-n8ve-funcs-cpp${x}    "$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions${x}.cpp.h.ts") \
-                       $(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS) \
+                       $(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS) \
                        ,--out-n8ve-liveness-cpp${x} "$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness${x}.cpp.h.ts") \
 		,)
 	$(foreach x, 1 2 3 4, $(NLTAB)$(QUIET)$(CP) -v -f --changed -- \
@@ -732,17 +732,17 @@ ifdef VBOX_WITH_IEM_RECOMPILER
 	$(QUIET)$(CP) -v -f --changed -- \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.h.ts" \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.h"
- ifdef VBOX_WITH_IEM_NATIVE_RECOMPILER
+ ifdef VRA_WITH_IEM_NATIVE_RECOMPILER
 	$(QUIET)$(CP) -v -f --changed -- \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions.h.ts" \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions.h"
 	$(QUIET)$(CP) -v -f --changed -- \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness.h.ts" \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness.h"
-	$(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS), $(NLTAB)$(QUIET)$(CP) -v -f --changed -- \
+	$(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS), $(NLTAB)$(QUIET)$(CP) -v -f --changed -- \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions${x}.cpp.h.ts" \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions${x}.cpp.h")
-	$(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS), $(NLTAB)$(QUIET)$(CP) -v -f --changed -- \
+	$(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS), $(NLTAB)$(QUIET)$(CP) -v -f --changed -- \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness${x}.cpp.h.ts" \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness${x}.cpp.h")
  endif
@@ -754,8 +754,8 @@ ifdef VBOX_WITH_IEM_RECOMPILER
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.cpp.h.ts" \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions.h.ts" \
 		"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness.h.ts" \
-		$(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS),"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions${x}.cpp.h.ts") \
-               $(foreach x, $(VBOX_IEM_NATIVE_GEN_SRC_PARTS),"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness${x}.cpp.h.ts") \
+		$(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS),"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeFunctions${x}.cpp.h.ts") \
+               $(foreach x, $(VRA_IEM_NATIVE_GEN_SRC_PARTS),"$(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMNativeLiveness${x}.cpp.h.ts") \
 
  foobared: $(VBoxVMM_0_OUTDIR)/CommonGenIncs/IEMThreadedFunctions.h.ts
 
@@ -843,9 +843,9 @@ ifdef VBOX_WITH_IEM_RECOMPILER
 	$(QUIET)$(CP) -v -f --changed -- "$@" "$(basename $@)"
  endif
 
-endif # VBOX_WITH_IEM_RECOMPILER
+endif # VRA_WITH_IEM_RECOMPILER
 
-if "$(KBUILD_TARGET)" == "win" && !defined(VBOX_ONLY_BUILD)
+if "$(KBUILD_TARGET)" == "win" && !defined(VRA_ONLY_BUILD)
  #
  # Debug type info hack for VMCPU, VM and similar.
  #
@@ -868,7 +868,7 @@ if "$(KBUILD_TARGET)" == "win" && !defined(VBOX_ONLY_BUILD)
 endif
 
 
-if1of ($(VBOX_LDR_FMT), pe lx)
+if1of ($(VRA_LDR_FMT), pe lx)
  #
  # VMMR0Imp.lib
  #
@@ -895,14 +895,14 @@ endif # R0: pe + lx
 ## VMMR3Imp.lib - obsolete.
 ##
 #IMPORT_LIBS += VMMR3Imp
-#$(call VBOX_GENERATE_IMPORT_TARGET_FN,VMMR3Imp,VBoxVMM,VMMR3/VMMR3.def)
+#$(call VRA_GENERATE_IMPORT_TARGET_FN,VMMR3Imp,VBoxVMM,VMMR3/VMMR3.def)
 
 
 #
 # VMMStatic.lib - for unit tests.
 # We change IEM to stub-mode here to save a couple hundred MBs and reduce compile time.
 #
-ifndef VBOX_ONLY_BUILD
+ifndef VRA_ONLY_BUILD
  LIBRARIES += VMMStatic
 endif
 ifeq ($(KBUILD_TARGET_ARCH),arm64)
@@ -913,17 +913,17 @@ endif
 VMMStatic_DEFS = \
 	IN_VMM_STATIC_UNIT_TESTS \
 	$(filter-out \
-		VBOX_WITH_DEBUGGER \
-		VBOX_WITH_IEM_RECOMPILER \
-		VBOX_WITH_IEM_NATIVE_RECOMPILER \
-		VBOX_WITH_NESTED_HWVIRT_SVM \
-		VBOX_WITH_NESTED_HWVIRT_VMX \
-		VBOX_WITH_NESTED_HWVIRT_VMX_EPT \
-		VBOX_WITH_NATIVE_NEM \
+		VRA_WITH_DEBUGGER \
+		VRA_WITH_IEM_RECOMPILER \
+		VRA_WITH_IEM_NATIVE_RECOMPILER \
+		VRA_WITH_NESTED_HWVIRT_SVM \
+		VRA_WITH_NESTED_HWVIRT_VMX \
+		VRA_WITH_NESTED_HWVIRT_VMX_EPT \
+		VRA_WITH_NATIVE_NEM \
 		,$($(VMMStatic_EXTENDS)_DEFS))
 VMMStatic_DEFS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) = \
 	$(filter-out \
-		VBOX_WITH_NATIVE_NEM \
+		VRA_WITH_NATIVE_NEM \
 		,$($(VMMStatic_EXTENDS)_DEFS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)))
 VMMStatic_SOURCES = \
 	$(filter-out \
@@ -949,8 +949,8 @@ VMMStatic_SOURCES.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) = \
 #
 # VMMR0.r0
 #
-if defined(VBOX_WITH_R0_MODULES) && !defined(VBOX_ONLY_BUILD)
- ifdef VBOX_WITH_VBOXR0_AS_DLL
+if defined(VRA_WITH_R0_MODULES) && !defined(VRA_ONLY_BUILD)
+ ifdef VRA_WITH_VRAR0_AS_DLL
   DLLS    += VMMR0
  else
   SYSMODS += VMMR0
@@ -958,31 +958,31 @@ if defined(VBOX_WITH_R0_MODULES) && !defined(VBOX_ONLY_BUILD)
  VMMR0_TEMPLATE  = VBoxR0
  VMMR0_SYSSUFF   = .r0
 
- VMMR0_DEFS      = VBOX_VMM_TARGET_AGNOSTIC VBOX_IN_VMM IN_VMM_R0 IN_RT_R0 IN_DIS DIS_CORE_ONLY IN_INTNET_R0 \
+ VMMR0_DEFS      = VRA_VMM_TARGET_AGNOSTIC VRA_IN_VMM IN_VMM_R0 IN_RT_R0 IN_DIS DIS_CORE_ONLY IN_INTNET_R0 \
  	$(VMM_COMMON_DEFS) RTASSERT_HAVE_SHOULD_PANIC
- ifdef VBOX_WITH_TRIPLE_FAULT_HACK
-  VMMR0_DEFS     += VBOX_WITH_TRIPLE_FAULT_HACK
+ ifdef VRA_WITH_TRIPLE_FAULT_HACK
+  VMMR0_DEFS     += VRA_WITH_TRIPLE_FAULT_HACK
  endif
- ifdef VBOX_WITH_IOMMU_AMD
-  VMMR0_DEFS     += VBOX_WITH_IOMMU_AMD
+ ifdef VRA_WITH_IOMMU_AMD
+  VMMR0_DEFS     += VRA_WITH_IOMMU_AMD
  endif
- ifdef VBOX_WITH_DBGF_TRACING
-  VMMR0_DEFS     += VBOX_WITH_DBGF_TRACING
+ ifdef VRA_WITH_DBGF_TRACING
+  VMMR0_DEFS     += VRA_WITH_DBGF_TRACING
  endif
  if1of ($(KBUILD_TARGET), darwin linux win)
   VMMR0_DEFS     += VMM_R0_TOUCH_FPU
  endif
- ifdef VBOX_WITH_VIRT_ARMV8
-  VMMR0_DEFS     += VBOX_WITH_VIRT_ARMV8
+ ifdef VRA_WITH_VIRT_ARMV8
+  VMMR0_DEFS     += VRA_WITH_VIRT_ARMV8
  endif
- VMMR0_DEFS.win.amd64  = VBOX_WITH_KERNEL_USING_XMM
+ VMMR0_DEFS.win.amd64  = VRA_WITH_KERNEL_USING_XMM
 
- ifeq ($(VBOX_LDR_FMT),elf)
+ ifeq ($(VRA_LDR_FMT),elf)
   VMMR0_CXXFLAGS += -Wunused -Wunused-variable -Wno-unused-parameter
  endif
 
  # yasm versions not knowing about -Wno-segreg-in-64bit (including vanilla 1.3.0) would cause build failure.
- if "$(VBOX_ASTOOL)" != "YASM" || defined("VBOX_YASM_Wno-segreg-in-64bit")
+ if "$(VRA_ASTOOL)" != "YASM" || defined("VRA_YASM_Wno-segreg-in-64bit")
   VMMR0_ASFLAGS.amd64 := -Werror
  endif
  VMMR0_ASFLAGS.x86   := -Werror
@@ -1009,12 +1009,12 @@ if defined(VBOX_WITH_R0_MODULES) && !defined(VBOX_ONLY_BUILD)
  VMMR0_SOURCES.win = \
  	$(VMMR0Imp_0_OUTDIR)/VMMR0.def
 
- ifndef VBOX_WITH_MINIMAL_R0
+ ifndef VRA_WITH_MINIMAL_R0
   VMMR0_SOURCES += \
   	VMMR0/CPUMR0.cpp \
   	VMMR0/DBGFR0.cpp \
   	VMMR0/DBGFR0Bp.cpp \
-  	$(if-expr defined(VBOX_WITH_DBGF_TRACING), VMMR0/DBGFR0Tracer.cpp,) \
+  	$(if-expr defined(VRA_WITH_DBGF_TRACING), VMMR0/DBGFR0Tracer.cpp,) \
   	VMMR0/GIMR0.cpp \
   	VMMR0/GIMR0Hv.cpp \
   	VMMR0/GMMR0.cpp \
@@ -1028,7 +1028,7 @@ if defined(VBOX_WITH_R0_MODULES) && !defined(VBOX_ONLY_BUILD)
   	VMMR0/IOMR0Mmio.cpp \
   	VMMR0/PDMR0Device.cpp \
   	VMMR0/PDMR0DevHlp.cpp \
-  	$(if-expr defined(VBOX_WITH_DBGF_TRACING), VMMR0/PDMR0DevHlpTracing.cpp,) \
+  	$(if-expr defined(VRA_WITH_DBGF_TRACING), VMMR0/PDMR0DevHlpTracing.cpp,) \
   	VMMR0/PDMR0Driver.cpp \
   	VMMR0/PDMR0Queue.cpp \
   	VMMR0/PGMR0.cpp \
@@ -1042,7 +1042,7 @@ if defined(VBOX_WITH_R0_MODULES) && !defined(VBOX_ONLY_BUILD)
   	VMMAll/CPUMAllMsrs.cpp \
   	VMMAll/DBGFAll.cpp \
   	VMMAll/DBGFAllBp.cpp \
-  	$(if-expr defined(VBOX_WITH_DBGF_TRACING), VMMAll/DBGFAllTracer.cpp,) \
+  	$(if-expr defined(VRA_WITH_DBGF_TRACING), VMMAll/DBGFAllTracer.cpp,) \
   	VMMAll/EMAll.cpp \
   	VMMAll/GCMAll.cpp \
   	VMMAll/GIMAll.cpp \
@@ -1079,7 +1079,7 @@ if defined(VBOX_WITH_R0_MODULES) && !defined(VBOX_ONLY_BUILD)
   	VMMAll/PDMAllCritSect.cpp \
   	VMMAll/PDMAllCritSectRw.cpp \
   	VMMAll/PDMAllCritSectBoth.cpp \
-  	$(if-expr defined(VBOX_WITH_IOMMU_AMD) || defined(VBOX_WITH_IOMMU_INTEL), VMMAll/target-x86/PDMAllIommu-x86.cpp,) \
+  	$(if-expr defined(VRA_WITH_IOMMU_AMD) || defined(VRA_WITH_IOMMU_INTEL), VMMAll/target-x86/PDMAllIommu-x86.cpp,) \
   	VMMAll/PDMAllQueue.cpp \
   	VMMAll/PDMAllTask.cpp \
   	VMMAll/PGMAll.cpp \
@@ -1102,30 +1102,30 @@ if defined(VBOX_WITH_R0_MODULES) && !defined(VBOX_ONLY_BUILD)
   	$(if-expr !defined(IEM_WITHOUT_ASSEMBLY),VMMAll/target-x86/IEMAllAImpl-x86-amd64.asm,) \
   	VMMAll/VMMAllA.asm
 
-  ifdef VBOX_WITH_TRIPLE_FAULT_HACK
+  ifdef VRA_WITH_TRIPLE_FAULT_HACK
    VMMR0_SOURCES.amd64 += \
    	VMMR0/VMMR0TripleFaultHack.cpp \
    	VMMR0/VMMR0TripleFaultHackA.asm
   endif
-  ifdef VBOX_WITH_NETSHAPER
+  ifdef VRA_WITH_NETSHAPER
    VMMR0_SOURCES += \
    	VMMAll/PDMAllNetShaper.cpp
   endif
- endif # !VBOX_WITH_MINIMAL_R0
+ endif # !VRA_WITH_MINIMAL_R0
 
  VMMR0_LIBS = \
- 	$(PATH_STAGE_LIB)/ServicesR0$(VBOX_SUFF_LIB) \
- 	$(PATH_STAGE_LIB)/RuntimeR0$(VBOX_SUFF_LIB) \
- 	$(PATH_STAGE_LIB)/DisasmR0$(VBOX_SUFF_LIB) \
- 	$(VBOX_LIB_SUPR0)
- ifdef VBOX_WITH_NATIVE_NEM
+ 	$(PATH_STAGE_LIB)/ServicesR0$(VRA_SUFF_LIB) \
+ 	$(PATH_STAGE_LIB)/RuntimeR0$(VRA_SUFF_LIB) \
+ 	$(PATH_STAGE_LIB)/DisasmR0$(VRA_SUFF_LIB) \
+ 	$(VRA_LIB_SUPR0)
+ ifdef VRA_WITH_NATIVE_NEM
   VMMR0_SOURCES.linux.amd64  += VMMR0/NEMR0Native-stubs.cpp
   VMMR0_SOURCES.win.amd64    += VMMR0/NEMR0Native-stubs.cpp
   VMMR0_SOURCES.darwin.amd64 += VMMR0/NEMR0Native-stubs.cpp
-  VMMR0_DEFS.darwin.amd64    += VBOX_WITH_NATIVE_NEM VBOX_WITH_NEM_R0
+  VMMR0_DEFS.darwin.amd64    += VRA_WITH_NATIVE_NEM VRA_WITH_NEM_R0
  endif
 
- $(call VBOX_SET_VER_INFO_R0,VMMR0,VirtualBox VMM - ring-0 context parts) # Version info / description.
+ $(call VRA_SET_VER_INFO_R0,VMMR0,VirtualAgent VMM - ring-0 context parts) # Version info / description.
 
  if "$(USERNAME)" == "bird" && "$(KBUILD_TARGET)" == "win"
   VMMR0_VMMAll/IEMAll.cpp_CXXFLAGS                      = /FAcs /Fa$(subst /,\\,$(outbase).cod)
@@ -1154,7 +1154,7 @@ if defined(VBOX_WITH_R0_MODULES) && !defined(VBOX_ONLY_BUILD)
   VMMR0PdbTypeHack_INTERMEDIATES  = $(VMMR0_INTERMEDIATES)
  endif
 
- ifdef VBOX_WITH_KMOD_WRAPPED_R0_MODS
+ ifdef VRA_WITH_KMOD_WRAPPED_R0_MODS
   # Wrapper kmod for VMMR0.r0
   INSTALLS.linux += vbox_vmmr0-src
   vbox_vmmr0-src_INST = bin/src/vbox_vmmr0/
@@ -1167,32 +1167,32 @@ if defined(VBOX_WITH_R0_MODULES) && !defined(VBOX_ONLY_BUILD)
   	$(VMMR0_0_OUTDIR)/VMMR0.debug=>VMMR0.debug
  endif
 
-endif # defined(VBOX_WITH_R0_MODULES) && !defined(VBOX_ONLY_BUILD)
+endif # defined(VRA_WITH_R0_MODULES) && !defined(VRA_ONLY_BUILD)
 
 
 
-ifndef VBOX_ONLY_BUILD
+ifndef VRA_ONLY_BUILD
  #
  # SSMStandalone.lib/a for linking with VBoxSVC and other executables.
  #
  LIBRARIES += SSMStandalone
  SSMStandalone_TEMPLATE = VBoxR3Exe
- SSMStandalone_DEFS    = VBOX_VMM_TARGET_AGNOSTIC VBOX_IN_VMM IN_VMM_R3 IN_VMM_STATIC SSM_STANDALONE CPUM_DB_STANDALONE $(VMM_COMMON_DEFS)
+ SSMStandalone_DEFS    = VRA_VMM_TARGET_AGNOSTIC VRA_IN_VMM IN_VMM_R3 IN_VMM_STATIC SSM_STANDALONE CPUM_DB_STANDALONE $(VMM_COMMON_DEFS)
  SSMStandalone_INCS    = include
  SSMStandalone_SOURCES = \
  	VMMR3/SSMR3.cpp
-endif # !VBOX_ONLY_BUILD
+endif # !VRA_ONLY_BUILD
 
 
-if   !defined(VBOX_ONLY_BUILD) \
-  && (   defined(VBOX_WITH_DTRACE_R3) \
-      || defined(VBOX_WITH_DTRACE_R0) \
-  || defined(VBOX_WITH_DTRACE_RC))
+if   !defined(VRA_ONLY_BUILD) \
+  && (   defined(VRA_WITH_DTRACE_R3) \
+      || defined(VRA_WITH_DTRACE_R0) \
+  || defined(VRA_WITH_DTRACE_RC))
  #
  # Install the dtrace library files.
  #
  INSTALLS += VMMLibDTrace
- VMMLibDTrace_INST   = $(VBOX_INST_DTRACE_LIB)$(KBUILD_TARGET_ARCH)/
+ VMMLibDTrace_INST   = $(VRA_INST_DTRACE_LIB)$(KBUILD_TARGET_ARCH)/
  VMMLibDTrace_SOURCES = \
  	dtrace/lib/vbox-types.d \
  	dtrace/lib/$(KBUILD_TARGET_ARCH)/vbox-arch-types.d \
@@ -1210,13 +1210,13 @@ if   !defined(VBOX_ONLY_BUILD) \
  #
  define def_vmm_lib_dtrace_preprocess
   $$(call KB_FN_AUTO_CMD_DEPS,$$(VMMLibDTrace_0_OUTDIR)/$1)
-  $$(VMMLibDTrace_0_OUTDIR)/$1: $2 $$(VBOX_VBOXCPP) | $$$$(dir $$$$@)
+  $$(VMMLibDTrace_0_OUTDIR)/$1: $2 $$(VRA_VRACPP) | $$$$(dir $$$$@)
 	$$(call KB_FN_AUTO_CMD_DEPS_COMMANDS)
 	$$(QUIET)$$(call MSG_GENERATE,VMMLibDTrace,$$@,$2)
-	$$(QUIET)$(VBOX_VBOXCPP) -d \
-		-D VBOX_FOR_DTRACE_LIB \
-		-D VBOX_FOR_DTRACE_LIB_$(toupper $(KBUILD_TARGET_ARCH)) \
-		-D $(if-expr "$(KBUILD_TARGET_ARCH)" == "amd64",VBOX_VMM_TARGET_X86,VBOX_VMM_TARGET_ARMV8) \
+	$$(QUIET)$(VRA_VRACPP) -d \
+		-D VRA_FOR_DTRACE_LIB \
+		-D VRA_FOR_DTRACE_LIB_$(toupper $(KBUILD_TARGET_ARCH)) \
+		-D $(if-expr "$(KBUILD_TARGET_ARCH)" == "amd64",VRA_VMM_TARGET_X86,VRA_VMM_TARGET_ARMV8) \
 		-D IN_RING0 \
 		-D RT_C_DECLS_BEGIN= \
 		-D RT_C_DECLS_END= \
@@ -1253,14 +1253,14 @@ endif
 #
 # For VMMGetSvnRev.
 #
-VMMAll/VMMAll.cpp_DEFS = VBOX_SVN_REV=$(VBOX_SVN_REV)
+VMMAll/VMMAll.cpp_DEFS = VRA_SVN_REV=$(VRA_SVN_REV)
 
 #
 # Disable annoying warnings about array subscript above array bounds in aPages[]
 #
 ifneq ($(KBUILD_TARGET),win)
- VMMR3/target-x86/PGMR3Pool-x86.cpp_CXXFLAGS   = $(VBOX_GCC_Wno-array_bounds)
- VMMAll/target-x86/PGMAllPool-x86.cpp_CXXFLAGS = $(VBOX_GCC_Wno-array_bounds)
+ VMMR3/target-x86/PGMR3Pool-x86.cpp_CXXFLAGS   = $(VRA_GCC_Wno-array_bounds)
+ VMMAll/target-x86/PGMAllPool-x86.cpp_CXXFLAGS = $(VRA_GCC_Wno-array_bounds)
  VMMAll/PGMAll.cpp_CXXFLAGS    = -Wno-unused-function
  VMMAll/IEMAll.cpp_CXXFLAGS    = -Wno-unused-function
  VMMR0/GMMR0.cpp_CXXFLAGS      = -Wno-unused-value
@@ -1323,7 +1323,7 @@ $(foreach base,$(notdir $(basename $(wildcard $(PATH_SUB_CURRENT)/VMMR3/cpus/*.h
 # Process python source(s).
 #
 # The code generator for ARM requires python 3.10 (int.bit_count(), ++). So,
-# we ASSUME that VBOX_BLD_PYTHON or something even more recent is used for
+# we ASSUME that VRA_BLD_PYTHON or something even more recent is used for
 # running pylint below.
 #
 BLDDIRS += $(PATH_TARGET)/pylint
@@ -1334,11 +1334,11 @@ define def_vbox_vmm_py_check
  pylint: $(name)-py-phony.o
  $(name).o: $(name)-py-phony.o
  $(PATH_TARGET)/pylint/$(name).o $(name)-py-phony.o:: $(py) | $(PATH_TARGET)/pylint/
- ifdef VBOX_WITH_PYLINT
+ ifdef VRA_WITH_PYLINT
 	$(QUIET2)$(call MSG_L1,Subjecting $(py) to pylint...)
 	$(QUIET)$(REDIRECT) -C "$(dir $(py))" -E LC_ALL=C -- \
-		$(VBOX_PYLINT) --rcfile=$(PATH_TARGET)/no-such-pylintrc \
-			$$(VBOX_PYLINT_FLAGS) $$($(py)_VBOX_PYLINT_FLAGS) ./$(notdir $(py))
+		$(VRA_PYLINT) --rcfile=$(PATH_TARGET)/no-such-pylintrc \
+			$$(VRA_PYLINT_FLAGS) $$($(py)_VRA_PYLINT_FLAGS) ./$(notdir $(py))
  endif
 	$(QUIET)$(APPEND) -t "$(PATH_TARGET)/pylint/$(name).o"
 
@@ -1347,7 +1347,7 @@ endef # def_vbox_vmm_py_check
 
 $(foreach py, \
 	$(addprefix $(PATH_SUB_CURRENT)/VMMAll/, IEMAllInstPython.py IEMAllThrdPython.py IEMAllN8vePython.py ) \
-	$(if-expr "$(VBOX_BLD_PYTHON_VERSION)" vge "3.8.0" && "$(VBOX_PYLINT_VERSION)" >= 20000, \
+	$(if-expr "$(VRA_BLD_PYTHON_VERSION)" vge "3.8.0" && "$(VRA_PYLINT_VERSION)" >= 20000, \
 		$(PATH_SUB_CURRENT)/VMMAll/target-armv8/ArmAst.py \
 		$(PATH_SUB_CURRENT)/VMMAll/target-armv8/ArmBsdSpec.py \
 		$(PATH_SUB_CURRENT)/VMMAll/target-armv8/ArmBsdSpecCodeGen.py,) \

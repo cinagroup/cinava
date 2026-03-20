@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -37,14 +37,14 @@
 SUB_DEPTH = ../../../..
 include $(KBUILD_PATH)/subheader.kmk
 
-ifdef VBOX_WITH_TESTCASES # The whole file
+ifdef VRA_WITH_TESTCASES # The whole file
 
  #
  # Include the Validation Kit configuration to make use of build templates needed
  # for testcases to be included  on the Validation Kit .ISO.
  #
- ifdef VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING
-  ifndef VBOX_VALIDATIONKIT_CONFIG_KMK_INCLUDED
+ ifdef VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING
+  ifndef VRA_VALIDATIONKIT_CONFIG_KMK_INCLUDED
    include $(PATH_ROOT)/src/VBox/ValidationKit/Config.kmk
   endif
  endif
@@ -64,7 +64,7 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  #
  # Target lists
  #
- ifndef VBOX_ONLY_VALIDATIONKIT
+ ifndef VRA_ONLY_VALIDATIONKIT
   PROGRAMS += \
   	tstRTAcpi \
   	tstRTArmv8 \
@@ -208,7 +208,7 @@ ifdef VBOX_WITH_TESTCASES # The whole file
   PROGRAMS.darwin += \
   	tstDarwinSched \
   	tstRTDarwinMachKernel
-  ifdef VBOX_WITH_LIBCURL
+  ifdef VRA_WITH_LIBCURL
    PROGRAMS += \
    	tstRTHttp-1 \
    	tstRTCRest-1
@@ -225,14 +225,14 @@ ifdef VBOX_WITH_TESTCASES # The whole file
    endif
   endif
 
-  if defined(VBOX_WITH_R0_MODULES)
+  if defined(VRA_WITH_R0_MODULES)
    PROGRAMS += \
    	tstLdr-2 \
    	tstLdr-3 \
    	tstLdr-4 \
    	tstTime-2 \
    	tstTSC
-   if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+   if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
     PROGRAMS += \
     	tstRTR0MemUserKernelDriverHardened \
     	tstRTR0SemMutexDriverHardened \
@@ -253,14 +253,14 @@ ifdef VBOX_WITH_TESTCASES # The whole file
     	tstRTR0ThreadPreemptionDriver \
     	tstRTR0ThreadDriver
    endif
-   if1of ($(KBUILD_TARGET_ARCH), $(VBOX_SUPPORTED_HOST_ARCHS))
-    $(if-expr defined(VBOX_WITH_VBOXR0_AS_DLL),DLLS,SYSMODS) += \
+   if1of ($(KBUILD_TARGET_ARCH), $(VRA_SUPPORTED_HOST_ARCHS))
+    $(if-expr defined(VRA_WITH_VRAR0_AS_DLL),DLLS,SYSMODS) += \
     	tstLdrObjR0
-    ifdef VBOX_WITH_RAW_MODE
+    ifdef VRA_WITH_RAW_MODE
      SYSMODS += tstLdrObj
     endif
    endif
-   $(if-expr defined(VBOX_WITH_VBOXR0_AS_DLL),DLLS,SYSMODS) += \
+   $(if-expr defined(VRA_WITH_VRAR0_AS_DLL),DLLS,SYSMODS) += \
    	tstRTR0MemUserKernel \
    	tstRTR0SemMutex \
    	tstRTR0Timer \
@@ -268,16 +268,16 @@ ifdef VBOX_WITH_TESTCASES # The whole file
    	tstRTR0Thread
    if1of ($(KBUILD_TARGET), solaris darwin)
     PROGRAMS += tstRTR0DbgKrnlInfoDriver
-    $(if-expr defined(VBOX_WITH_VBOXR0_AS_DLL),DLLS,SYSMODS) += tstRTR0DbgKrnlInfo
-   endif # VBOX_SUPPORTED_HOST_ARCHS only
+    $(if-expr defined(VRA_WITH_VRAR0_AS_DLL),DLLS,SYSMODS) += tstRTR0DbgKrnlInfo
+   endif # VRA_SUPPORTED_HOST_ARCHS only
 
   endif
-  if1of ($(VBOX_LDR_FMT)), lx pe)
+  if1of ($(VRA_LDR_FMT)), lx pe)
    LIBRARIES += \
    	tstLdr-4Imp
   endif
 
- endif # !VBOX_ONLY_VALIDATIONKIT
+ endif # !VRA_ONLY_VALIDATIONKIT
 
 
  #
@@ -294,10 +294,10 @@ ifdef VBOX_WITH_TESTCASES # The whole file
 
  $$(TST_RT_ACPI_FILE): $(MAKEFILE_CURRENT) \
  		$(foreach source,$(TST_RT_ACPI_SOURCES),$(TST_RT_ACPI_PATH_SOURCES)/$(lastword $(subst =,$(SP),$(source)))) \
- 		$(VBOX_BIN2C) \
+ 		$(VRA_BIN2C) \
  		| $$(dir $$@)
 	$(QUIET)$(RM) -f -- $@
-	$(foreach source,$(TST_RT_ACPI_SOURCES), $(NLTAB)$(VBOX_BIN2C) -ascii --append \
+	$(foreach source,$(TST_RT_ACPI_SOURCES), $(NLTAB)$(VRA_BIN2C) -ascii --append \
 		"$(firstword $(subst =,$(SP),$(source)))" \
 		"$(TST_RT_ACPI_PATH_SOURCES)/$(lastword $(subst =,$(SP),$(source)))" \
 		"$@")
@@ -369,13 +369,13 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstRTCrPkix-1_TEMPLATE     = VBoxR3TstExe
  tstRTCrPkix-1_SOURCES      = tstRTCrPkix-1.cpp
 
- ifndef VBOX_ONLY_VALIDATIONKIT
+ ifndef VRA_ONLY_VALIDATIONKIT
   tstRTCrX509-1_TEMPLATE     = VBoxR3TstExe
   tstRTCrX509-1_SOURCES      = tstRTCrX509-1.cpp
   tstRTCrX509-1_INCS         = $(tstRTCrX509-1_0_OUTDIR)
   tstRTCrX509-1_CLEAN        = $(tstRTCrX509-1_0_OUTDIR)/tstRTCrX509-1.h
   tstRTCrX509-1_INTERMEDIATES = $(tstRTCrX509-1_0_OUTDIR)/tstRTCrX509-1.h
-  tstRTCrX509-1_VBOX_FILES := \
+  tstRTCrX509-1_VRA_FILES := \
   	Pem_md4=$(PATH_SUB_CURRENT)/tstRTCrX509-md4.pem \
   	Pem_md5=$(PATH_SUB_CURRENT)/tstRTCrX509-md5.pem \
   	Pem_sha1=$(PATH_SUB_CURRENT)/tstRTCrX509-sha1.pem \
@@ -395,26 +395,26 @@ ifdef VBOX_WITH_TESTCASES # The whole file
   	Der_cert1=$(PATH_SUB_CURRENT)/tstRTCrX509-cert1.der \
   	$(NO_SUCH_VARIABLE)
   $$(tstRTCrX509-1_0_OUTDIR)/tstRTCrX509-1.h: \
-  		$(foreach file,$(tstRTCrX509-1_VBOX_FILES),$(lastword  $(subst =,$(SP) ,$(file)))) \
-  		$(VBOX_BIN2C) \
+  		$(foreach file,$(tstRTCrX509-1_VRA_FILES),$(lastword  $(subst =,$(SP) ,$(file)))) \
+  		$(VRA_BIN2C) \
   		| $$(dir $$@)
 	$(RM) -f -- "$@"
-	$(foreach file,$(tstRTCrX509-1_VBOX_FILES) \
-	, $(NLTAB)$(VBOX_BIN2C) -ascii --append \
+	$(foreach file,$(tstRTCrX509-1_VRA_FILES) \
+	, $(NLTAB)$(VRA_BIN2C) -ascii --append \
 		"$(firstword $(subst =,$(SP) ,$(file)))" \
 		"$(lastword  $(subst =,$(SP) ,$(file)))" \
 		"$@")
- endif # !VBOX_ONLY_VALIDATIONKIT
+ endif # !VRA_ONLY_VALIDATIONKIT
 
 
  tstRTCType_TEMPLATE = VBoxR3TstExe
  tstRTCType_SOURCES = tstRTCType.cpp
 
- ifdef VBOX_WITH_LIBCURL
+ ifdef VRA_WITH_LIBCURL
   tstRTCRest-1_TEMPLATE = VBoxR3TstExe
   tstRTCRest-1_SOURCES = tstRTCRest-1.cpp
-  if ("$(KBUILD_TARGET)" == "solaris" && $(VBOX_GCC_VERSION_CXX) <= 70500)
-   tstRTCRest-1_DEFS = VBOX_SOLARIS_WITHOUT_XPG6_ENABLED
+  if ("$(KBUILD_TARGET)" == "solaris" && $(VRA_GCC_VERSION_CXX) <= 70500)
+   tstRTCRest-1_DEFS = VRA_SOLARIS_WITHOUT_XPG6_ENABLED
   endif
  endif
 
@@ -422,12 +422,12 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstRTDigest_SOURCES = tstRTDigest.cpp
 
  tstRTDigest-2_TEMPLATE = VBoxR3TstExe
- ifndef VBOX_WITH_ALT_HASH_CODE
+ ifndef VRA_WITH_ALT_HASH_CODE
   tstRTDigest-2_DEFS = IPRT_WITHOUT_SHA512T224 IPRT_WITHOUT_SHA512T256
  endif
  tstRTDigest-2_SOURCES = tstRTDigest-2.cpp
 
- ifdef VBOX_WITH_LIBCURL
+ ifdef VRA_WITH_LIBCURL
   tstRTHttp-1_TEMPLATE = VBoxR3TstExe
   tstRTHttp-1_SOURCES = tstRTHttp-1.cpp
   tstRTHttp-1_SDKS = VBoxLibCurl
@@ -530,37 +530,37 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstLdr-2_SOURCES = tstLdr-2.cpp
  tstLdr-2_DEFS = IN_DIS
  tstLdr-2_LIBS = \
- 	$(PATH_STAGE_LIB)/DisasmR3$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/DisasmR3$(VRA_SUFF_LIB)
 
- ifdef VBOX_WITH_RAW_MODE
+ ifdef VRA_WITH_RAW_MODE
   tstLdrObj_TEMPLATE = VBoxRc
   tstLdrObj_INST = $(INST_TESTCASE)
   tstLdrObj_SYSSUFF = .gc
   tstLdrObj_SOURCES = tstLdrObj.cpp
   tstLdrObj_DEFS = IN_DIS IN_RT_RC DIS_CORE_ONLY
-  ifeq ($(VBOX_LDR_FMT32),elf)
-   tstLdrObj_DEFS += VBOX_SOME_IMPORT_FUNCTION
+  ifeq ($(VRA_LDR_FMT32),elf)
+   tstLdrObj_DEFS += VRA_SOME_IMPORT_FUNCTION
   endif
   tstLdrObj_LIBS = \
-  	$(PATH_STAGE_LIB)/DisasmRC$(VBOX_SUFF_LIB) \
-  	$(PATH_STAGE_LIB)/RuntimeRC$(VBOX_SUFF_LIB)
-  if1of ($(VBOX_LDR_FMT32), lx pe)
+  	$(PATH_STAGE_LIB)/DisasmRC$(VRA_SUFF_LIB) \
+  	$(PATH_STAGE_LIB)/RuntimeRC$(VRA_SUFF_LIB)
+  if1of ($(VRA_LDR_FMT32), lx pe)
    tstLdrObj_LIBS += \
-   	$(PATH_STAGE_LIB)/VMMRCBuiltin$(VBOX_SUFF_LIB) \
-   	$(PATH_STAGE_LIB)/VMMRCImp$(VBOX_SUFF_LIB)
+   	$(PATH_STAGE_LIB)/VMMRCBuiltin$(VRA_SUFF_LIB) \
+   	$(PATH_STAGE_LIB)/VMMRCImp$(VRA_SUFF_LIB)
   endif
- endif # VBOX_WITH_RAW_MODE
+ endif # VRA_WITH_RAW_MODE
 
  tstLdr-3_TEMPLATE = VBoxR3TstExe
  tstLdr-3_SOURCES = tstLdr-3.cpp
  tstLdr-3_DEFS = IN_DIS
  tstLdr-3_LIBS = \
- 	$(PATH_STAGE_LIB)/DisasmR3$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/DisasmR3$(VRA_SUFF_LIB)
 
  tstLdr-4Imp_TEMPLATE = VBoxR0
- ifeq ($(VBOX_LDR_FMT),lx)
+ ifeq ($(VRA_LDR_FMT),lx)
   tstLdr-4Imp_SOURCES = tstLdr-4Imp-os2.def
- else ifeq ($(VBOX_LDR_FMT),pe)
+ else ifeq ($(VRA_LDR_FMT),pe)
   tstLdr-4Imp_SOURCES.win = tstLdr-4Imp-win.def
  endif
 
@@ -569,17 +569,17 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstLdrObjR0_SYSSUFF = .r0
  tstLdrObjR0_SOURCES = tstLdrObjR0.cpp tstLdrDisasmTest.cpp
  tstLdrObjR0_DEFS = IN_DIS IN_RT_R0 DIS_CORE_ONLY
- ifeq ($(VBOX_LDR_FMT32),elf)
-  tstLdrObjR0_DEFS += VBOX_SOME_IMPORT_FUNCTION
+ ifeq ($(VRA_LDR_FMT32),elf)
+  tstLdrObjR0_DEFS += VRA_SOME_IMPORT_FUNCTION
  endif
  ifn1of ($(KBUILD_TARGET), win)
-  tstLdrObjR0_CXXFLAGS = $(VBOX_GCC_Wno-array_bounds)
+  tstLdrObjR0_CXXFLAGS = $(VRA_GCC_Wno-array_bounds)
  endif
  tstLdrObjR0_LIBS = \
- 	$(PATH_STAGE_LIB)/DisasmR0$(VBOX_SUFF_LIB) \
- 	$(PATH_STAGE_LIB)/RuntimeR0$(VBOX_SUFF_LIB) \
- 	$(VBOX_LIB_SUPR0)
- if1of ($(VBOX_LDR_FMT), pe lx)
+ 	$(PATH_STAGE_LIB)/DisasmR0$(VRA_SUFF_LIB) \
+ 	$(PATH_STAGE_LIB)/RuntimeR0$(VRA_SUFF_LIB) \
+ 	$(VRA_LIB_SUPR0)
+ if1of ($(VRA_LDR_FMT), pe lx)
   tstLdrObjR0_LIBS += \
   	$(TARGET_tstLdr-4Imp)
  endif
@@ -588,7 +588,7 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstLdr-4_SOURCES = tstLdr-4.cpp tstLdrDisasmTest.cpp
  tstLdr-4_DEFS = IN_DIS
  tstLdr-4_LIBS = \
- 	$(PATH_STAGE_LIB)/DisasmR3$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/DisasmR3$(VRA_SUFF_LIB)
 
  tstLdrLoad_TEMPLATE = VBoxR3TstExe
  tstLdrLoad_SOURCES = tstLdrLoad.cpp
@@ -605,7 +605,7 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstRTLockValidator_TEMPLATE = VBoxR3TstExe
  tstRTLockValidator_SOURCES = tstRTLockValidator.cpp
 
- ifndef VBOX_ONLY_VALIDATIONKIT
+ ifndef VRA_ONLY_VALIDATIONKIT
   tstLog_TEMPLATE     = VBoxR3TstExe
   tstLog_SOURCES      = tstLog.cpp
   tstLog_INCS         = $(tstLog_0_OUTDIR)
@@ -615,7 +615,7 @@ ifdef VBOX_WITH_TESTCASES # The whole file
 	$(call MSG_GENERATE,,$@,$<)
 	$(QUIET)$(RM) -f -- "$@"
 	$(QUIET)$(SED) -n -e 's/^ *LOG_GROUP_\([A-Z0-9_]*\),.*$(DOLLAR)/{ LOG_GROUP_\1, "\1" },/p' --output "$@" "$<"
- endif # !VBOX_ONLY_VALIDATIONKIT
+ endif # !VRA_ONLY_VALIDATIONKIT
 
  tstRTMemEf_TEMPLATE = VBoxR3TstExe
  tstRTMemEf_SOURCES = tstRTMemEf.cpp
@@ -796,7 +796,7 @@ ifdef VBOX_WITH_TESTCASES # The whole file
 
  #
  # For testing no-CRT exception handling we need to use the static build,
- # assuming ofc that VBOX_WITH_NOCRT_STATIC is in effect.
+ # assuming ofc that VRA_WITH_NOCRT_STATIC is in effect.
  #
  TEMPLATE_VBoxR3TstExeStatic        := Testcase for the static (no-CRT) libraries.
  TEMPLATE_VBoxR3TstExeStatic_EXTENDS := VBoxR3Static
@@ -813,8 +813,8 @@ ifdef VBOX_WITH_TESTCASES # The whole file
 
  tstRTNoCrt-5_TEMPLATE := VBoxR3TstExeStatic
  if   "$(KBUILD_TARGET_ARCH)" == "amd64" \
-   && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBOX_ONLY_VALIDATIONKIT) && !defined(VBOX_ONLY_DOCS) \
-   && !defined(VBOX_WITH_PARFAIT) # mirrors RuntimeR3-x86 cond
+   && !defined(VRA_ONLY_ADDITIONS) && !defined(VRA_ONLY_VALIDATIONKIT) && !defined(VRA_ONLY_DOCS) \
+   && !defined(VRA_WITH_PARFAIT) # mirrors RuntimeR3-x86 cond
   tstRTNoCrt-5_BLD_TRG_ARCH := x86
  endif
  tstRTNoCrt-5_SOURCES := tstRTNoCrt-5.cpp
@@ -976,7 +976,7 @@ ifdef VBOX_WITH_TESTCASES # The whole file
 
  tstRTTime_TEMPLATE = VBoxR3TstExe
  tstRTTime_SOURCES := tstRTTime.cpp
- ifdef VBOX_WITH_R0_MODULES
+ ifdef VRA_WITH_R0_MODULES
   tstRTTime_DEFS   := MAY_USE_GIP
  endif
 
@@ -1063,12 +1063,12 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstRTR0DbgKrnlInfo_SYSSUFF = .r0
  tstRTR0DbgKrnlInfo_SOURCES = tstRTR0DbgKrnlInfo.cpp
  tstRTR0DbgKrnlInfo_LIBS = \
- 	$(PATH_STAGE_LIB)/RuntimeR0$(VBOX_SUFF_LIB) \
- 	$(VBOX_LIB_SUPR0)
- if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ 	$(PATH_STAGE_LIB)/RuntimeR0$(VRA_SUFF_LIB) \
+ 	$(VRA_LIB_SUPR0)
+ if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
   tstRTR0DbgKrnlInfoDriverHardened_TEMPLATE = VBoxR3HardenedTstExe
   tstRTR0DbgKrnlInfoDriverHardened_NAME = tstRTR0DbgKrnlInfoDriver
-  ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+  ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
    tstRTR0DbgKrnlInfoDriverHardened_DEFS = PROGRAM_NAME_STR="tstRTR0DbgKrnlInfoDriver"
   else
    tstRTR0DbgKrnlInfoDriverHardened_DEFS = PROGRAM_NAME_STR=\"tstRTR0DbgKrnlInfoDriver\"
@@ -1088,12 +1088,12 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstRTR0MemUserKernel_SYSSUFF = .r0
  tstRTR0MemUserKernel_SOURCES = tstRTR0MemUserKernel.cpp
  tstRTR0MemUserKernel_LIBS = \
- 	$(PATH_STAGE_LIB)/RuntimeR0$(VBOX_SUFF_LIB) \
- 	$(VBOX_LIB_SUPR0)
- if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ 	$(PATH_STAGE_LIB)/RuntimeR0$(VRA_SUFF_LIB) \
+ 	$(VRA_LIB_SUPR0)
+ if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
   tstRTR0MemUserKernelDriverHardened_TEMPLATE = VBoxR3HardenedTstExe
   tstRTR0MemUserKernelDriverHardened_NAME = tstRTR0MemUserKernelDriver
-  ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+  ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
    tstRTR0MemUserKernelDriverHardened_DEFS = PROGRAM_NAME_STR="tstRTR0MemUserKernelDriver"
   else
    tstRTR0MemUserKernelDriverHardened_DEFS = PROGRAM_NAME_STR=\"tstRTR0MemUserKernelDriver\"
@@ -1112,12 +1112,12 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstRTR0SemMutex_SYSSUFF = .r0
  tstRTR0SemMutex_SOURCES = tstRTR0SemMutex.cpp
  tstRTR0SemMutex_LIBS = \
- 	$(PATH_STAGE_LIB)/RuntimeR0$(VBOX_SUFF_LIB) \
- 	$(VBOX_LIB_SUPR0)
- if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ 	$(PATH_STAGE_LIB)/RuntimeR0$(VRA_SUFF_LIB) \
+ 	$(VRA_LIB_SUPR0)
+ if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
   tstRTR0SemMutexDriverHardened_TEMPLATE = VBoxR3HardenedTstExe
   tstRTR0SemMutexDriverHardened_NAME = tstRTR0SemMutexDriver
-  ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+  ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
    tstRTR0SemMutexDriverHardened_DEFS = PROGRAM_NAME_STR="tstRTR0SemMutexDriver"
   else
    tstRTR0SemMutexDriverHardened_DEFS = PROGRAM_NAME_STR=\"tstRTR0SemMutexDriver\"
@@ -1136,12 +1136,12 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstRTR0Thread_SYSSUFF = .r0
  tstRTR0Thread_SOURCES = tstRTR0Thread.cpp
  tstRTR0Thread_LIBS = \
- 	$(PATH_STAGE_LIB)/RuntimeR0$(VBOX_SUFF_LIB) \
- 	$(VBOX_LIB_SUPR0)
- if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ 	$(PATH_STAGE_LIB)/RuntimeR0$(VRA_SUFF_LIB) \
+ 	$(VRA_LIB_SUPR0)
+ if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
   tstRTR0ThreadDriverHardened_TEMPLATE = VBoxR3HardenedTstExe
   tstRTR0ThreadDriverHardened_NAME = tstRTR0ThreadDriver
-  ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+  ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
    tstRTR0ThreadDriverHardened_DEFS = PROGRAM_NAME_STR="tstRTR0ThreadDriver"
   else
    tstRTR0ThreadDriverHardened_DEFS = PROGRAM_NAME_STR=\"tstRTR0ThreadDriver\"
@@ -1160,12 +1160,12 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstRTR0Timer_SYSSUFF = .r0
  tstRTR0Timer_SOURCES = tstRTR0Timer.cpp
  tstRTR0Timer_LIBS = \
- 	$(PATH_STAGE_LIB)/RuntimeR0$(VBOX_SUFF_LIB) \
- 	$(VBOX_LIB_SUPR0)
- if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ 	$(PATH_STAGE_LIB)/RuntimeR0$(VRA_SUFF_LIB) \
+ 	$(VRA_LIB_SUPR0)
+ if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
   tstRTR0TimerDriverHardened_TEMPLATE = VBoxR3HardenedTstExe
   tstRTR0TimerDriverHardened_NAME = tstRTR0TimerDriver
-  ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+  ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
    tstRTR0TimerDriverHardened_DEFS = PROGRAM_NAME_STR="tstRTR0TimerDriver"
   else
    tstRTR0TimerDriverHardened_DEFS = PROGRAM_NAME_STR=\"tstRTR0TimerDriver\"
@@ -1184,12 +1184,12 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  tstRTR0ThreadPreemption_SYSSUFF = .r0
  tstRTR0ThreadPreemption_SOURCES = tstRTR0ThreadPreemption.cpp
  tstRTR0ThreadPreemption_LIBS = \
- 	$(PATH_STAGE_LIB)/RuntimeR0$(VBOX_SUFF_LIB) \
- 	$(VBOX_LIB_SUPR0)
- if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ 	$(PATH_STAGE_LIB)/RuntimeR0$(VRA_SUFF_LIB) \
+ 	$(VRA_LIB_SUPR0)
+ if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
   tstRTR0ThreadPreemptionDriverHardened_TEMPLATE = VBoxR3HardenedTstExe
   tstRTR0ThreadPreemptionDriverHardened_NAME = tstRTR0ThreadPreemptionDriver
-  ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+  ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
    tstRTR0ThreadPreemptionDriverHardened_DEFS = PROGRAM_NAME_STR="tstRTR0ThreadPreemptionDriver"
   else
    tstRTR0ThreadPreemptionDriverHardened_DEFS = PROGRAM_NAME_STR=\"tstRTR0ThreadPreemptionDriver\"
@@ -1222,13 +1222,13 @@ ifdef VBOX_WITH_TESTCASES # The whole file
  	../r0drv/linux/dbgkrnlinfo-r0drv-linux.c
 
  ntGetTimerResolution_SOURCES = ntGetTimerResolution.cpp
- ntGetTimerResolution_SDKS.win = ReorderCompilerIncs $(VBOX_WINPSDK) $(VBOX_WINDDK) VBoxNtDll
+ ntGetTimerResolution_SDKS.win = ReorderCompilerIncs $(VRA_WINPSDK) $(VRA_WINDDK) VBoxNtDll
 
 
  #
  # ValKit versions of selected tests.
  #
- ifdef VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING
+ ifdef VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING
   define def_valkit_unittest_iprt
    PROGRAMS += $(unittest)-ValKit
    $(unittest)-ValKit_TEMPLATE := VBoxValidationKitR3TstExe
@@ -1239,6 +1239,6 @@ ifdef VBOX_WITH_TESTCASES # The whole file
 	,$(evalcall2 def_valkit_unittest_iprt))
  endif
 
-endif # VBOX_WITH_TESTCASES
+endif # VRA_WITH_TESTCASES
 
 include $(FILE_KBUILD_SUB_FOOTER)

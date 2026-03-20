@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -26,44 +26,44 @@
 #
 
 # Include the top-level configure file.
-ifndef VBOX_ROOT_CONFIG_KMK_INCLUDED
+ifndef VRA_ROOT_CONFIG_KMK_INCLUDED
  include $(PATH_ROOT)/Config.kmk
 endif
 
 # Figure out openssl perl asm style for the target
-VBOX_CRYPTO_ASM_SCHEME := portme
+VRA_CRYPTO_ASM_SCHEME := portme
 if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd solaris)
- VBOX_CRYPTO_ASM_SCHEME  := elf
+ VRA_CRYPTO_ASM_SCHEME  := elf
 else ifeq ($(KBUILD_TARGET),darwin)
- VBOX_CRYPTO_ASM_SCHEME  := macosx
+ VRA_CRYPTO_ASM_SCHEME  := macosx
 else ifeq ($(KBUILD_TARGET),win)
- VBOX_CRYPTO_ASM_SCHEME  := nasm
+ VRA_CRYPTO_ASM_SCHEME  := nasm
 endif
 
 # Can't use relative paths when dealing with sub-makefiles.
-VBOX_PATH_OPENSSL           := $(PATH_ROOT)/src/libs/openssl-3.4.4
-VBOX_PATH_CRYPTO            := $(VBOX_PATH_OPENSSL)/crypto
-VBOX_PATH_CRYPTO_GENASM     := $(VBOX_PATH_CRYPTO)/genasm-$(VBOX_CRYPTO_ASM_SCHEME)
-VBOX_PATH_CRYPTO_AES        := $(VBOX_PATH_CRYPTO)/aes
-VBOX_PATH_CRYPTO_BN         := $(VBOX_PATH_CRYPTO)/bn
-VBOX_PATH_CRYPTO_CHACHA     := $(VBOX_PATH_CRYPTO)/chacha
-VBOX_PATH_CRYPTO_EC         := $(VBOX_PATH_CRYPTO)/ec
-VBOX_PATH_CRYPTO_MD5        := $(VBOX_PATH_CRYPTO)/md5
-VBOX_PATH_CRYPTO_MODES      := $(VBOX_PATH_CRYPTO)/modes
-VBOX_PATH_CRYPTO_POLY1305   := $(VBOX_PATH_CRYPTO)/poly1305
-VBOX_PATH_CRYPTO_RC4        := $(VBOX_PATH_CRYPTO)/rc4
-VBOX_PATH_CRYPTO_SHA        := $(VBOX_PATH_CRYPTO)/sha
-VBOX_PATH_CRYPTO_DES        := $(VBOX_PATH_CRYPTO)/des
-VBOX_PATH_CRYPTO_CAMELLIA   := $(VBOX_PATH_CRYPTO)/camellia
-VBOX_INST_CRYPTO_HEADERS    := obj/$(if-expr "$(CURSUBDIR)" == ".",,$(CURSUBDIR)/)crypto-3.4.4-headers/include/openssl/
-VBOX_PATH_CRYPTO_HEADERS    := $(abspath $(PATH_OUT))/$(patsubst %/,%,$(VBOX_INST_CRYPTO_HEADERS))
-VBOX_PATH_CRYPTO_PROVIDERS  := $(VBOX_PATH_OPENSSL)/providers
+VRA_PATH_OPENSSL           := $(PATH_ROOT)/src/libs/openssl-3.4.4
+VRA_PATH_CRYPTO            := $(VRA_PATH_OPENSSL)/crypto
+VRA_PATH_CRYPTO_GENASM     := $(VRA_PATH_CRYPTO)/genasm-$(VRA_CRYPTO_ASM_SCHEME)
+VRA_PATH_CRYPTO_AES        := $(VRA_PATH_CRYPTO)/aes
+VRA_PATH_CRYPTO_BN         := $(VRA_PATH_CRYPTO)/bn
+VRA_PATH_CRYPTO_CHACHA     := $(VRA_PATH_CRYPTO)/chacha
+VRA_PATH_CRYPTO_EC         := $(VRA_PATH_CRYPTO)/ec
+VRA_PATH_CRYPTO_MD5        := $(VRA_PATH_CRYPTO)/md5
+VRA_PATH_CRYPTO_MODES      := $(VRA_PATH_CRYPTO)/modes
+VRA_PATH_CRYPTO_POLY1305   := $(VRA_PATH_CRYPTO)/poly1305
+VRA_PATH_CRYPTO_RC4        := $(VRA_PATH_CRYPTO)/rc4
+VRA_PATH_CRYPTO_SHA        := $(VRA_PATH_CRYPTO)/sha
+VRA_PATH_CRYPTO_DES        := $(VRA_PATH_CRYPTO)/des
+VRA_PATH_CRYPTO_CAMELLIA   := $(VRA_PATH_CRYPTO)/camellia
+VRA_INST_CRYPTO_HEADERS    := obj/$(if-expr "$(CURSUBDIR)" == ".",,$(CURSUBDIR)/)crypto-3.4.4-headers/include/openssl/
+VRA_PATH_CRYPTO_HEADERS    := $(abspath $(PATH_OUT))/$(patsubst %/,%,$(VRA_INST_CRYPTO_HEADERS))
+VRA_PATH_CRYPTO_PROVIDERS  := $(VRA_PATH_OPENSSL)/providers
 
 # Enable asm implementation of crypto.
 if1of ($(KBUILD_TARGET_ARCH), x86 amd64)
- ifneq ($(VBOX_CRYPTO_ASM_SCHEME),portme)
+ ifneq ($(VRA_CRYPTO_ASM_SCHEME),portme)
   ifn1of ($(KBUILD_TARGET), ) # Selective exclusion for testing.  scm:ignore-empty-if1of-set
-   VBOX_WITH_CRYPTO_ASM = 1
+   VRA_WITH_CRYPTO_ASM = 1
   endif
  endif
 endif
@@ -75,9 +75,9 @@ endif
 #
 INSTALLS += crypto-headers
 crypto-headers_TEMPLATE := DUMMY
-crypto-headers_INST      = $(VBOX_INST_CRYPTO_HEADERS)
+crypto-headers_INST      = $(VRA_INST_CRYPTO_HEADERS)
 crypto-headers_MODE     := a+r,u+w
-crypto-headers_DEFPATH   = $(VBOX_PATH_OPENSSL)
+crypto-headers_DEFPATH   = $(VRA_PATH_OPENSSL)
 crypto-headers_SOURCES  := \
 	include/openssl/aes.h=>aes.h \
 	include/openssl/asn1err.h=>asn1err.h \
@@ -230,7 +230,7 @@ crypto-headers_SOURCES  := \
 # 1=<src>, 2=<dst>, 3=<target>, 4=<flags>, 5=install|stage
 # context vars: uid, gid, mode
 #
-if "$(VBOX_GCC_VERSION_CC)" < 30400 && "$(KBUILD_TARGET)" != "win"
+if "$(VRA_GCC_VERSION_CC)" < 30400 && "$(KBUILD_TARGET)" != "win"
  define crypto-headers_INSTALLER
 	$$(RM) -f -- "$(2)"
 	$$(SED) -e 's/^\([#][[:space:]]*\)pragma[[:space:]][[:space:]]*once.*/\1ifndef RT_WITHOUT_PRAGMA_ONCE\n\1 pragma once\n\1endif/' \
@@ -245,21 +245,21 @@ endif
 TEMPLATE_LibCrypto = Template for the OpenSSL crypto library.
 TEMPLATE_LibCrypto_EXTENDS = VBoxR3RuntimeDllNonPedantic
 ifneq ($(KBUILD_TARGET),win)
- TEMPLATE_LibCrypto_ASTOOL.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)  = $(VBOX_GCC_TOOL)
- TEMPLATE_LibCrypto_ASTOOL.$(KBUILD_TARGET).x86                    = $(VBOX_GCC_TOOL)
- TEMPLATE_LibCrypto_ASFLAGS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) = $(VBOX_$(VBOX_GCC_TOOL)_ASFLAGS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH))
- TEMPLATE_LibCrypto_ASFLAGS.$(KBUILD_TARGET).x86                   = $(VBOX_$(VBOX_GCC_TOOL)_ASFLAGS.$(KBUILD_TARGET).x86)
- TEMPLATE_LibCrypto_ASFLAGS                                        = -include $(VBOX_PATH_OPENSSL)/openssl-mangling.h
+ TEMPLATE_LibCrypto_ASTOOL.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)  = $(VRA_GCC_TOOL)
+ TEMPLATE_LibCrypto_ASTOOL.$(KBUILD_TARGET).x86                    = $(VRA_GCC_TOOL)
+ TEMPLATE_LibCrypto_ASFLAGS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) = $(VRA_$(VRA_GCC_TOOL)_ASFLAGS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH))
+ TEMPLATE_LibCrypto_ASFLAGS.$(KBUILD_TARGET).x86                   = $(VRA_$(VRA_GCC_TOOL)_ASFLAGS.$(KBUILD_TARGET).x86)
+ TEMPLATE_LibCrypto_ASFLAGS                                        = -include $(VRA_PATH_OPENSSL)/openssl-mangling.h
  TEMPLATE_LibCrypto_ASDEFS                                         = $(NO_SUCH_VARIABLE)
  TEMPLATE_LibCrypto_ASDEFS.darwin                                  = OPENSSL_MANGLE_ASM
- if "$(VBOX_AS_VERSION)" != "" && "$(VBOX_AS_VERSION)" vlt "GNU assembler version 2.20"
-  TEMPLATE_LibCrypto_ASFLAGS.solaris = -include $(VBOX_PATH_OPENSSL)/crypto/old-solaris-asm-trick.h
+ if "$(VRA_AS_VERSION)" != "" && "$(VRA_AS_VERSION)" vlt "GNU assembler version 2.20"
+  TEMPLATE_LibCrypto_ASFLAGS.solaris = -include $(VRA_PATH_OPENSSL)/crypto/old-solaris-asm-trick.h
  endif
 endif
 
 TEMPLATE_LibCrypto_DEFS = \
 	$(TEMPLATE_VBoxR3RuntimeDllNonPedantic_DEFS) \
-	VBOX_SUFF_DLL=$(VBOX_SUFF_DLL) \
+	VRA_SUFF_DLL=$(VRA_SUFF_DLL) \
 	OPENSSLDIR="/usr/local/ssl" \
 	ENGINESDIR="/usr/local/lib64/engines-3" \
 	MODULESDIR="/usr/local/lib64/ossl-modules" \
@@ -277,7 +277,7 @@ TEMPLATE_LibCrypto_DEFS = \
 	OPENSSL_PIC \
 	OPENSSL_IA32_SSE2 \
 	OPENSSL_BUILDING_OPENSSL
-ifdef VBOX_WITH_CRYPTO_ASM
+ifdef VRA_WITH_CRYPTO_ASM
  TEMPLATE_LibCrypto_DEFS += \
  	OPENSSL_BN_ASM_MONT \
  	OPENSSL_BN_ASM_GF2m \
@@ -336,13 +336,13 @@ ifeq ($(KBUILD_TARGET),linux)
  TEMPLATE_LibCrypto_DEFS.x86 += \
  	OPENSSL_USE_IPV6=0
 endif
-if defined(VBOX_WITH_PARFAIT) #&& VBOX_GCC_VERSION_CC == 50301
+if defined(VRA_WITH_PARFAIT) #&& VRA_GCC_VERSION_CC == 50301
  TEMPLATE_LibCrypto_DEFS += __STDC_NO_ATOMICS__
 endif
 # Enable for running with valgrind:
 #TEMPLATE_LibCrypto_DEFS += PURIFY
 
-TEMPLATE_LibCrypto_CFLAGS = $(filter-out $(VBOX_GCC_fvisibility-hidden),$(TEMPLATE_VBoxR3RuntimeDllNonPedantic_CFLAGS))
+TEMPLATE_LibCrypto_CFLAGS = $(filter-out $(VRA_GCC_fvisibility-hidden),$(TEMPLATE_VBoxR3RuntimeDllNonPedantic_CFLAGS))
 TEMPLATE_LibCrypto_CFLAGS.win  = $(TEMPLATE_VBoxR3RuntimeDllNonPedantic_CFLAGS.win)
 TEMPLATE_LibCrypto_CFLAGS.win += -wd4305 # asn1_lib.c(455) : warning C4305: 'type cast' : truncation from 'const unsigned char *' to 'unsigned long'
 TEMPLATE_LibCrypto_CFLAGS.win += -wd4306 # tasn_new.c(338) : warning C4306: 'type cast' : conversion from 'int' to 'ASN1_VALUE *' of greater size
@@ -359,28 +359,28 @@ TEMPLATE_LibCrypto_CFLAGS.win += -wd4067 # mem.c(14) : warning C4067: unexpected
 TEMPLATE_LibCrypto_CFLAGS.win += -wd4133 # ssl_local.h(2881): warning C4133: 'function': incompatible types - from 'volatile int *' to 'volatile LONG64 *'
 TEMPLATE_LibCrypto_CFLAGS.win += -wd4047 #threads_win.c(205): warning C4047: 'return': 'CRYPTO_THREAD_ID' differs in levels of indirection from 'DWORD'
 
-if1of ($(VBOX_VCC_TOOL_STEM), VCC120)
+if1of ($(VRA_VCC_TOOL_STEM), VCC120)
  TEMPLATE_LibCrypto_CFLAGS.win += -wd4005 # sdk\v7.1\include\sal_supp.h(57) : warning C4005: '__useHeader' : macro redefinition
 endif
 TEMPLATE_LibCrypto_CFLAGS.freebsd = -std=gnu99
 
 TEMPLATE_LibCrypto_INCS := \
-	$(dir $(VBOX_PATH_CRYPTO_HEADERS)) \
-	$(VBOX_PATH_OPENSSL) \
-	$(VBOX_PATH_OPENSSL)/include \
-	$(VBOX_PATH_OPENSSL)/providers/common/include \
-	$(VBOX_PATH_OPENSSL)/providers/fips/include \
-	$(VBOX_PATH_OPENSSL)/providers/implementations/include \
-	$(VBOX_PATH_OPENSSL)/gen-includes \
-	$(VBOX_PATH_CRYPTO)/include \
-	$(VBOX_PATH_CRYPTO_MODES) \
-	$(VBOX_PATH_CRYPTO)/ec/curve448 \
-	$(VBOX_PATH_CRYPTO)/ec/curve448/arch_32 \
-	$(patsubst %/openssl,%,$(VBOX_PATH_CRYPTO_HEADERS))
+	$(dir $(VRA_PATH_CRYPTO_HEADERS)) \
+	$(VRA_PATH_OPENSSL) \
+	$(VRA_PATH_OPENSSL)/include \
+	$(VRA_PATH_OPENSSL)/providers/common/include \
+	$(VRA_PATH_OPENSSL)/providers/fips/include \
+	$(VRA_PATH_OPENSSL)/providers/implementations/include \
+	$(VRA_PATH_OPENSSL)/gen-includes \
+	$(VRA_PATH_CRYPTO)/include \
+	$(VRA_PATH_CRYPTO_MODES) \
+	$(VRA_PATH_CRYPTO)/ec/curve448 \
+	$(VRA_PATH_CRYPTO)/ec/curve448/arch_32 \
+	$(patsubst %/openssl,%,$(VRA_PATH_CRYPTO_HEADERS))
 
 #TEMPLATE_LibCrypto_INTERMEDIATES = $($(crypto-headers)_1_STAGE_TARGET)
 TEMPLATE_LibCrypto_INTERMEDIATES := \
-	$(foreach f,$(crypto-headers_SOURCES),$(VBOX_PATH_CRYPTO_HEADERS)/$(lastword $(subst =>, ,$(f))))
+	$(foreach f,$(crypto-headers_SOURCES),$(VRA_PATH_CRYPTO_HEADERS)/$(lastword $(subst =>, ,$(f))))
 
 # Same as LibCrypto except that we don't install these libraries.
 TEMPLATE_SubLibCrypto          := Template for the OpenSSL crypto sub-libraries.
@@ -393,14 +393,14 @@ TEMPLATE_LibCryptoTstExe_EXTENDS = VBoxR3TstExe
 TEMPLATE_LibCryptoTstExe_DEFS    = $(TEMPLATE_VBoxR3TstExe_DEFS) $(filter-out $(TEMPLATE_VBoxR3RuntimeDllNonPedantic_DEFS) IN_RT_R3,$(TEMPLATE_LibCrypto_DEFS))
 TEMPLATE_LibCryptoTstExe_INCS    = $(TEMPLATE_LibCrypto_INCS) $(TEMPLATE_VBoxR3TstExe_INCS)
 ifeq ($(KBUILD_TARGET),win)
- TEMPLATE_LibCryptoTstExe_CFLAGS = $(filter-out $(VBOX_VCC_WERR), $(TEMPLATE_VBoxR3TstExe_CXXFLAGS)) $(VBOX_VCC_NON_PEDANTIC)
+ TEMPLATE_LibCryptoTstExe_CFLAGS = $(filter-out $(VRA_VCC_WERR), $(TEMPLATE_VBoxR3TstExe_CXXFLAGS)) $(VRA_VCC_NON_PEDANTIC)
 else
- TEMPLATE_LibCryptoTstExe_CFLAGS = $(filter-out $(VBOX_GCC_PEDANTIC_C), $(TEMPLATE_VBoxR3TstExe_CFLAGS)) $(VBOX_GCC_NON_PEDANTIC_C)
+ TEMPLATE_LibCryptoTstExe_CFLAGS = $(filter-out $(VRA_GCC_PEDANTIC_C), $(TEMPLATE_VBoxR3TstExe_CFLAGS)) $(VRA_GCC_NON_PEDANTIC_C)
 endif
-TEMPLATE_LibCryptoTstExe_LATE_LIBS = $(PATH_STAGE_LIB)/VBox-libcrypto$(VBOX_SUFF_LIB) $(TEMPLATE_VBoxR3TstExe_LATE_LIBS)
+TEMPLATE_LibCryptoTstExe_LATE_LIBS = $(PATH_STAGE_LIB)/VBox-libcrypto$(VRA_SUFF_LIB) $(TEMPLATE_VBoxR3TstExe_LATE_LIBS)
 
 
-ifdef VBOX_WITH_BLD_RTSIGNTOOL_SIGNING
+ifdef VRA_WITH_BLD_RTSIGNTOOL_SIGNING
  #
  # Build program versions of LibCrypto and SubLibCrypto for bldRTSignTool.
  #
@@ -425,7 +425,7 @@ ifdef VBOX_WITH_BLD_RTSIGNTOOL_SIGNING
  TEMPLATE_VBoxSubLibCryptoBldProg = Build program template a OpenSSL crypto sub-library.
  TEMPLATE_VBoxSubLibCryptoBldProg_EXTENDS   := VBoxLibCryptoBldProg
  TEMPLATE_VBoxSubLibCryptoBldProg_INSTTYPE   = none
-endif # VBOX_WITH_BLD_RTSIGNTOOL_SIGNING
+endif # VRA_WITH_BLD_RTSIGNTOOL_SIGNING
 
 
 #
@@ -440,14 +440,14 @@ TEMPLATE_VBoxSubLibCrypto-x86 = 32-bit template for the OpenSSL crypto sub-libra
 TEMPLATE_VBoxSubLibCrypto-x86_EXTENDS = VBoxLibCrypto-x86
 TEMPLATE_VBoxSubLibCrypto-x86_INSTTYPE = none
 
-ifdef VBOX_WITH_32_ON_64_MAIN_API # 32-bit edition.
- define VBOX_OPENSSL_X86
+ifdef VRA_WITH_32_ON_64_MAIN_API # 32-bit edition.
+ define VRA_OPENSSL_X86
   $(eval LIBRARIES += $(1)-x86)
   $(1)-x86_TEMPLATE := VBoxSubLibCrypto-x86
   $(1)-x86_EXTENDS  := $(1)
  endef
 else
- define VBOX_OPENSSL_X86
+ define VRA_OPENSSL_X86
  endef
 endif
 
@@ -455,10 +455,10 @@ endif
 ##
 # This is for ensuring nasm is in the PATH when generating the yasm/nasm code,
 # as the generator scripts checks the version to determin support for AVX and such.
-VBOX_CRYPTO_GEN_NASM_SETUP =
+VRA_CRYPTO_GEN_NASM_SETUP =
 if1of ($(KBUILD_TARGET_ARCH), amd64 x86)
  include $(PATH_KBUILD)/tools/NASM.kmk
  ifdef PATH_TOOL_NASM
-  VBOX_CRYPTO_GEN_NASM_SETUP = kmk_redirect -D 'PATH=$(PATH_TOOL_NASM)$(HOST_PATH_SEP)' --
+  VRA_CRYPTO_GEN_NASM_SETUP = kmk_redirect -D 'PATH=$(PATH_TOOL_NASM)$(HOST_PATH_SEP)' --
  endif
 endif

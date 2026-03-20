@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2022-2026 Oracle and/or its affiliates.
+# Copyright (C) 2022-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -41,14 +41,14 @@ providers_der_SOURCES = \
 	der_rsa_sig.c \
 	der_sm2_key.c \
 	der_sm2_sig.c \
-	$(VBOX_PATH_OPENSSL)/gen-sources/der/der_digests_gen.c \
-	$(VBOX_PATH_OPENSSL)/gen-sources/der/der_dsa_gen.c \
-	$(VBOX_PATH_OPENSSL)/gen-sources/der/der_ec_gen.c \
-	$(VBOX_PATH_OPENSSL)/gen-sources/der/der_ecx_gen.c \
-	$(VBOX_PATH_OPENSSL)/gen-sources/der/der_rsa_gen.c \
-	$(VBOX_PATH_OPENSSL)/gen-sources/der/der_sm2_gen.c \
-	$(VBOX_PATH_OPENSSL)/gen-sources/der/der_wrap_gen.c
-$(evalcall VBOX_OPENSSL_X86,providers_der)
+	$(VRA_PATH_OPENSSL)/gen-sources/der/der_digests_gen.c \
+	$(VRA_PATH_OPENSSL)/gen-sources/der/der_dsa_gen.c \
+	$(VRA_PATH_OPENSSL)/gen-sources/der/der_ec_gen.c \
+	$(VRA_PATH_OPENSSL)/gen-sources/der/der_ecx_gen.c \
+	$(VRA_PATH_OPENSSL)/gen-sources/der/der_rsa_gen.c \
+	$(VRA_PATH_OPENSSL)/gen-sources/der/der_sm2_gen.c \
+	$(VRA_PATH_OPENSSL)/gen-sources/der/der_wrap_gen.c
+$(evalcall VRA_OPENSSL_X86,providers_der)
 
 include $(FILE_KBUILD_SUB_FOOTER)
 
@@ -56,25 +56,25 @@ include $(FILE_KBUILD_SUB_FOOTER)
 # Re-creates certain openssl headers which exist as templates.
 #
 OSSL_PROVIDERS_DER_SRC_TEMPLATES := \
-	$(VBOX_PATH_CRYPTO_PROVIDERS)/common/der/der_digests_gen.c.in \
-	$(VBOX_PATH_CRYPTO_PROVIDERS)/common/der/der_dsa_gen.c.in \
-	$(VBOX_PATH_CRYPTO_PROVIDERS)/common/der/der_ec_gen.c.in \
-	$(VBOX_PATH_CRYPTO_PROVIDERS)/common/der/der_ecx_gen.c.in \
-	$(VBOX_PATH_CRYPTO_PROVIDERS)/common/der/der_rsa_gen.c.in \
-	$(VBOX_PATH_CRYPTO_PROVIDERS)/common/der/der_sm2_gen.c.in \
-	$(VBOX_PATH_CRYPTO_PROVIDERS)/common/der/der_wrap_gen.c.in
+	$(VRA_PATH_CRYPTO_PROVIDERS)/common/der/der_digests_gen.c.in \
+	$(VRA_PATH_CRYPTO_PROVIDERS)/common/der/der_dsa_gen.c.in \
+	$(VRA_PATH_CRYPTO_PROVIDERS)/common/der/der_ec_gen.c.in \
+	$(VRA_PATH_CRYPTO_PROVIDERS)/common/der/der_ecx_gen.c.in \
+	$(VRA_PATH_CRYPTO_PROVIDERS)/common/der/der_rsa_gen.c.in \
+	$(VRA_PATH_CRYPTO_PROVIDERS)/common/der/der_sm2_gen.c.in \
+	$(VRA_PATH_CRYPTO_PROVIDERS)/common/der/der_wrap_gen.c.in
 
 #
 # Big fat @todo:
 #  I'm too stupid atm to figure out how to get this executed sequentially
 #  instead of getting it expanded and executed at once...
 #
-recreate-providers-der-sources: $(VBOX_PATH_OPENSSL)/util/dofile.pl \
+recreate-providers-der-sources: $(VRA_PATH_OPENSSL)/util/dofile.pl \
 		$(OSSL_PROVIDERS_DER_SRC_TEMPLATES)
 	$(foreach src, $(OSSL_PROVIDERS_DER_SRC_TEMPLATES), \
 	    perl \
-	     -I$(VBOX_PATH_OPENSSL) \
-	     -I$(VBOX_PATH_OPENSSL)/util/perl \
-	     -I$(VBOX_PATH_CRYPTO_PROVIDERS)/common/der \
-	     -Mconfigdata -Moids_to_c $(VBOX_PATH_OPENSSL)/util/dofile.pl -oMakefile \
-	     $(src) > $(VBOX_PATH_OPENSSL)/gen-sources/der/$(basename $(notdir $(src)));))
+	     -I$(VRA_PATH_OPENSSL) \
+	     -I$(VRA_PATH_OPENSSL)/util/perl \
+	     -I$(VRA_PATH_CRYPTO_PROVIDERS)/common/der \
+	     -Mconfigdata -Moids_to_c $(VRA_PATH_OPENSSL)/util/dofile.pl -oMakefile \
+	     $(src) > $(VRA_PATH_OPENSSL)/gen-sources/der/$(basename $(notdir $(src)));))

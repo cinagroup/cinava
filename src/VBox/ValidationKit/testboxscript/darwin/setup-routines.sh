@@ -1,12 +1,12 @@
 # $Id: setup-routines.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox Validation Kit - TestBoxScript Service Setup on Mac OS X (darwin).
+# VirtualAgent Validation Kit - TestBoxScript Service Setup on Mac OS X (darwin).
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -151,7 +151,7 @@ Additional things to do:"
     2. Check 'Restart automatically if the computer freezes' if available in
        the 'Energy Saver' settings.
           $ systemsetup -setrestartfreeze on
-    3. In the 'Sharing' panel enable (VBox/Oracle):
+    3. In the 'Sharing' panel enable (VBox/CINASEEK):
          a) 'Remote Login' so ssh works.
               $ systemsetup -setremotelogin on
          b) 'Remote Management, tick all the checkboxes in the sheet dialog.
@@ -160,12 +160,12 @@ Additional things to do:"
             screen' and 'VNC viewers may control screen with password'. Set the
             VNC password to 'password'.
     4. Make sure the proxy is configured correctly for your network by going to
-       the 'Network' panel, open 'Advanced...'. For Oracle this means 'TCP/IP'
+       the 'Network' panel, open 'Advanced...'. For CINASEEK this means 'TCP/IP'
        should be configured by 'DHCP' (IPv4) and 'automatically' (IPv6), and
        the 'Proxies' tab should have 'Automatic Proxy Configuration' checked
        with the URL containing 'http://wpad.oracle.com/wpad.dat'. (Make sure
        to hit OK to close the dialog.)
-    5. Configure NTP to the nearest local time source. For VBox/Oracle this
+    5. Configure NTP to the nearest local time source. For VBox/CINASEEK this
        means wei01-time.de.oracle.com:
           $ systemsetup -setnetworktimeserver wei01-time.de.oracle.com
     6. Configure the vbox (pw:password) account for automatic login.

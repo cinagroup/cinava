@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 if1of ($(KBUILD_TARGET_ARCH), amd64 arm64)
- VBOX_WITH_LIBJPEG_SIMD = 1
+ VRA_WITH_LIBJPEG_SIMD = 1
 endif
 
 LIBRARIES += VBox-libjpeg
@@ -41,7 +41,7 @@ endif
 VBox-libjpeg_CFLAGS.win    += -wd4774 # jerror.c(192): warning C4774: 'snprintf' : format string expected in argument 3 is not a string literal
 
 # Following defines normally reside in jconfigint.h
-ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
  VBox-libjpeg_DEFS += \
  	PACKAGE_NAME="libjpeg-turbo" \
  	VERSION="3.1.0" \
@@ -152,7 +152,7 @@ VBox-libjpeg_SOURCES += \
 	src/jcarith.c \
 	src/jdarith.c
 
-ifdef VBOX_WITH_LIBJPEG_SIMD
+ifdef VRA_WITH_LIBJPEG_SIMD
  VBox-libjpeg_DEFS += WITH_SIMD
 
  # Asm system-dependent defines
@@ -162,17 +162,17 @@ ifdef VBOX_WITH_LIBJPEG_SIMD
  ifeq ($(KBUILD_TARGET_ARCH),arm64)
   VBox-libjpeg_DEFS += NEON_INTRINSICS
  endif
- ifeq ($(VBOX_LDR_FMT),pe)
+ ifeq ($(VRA_LDR_FMT),pe)
   ifeq ($(KBUILD_TARGET_ARCH),x86)
    VBox-libjpeg_DEFS += WIN32
   else
    VBox-libjpeg_DEFS += WIN64
   endif
  endif
- ifeq ($(VBOX_LDR_FMT),elf)
+ ifeq ($(VRA_LDR_FMT),elf)
   VBox-libjpeg_DEFS += ELF
  endif
- ifeq ($(VBOX_LDR_FMT),macho)
+ ifeq ($(VRA_LDR_FMT),macho)
   VBox-libjpeg_DEFS += MACHO
  endif
 
@@ -288,6 +288,6 @@ ifdef VBOX_WITH_LIBJPEG_SIMD
  	simd/arm/aarch64/jsimd.c
 
 
-endif # VBOX_WITH_LIBJPEG_SIMD
+endif # VRA_WITH_LIBJPEG_SIMD
 
 include $(FILE_KBUILD_SUB_FOOTER)

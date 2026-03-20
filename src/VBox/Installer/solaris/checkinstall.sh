@@ -2,13 +2,13 @@
 # $Id: checkinstall.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
 #
-# VirtualBox checkinstall script for Solaris.
+# VirtualAgent checkinstall script for Solaris.
 #
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ errorprint()
 
 abort_error()
 {
-    errorprint "Please close all VirtualBox processes and re-run this installer."
+    errorprint "Please close all VirtualAgent processes and re-run this installer."
     exit 1
 }
 
@@ -259,7 +259,7 @@ if test "x$PKG_MISSING_IPS" != "x"; then
     fi
     errorprint "Missing packages: $PKG_MISSING_IPS"
     errorprint ""
-    errorprint "Please install these packages before installing VirtualBox."
+    errorprint "Please install these packages before installing VirtualAgent."
     exit 1
 else
     infoprint "Done."
@@ -271,29 +271,29 @@ if test "$REMOTE_INST" -eq 1; then
 fi
 
 # Check & disable running services
-disable_service "svc:/application/virtualbox/zoneaccess"  "VirtualBox zone access service"
-disable_service "svc:/application/virtualbox/webservice"  "VirtualBox web service"
-disable_service "svc:/application/virtualbox/autostart"   "VirtualBox auto-start service"
-disable_service "svc:/application/virtualbox/balloonctrl" "VirtualBox balloon-control service"
+disable_service "svc:/application/virtualbox/zoneaccess"  "VirtualAgent zone access service"
+disable_service "svc:/application/virtualbox/webservice"  "VirtualAgent web service"
+disable_service "svc:/application/virtualbox/autostart"   "VirtualAgent auto-start service"
+disable_service "svc:/application/virtualbox/balloonctrl" "VirtualAgent balloon-control service"
 
 # Check if VBoxSVC is currently running
-VBOXSVC_PID=`ps -eo pid,fname | grep VBoxSVC | grep -v grep | awk '{ print $1 }'`
-if test ! -z "$VBOXSVC_PID" && test "$VBOXSVC_PID" -ge 0; then
-    errorprint "VirtualBox's VBoxSVC (pid $VBOXSVC_PID) still appears to be running."
+VRASVC_PID=`ps -eo pid,fname | grep VBoxSVC | grep -v grep | awk '{ print $1 }'`
+if test ! -z "$VRASVC_PID" && test "$VRASVC_PID" -ge 0; then
+    errorprint "VirtualAgent's VBoxSVC (pid $VRASVC_PID) still appears to be running."
     abort_error
 fi
 
 # Check if VBoxNetDHCP is currently running
-VBOXNETDHCP_PID=`ps -eo pid,fname | grep VBoxNetDHCP | grep -v grep | awk '{ print $1 }'`
-if test ! -z "$VBOXNETDHCP_PID" && test "$VBOXNETDHCP_PID" -ge 0; then
-    errorprint "VirtualBox's VBoxNetDHCP (pid $VBOXNETDHCP_PID) still appears to be running."
+VRANETDHCP_PID=`ps -eo pid,fname | grep VBoxNetDHCP | grep -v grep | awk '{ print $1 }'`
+if test ! -z "$VRANETDHCP_PID" && test "$VRANETDHCP_PID" -ge 0; then
+    errorprint "VirtualAgent's VBoxNetDHCP (pid $VRANETDHCP_PID) still appears to be running."
     abort_error
 fi
 
 # Check if VBoxNetNAT is currently running
-VBOXNETNAT_PID=`ps -eo pid,fname | grep VBoxNetNAT | grep -v grep | awk '{ print $1 }'`
-if test ! -z "$VBOXNETNAT_PID" && test "$VBOXNETNAT_PID" -ge 0; then
-    errorprint "VirtualBox's VBoxNetNAT (pid $VBOXNETNAT_PID) still appears to be running."
+VRANETNAT_PID=`ps -eo pid,fname | grep VBoxNetNAT | grep -v grep | awk '{ print $1 }'`
+if test ! -z "$VRANETNAT_PID" && test "$VRANETNAT_PID" -ge 0; then
+    errorprint "VirtualAgent's VBoxNetNAT (pid $VRANETNAT_PID) still appears to be running."
     abort_error
 fi
 
@@ -302,21 +302,21 @@ BIN_IFCONFIG=`which ifconfig 2> /dev/null`
 if test -x "$BIN_IFCONFIG"; then
     vboxnetup=`$BIN_IFCONFIG vboxnet0 >/dev/null 2>&1`
     if test "$?" -eq 0; then
-        infoprint "VirtualBox NetAdapter is still plumbed"
+        infoprint "VirtualAgent NetAdapter is still plumbed"
         infoprint "Trying to remove old NetAdapter..."
         $BIN_IFCONFIG vboxnet0 unplumb
         if test "$?" -ne 0; then
-            errorprint "VirtualBox NetAdapter 'vboxnet0' couldn't be unplumbed (probably in use)."
+            errorprint "VirtualAgent NetAdapter 'vboxnet0' couldn't be unplumbed (probably in use)."
             abort_error
         fi
     fi
     vboxnetup=`$BIN_IFCONFIG vboxnet0 inet6 >/dev/null 2>&1`
     if test "$?" -eq 0; then
-        infoprint "VirtualBox NetAdapter (Ipv6) is still plumbed"
+        infoprint "VirtualAgent NetAdapter (Ipv6) is still plumbed"
         infoprint "Trying to remove old NetAdapter..."
         $BIN_IFCONFIG vboxnet0 inet6 unplumb
         if test "$?" -ne 0; then
-            errorprint "VirtualBox NetAdapter 'vboxnet0' IPv6 couldn't be unplumbed (probably in use)."
+            errorprint "VirtualAgent NetAdapter 'vboxnet0' IPv6 couldn't be unplumbed (probably in use)."
             abort_error
         fi
     fi

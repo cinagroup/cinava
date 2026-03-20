@@ -1,12 +1,12 @@
 #!/bin/sh
 ## @file
-# Oracle VirtualBox startup script, Linux hosts.
+# CINA VirtualAgent startup script, Linux hosts.
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -51,13 +51,13 @@ MY_DIR="${TARGET%/[!/]*}"
 #     done
 # )
 
-if test -f /usr/lib/virtualbox/VirtualBox &&
-    test -x /usr/lib/virtualbox/VirtualBox; then
+if test -f /usr/lib/virtualbox/VirtualAgent &&
+    test -x /usr/lib/virtualbox/VirtualAgent; then
     INSTALL_DIR=/usr/lib/virtualbox
-elif test -f "${MY_DIR}/VirtualBox" && test -x "${MY_DIR}/VirtualBox"; then
+elif test -f "${MY_DIR}/VirtualAgent" && test -x "${MY_DIR}/VirtualAgent"; then
     INSTALL_DIR="${MY_DIR}"
 else
-    echo "Could not find VirtualBox installation. Please reinstall."
+    echo "Could not find VirtualAgent installation. Please reinstall."
     exit 1
 fi
 
@@ -97,32 +97,32 @@ EOF
 fi
 
 # Get effective user name to use it in order to compose XPCOM IPC socket path.
-VBOX_EFFECTIVE_USER="$(whoami)"
-if [ -z "$VBOX_EFFECTIVE_USER" ]; then
+VRA_EFFECTIVE_USER="$(whoami)"
+if [ -z "$VRA_EFFECTIVE_USER" ]; then
     cat << EOF
-WARNING: Unable to detect effective user name. VirtualBox might run incorrectly.
+WARNING: Unable to detect effective user name. VirtualAgent might run incorrectly.
 EOF
 fi
 
 # Variables LOGNAME and USER are used by XPCOM code in order to
 # compose IPC socket path. If they set to something which is different
 # from the effective user name, it might result in misbehavior.
-# Setting VBOX_IPC_SOCKETID will tell XPCOM code which path it should use explicitly.
-[ -n "$LOGNAME" ] && [ "$LOGNAME" = "$VBOX_EFFECTIVE_USER" ] || vbox_override_env="1"
-[ -n "$USER"    ] && [ "$USER"    = "$VBOX_EFFECTIVE_USER" ] || vbox_override_env="1"
+# Setting VRA_IPC_SOCKETID will tell XPCOM code which path it should use explicitly.
+[ -n "$LOGNAME" ] && [ "$LOGNAME" = "$VRA_EFFECTIVE_USER" ] || vbox_override_env="1"
+[ -n "$USER"    ] && [ "$USER"    = "$VRA_EFFECTIVE_USER" ] || vbox_override_env="1"
 
 if [ -n "$vbox_override_env" ]; then
 cat << EOF
 WARNING: Environment variable LOGNAME or USER does not correspond to effective user id.
 EOF
-    export VBOX_IPC_SOCKETID="$VBOX_EFFECTIVE_USER"
+    export VRA_IPC_SOCKETID="$VRA_EFFECTIVE_USER"
 fi
 
-SERVER_PID=`ps -U "$VBOX_EFFECTIVE_USER" | grep VBoxSVC | awk '{ print $1 }'`
+SERVER_PID=`ps -U "$VRA_EFFECTIVE_USER" | grep VBoxSVC | awk '{ print $1 }'`
 if [ -z "$SERVER_PID" ]; then
     # Server not running yet/anymore, cleanup socket path.
     # See IPC_GetDefaultSocketPath()!
-    rm -rf "/tmp/.vbox-$VBOX_EFFECTIVE_USER-ipc" > /dev/null 2>&1
+    rm -rf "/tmp/.vbox-$VRA_EFFECTIVE_USER-ipc" > /dev/null 2>&1
 fi
 
 if [ "$SHUTDOWN" = "true" ]; then
@@ -135,11 +135,11 @@ fi
 
 APP=`basename $0`
 case "$APP" in
-    VirtualBox|virtualbox)
-        exec "$INSTALL_DIR/VirtualBox" "$@"
+    VirtualAgent|virtualbox)
+        exec "$INSTALL_DIR/VirtualAgent" "$@"
         ;;
-    VirtualBoxVM|virtualboxvm)
-        exec "$INSTALL_DIR/VirtualBoxVM" "$@"
+    VirtualAgentVM|virtualboxvm)
+        exec "$INSTALL_DIR/VirtualAgentVM" "$@"
         ;;
     VBoxManage|vboxmanage)
         exec "$INSTALL_DIR/VBoxManage" "$@"

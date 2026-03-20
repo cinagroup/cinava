@@ -1,14 +1,14 @@
 #! /bin/sh
 # $Id: VBoxCreateUSBNode.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $ */
 ## @file
-# VirtualBox USB Proxy Service, Linux Specialization.
-# udev helper for creating and removing device nodes for VirtualBox USB devices
+# VirtualAgent USB Proxy Service, Linux Specialization.
+# udev helper for creating and removing device nodes for VirtualAgent USB devices
 #
 
 #
-# Copyright (C) 2010-2026 Oracle and/or its affiliates.
+# Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or

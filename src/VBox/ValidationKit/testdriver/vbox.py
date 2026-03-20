@@ -3,14 +3,14 @@
 # pylint: disable=too-many-lines
 
 """
-VirtualBox Specific base testdriver.
+VirtualAgent Specific base testdriver.
 """
 
 __copyright__ = \
 """
-Copyright (C) 2010-2026 Oracle and/or its affiliates.
+Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -165,7 +165,7 @@ def isIpAddrValid(sIpAddr):
 
 def stringifyErrorInfo(oErrInfo):
     """
-    Stringifies the error information in a IVirtualBoxErrorInfo object.
+    Stringifies the error information in a IVirtualAgentErrorInfo object.
 
     Returns string with error info.
     """
@@ -183,7 +183,7 @@ def stringifyErrorInfo(oErrInfo):
 
 def reportError(oErr, sText):
     """
-    Report a VirtualBox error on oErr.  oErr can be IVirtualBoxErrorInfo
+    Report a VirtualAgent error on oErr.  oErr can be IVirtualAgentErrorInfo
     or IProgress.  Anything else is ignored.
 
     Returns the same a reporter.error().
@@ -247,21 +247,21 @@ class ComError(object):
     This works more like a module than a class since it's replacing a module.
     """
 
-    # The VBOX_E_XXX bits:
-    __VBOX_E_BASE = -2135228416;
-    VBOX_E_OBJECT_NOT_FOUND         = __VBOX_E_BASE + 1;
-    VBOX_E_INVALID_VM_STATE         = __VBOX_E_BASE + 2;
-    VBOX_E_VM_ERROR                 = __VBOX_E_BASE + 3;
-    VBOX_E_FILE_ERROR               = __VBOX_E_BASE + 4;
-    VBOX_E_IPRT_ERROR               = __VBOX_E_BASE + 5;
-    VBOX_E_PDM_ERROR                = __VBOX_E_BASE + 6;
-    VBOX_E_INVALID_OBJECT_STATE     = __VBOX_E_BASE + 7;
-    VBOX_E_HOST_ERROR               = __VBOX_E_BASE + 8;
-    VBOX_E_NOT_SUPPORTED            = __VBOX_E_BASE + 9;
-    VBOX_E_XML_ERROR                = __VBOX_E_BASE + 10;
-    VBOX_E_INVALID_SESSION_STATE    = __VBOX_E_BASE + 11;
-    VBOX_E_OBJECT_IN_USE            = __VBOX_E_BASE + 12;
-    VBOX_E_DONT_CALL_AGAIN          = __VBOX_E_BASE + 13;
+    # The VRA_E_XXX bits:
+    __VRA_E_BASE = -2135228416;
+    VRA_E_OBJECT_NOT_FOUND         = __VRA_E_BASE + 1;
+    VRA_E_INVALID_VM_STATE         = __VRA_E_BASE + 2;
+    VRA_E_VM_ERROR                 = __VRA_E_BASE + 3;
+    VRA_E_FILE_ERROR               = __VRA_E_BASE + 4;
+    VRA_E_IPRT_ERROR               = __VRA_E_BASE + 5;
+    VRA_E_PDM_ERROR                = __VRA_E_BASE + 6;
+    VRA_E_INVALID_OBJECT_STATE     = __VRA_E_BASE + 7;
+    VRA_E_HOST_ERROR               = __VRA_E_BASE + 8;
+    VRA_E_NOT_SUPPORTED            = __VRA_E_BASE + 9;
+    VRA_E_XML_ERROR                = __VRA_E_BASE + 10;
+    VRA_E_INVALID_SESSION_STATE    = __VRA_E_BASE + 11;
+    VRA_E_OBJECT_IN_USE            = __VRA_E_BASE + 12;
+    VRA_E_DONT_CALL_AGAIN          = __VRA_E_BASE + 13;
 
     # Reverse lookup table.
     dDecimalToConst = {}; # pylint: disable=invalid-name
@@ -276,9 +276,9 @@ class ComError(object):
         install compatability mappings.
         """
 
-        # First, add the VBOX_E_XXX constants to dDecimalToConst.
+        # First, add the VRA_E_XXX constants to dDecimalToConst.
         for sAttr in dir(ComError):
-            if sAttr.startswith('VBOX_E'):
+            if sAttr.startswith('VRA_E'):
                 oAttr = getattr(ComError, sAttr);
                 ComError.dDecimalToConst[oAttr] = sAttr;
 
@@ -385,7 +385,7 @@ class ComError(object):
 
 class Build(object): # pylint: disable=too-few-public-methods
     """
-    A VirtualBox build.
+    A VirtualAgent build.
 
     Note! After dropping the installation of VBox from this code and instead
           realizing that with the vboxinstall.py wrapper driver, this class is
@@ -424,7 +424,7 @@ class Build(object): # pylint: disable=too-few-public-methods
                 self.sArch = os.environ.get("KBUILD_TARGET_ARCH", oDriver.sHostArch);
 
             sOut = os.path.join('out', self.sOs + '.' + self.sArch, self.sType);
-            sSearch = os.environ.get('VBOX_TD_DEV_TREE', os.path.dirname(__file__)); # Env.var. for older trees or testboxscript.
+            sSearch = os.environ.get('VRA_TD_DEV_TREE', os.path.dirname(__file__)); # Env.var. for older trees or testboxscript.
             sCandidat = None;
             for i in range(0, 10):                                          # pylint: disable=unused-variable
                 sBldDir = os.path.join(sSearch, sOut);
@@ -433,7 +433,7 @@ class Build(object): # pylint: disable=too-few-public-methods
                     if os.path.isfile(sCandidat):
                         self.sSdkPath = os.path.join(sBldDir, 'bin/sdk');
                         break;
-                    sCandidat = os.path.join(sBldDir, 'dist/VirtualBox.app/Contents/MacOS/VBoxSVC');
+                    sCandidat = os.path.join(sBldDir, 'dist/VirtualAgent.app/Contents/MacOS/VBoxSVC');
                     if os.path.isfile(sCandidat):
                         self.sSdkPath = os.path.join(sBldDir, 'dist/sdk');
                         break;
@@ -452,7 +452,7 @@ class Build(object): # pylint: disable=too-few-public-methods
                 else:
                     s = oFile.readline();
                     oFile.close();
-                    oMatch = re.search("VBOX_SVN_REV=(\\d+)", s);
+                    oMatch = re.search("VRA_SVN_REV=(\\d+)", s);
                     if oMatch is not None:
                         self.sDesignation = oMatch.group(1);
 
@@ -517,12 +517,12 @@ class Build(object): # pylint: disable=too-few-public-methods
 
 class EventHandlerBase(object):
     """
-    Base class for both Console and VirtualBox event handlers.
+    Base class for both Console and VirtualAgent event handlers.
     """
 
     def __init__(self, dArgs, fpApiVer, sName = None):
         self.oVBoxMgr   = dArgs['oVBoxMgr'];
-        self.oEventSrc  = dArgs['oEventSrc']; # Console/VirtualBox for < 3.3
+        self.oEventSrc  = dArgs['oEventSrc']; # Console/VirtualAgent for < 3.3
         self.oListener  = dArgs['oListener'];
         self.fPassive   = self.oListener is not None;
         self.sName      = sName
@@ -759,9 +759,9 @@ class ConsoleEventHandlerBase(EventHandlerBase):
         return None;
 
 
-class VirtualBoxEventHandlerBase(EventHandlerBase):
+class VirtualAgentEventHandlerBase(EventHandlerBase):
     """
-    Base class for handling IVirtualBox events.
+    Base class for handling IVirtualAgent events.
 
     The class has IConsoleCallback (<=3.2) compatible callback methods which
     the user can override as needed.
@@ -863,7 +863,7 @@ class SessionConsoleEventHandler(ConsoleEventHandlerBase):
 
 class TestDriver(base.TestDriver):                                              # pylint: disable=too-many-instance-attributes
     """
-    This is the VirtualBox test driver.
+    This is the VirtualAgent test driver.
     """
 
     def __init__(self):
@@ -935,8 +935,8 @@ class TestDriver(base.TestDriver):                                              
 
         # Make sure all debug logs goes to the scratch area unless
         # specified otherwise (more of this later on).
-        if 'VBOX_LOG_DEST' not in os.environ:
-            os.environ['VBOX_LOG_DEST'] = 'nodeny dir=%s' % (self.sScratchPath);
+        if 'VRA_LOG_DEST' not in os.environ:
+            os.environ['VRA_LOG_DEST'] = 'nodeny dir=%s' % (self.sScratchPath);
 
 
     def _detectBuild(self, fQuiet = False):
@@ -961,20 +961,20 @@ class TestDriver(base.TestDriver):                                              
         if self.sHost == 'win':
             sProgFiles = os.environ.get('ProgramFiles', 'C:\\Program Files');
             asLocs = [
-                os.path.join(sProgFiles, 'Oracle', 'VirtualBox'),
-                os.path.join(sProgFiles, 'OracleVM', 'VirtualBox'),
-                os.path.join(sProgFiles, 'Sun', 'VirtualBox'),
+                os.path.join(sProgFiles, 'CINASEEK', 'VirtualAgent'),
+                os.path.join(sProgFiles, 'CINASEEKVM', 'VirtualAgent'),
+                os.path.join(sProgFiles, 'Sun', 'VirtualAgent'),
             ];
         elif self.sHost == 'solaris':
-            asLocs = [ '/opt/VirtualBox-3.2', '/opt/VirtualBox-3.1', '/opt/VirtualBox-3.0', '/opt/VirtualBox' ];
+            asLocs = [ '/opt/VirtualAgent-3.2', '/opt/VirtualAgent-3.1', '/opt/VirtualAgent-3.0', '/opt/VirtualAgent' ];
         elif self.sHost == 'darwin':
-            asLocs = [ '/Applications/VirtualBox.app/Contents/MacOS' ];
+            asLocs = [ '/Applications/VirtualAgent.app/Contents/MacOS' ];
         elif self.sHost == 'linux':
-            asLocs = [ '/opt/VirtualBox-3.2', '/opt/VirtualBox-3.1', '/opt/VirtualBox-3.0', '/opt/VirtualBox' ];
+            asLocs = [ '/opt/VirtualAgent-3.2', '/opt/VirtualAgent-3.1', '/opt/VirtualAgent-3.0', '/opt/VirtualAgent' ];
         else:
-            asLocs = [ '/opt/VirtualBox' ];
-        if 'VBOX_INSTALL_PATH' in os.environ:
-            asLocs.insert(0, os.environ['VBOX_INSTALL_PATH']);
+            asLocs = [ '/opt/VirtualAgent' ];
+        if 'VRA_INSTALL_PATH' in os.environ:
+            asLocs.insert(0, os.environ['VRA_INSTALL_PATH']);
 
         for sLoc in asLocs:
             try:
@@ -986,7 +986,7 @@ class TestDriver(base.TestDriver):                                              
                 pass;
 
         if not fQuiet:
-            reporter.error('failed to find VirtualBox installation');
+            reporter.error('failed to find VirtualAgent installation');
         return False;
 
     def _detectValidationKit(self, fQuiet = False):
@@ -1051,11 +1051,11 @@ class TestDriver(base.TestDriver):                                              
         Make the necessary VBox related environment changes.
         Children not importing the VBox API should call this.
         """
-        # Make sure we've got our own VirtualBox config and VBoxSVC (on XPCOM at least).
+        # Make sure we've got our own VirtualAgent config and VBoxSVC (on XPCOM at least).
         if not self.fUseDefaultSvc:
-            os.environ['VBOX_USER_HOME']    = os.path.join(self.sScratchPath, 'VBoxUserHome');
+            os.environ['VRA_USER_HOME']    = os.path.join(self.sScratchPath, 'VBoxUserHome');
             sUser = os.environ.get('USERNAME', os.environ.get('USER', os.environ.get('LOGNAME', 'unknown')));
-            os.environ['VBOX_IPC_SOCKETID'] = sUser + '-VBoxTest';
+            os.environ['VRA_IPC_SOCKETID'] = sUser + '-VBoxTest';
         return True;
 
     @staticmethod
@@ -1065,7 +1065,7 @@ class TestDriver(base.TestDriver):                                              
 
     def importVBoxApi(self):
         """
-        Import the 'vboxapi' module from the VirtualBox build we're using and
+        Import the 'vboxapi' module from the VirtualAgent build we're using and
         instantiate the two basic objects.
 
         This will try detect an development or installed build if no build has
@@ -1140,13 +1140,13 @@ class TestDriver(base.TestDriver):                                              
         self.sVBoxSvcLogFile = '%s/VBoxSVC-debug.log' % (self.sScratchPath,);
         try:    os.remove(self.sVBoxSvcLogFile);
         except: pass;
-        os.environ['VBOX_LOG']       = self.sLogSvcGroups;
-        os.environ['VBOX_LOG_FLAGS'] = '%s append' % (self.sLogSvcFlags,);  # Append becuse of VBoxXPCOMIPCD.
+        os.environ['VRA_LOG']       = self.sLogSvcGroups;
+        os.environ['VRA_LOG_FLAGS'] = '%s append' % (self.sLogSvcFlags,);  # Append becuse of VBoxXPCOMIPCD.
         if self.sLogSvcDest:
-            os.environ['VBOX_LOG_DEST'] = 'nodeny ' + self.sLogSvcDest;
+            os.environ['VRA_LOG_DEST'] = 'nodeny ' + self.sLogSvcDest;
         else:
-            os.environ['VBOX_LOG_DEST'] = 'nodeny file=%s' % (self.sVBoxSvcLogFile,);
-        os.environ['VBOXSVC_RELEASE_LOG_FLAGS'] = 'time append';
+            os.environ['VRA_LOG_DEST'] = 'nodeny file=%s' % (self.sVBoxSvcLogFile,);
+        os.environ['VRASVC_RELEASE_LOG_FLAGS'] = 'time append';
 
         reporter.log2('VBoxSVC environment:');
         self._printEnv();
@@ -1218,8 +1218,8 @@ class TestDriver(base.TestDriver):                                              
                 reporter.log2("NSPR_INHERIT_FDS=%s" % (os.environ['NSPR_INHERIT_FDS']));
 
                 # New way since VBox 7.1
-                os.environ['VBOX_STARTUP_PIPE_FD'] = '%u' % (iPipeW,);
-                reporter.log2("VBOX_STARTUP_PIPE_FD=%s" % (os.environ['VBOX_STARTUP_PIPE_FD']));
+                os.environ['VRA_STARTUP_PIPE_FD'] = '%u' % (iPipeW,);
+                reporter.log2("VRA_STARTUP_PIPE_FD=%s" % (os.environ['VRA_STARTUP_PIPE_FD']));
 
                 self.oVBoxSvcProcess = base.Process.spawn(sVBoxSVC, sVBoxSVC, '--auto-shutdown'); # SIGUSR1 requirement.
                 try: # Try make sure we get the SIGINT and not VBoxSVC.
@@ -1391,13 +1391,13 @@ class TestDriver(base.TestDriver):                                              
         self.sSelfLogFile = '%s/VBoxTestDriver.log' % (self.sScratchPath,);
         try:    os.remove(self.sSelfLogFile);
         except: pass;
-        os.environ['VBOX_LOG']       = self.sLogSelfGroups;
-        os.environ['VBOX_LOG_FLAGS'] = '%s append' % (self.sLogSelfFlags, );
+        os.environ['VRA_LOG']       = self.sLogSelfGroups;
+        os.environ['VRA_LOG_FLAGS'] = '%s append' % (self.sLogSelfFlags, );
         if self.sLogSelfDest:
-            os.environ['VBOX_LOG_DEST'] = 'nodeny ' + self.sLogSelfDest;
+            os.environ['VRA_LOG_DEST'] = 'nodeny ' + self.sLogSelfDest;
         else:
-            os.environ['VBOX_LOG_DEST'] = 'nodeny file=%s' % (self.sSelfLogFile,);
-        os.environ['VBOX_RELEASE_LOG_FLAGS'] = 'time append';
+            os.environ['VRA_LOG_DEST'] = 'nodeny file=%s' % (self.sSelfLogFile,);
+        os.environ['VRA_RELEASE_LOG_FLAGS'] = 'time append';
 
         reporter.log2('Self environment:');
         self._printEnv();
@@ -1409,11 +1409,11 @@ class TestDriver(base.TestDriver):                                              
             sys.path.insert(0, os.path.join(self.oBuild.sSdkPath, 'installer', 'python', 'vboxapi', 'src')) # For >= VBox 7.1
             sys.path.insert(1, os.path.join(self.oBuild.sSdkPath, 'install')); # stupid stupid windows installer (VBox < 7.1)!
             sys.path.insert(2, os.path.join(self.oBuild.sSdkPath, 'bindings', 'xpcom', 'python'))
-        os.environ['VBOX_PROGRAM_PATH'] = self.oBuild.sInstallPath;
+        os.environ['VRA_PROGRAM_PATH'] = self.oBuild.sInstallPath;
         reporter.log("sys.path: %s" % (sys.path));
 
         try:
-            from vboxapi import VirtualBoxManager;  # pylint: disable=import-error
+            from vboxapi import VirtualAgentManager;  # pylint: disable=import-error
         except:
             reporter.logXcpt('Error importing vboxapi (Python %s)' % (sys.version,));
             return False;
@@ -1436,22 +1436,22 @@ class TestDriver(base.TestDriver):                                              
 
         # Create the manager.
         try:
-            self.oVBoxMgr = VirtualBoxManager(None, None)
+            self.oVBoxMgr = VirtualAgentManager(None, None)
         except:
             self.oVBoxMgr = None;
-            reporter.logXcpt('VirtualBoxManager exception');
+            reporter.logXcpt('VirtualAgentManager exception');
             return False;
 
         # Figure the API version.
         try:
-            oVBox = self.oVBoxMgr.getVirtualBox();
+            oVBox = self.oVBoxMgr.getVirtualAgent();
 
             try:
                 sVer = oVBox.version;
             except:
-                reporter.logXcpt('Failed to get VirtualBox version, assuming 4.0.0');
+                reporter.logXcpt('Failed to get VirtualAgent version, assuming 4.0.0');
                 sVer = "4.0.0";
-            reporter.log("IVirtualBox.version=%s" % (sVer,));
+            reporter.log("IVirtualAgent.version=%s" % (sVer,));
 
             # Convert the string to three integer values and check ranges.
             asVerComponents = sVer.split('.');
@@ -1486,23 +1486,23 @@ class TestDriver(base.TestDriver):                                              
             try:
                 self.uRevision = oVBox.revision;
             except:
-                reporter.logXcpt('Failed to get VirtualBox revision, assuming 0');
+                reporter.logXcpt('Failed to get VirtualAgent revision, assuming 0');
                 self.uRevision = 0;
-            reporter.log("IVirtualBox.revision=%u" % (self.uRevision,));
+            reporter.log("IVirtualAgent.revision=%u" % (self.uRevision,));
 
             try:
                 self.uApiRevision = oVBox.APIRevision;
             except:
-                reporter.logXcpt('Failed to get VirtualBox APIRevision, faking it.');
+                reporter.logXcpt('Failed to get VirtualAgent APIRevision, faking it.');
                 self.uApiRevision = self.makeApiRevision(aiVerComponents[0], aiVerComponents[1], aiVerComponents[2], 0);
-            reporter.log("IVirtualBox.APIRevision=%#x" % (self.uApiRevision,));
+            reporter.log("IVirtualAgent.APIRevision=%#x" % (self.uApiRevision,));
 
             # Patch VBox manage to gloss over portability issues (error constants, etc).
             self._patchVBoxMgr();
 
             # Wrap oVBox.
-            from testdriver.vboxwrappers import VirtualBoxWrapper;
-            self.oVBox = VirtualBoxWrapper(oVBox, self.oVBoxMgr, self.fpApiVer, self);
+            from testdriver.vboxwrappers import VirtualAgentWrapper;
+            self.oVBox = VirtualAgentWrapper(oVBox, self.oVBoxMgr, self.fpApiVer, self);
 
             # Install the constant wrapping hack.
             vboxcon.goHackModuleClass.oVBoxMgr  = self.oVBoxMgr; # VBoxConstantWrappingHack.
@@ -1516,7 +1516,7 @@ class TestDriver(base.TestDriver):                                              
         except:
             self.oVBoxMgr = None;
             self.oVBox    = None;
-            reporter.logXcpt("getVirtualBox / API version exception");
+            reporter.logXcpt("getVirtualAgent / API version exception");
             return False;
 
         # Done
@@ -1634,7 +1634,7 @@ class TestDriver(base.TestDriver):                                              
                     if isinstance(oObj, DispatchBaseClass):
                         reporter.log('_teardownVBoxApi:   %s' % (oObj,));
                         aoObjsLeftBehind.append(oObj);
-                    elif utils.getObjectTypeName(oObj) == 'VirtualBoxManager':
+                    elif utils.getObjectTypeName(oObj) == 'VirtualAgentManager':
                         reporter.log('_teardownVBoxApi:   %s' % (oObj,));
                         cVBoxMgrs += 1;
                         aoObjsLeftBehind.append(oObj);
@@ -1673,7 +1673,7 @@ class TestDriver(base.TestDriver):                                              
                     if isinstance(oObj, Component):
                         reporter.log('_teardownVBoxApi:   %s' % (oObj,));
                         aoObjsLeftBehind.append(oObj);
-                    if utils.getObjectTypeName(oObj) == 'VirtualBoxManager':
+                    if utils.getObjectTypeName(oObj) == 'VirtualAgentManager':
                         reporter.log('_teardownVBoxApi:   %s' % (oObj,));
                         cVBoxMgrs += 1;
                         aoObjsLeftBehind.append(oObj);
@@ -1826,7 +1826,7 @@ class TestDriver(base.TestDriver):                                              
     def showUsage(self):
         rc = base.TestDriver.showUsage(self);
         reporter.log('');
-        reporter.log('Generic VirtualBox Options:');
+        reporter.log('Generic VirtualAgent Options:');
         reporter.log('  --vbox-session-type <type>');
         reporter.log('      Sets the session type.  Typical values are: gui, headless, sdl');
         reporter.log('      Default: %s' % (self.sSessionTypeDef));
@@ -2517,7 +2517,7 @@ class TestDriver(base.TestDriver):                                              
 
         if self.fpApiVer >= 4.0:
             if sIdOrDesc == 'Solaris (64 bit)':
-                sIdOrDesc = 'Oracle Solaris 10 5/09 and earlier (64 bit)';
+                sIdOrDesc = 'CINASEEK Solaris 10 5/09 and earlier (64 bit)';
 
         try:
             aoGuestTypes = self.oVBoxMgr.getArray(self.oVBox, 'GuestOSTypes');
@@ -2572,7 +2572,7 @@ class TestDriver(base.TestDriver):                                              
                 reporter.error('Unkown platform architecture "%s"' % (sPlatformArchitecture,));
                 return None;
         elif sPlatformArchitecture != 'x86':  # < 7.1 only has x86 support.
-            reporter.errorXcpt('This host version of VirtualBox only supports x86 as platform architecture');
+            reporter.errorXcpt('This host version of VirtualAgent only supports x86 as platform architecture');
             return None;
 
         # create + register the VM
@@ -3030,7 +3030,7 @@ class TestDriver(base.TestDriver):                                              
 
         # OL / RHEL symlinks "/bin"/ to "/usr/bin". To avoid (unexpectedly) following symlinks, use "/usr/bin" then instead.
         if  not sPathPrefix \
-        and oTestVm.sKind in ('Oracle_64', 'Oracle'): ## @todo Does this apply for "RedHat" as well?
+        and oTestVm.sKind in ('CINASEEK_64', 'CINASEEK'): ## @todo Does this apply for "RedHat" as well?
             return "/usr/bin";
 
         return sPathPrefix + "/bin";
@@ -3052,7 +3052,7 @@ class TestDriver(base.TestDriver):                                              
 
         # OL / RHEL symlinks "/sbin"/ to "/usr/sbin". To avoid (unexpectedly) following symlinks, use "/usr/sbin" then instead.
         if  not sPathPrefix \
-        and oTestVm.sKind in ('Oracle_64', 'Oracle'): ## @todo Does this apply for "RedHat" as well?
+        and oTestVm.sKind in ('CINASEEK_64', 'CINASEEK'): ## @todo Does this apply for "RedHat" as well?
             return "/usr/sbin";
 
         return sPathPrefix + "/sbin";
@@ -3294,13 +3294,13 @@ class TestDriver(base.TestDriver):                                              
         else:
             sLogDest = 'file=%s' % (self.sSessionLogFile,);
         asEnvFinal = [
-            'VBOX_LOG=%s' % (self.sLogSessionGroups,),
-            'VBOX_LOG_FLAGS=%s' % (self.sLogSessionFlags,),
-            'VBOX_LOG_DEST=nodeny %s' % (sLogDest,),
-            'VBOX_RELEASE_LOG_FLAGS=append time',
+            'VRA_LOG=%s' % (self.sLogSessionGroups,),
+            'VRA_LOG_FLAGS=%s' % (self.sLogSessionFlags,),
+            'VRA_LOG_DEST=nodeny %s' % (sLogDest,),
+            'VRA_RELEASE_LOG_FLAGS=append time',
         ];
         if sType == 'gui':
-            asEnvFinal.append('VBOX_GUI_DBG_ENABLED=1');
+            asEnvFinal.append('VRA_GUI_DBG_ENABLED=1');
         if asEnv is not None and asEnv:
             asEnvFinal += asEnv;
 
@@ -3872,7 +3872,7 @@ class TestDriver(base.TestDriver):                                              
 
     def hasRawModeSupport(self, fQuiet = False):
         """
-        Checks if raw-mode is supported by VirtualBox that the testbox is
+        Checks if raw-mode is supported by VirtualAgent that the testbox is
         configured for it.
 
         Returns True / False.
@@ -4284,7 +4284,7 @@ class TestDriver(base.TestDriver):                                              
           or oTestVM.fSnapshotRestoreCurrent is False:
             try:
                 oSession1 = self.openSession(self.getVmByName(sVmName));
-                oSession1.delGuestPropertyValue('/VirtualBox/GuestInfo/Net/0/V4/IP');
+                oSession1.delGuestPropertyValue('/VirtualAgent/GuestInfo/Net/0/V4/IP');
                 oSession1.saveSettings(True);
                 del oSession1;
             except:

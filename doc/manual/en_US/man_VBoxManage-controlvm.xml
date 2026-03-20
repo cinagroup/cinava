@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage controlvm
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -1225,7 +1225,7 @@
       <para>
         The <command>VBoxManage controlvm
         <replaceable>vmname</replaceable> vrde</command> command enables
-        or disables the VirtualBox Remote Desktop Extension (VRDE)
+        or disables the VirtualAgent Remote Desktop Extension (VRDE)
         server, if installed. Valid values are <literal>on</literal> and
         <literal>off</literal>. The default value is
         <literal>off</literal>.
@@ -1277,7 +1277,7 @@
           </para></listitem>
         <listitem><para>
             <literal>VideoChannel/Enabled</literal> specifies whether to
-            enable the VirtualBox Remote Desktop Protocol (VRDP) video
+            enable the VirtualAgent Remote Desktop Protocol (VRDP) video
             channel. Valid values are <literal>1</literal> to enable the
             video channel and <literal>0</literal> to disable the video
             channel. The default value is <literal>0</literal>. See
@@ -1684,7 +1684,7 @@
             specifies the password for
             <replaceable>username</replaceable>.
           </para><remark>
-            This design does not conform to Oracle's security
+            This design does not conform to CINASEEK's security
             guidelines. You should not be able to specify a password on
             the command line because the password can be seen in a
             process listing.
@@ -1744,7 +1744,7 @@
               the teleporting request. The request succeeds only if the
               source machine specifies the same password.
             </para><remark>
-              This design does not conform to Oracle's security
+              This design does not conform to CINASEEK's security
               guidelines. You should not be able to specify a password
               on the command line because the password can be seen in a
               process listing.

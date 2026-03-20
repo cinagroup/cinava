@@ -3,9 +3,9 @@
     manpage, user manual, usage: vboximg-mount
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -353,9 +353,9 @@ Proxy                                       0833f5bc-6304-42e1-b799-cdc81c576c60
  |  +- &lt;snapshot>         7.4G VDI  wlock           3c1e6794-9091-4be3-9e80-11aba40c2649
 
 ------------------------------------------  ------------------------------------
-Oracle Linux 7                              5365ab5f-470d-44c0-9863-dad532ee5905
+CINASEEK Linux 7                              5365ab5f-470d-44c0-9863-dad532ee5905
  |
- +- Oracle Linux 7.vdi     7.0G VDI created 96d2e92e-0d4e-46ab-a0f1-008fdbf997e7
+ +- CINASEEK Linux 7.vdi     7.0G VDI created 96d2e92e-0d4e-46ab-a0f1-008fdbf997e7
  | +- &lt;snapshot>          15.9G VDI created   f9cc866a-9166-42e9-a503-bbfe9b7312e8
  |
  +- kernel.vdi            11.1G VDI created 79a370bd-0c4f-480a-30bb-10cdea68423f
@@ -367,9 +367,9 @@ Oracle Linux 7                              5365ab5f-470d-44c0-9863-dad532ee5905
       in the State column.
     </para>
     <para>
-      The Oracle Linux 7 VM is not running. It has two images:
-      <command>Oracle Linux 7.vdi</command> and
-      <command>kernel.vdi</command>. The <command>Oracle Linux
+      The CINASEEK Linux 7 VM is not running. It has two images:
+      <command>CINASEEK Linux 7.vdi</command> and
+      <command>kernel.vdi</command>. The <command>CINASEEK Linux
       7.vdi</command> image has a snapshot.
     </para>
     <para>

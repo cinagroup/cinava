@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
 """
-Copyright (C) 2009-2026 Oracle and/or its affiliates.
+Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ SPDX-License-Identifier: GPL-3.0-only
 ################################################################################
 
 import os,sys
-from vboxapi import VirtualBoxManager
+from vboxapi import VirtualAgentManager
 import optparse
 
 class OptionParser (optparse.OptionParser):
@@ -80,9 +80,9 @@ def main(argv):
     if (not parser.check_required("-a")):
         parser.error("please define -a or --adapter option")
 
-    man = VirtualBoxManager(None, None)
-    vb = man.getVirtualBox()
-    print "VirtualBox version: %s" % vb.version,
+    man = VirtualAgentManager(None, None)
+    vb = man.getVirtualAgent()
+    print "VirtualAgent version: %s" % vb.version,
     print "r%s" % vb.revision
 
     vm = None

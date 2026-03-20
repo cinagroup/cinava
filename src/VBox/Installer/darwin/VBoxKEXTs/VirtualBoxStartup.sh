@@ -1,14 +1,14 @@
 #!/bin/sh
-# $Id: VirtualBoxStartup.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
+# $Id: VirtualAgentStartup.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
 # Startup service for loading the kernel extensions and select the set of VBox
 # binaries that matches the kernel architecture.
 #
 
 #
-# Copyright (C) 2007-2026 Oracle and/or its affiliates.
+# Copyright (C) 2007-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -77,43 +77,43 @@ fi
 
 StartService()
 {
-    VBOX_RC=0
-    VBOXDRV="VBoxDrv"
+    VRA_RC=0
+    VRADRV="VBoxDrv"
     MACOS_VERSION_MAJOR=$(sw_vers -productVersion | /usr/bin/sed -e 's/^\([0-9]*\).*$/\1/')
 
     #
     # Check that all the directories exist first.
     #
-    if [ ! -d "/Library/Application Support/VirtualBox/${VBOXDRV}.kext" ]; then
-        ConsoleMessage "Error: /Library/Application Support/VirtualBox/${VBOXDRV}.kext is missing"
-        VBOX_RC=1
+    if [ ! -d "/Library/Application Support/VirtualAgent/${VRADRV}.kext" ]; then
+        ConsoleMessage "Error: /Library/Application Support/VirtualAgent/${VRADRV}.kext is missing"
+        VRA_RC=1
     fi
-    if [ ! -d "/Library/Application Support/VirtualBox/VBoxNetFlt.kext" ]; then
-        ConsoleMessage "Error: /Library/Application Support/VirtualBox/VBoxNetFlt.kext is missing"
-        VBOX_RC=1
+    if [ ! -d "/Library/Application Support/VirtualAgent/VBoxNetFlt.kext" ]; then
+        ConsoleMessage "Error: /Library/Application Support/VirtualAgent/VBoxNetFlt.kext is missing"
+        VRA_RC=1
     fi
-    if [ ! -d "/Library/Application Support/VirtualBox/VBoxNetAdp.kext" ]; then
-        ConsoleMessage "Error: /Library/Application Support/VirtualBox/VBoxNetAdp.kext is missing"
-        VBOX_RC=1
+    if [ ! -d "/Library/Application Support/VirtualAgent/VBoxNetAdp.kext" ]; then
+        ConsoleMessage "Error: /Library/Application Support/VirtualAgent/VBoxNetAdp.kext is missing"
+        VRA_RC=1
     fi
 
     #
     # Check that no drivers are currently running.
     # (Try stop the service if this is the case.)
     #
-    if [ $VBOX_RC -eq 0 ]; then
+    if [ $VRA_RC -eq 0 ]; then
         if [[ ${MACOS_VERSION_MAJOR} -lt 11 ]]; then
             if kextstat -lb org.virtualbox.kext.VBoxDrv 2>&1 | grep -q org.virtualbox.kext.VBoxDrv; then
-                ConsoleMessage "Error: ${VBOXDRV}.kext is already loaded"
-                VBOX_RC=1
+                ConsoleMessage "Error: ${VRADRV}.kext is already loaded"
+                VRA_RC=1
             fi
             if kextstat -lb org.virtualbox.kext.VBoxNetFlt 2>&1 | grep -q org.virtualbox.kext.VBoxNetFlt; then
                 ConsoleMessage "Error: VBoxNetFlt.kext is already loaded"
-                VBOX_RC=1
+                VRA_RC=1
             fi
             if kextstat -lb org.virtualbox.kext.VBoxNetAdp 2>&1 | grep -q org.virtualbox.kext.VBoxNetAdp; then
                 ConsoleMessage "Error: VBoxNetAdp.kext is already loaded"
-                VBOX_RC=1
+                VRA_RC=1
             fi
         else
             #
@@ -121,16 +121,16 @@ StartService()
             # invocation to stdout...
             #
             if kmutil showloaded --list-only -b org.virtualbox.kext.VBoxDrv 2>&1 | grep -q org.virtualbox.kext.VBoxDrv; then
-                ConsoleMessage "Error: ${VBOXDRV}.kext is already loaded"
-                VBOX_RC=1
+                ConsoleMessage "Error: ${VRADRV}.kext is already loaded"
+                VRA_RC=1
             fi
             if kmutil showloaded --list-only -b org.virtualbox.kext.VBoxNetFlt 2>&1 | grep -q org.virtualbox.kext.VBoxNetFlt; then
                 ConsoleMessage "Error: VBoxNetFlt.kext is already loaded"
-                VBOX_RC=1
+                VRA_RC=1
             fi
             if kmutil showloaded --list-only -b org.virtualbox.kext.VBoxNetAdp 2>&1 | grep -q org.virtualbox.kext.VBoxNetAdp; then
                 ConsoleMessage "Error: VBoxNetAdp.kext is already loaded"
-                VBOX_RC=1
+                VRA_RC=1
             fi
         fi
     fi
@@ -138,50 +138,50 @@ StartService()
     #
     # Load the drivers.
     #
-    if [ $VBOX_RC -eq 0 ]; then
+    if [ $VRA_RC -eq 0 ]; then
         if [[ ${MACOS_VERSION_MAJOR} -lt 11 ]]; then
-            ConsoleMessage "Loading ${VBOXDRV}.kext"
-            if ! kextload "/Library/Application Support/VirtualBox/${VBOXDRV}.kext"; then
-                ConsoleMessage "Error: Failed to load /Library/Application Support/VirtualBox/${VBOXDRV}.kext"
-                VBOX_RC=1
+            ConsoleMessage "Loading ${VRADRV}.kext"
+            if ! kextload "/Library/Application Support/VirtualAgent/${VRADRV}.kext"; then
+                ConsoleMessage "Error: Failed to load /Library/Application Support/VirtualAgent/${VRADRV}.kext"
+                VRA_RC=1
             fi
 
             ConsoleMessage "Loading VBoxNetFlt.kext"
-            if ! kextload -d "/Library/Application Support/VirtualBox/${VBOXDRV}.kext" "/Library/Application Support/VirtualBox/VBoxNetFlt.kext"; then
-                ConsoleMessage "Error: Failed to load /Library/Application Support/VirtualBox/VBoxNetFlt.kext"
-                VBOX_RC=1
+            if ! kextload -d "/Library/Application Support/VirtualAgent/${VRADRV}.kext" "/Library/Application Support/VirtualAgent/VBoxNetFlt.kext"; then
+                ConsoleMessage "Error: Failed to load /Library/Application Support/VirtualAgent/VBoxNetFlt.kext"
+                VRA_RC=1
             fi
 
             ConsoleMessage "Loading VBoxNetAdp.kext"
-            if ! kextload -d "/Library/Application Support/VirtualBox/${VBOXDRV}.kext" "/Library/Application Support/VirtualBox/VBoxNetAdp.kext"; then
-                ConsoleMessage "Error: Failed to load /Library/Application Support/VirtualBox/VBoxNetAdp.kext"
-                VBOX_RC=1
+            if ! kextload -d "/Library/Application Support/VirtualAgent/${VRADRV}.kext" "/Library/Application Support/VirtualAgent/VBoxNetAdp.kext"; then
+                ConsoleMessage "Error: Failed to load /Library/Application Support/VirtualAgent/VBoxNetAdp.kext"
+                VRA_RC=1
             fi
         else
             #
             # On BigSur we can only load by bundle ID because the drivers are baked into a kext collection image
             # and the real path is never loaded actually.
             #
-            ConsoleMessage "Loading ${VBOXDRV}.kext"
+            ConsoleMessage "Loading ${VRADRV}.kext"
             if ! kmutil load -b org.virtualbox.kext.VBoxDrv; then
                 ConsoleMessage "Error: Failed to load org.virtualbox.kext.VBoxDrv"
-                VBOX_RC=1
+                VRA_RC=1
             fi
 
             ConsoleMessage "Loading VBoxNetFlt.kext"
             if ! kmutil load -b org.virtualbox.kext.VBoxNetFlt; then
                 ConsoleMessage "Error: Failed to load org.virtualbox.kext.VBoxNetFlt"
-                VBOX_RC=1
+                VRA_RC=1
             fi
 
             ConsoleMessage "Loading VBoxNetAdp.kext"
             if ! kmutil load -b org.virtualbox.kext.VBoxNetAdp; then
                 ConsoleMessage "Error: Failed to load org.virtualbox.kext.VBoxNetAdp"
-                VBOX_RC=1
+                VRA_RC=1
             fi
         fi
 
-        if [ $VBOX_RC -ne 0 ]; then
+        if [ $VRA_RC -ne 0 ]; then
             # unload the drivers (ignoring failures)
             kextunload -b org.virtualbox.kext.VBoxNetAdp
             kextunload -b org.virtualbox.kext.VBoxNetFlt
@@ -192,18 +192,18 @@ StartService()
     #
     # Set the error on failure.
     #
-    if [ "$VBOX_RC" -ne "0" ]; then
-        ConsoleMessage -f VirtualBox
-        exit $VBOX_RC
+    if [ "$VRA_RC" -ne "0" ]; then
+        ConsoleMessage -f VirtualAgent
+        exit $VRA_RC
     fi
 }
 
 
 StopService()
 {
-    VBOX_RC=0
-    VBOXDRV="VBoxDrv"
-    VBOXUSB="VBoxUSB"
+    VRA_RC=0
+    VRADRV="VBoxDrv"
+    VRAUSB="VBoxUSB"
     MACOS_VERSION_MAJOR=$(sw_vers -productVersion | /usr/bin/sed -e 's/^\([0-9]*\).*$/\1/')
 
     if [[ ${MACOS_VERSION_MAJOR} -lt 11 ]]; then
@@ -211,7 +211,7 @@ StopService()
             ConsoleMessage "Unloading VBoxNetFlt.kext"
             if ! kextunload -m org.virtualbox.kext.VBoxNetFlt; then
                 ConsoleMessage "Error: Failed to unload VBoxNetFlt.kext"
-                VBOX_RC=1
+                VRA_RC=1
             fi
         fi
 
@@ -219,16 +219,16 @@ StopService()
             ConsoleMessage "Unloading VBoxNetAdp.kext"
             if ! kextunload -m org.virtualbox.kext.VBoxNetAdp; then
                 ConsoleMessage "Error: Failed to unload VBoxNetAdp.kext"
-                VBOX_RC=1
+                VRA_RC=1
             fi
         fi
 
         # This must come last because of dependencies.
         if kextstat -lb org.virtualbox.kext.VBoxDrv 2>&1 | grep -q org.virtualbox.kext.VBoxDrv; then
-            ConsoleMessage "Unloading ${VBOXDRV}.kext"
+            ConsoleMessage "Unloading ${VRADRV}.kext"
             if ! kextunload -m org.virtualbox.kext.VBoxDrv; then
                 ConsoleMessage "Error: Failed to unload VBoxDrv.kext"
-                VBOX_RC=1
+                VRA_RC=1
             fi
         fi
     else
@@ -236,7 +236,7 @@ StopService()
             ConsoleMessage "Unloading VBoxNetFlt.kext"
             if ! kmutil unload -b org.virtualbox.kext.VBoxNetFlt; then
                 ConsoleMessage "Error: Failed to unload VBoxNetFlt.kext"
-                VBOX_RC=1
+                VRA_RC=1
             fi
         fi
 
@@ -244,24 +244,24 @@ StopService()
             ConsoleMessage "Unloading VBoxNetAdp.kext"
             if ! kmutil unload -b org.virtualbox.kext.VBoxNetAdp; then
                 ConsoleMessage "Error: Failed to unload VBoxNetAdp.kext"
-                VBOX_RC=1
+                VRA_RC=1
             fi
         fi
 
         # This must come last because of dependencies.
         if kmutil showloaded --list-only -b org.virtualbox.kext.VBoxDrv 2>&1 | grep -q org.virtualbox.kext.VBoxDrv; then
-            ConsoleMessage "Unloading ${VBOXDRV}.kext"
+            ConsoleMessage "Unloading ${VRADRV}.kext"
             if ! kmutil unload -b org.virtualbox.kext.VBoxDrv; then
                 ConsoleMessage "Error: Failed to unload VBoxDrv.kext"
-                VBOX_RC=1
+                VRA_RC=1
             fi
         fi
     fi
 
     # Set the error on failure.
-    if [ "$VBOX_RC" -ne "0" ]; then
-        ConsoleMessage -f VirtualBox
-        exit $VBOX_RC
+    if [ "$VRA_RC" -ne "0" ]; then
+        ConsoleMessage -f VirtualAgent
+        exit $VRA_RC
     fi
 }
 

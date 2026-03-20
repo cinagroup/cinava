@@ -4,14 +4,14 @@
 # pylint: disable=unused-import
 # pylint: disable=protected-access -- for XPCOM _xpcom member
 """
-VirtualBox Python API Glue.
+VirtualAgent Python API Glue.
 """
 
 __copyright__ = \
 """
-Copyright (C) 2009-2026 Oracle and/or its affiliates.
+Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -58,34 +58,34 @@ if sys.version_info >= (3, 0):
 # Globals, environment and sys.path changes.
 #
 import platform
-g_sVBoxBinDir = os.environ.get("VBOX_PROGRAM_PATH", None)
-g_sVBoxSdkDir = os.environ.get("VBOX_SDK_PATH", None)
+g_sVBoxBinDir = os.environ.get("VRA_PROGRAM_PATH", None)
+g_sVBoxSdkDir = os.environ.get("VRA_SDK_PATH", None)
 
 if g_sVBoxBinDir is None:
     if platform.system() == 'Darwin':
-        g_sVBoxBinDir = '/Applications/VirtualBox.app/Contents/MacOS'
+        g_sVBoxBinDir = '/Applications/VirtualAgent.app/Contents/MacOS'
     else: # Will be set by the installer
-        g_sVBoxBinDir = "%VBOX_INSTALL_PATH%"
+        g_sVBoxBinDir = "%VRA_INSTALL_PATH%"
 else:
     g_sVBoxBinDir = os.path.abspath(g_sVBoxBinDir)
 
 if g_sVBoxSdkDir is None:
     if platform.system() == 'Darwin':
-        g_sVBoxSdkDir = '/Applications/VirtualBox.app/Contents/MacOS/sdk'
+        g_sVBoxSdkDir = '/Applications/VirtualAgent.app/Contents/MacOS/sdk'
     else: # Will be set by the installer
-        g_sVBoxSdkDir = "%VBOX_SDK_PATH%"
+        g_sVBoxSdkDir = "%VRA_SDK_PATH%"
 else:
     g_sVBoxSdkDir = os.path.abspath(g_sVBoxSdkDir)
 
-os.environ["VBOX_PROGRAM_PATH"] = g_sVBoxBinDir
-os.environ["VBOX_SDK_PATH"] = g_sVBoxSdkDir
+os.environ["VRA_PROGRAM_PATH"] = g_sVBoxBinDir
+os.environ["VRA_SDK_PATH"] = g_sVBoxSdkDir
 sys.path.append(g_sVBoxBinDir)
 
 
 #
-# Import the generated VirtualBox constants.
+# Import the generated VirtualAgent constants.
 #
-from .VirtualBox_constants import VirtualBoxReflectionInfo
+from .VirtualAgent_constants import VirtualAgentReflectionInfo
 
 
 class PerfCollector(object):
@@ -213,9 +213,9 @@ class PlatformBase(object):
     def __init__(self, aoParams):
         _ = aoParams
 
-    def getVirtualBox(self):
+    def getVirtualAgent(self):
         """
-        Gets a the IVirtualBox singleton.
+        Gets a the IVirtualAgent singleton.
         """
         return None
 
@@ -223,8 +223,8 @@ class PlatformBase(object):
         """
         Get a session object that can be used for opening machine sessions.
 
-        The oIVBox parameter is an getVirtualBox() return value, i.e. an
-        IVirtualBox reference.
+        The oIVBox parameter is an getVirtualAgent() return value, i.e. an
+        IVirtualAgent reference.
 
         See also openMachineSession.
         """
@@ -310,7 +310,7 @@ class PlatformBase(object):
         Returns 2 on error (like not supported for web services).
 
         Raises an exception if the calling thread is not the main thread (the one
-        that initialized VirtualBoxManager) or if the time isn't an integer.
+        that initialized VirtualAgentManager) or if the time isn't an integer.
         """
         _ = cMsTimeout
         return 2
@@ -416,15 +416,15 @@ class PlatformMSCOM(PlatformBase):
     Platform specific code for MS COM.
     """
 
-    ## @name VirtualBox COM Typelib definitions (should be generate)
+    ## @name VirtualAgent COM Typelib definitions (should be generate)
     #
-    # @remarks Must be updated when the corresponding VirtualBox.xidl bits
+    # @remarks Must be updated when the corresponding VirtualAgent.xidl bits
     #          are changed.  Fortunately this isn't very often.
     # @{
-    VBOX_TLB_GUID = '{D7569351-1750-46F0-936E-BD127D5BC264}'
-    VBOX_TLB_LCID = 0
-    VBOX_TLB_MAJOR = 1
-    VBOX_TLB_MINOR = 3
+    VRA_TLB_GUID = '{D7569351-1750-46F0-936E-BD127D5BC264}'
+    VRA_TLB_LCID = 0
+    VRA_TLB_MAJOR = 1
+    VRA_TLB_MINOR = 3
     ## @}
 
     def __init__(self, dParams):
@@ -487,9 +487,9 @@ class PlatformMSCOM(PlatformBase):
         # versioning rules).
         #
         self.flushGenPyCache(win32com.client.gencache)
-        win32com.client.gencache.EnsureDispatch('VirtualBox.Session')
-        win32com.client.gencache.EnsureDispatch('VirtualBox.VirtualBox')
-        win32com.client.gencache.EnsureDispatch('VirtualBox.VirtualBoxClient')
+        win32com.client.gencache.EnsureDispatch('VirtualAgent.Session')
+        win32com.client.gencache.EnsureDispatch('VirtualAgent.VirtualAgent')
+        win32com.client.gencache.EnsureDispatch('VirtualAgent.VirtualAgentClient')
 
         self.oClient = None     ##< instance of client used to support lifetime of VBoxSDS
         self.oIntCv = threading.Condition()
@@ -511,8 +511,8 @@ class PlatformMSCOM(PlatformBase):
         # version or the result of runnig makepy or gencache manually, but we
         # need to cover it as well.)
         #
-        sName = oGenCache.GetGeneratedFileName(self.VBOX_TLB_GUID, self.VBOX_TLB_LCID,
-                                               self.VBOX_TLB_MAJOR, self.VBOX_TLB_MINOR)
+        sName = oGenCache.GetGeneratedFileName(self.VRA_TLB_GUID, self.VRA_TLB_LCID,
+                                               self.VRA_TLB_MAJOR, self.VRA_TLB_MINOR)
         sGenPath = oGenCache.GetGeneratePath()
         if len(sName) > 36 and len(sGenPath) > 5:
             sTypelibPath = os.path.join(sGenPath, sName)
@@ -523,20 +523,20 @@ class PlatformMSCOM(PlatformBase):
         #
         # Ensure that our typelib is valid.
         #
-        return oGenCache.EnsureModule(self.VBOX_TLB_GUID, self.VBOX_TLB_LCID, self.VBOX_TLB_MAJOR, self.VBOX_TLB_MINOR)
+        return oGenCache.EnsureModule(self.VRA_TLB_GUID, self.VRA_TLB_LCID, self.VRA_TLB_MAJOR, self.VRA_TLB_MINOR)
 
     def getSessionObject(self):
         import win32com
         from win32com.client import Dispatch
-        return win32com.client.Dispatch("VirtualBox.Session")
+        return win32com.client.Dispatch("VirtualAgent.Session")
 
-    def getVirtualBox(self):
+    def getVirtualAgent(self):
         # Caching self.oClient is the trick for SDS. It allows to keep the
         # VBoxSDS in the memory  until the end of PlatformMSCOM lifetme.
         if self.oClient is None:
             import win32com
             from win32com.client import Dispatch
-            self.oClient = win32com.client.Dispatch("VirtualBox.VirtualBoxClient")
+            self.oClient = win32com.client.Dispatch("VirtualAgent.VirtualAgentClient")
         return self.oClient.virtualBox
 
     def getType(self):
@@ -741,9 +741,9 @@ class PlatformXPCOM(PlatformBase):
         import xpcom.components
         return xpcom.components.classes["@virtualbox.org/Session;1"].createInstance()
 
-    def getVirtualBox(self):
+    def getVirtualAgent(self):
         import xpcom.components
-        client = xpcom.components.classes["@virtualbox.org/VirtualBoxClient;1"].createInstance()
+        client = xpcom.components.classes["@virtualbox.org/VirtualAgentClient;1"].createInstance()
         return client.virtualBox
 
     def getType(self):
@@ -836,7 +836,7 @@ class PlatformXPCOM(PlatformBase):
 
 class PlatformWEBSERVICE(PlatformBase):
     """
-    VirtualBox Web Services API specific code.
+    VirtualAgent Web Services API specific code.
     """
 
     def __init__(self, dParams):
@@ -845,8 +845,8 @@ class PlatformWEBSERVICE(PlatformBase):
         sWebServLib = os.path.join(g_sVBoxSdkDir, 'bindings', 'webservice', 'python', 'lib')
         if sWebServLib not in sys.path:
             sys.path.append(sWebServLib)
-        import VirtualBox_wrappers
-        from VirtualBox_wrappers import IWebsessionManager2
+        import VirtualAgent_wrappers
+        from VirtualAgent_wrappers import IWebsessionManager2
 
         # Initialize instance variables from parameters.
         if dParams is not None:
@@ -867,7 +867,7 @@ class PlatformWEBSERVICE(PlatformBase):
     def getSessionObject(self):
         return self.wsmgr.getSessionObject(self.vbox)
 
-    def getVirtualBox(self):
+    def getVirtualAgent(self):
         return self.connect(self.url, self.user, self.password)
 
     def getType(self):
@@ -901,7 +901,7 @@ class PlatformWEBSERVICE(PlatformBase):
         notDocumentedDict = {}
         notDocumentedDict['oIUnknown'] = oIUnknown
         sEval  = ""
-        sEval += "from VirtualBox_wrappers import " + sClassName + "\n"
+        sEval += "from VirtualAgent_wrappers import " + sClassName + "\n"
         sEval += "result = " + sClassName + "(oIUnknown.mgr, oIUnknown.handle)\n"
         # wrong, need to test if class indeed implements this interface
         exec(sEval, notDocumentedDict, notDocumentedDict) # pylint: disable=exec-used
@@ -914,7 +914,7 @@ class PlatformWEBSERVICE(PlatformBase):
     def connect(self, url, user, passwd):
         if self.vbox is not None:
             self.disconnect()
-        from VirtualBox_wrappers import IWebsessionManager2
+        from VirtualAgent_wrappers import IWebsessionManager2
 
         if url is None:
             url = ""
@@ -939,20 +939,20 @@ class PlatformWEBSERVICE(PlatformBase):
 
 
 ## The current (last) exception class.
-# This is reinitalized whenever VirtualBoxManager is called, so it will hold
+# This is reinitalized whenever VirtualAgentManager is called, so it will hold
 # the reference to the error exception class for the last platform/style that
 # was used.  Most clients does not talk to multiple VBox instance on different
 # platforms at the same time, so this should be sufficent for most uses and
-# be way simpler to use than VirtualBoxManager::oXcptClass.
+# be way simpler to use than VirtualAgentManager::oXcptClass.
 g_oCurXcptClass = None
 
 
-class VirtualBoxManager(object):
+class VirtualAgentManager(object):
     """
-    VirtualBox API manager class.
+    VirtualAgent API manager class.
 
     The API users will have to instantiate this.  If no parameters are given,
-    it will default to interface with the VirtualBox running on the local
+    it will default to interface with the VirtualAgent running on the local
     machine.  sStyle can be None (default), MSCOM, XPCOM or WEBSERVICES.  Most
     users will either be specifying None or WEBSERVICES.
 
@@ -968,7 +968,7 @@ class VirtualBoxManager(object):
 
         # Deprecation warning for older Python stuff (< Python 3.x).
         if sys.version_info.major < 3:
-            print("\nWarning: Running VirtualBox with Python %d.%d is marked as being deprecated.\n" \
+            print("\nWarning: Running VirtualAgent with Python %d.%d is marked as being deprecated.\n" \
                   "Please upgrade your Python installation to avoid breakage.\n" \
                   % (sys.version_info.major, sys.version_info.minor))
 
@@ -988,12 +988,12 @@ class VirtualBoxManager(object):
         self.style = sStyle
         self.type = self.platform.getType()
         self.remote = self.platform.isRemote()
-        ## VirtualBox API constants (for webservices, enums are symbolic).
-        self.constants = VirtualBoxReflectionInfo(sStyle == "WEBSERVICE")
+        ## VirtualAgent API constants (for webservices, enums are symbolic).
+        self.constants = VirtualAgentReflectionInfo(sStyle == "WEBSERVICE")
 
         ## Status constants.
-        self.statuses = self.platform.xcptSetupConstants(VirtualBoxManager.Statuses())
-        ## @todo Add VBOX_E_XXX to statuses? They're already in constants...
+        self.statuses = self.platform.xcptSetupConstants(VirtualAgentManager.Statuses())
+        ## @todo Add VRA_E_XXX to statuses? They're already in constants...
         ## Dictionary for errToString, built on demand.
         self._dErrorValToName = None
 
@@ -1008,7 +1008,7 @@ class VirtualBoxManager(object):
 
         # Get the virtualbox singleton.
         try:
-            self.platform.getVirtualBox()
+            self.platform.getVirtualAgent()
         except NameError:
             print("Installation problem: check that appropriate libs in place")
             traceback.print_exc()
@@ -1039,9 +1039,9 @@ class VirtualBoxManager(object):
     #
     # Wrappers for self.platform methods.
     #
-    def getVirtualBox(self):
-        """ See PlatformBase::getVirtualBox(). """
-        return self.platform.getVirtualBox()
+    def getVirtualAgent(self):
+        """ See PlatformBase::getVirtualAgent(). """
+        return self.platform.getVirtualAgent()
 
     def getSessionObject(self, oIVBox = None):
         """ See PlatformBase::getSessionObject(). """
@@ -1129,13 +1129,13 @@ class VirtualBoxManager(object):
 
     def getBinDir(self):
         """
-        Returns the VirtualBox binary directory.
+        Returns the VirtualAgent binary directory.
         """
         return g_sVBoxBinDir
 
     def getSdkDir(self):
         """
-        Returns the VirtualBox SDK directory.
+        Returns the VirtualAgent SDK directory.
         """
         return g_sVBoxSdkDir
 

@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage modifyvm
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -694,7 +694,7 @@ it unless this changes. -->
     <para>
       Most of these properties correspond to the VM settings that are
       shown in each VM's <emphasis role="bold">Settings</emphasis>
-      dialog in the VirtualBox Manager. See
+      dialog in the VirtualAgent Manager. See
       <xref linkend="ct_working-with-vms" />. However, some settings can only
       be viewed and managed with the <command>VBoxManage</command>
       command.
@@ -2149,7 +2149,7 @@ it unless this changes. -->
       <title>Remote Machine Settings</title>
       <remark role="help-copy-synopsis"/>
       <para>
-        The following options enable you to modify the VirtualBox Remote
+        The following options enable you to modify the VirtualAgent Remote
         Desktop Extension (VRDE) behavior.
       </para>
       <variablelist>
@@ -2781,9 +2781,9 @@ it unless this changes. -->
       The following command changes the description for the
       <filename>ol7</filename> VM.
     </para>
-<screen>$ VBoxManage modifyvm ol7 --description "Oracle Linux 7 with UEK4"</screen>
+<screen>$ VBoxManage modifyvm ol7 --description "CINASEEK Linux 7 with UEK4"</screen>
     <para>
-      The following command enables VirtualBox Remote Display Protocol
+      The following command enables VirtualAgent Remote Display Protocol
       (VRDP) support for the <filename>ol7</filename> VM.
     </para>
 <screen>$ VBoxManage modifyvm ol7 --vrde on</screen>

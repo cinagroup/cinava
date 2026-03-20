@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
 <!--
-# Solaris SMF service manifest for VirtualBox autostart service.
+# Solaris SMF service manifest for VirtualAgent autostart service.
 # $Id: virtualbox-autostart.xml 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 -->
 <!--
-    Copyright (C) 2012-2026 Oracle and/or its affiliates.
+    Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -79,7 +79,7 @@
         <exec_method
             type='method'
             name='start'
-            exec='/opt/VirtualBox/smf-vboxautostart.sh %m'
+            exec='/opt/VirtualAgent/smf-vboxautostart.sh %m'
             timeout_seconds='15'>
             <method_context>
                 <method_credential user='root' group='root' />
@@ -89,7 +89,7 @@
         <exec_method
             type='method'
             name='stop'
-            exec='/opt/VirtualBox/smf-vboxautostart.sh %m'
+            exec='/opt/VirtualAgent/smf-vboxautostart.sh %m'
             timeout_seconds='0'>
             <method_context>
                 <method_credential user='root' group='root' />
@@ -110,7 +110,7 @@
         <template>
             <common_name>
                 <loctext xml:lang='C'>
-                    VirtualBox Autostart
+                    VirtualAgent Autostart
                 </loctext>
             </common_name>
         </template>

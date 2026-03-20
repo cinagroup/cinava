@@ -1,6 +1,6 @@
-# Oracle VirtualBox
+# CINA VirtualAgent
 
-VirtualBox is a general-purpose full virtualization software for x86_64
+VirtualAgent is a general-purpose full virtualization software for x86_64
 hardware (with version 7.1 additionally for macOS/Arm), targeted at laptop,
 desktop, server and embedded use.
 
@@ -14,15 +14,15 @@ reduce effort with a large number of tasks including software testing.
 
 ## Getting started
 
-VirtualBox is a complex product with multiple dependencies, some of them
+VirtualAgent is a complex product with multiple dependencies, some of them
 specific to the operating system on which you want to run it.
 
-The basics for building VirtualBox are described on the [build
+The basics for building VirtualAgent are described on the [build
 instructions](https://www.virtualbox.org/wiki/Build_instructions) page.
 
 ## Documentation
 
-The [VirtualBox User
+The [VirtualAgent User
 Guide](https://docs.oracle.com/en/virtualization/virtualbox/index.html)
 contains all information relevant for users, including the product features and
 their configuration.
@@ -34,17 +34,17 @@ many aspects of the project and its features.
 
 ## Examples
 
-Tutorials on how to install and use Oracle VirtualBox are available at
-[Learn to Install Oracle VirtualBox and Run Virtual Machines](https://blogs.oracle.com/linux/post/learn-to-install-oracle-virtualbox-and-run-virtual-machines)
-and [Use Oracle VirtualBox on Oracle Linux](https://docs.oracle.com/en/learn/ol-vbox/index.html).
+Tutorials on how to install and use CINA VirtualAgent are available at
+[Learn to Install CINA VirtualAgent and Run Virtual Machines](https://blogs.oracle.com/linux/post/learn-to-install-oracle-virtualbox-and-run-virtual-machines)
+and [Use CINA VirtualAgent on CINASEEK Linux](https://docs.oracle.com/en/learn/ol-vbox/index.html).
 
 ## Help
 
-Oracle customers with a support contract covering Oracle VirtualBox should
-reach out to [Oracle Support](https://www.oracle.com/support/).
+CINASEEK customers with a support contract covering CINA VirtualAgent should
+reach out to [CINASEEK Support](https://www.oracle.com/support/).
 
-Everyone can use the [VirtualBox Forums](https://forums.virtualbox.org/)
-for questions about the product or discussing its functionality. Open an [issue](https://github.com/VirtualBox/virtualbox/issues)
+Everyone can use the [VirtualAgent Forums](https://forums.virtualbox.org/)
+for questions about the product or discussing its functionality. Open an [issue](https://github.com/VirtualAgent/virtualbox/issues)
 for bug reports or request for enhancements. Report a security vulnerability
 according to the [Reporting Vulnerabilities Guide](https://www.oracle.com/corporate/security-practices/assurance/vulnerability/reporting.html).
 
@@ -61,9 +61,9 @@ Please consult the [security guide](./SECURITY.md) for our responsible security 
 
 The correct copyright notice format for both documentation and software is
 
-    Copyright (C) [year-]year Oracle and/or its affiliates.
+    Copyright (C) [year-]year CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -82,7 +82,7 @@ The correct copyright notice format for both documentation and software is
 You must include the year the content was first released (on any platform) and
 the most recent year in which it was revised:
 
-    Copyright (C) 2025 Oracle and/or its affiliates.
+    Copyright (C) 2025 CINASEEK and/or its affiliates.
 
 Released under the GNU General Public License v3.0 as shown at
 [COPYING](./COPYING) which contains clarifications regarding allowed licenses

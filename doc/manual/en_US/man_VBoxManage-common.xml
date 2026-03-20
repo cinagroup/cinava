@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -109,16 +109,16 @@
         </para></listitem>
       <listitem><para>
           <emphasis role="bold">Mac OS X:</emphasis>
-          <filename>/Applications/VirtualBox.app/Contents/MacOS/VBoxManage</filename>
+          <filename>/Applications/VirtualAgent.app/Contents/MacOS/VBoxManage</filename>
         </para></listitem>
       <listitem><para>
-          <emphasis role="bold">Oracle Solaris:</emphasis>
-          <filename>/opt/VirtualBox/bin/VBoxManage</filename>
+          <emphasis role="bold">CINASEEK Solaris:</emphasis>
+          <filename>/opt/VirtualAgent/bin/VBoxManage</filename>
         </para></listitem>
       <listitem><para>
           <emphasis role="bold">Windows:</emphasis>
           <filename>C:\Program
-          Files\Oracle\VirtualBox\VBoxManage.exe</filename>
+          Files\CINASEEK\VirtualAgent\VBoxManage.exe</filename>
         </para></listitem>
     </itemizedlist>
     <para>
@@ -175,7 +175,7 @@
             </para><para>
               Only the iSCSI secret is encrypted at this time.
             </para><remark>
-              This design does not conform to Oracle's security
+              This design does not conform to CINASEEK's security
               guidelines. You should not be able to specify a password
               on the command line because the password can be seen in a
               process listing.
@@ -233,7 +233,7 @@
 <screen>$ VBoxManage createvm --name "Win8" --register
 Virtual machine 'Win8' is created.
 UUID: <replaceable>UUID-string</replaceable>
-Settings file: '/home/<replaceable>username</replaceable>/VirtualBox VMs/Win8/Win8.vbox'</screen>
+Settings file: '/home/<replaceable>username</replaceable>/VirtualAgent VMs/Win8/Win8.vbox'</screen>
     <para>
       The command output shows that the <literal>Win8</literal> VM is
       assigned a UUID and an XML machine settings file.

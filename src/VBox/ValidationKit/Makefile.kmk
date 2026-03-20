@@ -1,12 +1,12 @@
 # $Id: Makefile.kmk 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox Validation Kit.
+# VirtualAgent Validation Kit.
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -38,12 +38,12 @@ SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 # Make sure our Config.kmk is included.
-ifndef VBOX_VALIDATIONKIT_CONFIG_KMK_INCLUDED
+ifndef VRA_VALIDATIONKIT_CONFIG_KMK_INCLUDED
  include $(PATH_SUB_CURRENT)/Config.kmk
 endif
 
 # Collect install targets
-VBOX_VALIDATIONKIT_INSTALLS := $(INSTALLS)
+VRA_VALIDATIONKIT_INSTALLS := $(INSTALLS)
 
 #
 # Include sub-makefiles.
@@ -67,9 +67,9 @@ include $(PATH_SUB_CURRENT)/testmanager/Makefile.kmk
 #
 
 # The current target is enabled by default.
-VBOX_WITH_VALIDATIONKIT_PACKING.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) = 1
-ifdef VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING
- VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) = 1
+VRA_WITH_VALIDATIONKIT_PACKING.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) = 1
+ifdef VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING
+ VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) = 1
 endif
 
 #
@@ -97,15 +97,15 @@ ValidationKit-testdriver_SOURCES := \
 	$(PATH_SUB_CURRENT)/testdriver/win-vbox-net-uninstall.ps1
 ValidationKit-testdriver_EXEC_SOURCES := \
 	$(PATH_SUB_CURRENT)/testdriver/vboxinstaller.py
-$(PATH_SUB_CURRENT)/testdriver/txsclient.py_VBOX_PYCHECKER_FLAGS = --no-reimport
+$(PATH_SUB_CURRENT)/testdriver/txsclient.py_VRA_PYCHECKER_FLAGS = --no-reimport
 
 
 #
 # Packing target.
 #
-ifndef VBOX_WITHOUT_VALIDATIONKIT_ZIP
+ifndef VRA_WITHOUT_VALIDATIONKIT_ZIP
 
- VBOX_VALIDATIONKIT_INSTALLS := $(filter-out $(VBOX_VALIDATIONKIT_INSTALLS), $(INSTALLS))
+ VRA_VALIDATIONKIT_INSTALLS := $(filter-out $(VRA_VALIDATIONKIT_INSTALLS), $(INSTALLS))
 
  #
  # VBoxValidationKit.zip.
@@ -113,18 +113,18 @@ ifndef VBOX_WITHOUT_VALIDATIONKIT_ZIP
  #
  PACKING += $(PATH_OUT)/VBoxValidationKit.zip
  $(PATH_OUT)/VBoxValidationKit.zip: \
- 		$(VBOX_PATH_VALIDATIONKIT)/VBoxValidationKit.iso \
- 		$(VBOX_PATH_VALIDATIONKIT)/ \
- 		$$(foreach inst, $$(VBOX_VALIDATIONKIT_INSTALLS), \
+ 		$(VRA_PATH_VALIDATIONKIT)/VBoxValidationKit.iso \
+ 		$(VRA_PATH_VALIDATIONKIT)/ \
+ 		$$(foreach inst, $$(VRA_VALIDATIONKIT_INSTALLS), \
  			$$(filter $(PATH_STAGE)/$(INST_VALIDATIONKIT)%, $$($$(inst)_2_STAGE_TARGETS)))
 	$(call MSG_L1,Packing the Test Suite $@)
 	$(QUIET)$(RM) -f $@
  # Note: Exclude packing the testcase directory into .zip, as that directory only needs to be
  #       included in VBoxValidationKit.iso.
 	$(foreach os, darwin freebsd linux os2 solaris win,$(foreach arch, x86 amd64 arm64\
-	,$(if-expr defined(VBOX_WITH_VALIDATIONKIT_PACKING.$(os).$(arch))\
+	,$(if-expr defined(VRA_WITH_VALIDATIONKIT_PACKING.$(os).$(arch))\
 		,$(NLTAB)$(QUIET)$(REDIRECT) -C $(PATH_OUT_BASE)/$(os).$(arch)/$(KBUILD_TYPE)/ \
-			-- $(VBOX_ZIP) -r9 $@ $(INST_VALIDATIONKIT) -x '$(INST_VALIDATIONKIT)testcase/*' -x '*.pyc',)))
+			-- $(VRA_ZIP) -r9 $@ $(INST_VALIDATIONKIT) -x '$(INST_VALIDATIONKIT)testcase/*' -x '*.pyc',)))
 
  #
  # VBoxTestBoxScript.zip - For setting up the testboxes.
@@ -137,26 +137,26 @@ ifndef VBOX_WITHOUT_VALIDATIONKIT_ZIP
 	$(call MSG_L1,Packing the TestBox Script files to $@)
 	$(QUIET)$(RM) -f $@
 	$(foreach os, darwin freebsd linux os2 solaris win,$(foreach arch, x86 amd64 arm64\
-	,$(if-expr defined(VBOX_WITH_VALIDATIONKIT_PACKING.$(os).$(arch))\
+	,$(if-expr defined(VRA_WITH_VALIDATIONKIT_PACKING.$(os).$(arch))\
 		,$(NLTAB)$(QUIET)$(REDIRECT) -C $(PATH_OUT_BASE)/$(os).$(arch)/$(KBUILD_TYPE)/ \
-			-- $(VBOX_ZIP) -r9X $@ $(INST_TESTBOXSCRIPT) -x '*.pyc',)))
+			-- $(VRA_ZIP) -r9X $@ $(INST_TESTBOXSCRIPT) -x '*.pyc',)))
 
-endif # !VBOX_WITHOUT_VALIDATIONKIT_ZIP
+endif # !VRA_WITHOUT_VALIDATIONKIT_ZIP
 
 
 #
 # Automatically lint python code and python unit tests during build.
 #
-if defined(VBOX_WITH_PYLINT) && !defined(VBOX_WITHOUT_AUTO_PYLINT)
+if defined(VRA_WITH_PYLINT) && !defined(VRA_WITHOUT_AUTO_PYLINT)
  OTHERS      += $(PATH_TARGET)/pylint.run
  OTHER_CLEAN += $(PATH_TARGET)/pylint.run
- $(PATH_TARGET)/pylint.run: $$(filter-out %/testboxscript.o, $$(VBOX_VALIDATIONKIT_PYLINT_TARGETS))
+ $(PATH_TARGET)/pylint.run: $$(filter-out %/testboxscript.o, $$(VRA_VALIDATIONKIT_PYLINT_TARGETS))
 	$(QUIET)$(APPEND) -t "$@"
 endif
-if defined(VBOX_WITH_PYLINT) && !defined(VBOX_WITHOUT_AUTO_PYUNITTEST) # Tied to pylint for hysterical raisins.
+if defined(VRA_WITH_PYLINT) && !defined(VRA_WITHOUT_AUTO_PYUNITTEST) # Tied to pylint for hysterical raisins.
  OTHERS      += $(PATH_TARGET)/pyunittest.run
  OTHER_CLEAN += $(PATH_TARGET)/pyunittest.run
- $(PATH_TARGET)/pyunittest.run: $$(VBOX_VALIDATIONKIT_PYUNITTEST_TARGETS)
+ $(PATH_TARGET)/pyunittest.run: $$(VRA_VALIDATIONKIT_PYUNITTEST_TARGETS)
 	$(QUIET)$(APPEND) -t "$@"
 endif
 
@@ -165,66 +165,66 @@ $(evalcall def_vbox_validationkit_process_js_sources,FORCE)
 include $(FILE_KBUILD_SUB_FOOTER)
 
 
-VBOX_VALIDATIONKIT_ISO_RSP = $(PATH_TARGET)/VBoxValidationKitISO.rsp
-OTHERS_CLEAN              += $(VBOX_VALIDATIONKIT_ISO_RSP)
+VRA_VALIDATIONKIT_ISO_RSP = $(PATH_TARGET)/VBoxValidationKitISO.rsp
+OTHERS_CLEAN              += $(VRA_VALIDATIONKIT_ISO_RSP)
 
 #
 # Construct the file spec for creating the Validation Kit guest iso.
 #
-VBOX_VALIDATIONKIT_FILESPEC = \
-	valkit.txt=$(VBOX_PATH_VALIDATIONKIT_SRC)/docs/valkit.txt \
-	$(VBOX_PATH_VALIDATIONKIT)/vboxtxs-readme.txt
+VRA_VALIDATIONKIT_FILESPEC = \
+	valkit.txt=$(VRA_PATH_VALIDATIONKIT_SRC)/docs/valkit.txt \
+	$(VRA_PATH_VALIDATIONKIT)/vboxtxs-readme.txt
 ifneq ($(KBUILD_HOST),os2)
  if1of ($(KBUILD_TARGET_ARCH), amd64 x86)
-  VBOX_VALIDATIONKIT_FILESPEC += \
-  	$(VBOX_PATH_VALIDATIONKIT)/bootsectors/bootsector-pae.img \
-  	$(VBOX_PATH_VALIDATIONKIT)/bootsectors/bootsector-shutdown.img
+  VRA_VALIDATIONKIT_FILESPEC += \
+  	$(VRA_PATH_VALIDATIONKIT)/bootsectors/bootsector-pae.img \
+  	$(VRA_PATH_VALIDATIONKIT)/bootsectors/bootsector-shutdown.img
  endif
 endif
 
-VBOX_VALIDATIONKIT_FILESPEC_UNITTESTS =
+VRA_VALIDATIONKIT_FILESPEC_UNITTESTS =
 
-# Generate VBOX_PATH_VALIDATIONKIT.os.arch variables.
+# Generate VRA_PATH_VALIDATIONKIT.os.arch variables.
 $(foreach os, darwin freebsd linux os2 solaris win,$(foreach arch, x86 amd64 arm64, \
-	$(eval VBOX_PATH_VALIDATIONKIT.$(os).$(arch) = $(PATH_OUT_BASE)/$(os).$(arch)/$(KBUILD_TYPE)/$(INST_VALIDATIONKIT)$(os)/$(arch)) \
-	$(eval VBOX_PATH_VALIDATIONKIT_UNITTESTS.$(os).$(arch) = $(abspath $(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/../../testcase/$(os)/$(arch)/testcase)) \
+	$(eval VRA_PATH_VALIDATIONKIT.$(os).$(arch) = $(PATH_OUT_BASE)/$(os).$(arch)/$(KBUILD_TYPE)/$(INST_VALIDATIONKIT)$(os)/$(arch)) \
+	$(eval VRA_PATH_VALIDATIONKIT_UNITTESTS.$(os).$(arch) = $(abspath $(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/../../testcase/$(os)/$(arch)/testcase)) \
 ))
 
 # Common files first.
 define def_vbox_validationkit_common_files
- ifdef VBOX_WITH_VALIDATIONKIT_PACKING.$(os).$(arch)
-  VBOX_VALIDATIONKIT_FILESPEC += \
-  	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/cpu-alloc-all-mem$(TMP_SUFF_EXE) \
-  	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/cpu-numa$(TMP_SUFF_EXE) \
-  	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/FsPerf$(TMP_SUFF_EXE) \
-  	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/IoPerf$(TMP_SUFF_EXE) \
-  	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/NetPerf$(TMP_SUFF_EXE) \
-  	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/LoadGenerator$(TMP_SUFF_EXE) \
-  	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/SerialTest$(TMP_SUFF_EXE) \
-  	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/TestExecService$(TMP_SUFF_EXE) \
-  	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/vts_rm$(TMP_SUFF_EXE) \
-  	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/vts_shutdown$(TMP_SUFF_EXE) \
-  	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/vts_tar$(TMP_SUFF_EXE)
-  if1of ($(arch), amd64) ## HACK ALERT! This mirrors VBOX_WITH_R0_MODULES logic in /Config.kmk.
-   VBOX_VALIDATIONKIT_FILESPEC += \
-   	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/loadgeneratorR0.r0
+ ifdef VRA_WITH_VALIDATIONKIT_PACKING.$(os).$(arch)
+  VRA_VALIDATIONKIT_FILESPEC += \
+  	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/cpu-alloc-all-mem$(TMP_SUFF_EXE) \
+  	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/cpu-numa$(TMP_SUFF_EXE) \
+  	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/FsPerf$(TMP_SUFF_EXE) \
+  	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/IoPerf$(TMP_SUFF_EXE) \
+  	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/NetPerf$(TMP_SUFF_EXE) \
+  	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/LoadGenerator$(TMP_SUFF_EXE) \
+  	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/SerialTest$(TMP_SUFF_EXE) \
+  	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/TestExecService$(TMP_SUFF_EXE) \
+  	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/vts_rm$(TMP_SUFF_EXE) \
+  	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/vts_shutdown$(TMP_SUFF_EXE) \
+  	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/vts_tar$(TMP_SUFF_EXE)
+  if1of ($(arch), amd64) ## HACK ALERT! This mirrors VRA_WITH_R0_MODULES logic in /Config.kmk.
+   VRA_VALIDATIONKIT_FILESPEC += \
+   	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/loadgeneratorR0.r0
   endif
   ifn1of ($(os).$(arch), os2.x86 linux.arm64) ## not compiling bootsectors, no yasm.  could fix this better.
-   VBOX_VALIDATIONKIT_FILESPEC += \
-   	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/bs3-timing-1$(TMP_SUFF_EXE)
+   VRA_VALIDATIONKIT_FILESPEC += \
+   	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/bs3-timing-1$(TMP_SUFF_EXE)
   endif
   ifn1of ($(os), os2 freebsd netbsd openbsd) ## must match utils/audio/Makefile.kmk
-   VBOX_VALIDATIONKIT_FILESPEC += \
-   	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/vkat$(TMP_SUFF_EXE)
+   VRA_VALIDATIONKIT_FILESPEC += \
+   	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/vkat$(TMP_SUFF_EXE)
   endif
   if1of ($(os), win) ## must match utils/guestcontrol/Makefile.kmk
-   VBOX_VALIDATIONKIT_FILESPEC += \
-   	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/VBoxGuestControlHelper$(TMP_SUFF_EXE)
+   VRA_VALIDATIONKIT_FILESPEC += \
+   	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/VBoxGuestControlHelper$(TMP_SUFF_EXE)
   endif
   ifn1of ($(arch), arm64)
-   VBOX_VALIDATIONKIT_FILESPEC += \
-   	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/exceptionsR3$(TMP_SUFF_EXE) \
-   	$$(VBOX_PATH_VALIDATIONKIT.$(os).$(arch))/xmmsaving$(TMP_SUFF_EXE)
+   VRA_VALIDATIONKIT_FILESPEC += \
+   	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/exceptionsR3$(TMP_SUFF_EXE) \
+   	$$(VRA_PATH_VALIDATIONKIT.$(os).$(arch))/xmmsaving$(TMP_SUFF_EXE)
   endif
  endif
 endef
@@ -239,90 +239,90 @@ $(foreach os, darwin freebsd linux solaris,$(foreach arch, x86 amd64 arm64, \
 ))
 
 # OS specific files - Linux
-ifdef VBOX_WITH_VALIDATIONKIT_PACKING.linux.x86
- VBOX_VALIDATIONKIT_FILESPEC += \
- 	$(VBOX_PATH_VALIDATIONKIT.linux.x86)/UsbTest
+ifdef VRA_WITH_VALIDATIONKIT_PACKING.linux.x86
+ VRA_VALIDATIONKIT_FILESPEC += \
+ 	$(VRA_PATH_VALIDATIONKIT.linux.x86)/UsbTest
 endif
-ifdef VBOX_WITH_VALIDATIONKIT_PACKING.linux.amd64
- VBOX_VALIDATIONKIT_FILESPEC += \
- 	$(VBOX_PATH_VALIDATIONKIT.linux.amd64)/UsbTest
+ifdef VRA_WITH_VALIDATIONKIT_PACKING.linux.amd64
+ VRA_VALIDATIONKIT_FILESPEC += \
+ 	$(VRA_PATH_VALIDATIONKIT.linux.amd64)/UsbTest
 endif
-ifdef VBOX_WITH_VALIDATIONKIT_PACKING.linux.x86
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.linux.x86)/../vboxtxs)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.linux.x86)/../vboxtxs-nat)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.linux.x86)/../vboxtxs.service)
+ifdef VRA_WITH_VALIDATIONKIT_PACKING.linux.x86
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.linux.x86)/../vboxtxs)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.linux.x86)/../vboxtxs-nat)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.linux.x86)/../vboxtxs.service)
 
-else ifdef VBOX_WITH_VALIDATIONKIT_PACKING.linux.amd64
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.linux.amd64)/../vboxtxs)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.linux.amd64)/../vboxtxs-nat)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.linux.amd64)/../vboxtxs.service)
+else ifdef VRA_WITH_VALIDATIONKIT_PACKING.linux.amd64
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.linux.amd64)/../vboxtxs)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.linux.amd64)/../vboxtxs-nat)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.linux.amd64)/../vboxtxs.service)
 endif
 
 # OS specific files - OS/2
-ifdef VBOX_WITH_VALIDATIONKIT_PACKING.os2.x86
- VBOX_VALIDATIONKIT_FILESPEC += \
- 	$(VBOX_PATH_VALIDATIONKIT.os2.x86)/libc06.dll \
- 	$(VBOX_PATH_VALIDATIONKIT.os2.x86)/libc061.dll \
- 	$(VBOX_PATH_VALIDATIONKIT.os2.x86)/libc062.dll \
- 	$(VBOX_PATH_VALIDATIONKIT.os2.x86)/libc063.dll \
- 	$(VBOX_PATH_VALIDATIONKIT.os2.x86)/libc064.dll \
- 	$(VBOX_PATH_VALIDATIONKIT.os2.x86)/libc065.dll \
- 	$(VBOX_PATH_VALIDATIONKIT.os2.x86)/libc066.dll
+ifdef VRA_WITH_VALIDATIONKIT_PACKING.os2.x86
+ VRA_VALIDATIONKIT_FILESPEC += \
+ 	$(VRA_PATH_VALIDATIONKIT.os2.x86)/libc06.dll \
+ 	$(VRA_PATH_VALIDATIONKIT.os2.x86)/libc061.dll \
+ 	$(VRA_PATH_VALIDATIONKIT.os2.x86)/libc062.dll \
+ 	$(VRA_PATH_VALIDATIONKIT.os2.x86)/libc063.dll \
+ 	$(VRA_PATH_VALIDATIONKIT.os2.x86)/libc064.dll \
+ 	$(VRA_PATH_VALIDATIONKIT.os2.x86)/libc065.dll \
+ 	$(VRA_PATH_VALIDATIONKIT.os2.x86)/libc066.dll
 endif
 
 # OS specific files - Solaris
-ifdef VBOX_WITH_VALIDATIONKIT_PACKING.solaris.x86
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.solaris.x86)/../vboxtxs.sh)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.solaris.x86)/../vboxtxs.xml)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.solaris.x86)/../vboxtxs-sol10.xml)
-else ifdef VBOX_WITH_VALIDATIONKIT_PACKING.solaris.amd64
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.solaris.amd64)/../vboxtxs.sh)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.solaris.amd64)/../vboxtxs.xml)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.solaris.amd64)/../vboxtxs-sol10.xml)
+ifdef VRA_WITH_VALIDATIONKIT_PACKING.solaris.x86
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.solaris.x86)/../vboxtxs.sh)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.solaris.x86)/../vboxtxs.xml)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.solaris.x86)/../vboxtxs-sol10.xml)
+else ifdef VRA_WITH_VALIDATIONKIT_PACKING.solaris.amd64
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.solaris.amd64)/../vboxtxs.sh)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.solaris.amd64)/../vboxtxs.xml)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.solaris.amd64)/../vboxtxs-sol10.xml)
 endif
 
 # OS specific files - Windows
-ifdef VBOX_WITH_VALIDATIONKIT_PACKING.win.x86
- VBOX_VALIDATIONKIT_FILESPEC += \
- 	$(VBOX_PATH_VALIDATIONKIT.win.x86)/ntSetFreq.exe \
- 	$(VBOX_PATH_VALIDATIONKIT.win.x86)/ntTimeSources.exe \
- 	$(VBOX_PATH_VALIDATIONKIT.win.x86)/ntDisplay.exe \
- 	$(VBOX_PATH_VALIDATIONKIT.win.x86)/ntPlayToneWaveX.exe
+ifdef VRA_WITH_VALIDATIONKIT_PACKING.win.x86
+ VRA_VALIDATIONKIT_FILESPEC += \
+ 	$(VRA_PATH_VALIDATIONKIT.win.x86)/ntSetFreq.exe \
+ 	$(VRA_PATH_VALIDATIONKIT.win.x86)/ntTimeSources.exe \
+ 	$(VRA_PATH_VALIDATIONKIT.win.x86)/ntDisplay.exe \
+ 	$(VRA_PATH_VALIDATIONKIT.win.x86)/ntPlayToneWaveX.exe
 endif
-ifdef VBOX_WITH_VALIDATIONKIT_PACKING.win.amd64
- VBOX_VALIDATIONKIT_FILESPEC += \
- 	$(VBOX_PATH_VALIDATIONKIT.win.amd64)/ntSetFreq.exe \
- 	$(VBOX_PATH_VALIDATIONKIT.win.amd64)/ntTimeSources.exe \
- 	$(VBOX_PATH_VALIDATIONKIT.win.amd64)/ntDisplay.exe \
- 	$(VBOX_PATH_VALIDATIONKIT.win.amd64)/ntPlayToneWaveX.exe
+ifdef VRA_WITH_VALIDATIONKIT_PACKING.win.amd64
+ VRA_VALIDATIONKIT_FILESPEC += \
+ 	$(VRA_PATH_VALIDATIONKIT.win.amd64)/ntSetFreq.exe \
+ 	$(VRA_PATH_VALIDATIONKIT.win.amd64)/ntTimeSources.exe \
+ 	$(VRA_PATH_VALIDATIONKIT.win.amd64)/ntDisplay.exe \
+ 	$(VRA_PATH_VALIDATIONKIT.win.amd64)/ntPlayToneWaveX.exe
 endif
-ifdef VBOX_WITH_VALIDATIONKIT_PACKING.win.arm64
- VBOX_VALIDATIONKIT_FILESPEC += \
- 	$(VBOX_PATH_VALIDATIONKIT.win.arm64)/ntSetFreq.exe \
- 	$(VBOX_PATH_VALIDATIONKIT.win.arm64)/ntTimeSources.exe \
- 	$(VBOX_PATH_VALIDATIONKIT.win.arm64)/ntDisplay.exe \
- 	$(VBOX_PATH_VALIDATIONKIT.win.arm64)/ntPlayToneWaveX.exe
+ifdef VRA_WITH_VALIDATIONKIT_PACKING.win.arm64
+ VRA_VALIDATIONKIT_FILESPEC += \
+ 	$(VRA_PATH_VALIDATIONKIT.win.arm64)/ntSetFreq.exe \
+ 	$(VRA_PATH_VALIDATIONKIT.win.arm64)/ntTimeSources.exe \
+ 	$(VRA_PATH_VALIDATIONKIT.win.arm64)/ntDisplay.exe \
+ 	$(VRA_PATH_VALIDATIONKIT.win.arm64)/ntPlayToneWaveX.exe
 endif
-ifdef VBOX_WITH_VALIDATIONKIT_PACKING.win.x86
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.x86)/../vboxtxs.cmd)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.x86)/../vboxtxs.reg)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.x86)/../vboxtxs-nat.cmd)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.x86)/../vboxtxs-nat.reg)
-else ifdef VBOX_WITH_VALIDATIONKIT_PACKING.win.amd64
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.amd64)/../vboxtxs.cmd)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.amd64)/../vboxtxs.reg)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.amd64)/../vboxtxs-nat.cmd)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.amd64)/../vboxtxs-nat.reg)
-else ifdef VBOX_WITH_VALIDATIONKIT_PACKING.win.arm64
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.arm64)/../vboxtxs.cmd)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.arm64)/../vboxtxs.reg)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.arm64)/../vboxtxs-nat.cmd)
- VBOX_VALIDATIONKIT_FILESPEC += $(abspath $(VBOX_PATH_VALIDATIONKIT.win.arm64)/../vboxtxs-nat.reg)
+ifdef VRA_WITH_VALIDATIONKIT_PACKING.win.x86
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.x86)/../vboxtxs.cmd)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.x86)/../vboxtxs.reg)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.x86)/../vboxtxs-nat.cmd)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.x86)/../vboxtxs-nat.reg)
+else ifdef VRA_WITH_VALIDATIONKIT_PACKING.win.amd64
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.amd64)/../vboxtxs.cmd)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.amd64)/../vboxtxs.reg)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.amd64)/../vboxtxs-nat.cmd)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.amd64)/../vboxtxs-nat.reg)
+else ifdef VRA_WITH_VALIDATIONKIT_PACKING.win.arm64
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.arm64)/../vboxtxs.cmd)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.arm64)/../vboxtxs.reg)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.arm64)/../vboxtxs-nat.cmd)
+ VRA_VALIDATIONKIT_FILESPEC += $(abspath $(VRA_PATH_VALIDATIONKIT.win.arm64)/../vboxtxs-nat.reg)
 endif
 
 #
 # If enabled, this includes specially built unit tests (statically linked, for guests) located
-# in the $(VBOX_PATH_VALIDATIONKIT)/../../testcase/ directory.
+# in the $(VRA_PATH_VALIDATIONKIT)/../../testcase/ directory.
 #
 # This is useful if we want to run those on platforms where we don't have / support
 # any host support anymore (like Windows XP, for instance).
@@ -332,16 +332,16 @@ endif
 #
 # See @bugref{10195}
 #
-ifdef VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING
+ifdef VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING
  define def_vbox_validationkit_unittests
   # IPRT unit tests.
-  VBOX_VALIDATIONKIT_FILESPEC_UNITTESTS += \
+  VRA_VALIDATIONKIT_FILESPEC_UNITTESTS += \
   	$(foreach whitelisted, $(VALKIT_UNITTESTS_WHITELIST_IPRT) $(VALKIT_UNITTESTS_WHITELIST_IPRT.$(os)), \
-  		$$(wildcard $(VBOX_PATH_VALIDATIONKIT_UNITTESTS.$(os).$(arch))/$(whitelisted)$(TMP_SUFF_EXE)))
+  		$$(wildcard $(VRA_PATH_VALIDATIONKIT_UNITTESTS.$(os).$(arch))/$(whitelisted)$(TMP_SUFF_EXE)))
   # Unit tests which utilize parts of the Guest Additions.
-  VBOX_VALIDATIONKIT_FILESPEC_UNITTESTS += \
+  VRA_VALIDATIONKIT_FILESPEC_UNITTESTS += \
   	$(foreach whitelisted, $(VALKIT_UNITTESTS_WHITELIST_GUEST_ADDITIONS) $(VALKIT_UNITTESTS_WHITELIST_GUEST_ADDITIONS.$(os)), \
-  		$$(wildcard $(VBOX_PATH_VALIDATIONKIT_UNITTESTS.$(os).$(arch))/$(whitelisted)$(TMP_SUFF_EXE)))
+  		$$(wildcard $(VRA_PATH_VALIDATIONKIT_UNITTESTS.$(os).$(arch))/$(whitelisted)$(TMP_SUFF_EXE)))
  endef
 
  TMP_SUFF_EXE = .exe
@@ -353,7 +353,7 @@ ifdef VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING
  	$(eval $(def_vbox_validationkit_unittests)) \
  ))
 
-endif # VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING
+endif # VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING
 
 #
 # Build the Validation Kit guest ISO response file for RTIsoMaker.
@@ -361,7 +361,7 @@ endif # VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING
 # We need this response file because passing all those arguments to RTIsoMaker
 # will blow up the maximum command line length on some OSes.
 #
-$(VBOX_VALIDATIONKIT_ISO_RSP): | $$(dir $$@)
+$(VRA_VALIDATIONKIT_ISO_RSP): | $$(dir $$@)
 	$(call MSG_L1,Creating Validation Kit guest ISO response file $@ )
 	kmk_builtin_append -nt "$@" \
 		'--iso-level=3' \
@@ -369,48 +369,48 @@ $(VBOX_VALIDATIONKIT_ISO_RSP): | $$(dir $$@)
 		'--joliet' \
 		'--rational-attribs' \
 		'--random-order-verification=2048' \
-		$(foreach spec,$(VBOX_VALIDATIONKIT_FILESPEC) \
+		$(foreach spec,$(VRA_VALIDATIONKIT_FILESPEC) \
 			,$(if $(findstring =,$(spec)), $(spec), /$(lastword $(subst /$(INST_VALIDATIONKIT), ,$(spec))=$(spec))) ) \
-		$(foreach spec,$(VBOX_VALIDATIONKIT_FILESPEC_UNITTESTS) \
+		$(foreach spec,$(VRA_VALIDATIONKIT_FILESPEC_UNITTESTS) \
 			,$(if $(findstring =,$(spec)), $(spec), /$(lastword $(subst /$(INST_VALIDATIONKIT), ,$(spec))=$(spec))) ) \
-		$(foreach spec,$(filter-out %.txt %.dll %.xml %.reg %.img, $(VBOX_VALIDATIONKIT_FILESPEC)) \
+		$(foreach spec,$(filter-out %.txt %.dll %.xml %.reg %.img, $(VRA_VALIDATIONKIT_FILESPEC)) \
 			,--chmod=a+x:/$(lastword $(if $(findstring =,$(spec)), \
 				        	   $(subst =, $(SP), $(spec)), \
 						   $(subst /$(INST_VALIDATIONKIT), ,$(spec))))) \
-		$(foreach spec,$(filter-out %.txt %.dll %.xml %.reg %.img, $(VBOX_VALIDATIONKIT_FILESPEC_UNITTESTS)) \
+		$(foreach spec,$(filter-out %.txt %.dll %.xml %.reg %.img, $(VRA_VALIDATIONKIT_FILESPEC_UNITTESTS)) \
 			,--chmod=a+x:/$(lastword $(if $(findstring =,$(spec)), \
 				        	   $(subst =, $(SP), $(spec)), \
 						   $(subst $(INST_VALIDATIONKIT), ,$(spec))))) \
-		'--volume-id="VBOXVALK_$(VBOX_SVN_REV)_$(VBOX_VERSION_STRING_RAW)"' \
+		'--volume-id="VRAVALK_$(VRA_SVN_REV)_$(VRA_VERSION_STRING_RAW)"' \
 		'--name-setup=joliet' \
-		'--volume-id="VBoxValK $(VBOX_SVN_REV)"'
+		'--volume-id="VBoxValK $(VRA_SVN_REV)"'
 
 #
 # Build the Validation Kit guest ISO.
 #
-$(VBOX_PATH_VALIDATIONKIT)/VBoxValidationKit.iso: \
-		$(filter-out %=deleteme=, $(subst =,=deleteme= , $(VBOX_VALIDATIONKIT_FILESPEC))) \
-		$(VBOX_SVN_REV_KMK) \
-		$(VBOX_PATH_VALIDATIONKIT_SRC)/Makefile.kmk \
-		$(VBOX_VALIDATIONKIT_ISO_RSP) \
-		| $(if-expr defined(VBOX_USE_RTISOMAKER),$(VBOX_RTISOMAKER),)
+$(VRA_PATH_VALIDATIONKIT)/VBoxValidationKit.iso: \
+		$(filter-out %=deleteme=, $(subst =,=deleteme= , $(VRA_VALIDATIONKIT_FILESPEC))) \
+		$(VRA_SVN_REV_KMK) \
+		$(VRA_PATH_VALIDATIONKIT_SRC)/Makefile.kmk \
+		$(VRA_VALIDATIONKIT_ISO_RSP) \
+		| $(if-expr defined(VRA_USE_RTISOMAKER),$(VRA_RTISOMAKER),)
 	$(call MSG_TOOL,RTIsoMaker,,$@)
 	$(QUIET)$(MKDIR) -p $(@D)
 ifneq ($(KBUILD_TARGET),os2)
-	$(QUIET)$(ECHO) VBOX_VALIDATIONKIT_FILESPEC $(VBOX_VALIDATIONKIT_FILESPEC)
+	$(QUIET)$(ECHO) VRA_VALIDATIONKIT_FILESPEC $(VRA_VALIDATIONKIT_FILESPEC)
 endif
-ifdef VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING
+ifdef VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING
 	$(foreach os, darwin linux solaris win,$(foreach arch, x86 amd64 arm64, \
-		$(call MSG_L1, VBOX_PATH_VALIDATIONKIT_UNITTESTS.$(os).$(arch): $(VBOX_PATH_VALIDATIONKIT_UNITTESTS.$(os).$(arch))) \
+		$(call MSG_L1, VRA_PATH_VALIDATIONKIT_UNITTESTS.$(os).$(arch): $(VRA_PATH_VALIDATIONKIT_UNITTESTS.$(os).$(arch))) \
 	))
-	$(call MSG_L1, VBOX_VALIDATIONKIT_FILESPEC_UNITTESTS $(VBOX_VALIDATIONKIT_FILESPEC_UNITTESTS))
+	$(call MSG_L1, VRA_VALIDATIONKIT_FILESPEC_UNITTESTS $(VRA_VALIDATIONKIT_FILESPEC_UNITTESTS))
 endif
-	$(VBOX_RTISOMAKER) \
-		@$(VBOX_VALIDATIONKIT_ISO_RSP) \
+	$(VRA_RTISOMAKER) \
+		@$(VRA_VALIDATIONKIT_ISO_RSP) \
 		--output $@
 
 
 
 # Alias for creating the iso.
 .PHONY: validationkit-iso
-validationkit-iso: $(VBOX_PATH_VALIDATIONKIT)/VBoxValidationKit.iso
+validationkit-iso: $(VRA_PATH_VALIDATIONKIT)/VBoxValidationKit.iso

@@ -2,14 +2,14 @@
 # $Id: vboxtestvms.py 113145 2026-02-24 13:36:38Z serkan.bayraktar@oracle.com $
 
 """
-VirtualBox Test VMs
+VirtualAgent Test VMs
 """
 
 __copyright__ = \
 """
-Copyright (C) 2010-2026 Oracle and/or its affiliates.
+Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -139,9 +139,9 @@ g_aaNameToDetails = \
     [ 'Linux',          'RedHat',                g_k32,    1, 256, ['rhel',   'rhel[0-9]', 'rhel[0-9]u[0-9]']],
     [ 'Linux',          'Fedora',                g_k32,    1, 256, ['fedora', 'fedora[0-9]*', ]],
     [ 'Linux_64',       'Fedora_64',             g_k64,    1, 256, ['fedora-64', 'fedora[0-9]*-64', ]],
-    [ 'Linux',          'Oracle',                g_k32,    1, 256, ['ols[0-9]*', 'oel[0-9]*', ]],
-    [ 'Linux_64',       'Oracle_64',             g_k64,    1, 256, ['ols[0-9]*-64', 'oel[0-9]*-64', ]],
-    [ 'Linux_arm64',    'Oracle_arm64',          g_k64,    1, 256, ['ols[0-9]*-arm64', 'oel[0-9]*-arm64', ]],
+    [ 'Linux',          'CINASEEK',                g_k32,    1, 256, ['ols[0-9]*', 'oel[0-9]*', ]],
+    [ 'Linux_64',       'CINASEEK_64',             g_k64,    1, 256, ['ols[0-9]*-64', 'oel[0-9]*-64', ]],
+    [ 'Linux_arm64',    'CINASEEK_arm64',          g_k64,    1, 256, ['ols[0-9]*-arm64', 'oel[0-9]*-arm64', ]],
     [ 'Linux',          'OpenSUSE',              g_k32,    1, 256, ['opensuse[0-9]*', 'suse[0-9]*', ]],
     [ 'Linux_64',       'OpenSUSE_64',           g_k64,    1, 256, ['opensuse[0-9]*-64', 'suse[0-9]*-64', ]],
     [ 'Linux',          'Ubuntu16',              g_k32,    1, 256, ['ubuntu16[0-9]*', ]],
@@ -728,8 +728,8 @@ class BaseTestVm(object):
 
         Returns True if NOT supported on VIA, False if it IS supported.
         """
-        # Oracle linux doesn't like VIA in our experience
-        if self.aInfo[g_iKind] in ['Oracle', 'Oracle_64']:
+        # CINASEEK linux doesn't like VIA in our experience
+        if self.aInfo[g_iKind] in ['CINASEEK', 'CINASEEK_64']:
             return True;
         # OS/2: "The system detected an internal processing error at location
         # 0168:fff1da1f - 000e:ca1f. 0a8606fd
@@ -1502,8 +1502,8 @@ class TestVm(object):                                       # pylint: disable=to
 
         Returns True if NOT supported on VIA, False if it IS supported.
         """
-        # Oracle linux doesn't like VIA in our experience
-        if self.aInfo[g_iKind] in ['Oracle', 'Oracle_64']:
+        # CINASEEK linux doesn't like VIA in our experience
+        if self.aInfo[g_iKind] in ['CINASEEK', 'CINASEEK_64']:
             return True;
         # OS/2: "The system detected an internal processing error at location
         # 0168:fff1da1f - 000e:ca1f. 0a8606fd
@@ -2237,19 +2237,19 @@ class TestVmManager(object):
                asParavirtModesSup = [g_ksParavirtProviderKVM,]),
         # Note: Deprecated; had SELinux + Screensaver (black screen) enabled.
         #TestVm('tst-ol-8_1-64-efi',         kfGrpStdSmoke,        sHd = '6.1/efi/ol-8_1-efi-amd64.vdi',
-        #       sKind = 'Oracle_64', acCpusSup = range(1, 33), fIoApic = True, sFirmwareType = 'efi',
+        #       sKind = 'CINASEEK_64', acCpusSup = range(1, 33), fIoApic = True, sFirmwareType = 'efi',
         #       asParavirtModesSup = [g_ksParavirtProviderKVM,]),
         TestVm('tst-ol-8_1-64-efi',         kfGrpStdSmoke,        sHd = '6.1/efi/ol-8_1-efi-amd64-2.vdi',
-               sKind = 'Oracle_64', acCpusSup = range(1, 33), fIoApic = True, sFirmwareType = 'efi',
+               sKind = 'CINASEEK_64', acCpusSup = range(1, 33), fIoApic = True, sFirmwareType = 'efi',
                asParavirtModesSup = [g_ksParavirtProviderKVM,]),
         TestVm('tst-ol-8_1-64-efi-sb',      kfGrpStdSmoke,        sHd = '6.1/efi/ol-8_1-efi-amd64-2.vdi',
-               sKind = 'Oracle_64', acCpusSup = range(1, 33), fIoApic = True, sFirmwareType = 'efi',
+               sKind = 'CINASEEK_64', acCpusSup = range(1, 33), fIoApic = True, sFirmwareType = 'efi',
                asParavirtModesSup = [g_ksParavirtProviderKVM,], fSecureBoot = True, sUefiMokPathPrefix = '7.0/mok/vbox-test-MOK'),
         TestVm('tst-ol-6u10-32',            kfGrpStdSmoke,        sHd = '7.1/ol-6u10-x86.vdi',
-               sKind = 'Oracle',    acCpusSup = range(1, 33), fIoApic = True,
+               sKind = 'CINASEEK',    acCpusSup = range(1, 33), fIoApic = True,
                asParavirtModesSup = [g_ksParavirtProviderKVM,]),
         TestVm('tst-ol-9_2-amd64',          kfGrpStdSmoke,        sHd = '7.1/smoketests/ol-9_2-amd64-txs.vdi',
-               sKind = 'Oracle_64', acCpusSup = range(1, 33), fIoApic = True,
+               sKind = 'CINASEEK_64', acCpusSup = range(1, 33), fIoApic = True,
                asParavirtModesSup = [g_ksParavirtProviderKVM,], sHddControllerType='SATA Controller',
                sDvdControllerType = 'SATA Controller', sGraphicsControllerType = 'VMSVGA',
                fIsaExts = g_fIsaExtsX8664v2),
@@ -2258,7 +2258,7 @@ class TestVmManager(object):
         #       invoked by pm_sm_authenticate(). Also, the distro's repositories can't be used either easily anymore due to old
         #       certificates and/or authentication methods. However, newer versions, such as OL6u9 or u10 should work fine.
         #TestVm('tst-ol-6u2-32',             kfGrpStdSmoke,        sHd = '6.1/ol-6u2-x86.vdi',
-        #       sKind = 'Oracle',    acCpusSup = range(1, 33), fIoApic = True,
+        #       sKind = 'CINASEEK',    acCpusSup = range(1, 33), fIoApic = True,
         #       asParavirtModesSup = [g_ksParavirtProviderKVM,]),
         TestVm('tst-ubuntu-15_10-64-efi',   kfGrpStdSmoke,        sHd = '6.1/efi/ubuntu-15_10-efi-amd64-3.vdi',
                sKind = 'Ubuntu_64', acCpusSup = range(1, 33), fIoApic = True, sFirmwareType = 'efi',
@@ -2284,7 +2284,7 @@ class TestVmManager(object):
         #TestVm('tst-ubuntu-1804-64',   kfGrpStdSmoke,        sHd = '4.2/ubuntu-1804/t-ubuntu-1804-64.vdi',
         #       sKind = 'Ubuntu_64', acCpusSup = range(1, 33), fIoApic = True),
         TestVm('tst-ol76-64',   kfGrpStdSmoke,        sHd = '4.2/ol76/t-ol76-64.vdi',
-               sKind = 'Oracle_64', acCpusSup = range(1, 33), fIoApic = True,
+               sKind = 'CINASEEK_64', acCpusSup = range(1, 33), fIoApic = True,
                fQuirks = g_kfQuirkLinuxIoApic),
         TestVm('tst-ubuntu-20_04-64-amdvi',     kfGrpStdSmoke,    sHd = '6.1/ubuntu-20_04-64-ksenia-cleaned.vdi',
                sKind = 'Ubuntu_64', acCpusSup = range(1, 33), fIoApic = True,
@@ -2419,7 +2419,7 @@ class TestVmManager(object):
         # ARM
         #
         TestVm('tst-ol-9_2-arm64',          kfGrpStdSmoke,        sHd = '7.1/smoketests/ol-9_2-arm64-txs.vdi',
-               sKind = 'Oracle_arm64', acCpusSup = range(1, 33), sChipsetType = 'armv8virtual', \
+               sKind = 'CINASEEK_arm64', acCpusSup = range(1, 33), sChipsetType = 'armv8virtual', \
                sHddControllerType='VirtIO SCSI Controller', sDvdControllerType = 'VirtIO SCSI Controller', \
                sGraphicsControllerType = 'QemuRamFb', sPlatformArchitecture = 'ARM'),
     );

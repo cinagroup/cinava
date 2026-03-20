@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -37,10 +37,10 @@
 SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
 
-ifdef VBOX_ONLY_SDK
+ifdef VRA_ONLY_SDK
  # Required for xpidl
  LIBRARIES += RuntimeBldProg
-else ifdef VBOX_ONLY_ADDITIONS
+else ifdef VRA_ONLY_ADDITIONS
  #
  # Only build the additions, sort out the legacy names first.
  #
@@ -48,73 +48,73 @@ else ifdef VBOX_ONLY_ADDITIONS
  LIBRARIES.win += RuntimeR3NoCrt
  LIBRARIES.win.amd64 += RuntimeGuestR3-x86 RuntimeGuestR3Shared-x86
  LIBRARIES.win.arm64 += RuntimeGuestR3Shared-x86
- ifdef VBOX_WITH_ADDITION_DRIVERS
+ ifdef VRA_WITH_ADDITION_DRIVERS
   LIBRARIES += RuntimeGuestR0
   #LIBRARIES.os2 += RuntimeGuestR0OS2Warp3
  endif
- ifndef VBOX_ONLY_ADDITIONS_WITHOUT_RTISOMAKER
+ ifndef VRA_ONLY_ADDITIONS_WITHOUT_RTISOMAKER
   LIBRARIES += RuntimeBldProg
   include $(PATH_SUB_CURRENT)/tools/Makefile.kmk
  endif
 
-else ifdef VBOX_ONLY_VALIDATIONKIT
+else ifdef VRA_ONLY_VALIDATIONKIT
  #
  # Only build the Validation Kit.
  #
  LIBRARIES += RuntimeGuestR3 RuntimeGuestR3Shared RuntimeR3 RuntimeBldProg
- ifdef VBOX_WITH_R0_MODULES
+ ifdef VRA_WITH_R0_MODULES
   LIBRARIES += RuntimeR0
  endif
  LIBRARIES.solaris += RuntimeR0Stub
  LIBRARIES.win += RuntimeR0Stub #RuntimeR3NoCrt
- ifndef VBOX_WITH_NOCRT_STATIC
+ ifndef VRA_WITH_NOCRT_STATIC
   LIBRARIES.win.x86 += RuntimeR3VccTricks
  endif
  include $(PATH_SUB_CURRENT)/tools/Makefile.kmk
- ifdef VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING
+ ifdef VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING
   include $(PATH_SUB_CURRENT)/testcase/Makefile.kmk
  endif
-else ifdef VBOX_ONLY_DOCS
+else ifdef VRA_ONLY_DOCS
  #
  # Build docs only - need just regular R3 runtime.
  #
  LIBRARIES += RuntimeR3 RuntimeBldProg
  include $(PATH_SUB_CURRENT)/tools/Makefile.kmk
 
-else ifdef VBOX_ONLY_EXTPACKS_USE_IMPLIBS
+else ifdef VRA_ONLY_EXTPACKS_USE_IMPLIBS
  #
  # Build extension packs using import libraries as much as possible (VBoxDTrace
  # needs Ring-0 IPRT, though).
  #
  LIBRARIES += RuntimeBldProg
- ifdef VBOX_WITH_R0_MODULES
+ ifdef VRA_WITH_R0_MODULES
   LIBRARIES += RuntimeR0
  endif
  LIBRARIES.solaris += RuntimeR0Stub
  LIBRARIES.win += RuntimeR0Stub
- ifdef VBOX_WITH_RAW_MODE
+ ifdef VRA_WITH_RAW_MODE
   LIBRARIES.win += RuntimeRCStub
  endif
- ifneq ($(VBOX_LIB_RUNTIME_STATIC),$(VBOX_LIB_RUNTIME_STATIC_NO_ASAN))
+ ifneq ($(VRA_LIB_RUNTIME_STATIC),$(VRA_LIB_RUNTIME_STATIC_NO_ASAN))
   LIBRARIES += RuntimeR3NoAsan
  else
   LIBRARIES += RuntimeR3
  endif
  include $(PATH_SUB_CURRENT)/tools/Makefile.kmk
 
-else # !VBOX_ONLY_ADDITIONS && !VBOX_ONLY_VALIDATIONKIT && !VBOX_ONLY_DOCS
+else # !VRA_ONLY_ADDITIONS && !VRA_ONLY_VALIDATIONKIT && !VRA_ONLY_DOCS
 
  #
  # Normal build.
  #
- ifndef VBOX_ONLY_EXTPACKS
+ ifndef VRA_ONLY_EXTPACKS
   include $(PATH_SUB_CURRENT)/testcase/Makefile.kmk
  endif
  include $(PATH_SUB_CURRENT)/tools/Makefile.kmk
 
  BLDPROGS += uniread
  LIBRARIES += RuntimeR3 RuntimeBldProg RuntimeEFCPP
- ifdef VBOX_WITH_R0_MODULES
+ ifdef VRA_WITH_R0_MODULES
   LIBRARIES += RuntimeR0
  endif
  LIBRARIES.solaris    += RuntimeR0Stub
@@ -122,33 +122,33 @@ else # !VBOX_ONLY_ADDITIONS && !VBOX_ONLY_VALIDATIONKIT && !VBOX_ONLY_DOCS
  LIBRARIES.win.x86    += RuntimeR3NoCrt
  LIBRARIES.win.amd64  += RuntimeR3NoCrt
  LIBRARIES.win.arm64  += RuntimeR3NoCrt
- ifndef VBOX_WITH_PARFAIT
+ ifndef VRA_WITH_PARFAIT
   LIBRARIES.win.amd64 += RuntimeR3-x86
  endif
- ifdef VBOX_WITH_RAW_MODE
+ ifdef VRA_WITH_RAW_MODE
   LIBRARIES += RuntimeRC
   LIBRARIES.win += RuntimeRCStub
  endif
- ifdef VBOX_WITH_VBOXDRV
+ ifdef VRA_WITH_VRADRV
   LIBRARIES += RuntimeR0Drv
  endif
- ifdef VBOX_WITH_ADDITIONS
+ ifdef VRA_WITH_ADDITIONS
   LIBRARIES += RuntimeGuestR3 RuntimeGuestR3Shared
   LIBRARIES.win.amd64 += RuntimeGuestR3-x86 RuntimeGuestR3Shared-x86
   LIBRARIES.win.arm64 += RuntimeGuestR3Shared-x86
-  ifdef VBOX_WITH_ADDITION_DRIVERS
+  ifdef VRA_WITH_ADDITION_DRIVERS
    LIBRARIES += RuntimeGuestR0
   endif
   #LIBRARIES.os2 += RuntimeGuestR0OS2Warp3
- endif # VBOX_WITH_ADDITIONS
- ifndef VBOX_WITH_NOCRT_STATIC
+ endif # VRA_WITH_ADDITIONS
+ ifndef VRA_WITH_NOCRT_STATIC
   LIBRARIES.win.x86 += RuntimeR3VccTricks
  endif
- ifneq ($(VBOX_LIB_RUNTIME_STATIC),$(VBOX_LIB_RUNTIME_STATIC_NO_ASAN))
+ ifneq ($(VRA_LIB_RUNTIME_STATIC),$(VRA_LIB_RUNTIME_STATIC_NO_ASAN))
   LIBRARIES += RuntimeR3NoAsan
  endif
  DLLS += VBoxRT
- ifdef VBOX_WITH_32_ON_64_MAIN_API
+ ifdef VRA_WITH_32_ON_64_MAIN_API
   DLLS += VBoxRT-x86
  endif
 endif
@@ -188,26 +188,26 @@ OTHER_CLEAN += \
 #
 # Globals
 #
-VBOX_PATH_RUNTIME_SRC := $(PATH_SUB_CURRENT)
+VRA_PATH_RUNTIME_SRC := $(PATH_SUB_CURRENT)
 
 
 #
 # Set the defines that buildconfig.cpp needs. Its used by several targets.
 #
 common/misc/buildconfig.cpp_DEFS = \
-	IPRT_BLDCFG_SCM_REV=$(VBOX_SVN_REV) \
-	IPRT_BLDCFG_VERSION_MAJOR=$(VBOX_VERSION_MAJOR) \
-	IPRT_BLDCFG_VERSION_MINOR=$(VBOX_VERSION_MINOR) \
-	IPRT_BLDCFG_VERSION_BUILD=$(VBOX_VERSION_BUILD)
-ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+	IPRT_BLDCFG_SCM_REV=$(VRA_SVN_REV) \
+	IPRT_BLDCFG_VERSION_MAJOR=$(VRA_VERSION_MAJOR) \
+	IPRT_BLDCFG_VERSION_MINOR=$(VRA_VERSION_MINOR) \
+	IPRT_BLDCFG_VERSION_BUILD=$(VRA_VERSION_BUILD)
+ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
  common/misc/buildconfig.cpp_DEFS += \
- 	IPRT_BLDCFG_VERSION_STRING="$(VBOX_VERSION_STRING)" \
+ 	IPRT_BLDCFG_VERSION_STRING="$(VRA_VERSION_STRING)" \
  	IPRT_BLDCFG_TARGET="$(KBUILD_TARGET)" \
  	IPRT_BLDCFG_TARGET_ARCH="$(KBUILD_TARGET_ARCH)" \
  	IPRT_BLDCFG_TYPE="$(KBUILD_TYPE)"
 else
  common/misc/buildconfig.cpp_DEFS += \
- 	IPRT_BLDCFG_VERSION_STRING=\"$(VBOX_VERSION_STRING)\" \
+ 	IPRT_BLDCFG_VERSION_STRING=\"$(VRA_VERSION_STRING)\" \
  	IPRT_BLDCFG_TARGET=\"$(KBUILD_TARGET)\" \
  	IPRT_BLDCFG_TARGET_ARCH=\"$(KBUILD_TARGET_ARCH)\" \
  	IPRT_BLDCFG_TYPE=\"$(KBUILD_TYPE)\"
@@ -225,8 +225,8 @@ common/asn1/asn1-dump.cpp_INCS = $(IPRT_OUT_DIR)
 OTHER_CLEAN += $(IPRT_OUT_DIR)/oiddb.h $(IPRT_OUT_DIR)/oiddb.h.ts
 
 $(IPRT_OUT_DIR)/oiddb.h.ts +| $(IPRT_OUT_DIR)/oiddb.h: \
-		$(VBOX_PATH_RUNTIME_SRC)/common/asn1/oiddb.cfg \
-		$(VBOX_EXTRA_OID_CFG_FILES) \
+		$(VRA_PATH_RUNTIME_SRC)/common/asn1/oiddb.cfg \
+		$(VRA_EXTRA_OID_CFG_FILES) \
 		$$(oiddb2c_1_TARGET) \
 		| $$(dir $$@)
 	$(call MSG_GENERATE,,$@,$(filter %.xidl,$^))
@@ -346,7 +346,7 @@ endif
 #
 RuntimeBaseR3_TEMPLATE      = VBoxR3Static
 RuntimeBaseR3_SDKS          = VBoxLibXml2
-RuntimeBaseR3_SDKS.win      = $(VBOX_WINPSDK) $(VBOX_WINDDK)
+RuntimeBaseR3_SDKS.win      = $(VRA_WINPSDK) $(VRA_WINDDK)
 RuntimeBaseR3_DEFS          = \
 	IN_RT_R3 \
 	LDR_WITH_NATIVE \
@@ -354,7 +354,7 @@ RuntimeBaseR3_DEFS          = \
 	LDR_WITH_LX \
 	LDR_WITH_MACHO \
 	LDR_WITH_PE \
-	RT_WITH_VBOX \
+	RT_WITH_VRA \
 	RT_NO_GIP \
 	RT_WITHOUT_NOCRT_WRAPPERS \
 	NOFILEID
@@ -369,7 +369,7 @@ endif
 ifdef IPRT_WITH_LZO
  RuntimeBaseR3_DEFS        += RTZIP_USE_LZO
 endif
-ifdef VBOX_WITH_LIBLZMA
+ifdef VRA_WITH_LIBLZMA
  RuntimeBaseR3_DEFS        += IPRT_WITH_LZMA
  RuntimeBaseR3_SDKS        += VBoxLibLzma
 endif
@@ -860,7 +860,7 @@ RuntimeBaseR3_SOURCES      := \
 	r3/generic/semspinmutex-r3-generic.cpp \
 	r3/xml.cpp \
 	common/zip/xarvfs.cpp
-ifdef VBOX_WITH_LIBLZMA
+ifdef VRA_WITH_LIBLZMA
  RuntimeBaseR3_SOURCES += \
  	common/zip/lzmavfs.cpp
 endif
@@ -1033,10 +1033,10 @@ ifneq ($(KBUILD_TARGET),win)
 endif
 if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd solaris)
  RuntimeBaseR3_SOURCES += \
- 	$(if $(VBOX_WITH_DBUS),VBox/dbus.cpp,)
+ 	$(if $(VRA_WITH_DBUS),VBox/dbus.cpp,)
 endif
 
-VBOX_WITH_NT_DIRENUM = 1
+VRA_WITH_NT_DIRENUM = 1
 RuntimeBaseR3_SOURCES.win = \
 	common/dbg/dbgmoddbghelp.cpp \
 	common/ioqueue/ioqueue-aiofile-provider.cpp \
@@ -1062,7 +1062,7 @@ RuntimeBaseR3_SOURCES.win = \
 	generic/RTTimerCreate-generic.cpp \
 	generic/RTThreadSetAffinityToCpu-generic.cpp \
 	generic/mppresent-generic-online.cpp \
-	generic/semrw-$(if-expr defined(VBOX_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
+	generic/semrw-$(if-expr defined(VRA_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
 	generic/uuid-generic.cpp \
 	generic/RTProcDaemonize-generic.cpp \
 	generic/RTProcIsRunningByName-generic.cpp \
@@ -1106,7 +1106,7 @@ RuntimeBaseR3_SOURCES.win = \
 	r3/win/RTMemProtect-win.cpp \
 	r3/win/allocex-win.cpp \
 	r3/win/dir-win.cpp \
-	$(if-expr defined(VBOX_WITH_NT_DIRENUM),r3/nt/direnum-r3-nt.cpp,r3/win/direnum-win.cpp generic/RTDirQueryInfo-generic.cpp) \
+	$(if-expr defined(VRA_WITH_NT_DIRENUM),r3/nt/direnum-r3-nt.cpp,r3/win/direnum-win.cpp generic/RTDirQueryInfo-generic.cpp) \
 	r3/win/errvars-win.cpp \
 	r3/win/fileaio-win.cpp \
 	r3/win/fileio-win.cpp \
@@ -1319,7 +1319,7 @@ RuntimeBaseR3_SOURCES.os2   = \
 	generic/RTSemEventMultiWait-generic.cpp \
 	generic/RTSemMutexRequest-generic.cpp \
 	generic/RTSemMutexRequestDebug-generic.cpp \
-	generic/semrw-$(if-expr defined(VBOX_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
+	generic/semrw-$(if-expr defined(VRA_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
 	generic/timer-generic.cpp \
 	generic/utf16locale-generic.cpp \
 	generic/uuid-generic.cpp \
@@ -1403,7 +1403,7 @@ RuntimeBaseR3_SOURCES.darwin = \
 	generic/mppresent-generic.cpp \
 	generic/RTSemEventMultiWait-2-ex-generic.cpp \
 	generic/RTSemEventMultiWaitNoResume-2-ex-generic.cpp \
-	generic/semrw-$(if-expr defined(VBOX_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
+	generic/semrw-$(if-expr defined(VRA_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
 	generic/RTSystemShutdown-generic.cpp \
 	generic/timer-generic.cpp \
 	generic/utf16locale-generic.cpp \
@@ -1801,7 +1801,7 @@ RuntimeBaseR3_SOURCES.haiku = \
 	generic/RTSemEventMultiWait-2-ex-generic.cpp \
 	generic/RTSemEventMultiWaitNoResume-2-ex-generic.cpp \
 	generic/sched-generic.cpp \
-	generic/semrw-$(if-expr defined(VBOX_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
+	generic/semrw-$(if-expr defined(VRA_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
 	generic/timer-generic.cpp \
 	generic/utf16locale-generic.cpp \
 	generic/uuid-generic.cpp \
@@ -1869,14 +1869,14 @@ RuntimeBaseR3_SOURCES.haiku.amd64 += common/string/memrchr.asm
 #
 UNIT_VBoxNoCrtAliases = CRT symbol alias for the rtnocr_xxx implementations
 
-# Only adding the VBOX_NOCRT_ALIASES property to library targets for now:
-PROPS_ACCUMULATE_L           += VBOX_NOCRT_ALIASES
-PROPS_ACCUMULATE_L_LNK       += VBOX_NOCRT_ALIASES
-PROPS_LIBRARIES_ACCUMULATE_L += VBOX_NOCRT_ALIASES
-PROPS_ALL                    += VBOX_NOCRT_ALIASES
+# Only adding the VRA_NOCRT_ALIASES property to library targets for now:
+PROPS_ACCUMULATE_L           += VRA_NOCRT_ALIASES
+PROPS_ACCUMULATE_L_LNK       += VRA_NOCRT_ALIASES
+PROPS_LIBRARIES_ACCUMULATE_L += VRA_NOCRT_ALIASES
+PROPS_ALL                    += VRA_NOCRT_ALIASES
 
 define def_unit_VBoxNoCrtAliases_double_expansion
- $$($(target)_2_VBOX_NOCRT_ALIAS_KMK_FILE).ts +| $$($(target)_2_VBOX_NOCRT_ALIAS_KMK_FILE): \
+ $$($(target)_2_VRA_NOCRT_ALIAS_KMK_FILE).ts +| $$($(target)_2_VRA_NOCRT_ALIAS_KMK_FILE): \
  		$$(abspathex \
  			$$($(target)_SOURCES) \
  			$$($(target)_SOURCES.$(bld_trg)) \
@@ -1887,46 +1887,46 @@ define def_unit_VBoxNoCrtAliases_double_expansion
  			$$($(target)_SOURCES.$(bld_trg_cpu)) \
  			$$($(target)_SOURCES.$(bld_type)) \
  			, $(firstfile $(defpath) $(PATH_SUB_CURRENT))) \
- 		$$(VBOX_PATH_RUNTIME_SRC)//nocrt-aliases.sed
+ 		$$(VRA_PATH_RUNTIME_SRC)//nocrt-aliases.sed
 	$$(call MSG_GENERATE,$(target),$$@,)
 	$$(QUIET)$$(MKDIR) -p -- "$$(dir $$@)"
-	$$(QUIET)$$(APPEND) -tn "$$@" "$(target)_2_VBOX_NOCRT_ALIASES := \\"
-	$$(xargs $$(QUIET)$$(SED) -rn -f "$$(VBOX_PATH_RUNTIME_SRC)/nocrt-aliases.sed" --append "$$@" , $$(filter %.c %.cpp %.asm, $$^) )
+	$$(QUIET)$$(APPEND) -tn "$$@" "$(target)_2_VRA_NOCRT_ALIASES := \\"
+	$$(xargs $$(QUIET)$$(SED) -rn -f "$$(VRA_PATH_RUNTIME_SRC)/nocrt-aliases.sed" --append "$$@" , $$(filter %.c %.cpp %.asm, $$^) )
 	$$(QUIET)$$(APPEND) -n "$$@" "" ""
 	$$(QUIET)$$(CP) --changed -f -- "$$@" "$$(patsubst %.ts,%,$$@)"
 
- $$($(target)_0_OUTDIR)/genalias/genalias.ts + $$($(target)_2_VBOX_NOCRT_ALIAS_FILES): | $$(VBOX_GENALIAS)
+ $$($(target)_0_OUTDIR)/genalias/genalias.ts + $$($(target)_2_VRA_NOCRT_ALIAS_FILES): | $$(VRA_GENALIAS)
 	$$(call MSG_GENERATE,$(target),$$@,)
 	$$(QUIET)$$(MKDIR) -p -- "$$($(target)_0_OUTDIR)/genalias/"
-	$$(QUIET)$$(VBOX_GENALIAS) -f $$(if-expr "$(bld_trg)" == "win",coff.$(bld_trg_arch),$$(if-expr "$(bld_trg)" == "darwin",macho,omf)) \
-		-D "$$($(target)_0_OUTDIR)/genalias/" $$($(target)_2_VBOX_NOCRT_ALIASES) \
-		$$($(target)_VBOX_NOCRT_ALIASES) \
-		$$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg)) \
-		$$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg).$(bld_type)) \
-		$$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg).$(bld_trg_arch)) \
-		$$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg).$(bld_trg_arch).$(bld_type)) \
-		$$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg_arch)) \
-		$$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg_cpu)) \
-		$$($(target)_VBOX_NOCRT_ALIASES.$(bld_type))
-	$$(QUIET)$$(APPEND) -tn "$$($(target)_0_OUTDIR)/genalias/genalias.ts" "$$($(target)_2_VBOX_NOCRT_ALIASES))"
+	$$(QUIET)$$(VRA_GENALIAS) -f $$(if-expr "$(bld_trg)" == "win",coff.$(bld_trg_arch),$$(if-expr "$(bld_trg)" == "darwin",macho,omf)) \
+		-D "$$($(target)_0_OUTDIR)/genalias/" $$($(target)_2_VRA_NOCRT_ALIASES) \
+		$$($(target)_VRA_NOCRT_ALIASES) \
+		$$($(target)_VRA_NOCRT_ALIASES.$(bld_trg)) \
+		$$($(target)_VRA_NOCRT_ALIASES.$(bld_trg).$(bld_type)) \
+		$$($(target)_VRA_NOCRT_ALIASES.$(bld_trg).$(bld_trg_arch)) \
+		$$($(target)_VRA_NOCRT_ALIASES.$(bld_trg).$(bld_trg_arch).$(bld_type)) \
+		$$($(target)_VRA_NOCRT_ALIASES.$(bld_trg_arch)) \
+		$$($(target)_VRA_NOCRT_ALIASES.$(bld_trg_cpu)) \
+		$$($(target)_VRA_NOCRT_ALIASES.$(bld_type))
+	$$(QUIET)$$(APPEND) -tn "$$($(target)_0_OUTDIR)/genalias/genalias.ts" "$$($(target)_2_VRA_NOCRT_ALIASES))"
 
- $(target)_2_OBJS += $$($(target)_2_VBOX_NOCRT_ALIAS_FILES)
- OTHER_CLEAN += $$($(target)_2_VBOX_NOCRT_ALIAS_KMK_FILE) $$($(target)_2_VBOX_NOCRT_ALIAS_KMK_FILE).ts
+ $(target)_2_OBJS += $$($(target)_2_VRA_NOCRT_ALIAS_FILES)
+ OTHER_CLEAN += $$($(target)_2_VRA_NOCRT_ALIAS_KMK_FILE) $$($(target)_2_VRA_NOCRT_ALIAS_KMK_FILE).ts
 endef
 
 define def_unit_VBoxNoCrtAliases_target_pre
  if1of ($(bld_trg), win os2 darwin) # Only non-ELF targets as ELF does not support aliasing.
-  $(target)_2_VBOX_NOCRT_ALIAS_KMK_FILE := $(PATH_OUT)/nocrt-aliases-$(target).kmk
-  include $($(target)_2_VBOX_NOCRT_ALIAS_KMK_FILE)
-  $(target)_2_VBOX_NOCRT_ALIAS_FILES := $(foreach alias,$($(target)_2_VBOX_NOCRT_ALIASES) \
-  		$($(target)_VBOX_NOCRT_ALIASES) \
-  		$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg)) \
-  		$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg).$(bld_type)) \
-  		$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg).$(bld_trg_arch)) \
-  		$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg).$(bld_trg_arch).$(bld_type)) \
-  		$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg_arch)) \
-  		$($(target)_VBOX_NOCRT_ALIASES.$(bld_trg_cpu)) \
-  		$($(target)_VBOX_NOCRT_ALIASES.$(bld_type)) \
+  $(target)_2_VRA_NOCRT_ALIAS_KMK_FILE := $(PATH_OUT)/nocrt-aliases-$(target).kmk
+  include $($(target)_2_VRA_NOCRT_ALIAS_KMK_FILE)
+  $(target)_2_VRA_NOCRT_ALIAS_FILES := $(foreach alias,$($(target)_2_VRA_NOCRT_ALIASES) \
+  		$($(target)_VRA_NOCRT_ALIASES) \
+  		$($(target)_VRA_NOCRT_ALIASES.$(bld_trg)) \
+  		$($(target)_VRA_NOCRT_ALIASES.$(bld_trg).$(bld_type)) \
+  		$($(target)_VRA_NOCRT_ALIASES.$(bld_trg).$(bld_trg_arch)) \
+  		$($(target)_VRA_NOCRT_ALIASES.$(bld_trg).$(bld_trg_arch).$(bld_type)) \
+  		$($(target)_VRA_NOCRT_ALIASES.$(bld_trg_arch)) \
+  		$($(target)_VRA_NOCRT_ALIASES.$(bld_trg_cpu)) \
+  		$($(target)_VRA_NOCRT_ALIASES.$(bld_type)) \
   		, $($(target)_0_OUTDIR)/genalias/$(firstword $(subst =, $(SPACE),$(alias))).o)
   $(eval $(def_unit_VBoxNoCrtAliases_double_expansion))
  endif
@@ -1944,7 +1944,7 @@ endef
 RuntimeR3_TEMPLATE = VBoxR3Static
 RuntimeR3_EXTENDS  = RuntimeBaseR3
 RuntimeR3_DEFS.win = $(RuntimeBaseR3_DEFS.win) IPRT_NO_WIN_ERROR_DATA
-ifdef VBOX_WITH_NOCRT_STATIC
+ifdef VRA_WITH_NOCRT_STATIC
  if1of ($(KBUILD_TARGET), win)
   RuntimeR3_USES   = $(RuntimeBaseR3_USES) VBoxNoCrtAliases
   RuntimeR3_DEFS   = $(filter-out RT_WITHOUT_NOCRT_WRAPPERS,$(RuntimeBaseR3_DEFS)) \
@@ -2271,7 +2271,7 @@ ifdef VBOX_WITH_NOCRT_STATIC
   	common/compiler/vcc/x86-aulldiv.asm \
   	common/compiler/vcc/x86-aullrem.asm \
   	common/compiler/vcc/x86-aulldvrm.asm
-  RuntimeR3_VBOX_NOCRT_ALIASES.win := \
+  RuntimeR3_VRA_NOCRT_ALIASES.win := \
   	strtok_s=nocrt_strtok_r _strtok_s=nocrt_strtok_r nocrt_strtok_s=nocrt_strtok_r \
   	$(foreach fn, atan atan2 cos ceil exp fabs floor ldexp log lrint llrint remainder sin tan \
   		,$(fn)l=nocrt_$(fn) _$(fn)l=nocrt_$(fn))
@@ -2298,7 +2298,7 @@ ifn1of ($(KBUILD_TARGET), os2) # breaks validationkit, figure out later.
 
  # Preprocess the xml files, applying remarks.
  $(foreach file,$(IPRT_XML_REFENTRY_FILES) \
- , $(evalcall2 def_vbox_refentry_preprocess_for_manpage,$(IPRT_OUT_DIR)/man,$(notdir $(file)),$(VBOX_PATH_RUNTIME_SRC)/$(file)))
+ , $(evalcall2 def_vbox_refentry_preprocess_for_manpage,$(IPRT_OUT_DIR)/man,$(notdir $(file)),$(VRA_PATH_RUNTIME_SRC)/$(file)))
 
  # generate the header and add it as a dependency to the source using it.
  $(evalcall2 def_vbox_single_refentry_to_h,$(IPRT_OUT_DIR)/man/isomakercmd-man.h, $(IPRT_OUT_DIR)/man/isomakercmd-man.xml)
@@ -2662,7 +2662,7 @@ ifneq ($(KBUILD_HOST),win)
  RuntimeBldProg_SOURCES        += \
  	common/err/errmsgxpcom.cpp
 endif
-ifdef VBOX_WITH_LIBLZMA
+ifdef VRA_WITH_LIBLZMA
  RuntimeBldProg_SOURCES        += \
  	common/zip/lzmavfs.cpp
 endif
@@ -2716,7 +2716,7 @@ RuntimeBldProg_SOURCES.win = \
 	generic/RTSemEventMultiWaitNoResume-2-ex-generic.cpp \
 	generic/RTSemMutexRequest-generic.cpp \
 	generic/RTSemMutexRequestDebug-generic.cpp \
-	generic/semrw-$(if-expr defined(VBOX_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
+	generic/semrw-$(if-expr defined(VRA_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
 	generic/uuid-generic.cpp \
 	nt/fileioutils-nt.cpp \
 	nt/RTErrConvertFromNtStatus.cpp \
@@ -2814,7 +2814,7 @@ RuntimeBldProg_SOURCES.os2 += \
 	generic/RTSemMutexRequestDebug-generic.cpp \
 	generic/RTThreadGetNativeState-generic.cpp \
 	generic/RTUuidCreate-generic.cpp \
-	generic/semrw-$(if-expr defined(VBOX_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
+	generic/semrw-$(if-expr defined(VRA_WITH_LOCKLESS_SEMRW),lockless-,)generic.cpp \
 	generic/timer-generic.cpp \
 	generic/utf16locale-generic.cpp \
 	generic/uuid-generic.cpp \
@@ -2887,9 +2887,9 @@ RuntimeGuestR3_SOURCES                   = $(filter-out \
 	common/time/timesysalias.cpp \
 	r3/mempage-direct.cpp \
 	VBox/logbackdoor.cpp
-ifndef VBOX_WITH_NOCRT_STATIC
+ifndef VRA_WITH_NOCRT_STATIC
  RuntimeGuestR3_DEFS.win.x86             = $(RuntimeR3_DEFS.win.x86) \
- 	VCC_FAKES_TARGET_$(VBOX_VCC_TOOL_STEM) VCC_FAKES_TARGET=$(substr $(VBOX_VCC_TOOL_STEM),-3)
+ 	VCC_FAKES_TARGET_$(VRA_VCC_TOOL_STEM) VCC_FAKES_TARGET=$(substr $(VRA_VCC_TOOL_STEM),-3)
  RuntimeGuestR3_SOURCES.win.x86          = $(RuntimeR3_SOURCES.win.x86) \
  	r3/win/vcc-fakes-kernel32.cpp \
  	r3/win/vcc-fakes-kernel32-A.asm \
@@ -2919,7 +2919,7 @@ RuntimeGuestR3-x86_BLD_TRG_ARCH         := x86
 RuntimeGuestR3Shared_TEMPLATE           := VBoxGuestR3Dll
 RuntimeGuestR3Shared_EXTENDS            := RuntimeGuestR3
 RuntimeGuestR3Shared_INST                = $(INST_ADDITIONS_LIB)
-ifdef VBOX_WITH_NOCRT_STATIC
+ifdef VRA_WITH_NOCRT_STATIC
  if1of ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH), win.x86 win.amd64)
   RuntimeGuestR3Shared_SDKS              = $(filter-out VBoxSoftFloatR3Shared,$(RuntimeGuestR3_SDKS)) VBoxSoftFloatGuestR3Shared
   RuntimeGuestR3Shared_SOURCES           = $(RuntimeGuestR3_SOURCES) \
@@ -2943,41 +2943,41 @@ RuntimeGuestR3Shared-x86_BLD_TRG_ARCH   := x86
 #
 VBoxRT_TEMPLATE                = VBoxR3DllNoPic
 VBoxRT_SDKS                    = VBoxLibXml2
-ifdef VBOX_WITH_LIBCURL
+ifdef VRA_WITH_LIBCURL
  VBoxRT_SDKS                  += VBoxLibCurl
 endif
-ifdef VBOX_WITH_LIBLZMA
+ifdef VRA_WITH_LIBLZMA
  VBoxRT_SDKS                  += VBoxLibLzma
 endif
 VBoxRT_SDKS                   += VBoxOpenSslStatic
-if1of ($(KBUILD_TARGET_ARCH), $(VBOX_SUPPORTED_HOST_ARCHS))
+if1of ($(KBUILD_TARGET_ARCH), $(VRA_SUPPORTED_HOST_ARCHS))
  VBoxRT_SDKS                  += VBoxSoftFloatR3Shared
 endif
-VBoxRT_SDKS.win                = $(VBOX_WINPSDK) $(VBOX_WINDDK) VBoxNtDll
+VBoxRT_SDKS.win                = $(VRA_WINPSDK) $(VRA_WINDDK) VBoxNtDll
 if1of ($(KBUILD_TARGET), win)
- VBoxRT_INST                   = $(INST_DLL) $(INST_TESTCASE) $(VBOX_INST_TOOLS)
-else if1of ($(KBUILD_TARGET)$(VBOX_WITH_HARDENING), darwin win$(VBOX_WITH_HARDENING))
+ VBoxRT_INST                   = $(INST_DLL) $(INST_TESTCASE) $(VRA_INST_TOOLS)
+else if1of ($(KBUILD_TARGET)$(VRA_WITH_HARDENING), darwin win$(VRA_WITH_HARDENING))
  VBoxRT_INST                   = $(INST_DLL) $(INST_TESTCASE)
 endif
 VBoxRT_DEFS                   := $(filter-out RT_NO_GIP, $(RuntimeBaseR3_DEFS)) \
 	IPRT_WITH_OPENSSL \
 	IPRT_WITH_XAR \
 	IPRT_WITH_GHIDRA_DBG_MOD \
-	$(if-expr !defined(VBOX_WITH_ALT_HASH_CODE),IPRT_WITHOUT_SHA512T224 IPRT_WITHOUT_SHA512T256,)
-ifndef VBOX_WITH_R0_MODULES
+	$(if-expr !defined(VRA_WITH_ALT_HASH_CODE),IPRT_WITHOUT_SHA512T224 IPRT_WITHOUT_SHA512T256,)
+ifndef VRA_WITH_R0_MODULES
  VBoxRT_DEFS                  += RT_NO_GIP
 endif
-ifdef VBOX_WITH_LIBCURL
+ifdef VRA_WITH_LIBCURL
  VBoxRT_DEFS                  += IPRT_WITH_HTTP
 endif
-ifdef VBOX_WITH_LIBLZMA
+ifdef VRA_WITH_LIBLZMA
  VBoxRT_DEFS                  += IPRT_WITH_LZMA
 endif
 ifdef RTALLOC_REPLACE_MALLOC
  VBoxRT_DEFS                  += RTALLOC_REPLACE_MALLOC
 endif
-if defined(VBOX_WITH_DTRACE_R3) && !defined(VBOX_ONLY_VALIDATIONKIT)
- ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+if defined(VRA_WITH_DTRACE_R3) && !defined(VRA_ONLY_VALIDATIONKIT)
+ ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
   VBoxRT_DEFS                 += IPRT_WITH_DTRACE IPRT_DTRACE_INCLUDE="dtrace/iprt.h"
  else
   VBoxRT_DEFS                 += IPRT_WITH_DTRACE IPRT_DTRACE_INCLUDE=\"dtrace/iprt.h\"
@@ -2988,7 +2988,7 @@ VBoxRT_DEFS.$(KBUILD_TARGET)  := $(RuntimeBaseR3_DEFS.$(KBUILD_TARGET))
 VBoxRT_SOURCES                := \
 	VBox/VBoxRTDeps.cpp \
 	$(filter-out common/checksum/crc32.cpp, \
-		$(if-expr defined(VBOX_WITH_ALT_HASH_CODE), $(RuntimeBaseR3_SOURCES), \
+		$(if-expr defined(VRA_WITH_ALT_HASH_CODE), $(RuntimeBaseR3_SOURCES), \
 		$(patsubst common/checksum/alt-%,common/checksum/openssl-%,$(RuntimeBaseR3_SOURCES)) ) ) \
 	common/checksum/crc32-zlib.cpp \
 	common/dbg/dbgmodghidra.cpp \
@@ -3002,7 +3002,7 @@ VBoxRT_SOURCES                := \
 ifneq ($(KBUILD_TARGET),win)
  VBox/VBoxRTDeps.cpp_CXXFLAGS = -Wno-deprecated-declarations
 endif
-ifdef VBOX_WITH_LIBCURL
+ifdef VRA_WITH_LIBCURL
  VBoxRT_SOURCES               += \
  	generic/http-curl.cpp \
  	common/rest/rest-primary-object-types.cpp \
@@ -3020,7 +3020,7 @@ ifdef VBOX_WITH_LIBCURL
  	common/rest/RTCRestOutputPrettyToString.cpp \
  	common/rest/RTCRestOutputToString.cpp
 endif
-if defined(VBOX_WITH_DTRACE_R3) && !defined(VBOX_ONLY_VALIDATIONKIT)
+if defined(VRA_WITH_DTRACE_R3) && !defined(VRA_ONLY_VALIDATIONKIT)
  VBoxRT_SOURCES               += \
  	iprt.d
 endif
@@ -3041,24 +3041,24 @@ VBoxRT_INCS.$(KBUILD_TARGET)  := $(RuntimeBaseR3_INCS.$(KBUILD_TARGET))
 VBoxRT_INCS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH) := $(RuntimeBaseR3_INCS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH))
 VBoxRT_LIBS                    = \
 	$(SDK_VBoxLzf_LIBS) \
-	$(PATH_STAGE_LIB)/SUPR3$(VBOX_SUFF_LIB)
+	$(PATH_STAGE_LIB)/SUPR3$(VRA_SUFF_LIB)
 ifndef SDK_VBoxLibXml2_LIBS
  VBoxRT_LIBS                  += \
- 	$(PATH_STAGE_LIB)/VBox-libxml2$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/VBox-libxml2$(VRA_SUFF_LIB)
 endif
 VBoxRT_LIBS                   += \
 	$(SDK_VBoxZlib_LATE_LIBS)
 ifndef SDK_VBoxOpenSslStatic_LIBS
  VBoxRT_LIBS                  += \
- 	$(PATH_STAGE_LIB)/VBox-libcrypto$(VBOX_SUFF_LIB) \
- 	$(PATH_STAGE_LIB)/VBox-libssl$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/VBox-libcrypto$(VRA_SUFF_LIB) \
+ 	$(PATH_STAGE_LIB)/VBox-libssl$(VRA_SUFF_LIB)
 endif
 ifdef IPRT_WITH_LZO
  VBoxRT_LIBS                  += lzo2
 endif
 ifdef RTALLOC_REPLACE_MALLOC
  VBoxRT_LIBS                  += \
- 	$(PATH_STAGE_LIB)/DisasmR3$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/DisasmR3$(VRA_SUFF_LIB)
 endif
 VBoxRT_LIBS.darwin             = \
 	iconv
@@ -3076,16 +3076,16 @@ ifn1of ($(KBUILD_TARGET_ARCH), sparc32 sparc64)
  VBoxRT_LIBS.solaris += smbios
 endif
 VBoxRT_LIBS.win               += \
-	$(PATH_SDK_$(VBOX_WINPSDK)_LIB)/mpr.lib \
-	$(PATH_SDK_$(VBOX_WINPSDK)_LIB)/wbemuuid.lib \
-	$(PATH_TOOL_$(VBOX_VCC_TOOL)_LIB)/delayimp.lib
+	$(PATH_SDK_$(VRA_WINPSDK)_LIB)/mpr.lib \
+	$(PATH_SDK_$(VRA_WINPSDK)_LIB)/wbemuuid.lib \
+	$(PATH_TOOL_$(VRA_VCC_TOOL)_LIB)/delayimp.lib
 VBoxRT_LDFLAGS.darwin          = \
 	-framework IOKit \
 	-framework CoreFoundation \
 	-framework CoreServices \
 	-framework Security \
 	-framework SystemConfiguration \
-	-install_name $(VBOX_DYLD_EXECUTABLE_PATH)/VBoxRT.dylib
+	-install_name $(VRA_DYLD_EXECUTABLE_PATH)/VBoxRT.dylib
 VBoxRT_LDFLAGS.win             = /MANIFEST \
 	/delayload:user32.dll \
 	/delayload:ole32.dll \
@@ -3094,8 +3094,8 @@ VBoxRT_LDFLAGS.win             = /MANIFEST \
 	/delayload:mpr.dll
 # We could alias symbols on linux this way:
 #ifn1of ($(KBUILD_TARGET), darwin os2 solaris win)
-# if "$(substr $(VBOX_GCC_std),-2)" >= "17"
-#  ifdef VBOX_USE_CLANG
+# if "$(substr $(VRA_GCC_std),-2)" >= "17"
+#  ifdef VRA_USE_CLANG
 #   VBoxRT_LDFLAGS += -Wl,--defsym=_ZN22RTCRestBinaryParameter19setProducerCallbackEPFiPS_PvmmPmES1_m=_ZN22RTCRestBinaryParameter19setProducerCallbackEPDoFiPS_PvmmPmES1_m
 #  else
 #   VBoxRT_LDFLAGS += -Wl,--defsym=_ZN22RTCRestBinaryParameter19setProducerCallbackEPDoFiPS_PvmmPmES1_m=_ZN22RTCRestBinaryParameter19setProducerCallbackEPFiPS_PvmmPmES1_m
@@ -3104,11 +3104,11 @@ VBoxRT_LDFLAGS.win             = /MANIFEST \
 #endif
 
 if1of (VBoxRT, $(DLLS))
- $(call VBOX_SET_VER_INFO_DLL,VBoxRT,VirtualBox Runtime)
+ $(call VRA_SET_VER_INFO_DLL,VBoxRT,VirtualAgent Runtime)
 endif
 
 
-if defined(VBOX_WITH_MORE_NT4_COMPAT_BINARIES) && "$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)" == "win.x86"
+if defined(VRA_WITH_MORE_NT4_COMPAT_BINARIES) && "$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)" == "win.x86"
  #
  # Hacks for running tests on NT 4.  Really ugly!
  #
@@ -3120,7 +3120,7 @@ if defined(VBOX_WITH_MORE_NT4_COMPAT_BINARIES) && "$(KBUILD_TARGET).$(KBUILD_TAR
  TEMPLATE_VBoxR3RuntimeDllItself_EXTENDS = VBoxR3RuntimeDll
  TEMPLATE_VBoxR3RuntimeDllItself_LATE_LIBS.win.x86 = \
  	$(filter-out $(PATH_STAGE_LIB)/RuntimeR3VccTricks%, $(TEMPLATE_VBoxR3RuntimeDll_LATE_LIBS.win.x86))
- TEMPLATE_VBoxR3RuntimeDllItself_DEFS   += IN_RING3 VCC_FAKES_TARGET_$(VBOX_VCC_TOOL_STEM) VCC_FAKES_TARGET=$(substr $(VBOX_VCC_TOOL_STEM),-3)
+ TEMPLATE_VBoxR3RuntimeDllItself_DEFS   += IN_RING3 VCC_FAKES_TARGET_$(VRA_VCC_TOOL_STEM) VCC_FAKES_TARGET=$(substr $(VRA_VCC_TOOL_STEM),-3)
  TEMPLATE_VBoxR3RuntimeDllItself_SOURCES = \
  	r3/win/vcc-fakes-kernel32.cpp \
  	r3/win/vcc-fakes-kernel32-A.asm \
@@ -3132,12 +3132,12 @@ if defined(VBOX_WITH_MORE_NT4_COMPAT_BINARIES) && "$(KBUILD_TARGET).$(KBUILD_TAR
  VBoxRT_TEMPLATE         = VBoxR3RuntimeDllItself
  VBoxRT_TEMPLATE.win.x86 = VBoxR3RuntimeDllItself
  VBoxRT_DEFS.win.x86     = $(TEMPLATE_VBoxR3RuntimeDll_DEFS.win.x86) \
- 	_CRTIMP_PURE="__declspec(dllexport)" VCC_FAKES_TARGET_$(VBOX_VCC_TOOL_STEM) VCC_FAKES_TARGET=$(substr $(VBOX_VCC_TOOL_STEM),-3)
+ 	_CRTIMP_PURE="__declspec(dllexport)" VCC_FAKES_TARGET_$(VRA_VCC_TOOL_STEM) VCC_FAKES_TARGET=$(substr $(VRA_VCC_TOOL_STEM),-3)
  VBoxRT_LDFLAGS.win.x86  = /IGNORE:4049 /IGNORE:4217
  VBoxRT_LIBS.win.x86 = \
- 	$(PATH_TOOL_$(VBOX_VCC_TOOL_STEM)X86_LIB)/oldnames.lib \
- 	$(PATH_TOOL_$(VBOX_VCC_TOOL_STEM)X86_LIB)/libcmt.lib \
- 	$(PATH_TOOL_$(VBOX_VCC_TOOL_STEM)X86_LIB)/libcpmt.lib
+ 	$(PATH_TOOL_$(VRA_VCC_TOOL_STEM)X86_LIB)/oldnames.lib \
+ 	$(PATH_TOOL_$(VRA_VCC_TOOL_STEM)X86_LIB)/libcmt.lib \
+ 	$(PATH_TOOL_$(VRA_VCC_TOOL_STEM)X86_LIB)/libcpmt.lib
 endif
 
 
@@ -3176,7 +3176,7 @@ if1of ($(DLLS), VBoxRT)
  $(VBoxRT_0_OUTDIR)/VBoxRT.def: \
  		$(PATH_SUB_CURRENT)/r3/win/VBoxRT-$(KBUILD_TARGET_ARCH).def \
  		$(PATH_SUB_CURRENT)/r3/win/VBoxRT-openssl-3.0.def \
- 		$(if-expr "$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)" == "win.x86" && defined(VBOX_WITH_MORE_NT4_COMPAT_BINARIES) \
+ 		$(if-expr "$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)" == "win.x86" && defined(VRA_WITH_MORE_NT4_COMPAT_BINARIES) \
  			,$(PATH_SUB_CURRENT)/r3/win/VBoxRT-msvcr100-win32.def ,) \
  		| $$(dir $$@) #$(PATH_SUB_CURRENT)/r3/win/VBoxRT-msvcp100-win32.def
 	$(RM) -f -- $@
@@ -3184,8 +3184,8 @@ if1of ($(DLLS), VBoxRT)
 		$(if-expr "$(KBUILD_TARGET_ARCH)" == "x86"  ,-e "/not-x86/d",  -e "/only-x86/d") \
 		$(if-expr "$(KBUILD_TARGET_ARCH)" == "amd64",-e "/not-amd64/d",-e "/only-amd64/d") \
 		$(if-expr "$(KBUILD_TARGET_ARCH)" == "arm64",-e "/not-arm64/d",-e "/only-arm64/d") \
-		$(if-expr defined(VBOX_WITH_R0_MODULES)     ,-e "/no-gip/d",   -e "/with-gip/d") \
-		$(if-expr "$(substr $(if-expr $(KBUILD_TARGET) != 'win',$(VBOX_GCC_std),$(VBOX_VCC_std)),-2)" >= "17" \
+		$(if-expr defined(VRA_WITH_R0_MODULES)     ,-e "/no-gip/d",   -e "/with-gip/d") \
+		$(if-expr "$(substr $(if-expr $(KBUILD_TARGET) != 'win',$(VRA_GCC_std),$(VRA_VCC_std)),-2)" >= "17" \
                          && ("$(KBUILD_TARGET)" != "win" || !$(intersects RT_RELAXED_CALLBACKS_TYPES,$(DEFS))) \
 		                                            ,-e "/before-noexcept/d", -e "/after-noexcept/d") \
 		$^
@@ -3201,10 +3201,10 @@ VBoxRT-x86_EXTENDS = VBoxRT
 VBoxRT-x86_TEMPLATE = VBoxR3Dll-x86
 VBoxRT-x86_INST.win = $(INST_DLL)x86/
 VBoxRT-x86_SDKS  = VBoxLibXml2
-ifdef VBOX_WITH_LIBCURL
+ifdef VRA_WITH_LIBCURL
  VBoxRT-x86_SDKS += VBoxLibCurl-x86
 endif
-ifdef VBOX_WITH_LIBLZMA
+ifdef VRA_WITH_LIBLZMA
  VBoxRT-x86_SDKS += VBoxLibLzma-x86
 endif
 VBoxRT-x86_SDKS  += VBoxOpenSslStatic-x86
@@ -3213,18 +3213,18 @@ VBoxRT-x86_LIBS = \
 	$(SDK_VBoxLzf-x86_LIBS)
 if1of ($(KBUILD_TARGET_ARCH), amd64 x86)
  VBoxRT-x86_LIBS += \
- 	$(PATH_STAGE_LIB)/SUPR3-x86$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/SUPR3-x86$(VRA_SUFF_LIB)
 endif
 ifndef SDK_VBoxLibXml2_LIBS
  VBoxRT-x86_LIBS                 += \
- 	$(PATH_STAGE_LIB)/VBox-libxml2-x86$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/VBox-libxml2-x86$(VRA_SUFF_LIB)
 endif
 VBoxRT-x86_LIBS                  += \
 	$(SDK_VBoxZlib-x86_LIBS)
 ifndef SDK_VBoxOpenSslStatic_LIBS
  VBoxRT-x86_LIBS                 += \
- 	$(PATH_STAGE_LIB)/VBox-libcrypto-x86$(VBOX_SUFF_LIB) \
- 	$(PATH_STAGE_LIB)/VBox-libssl-x86$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/VBox-libcrypto-x86$(VRA_SUFF_LIB) \
+ 	$(PATH_STAGE_LIB)/VBox-libssl-x86$(VRA_SUFF_LIB)
 endif
 ifdef IPRT_WITH_LZO
  VBoxRT-x86_LIBS                  += lzo2
@@ -3245,33 +3245,33 @@ ifn1of ($(KBUILD_TARGET_ARCH), sparc32 sparc64)
  VBoxRT-x86_LIBS.solaris += smbios
 endif
 VBoxRT-x86_LIBS.win               += \
-	$(PATH_SDK_$(VBOX_WINPSDK)_LIB.x86)/mpr.lib \
-	$(PATH_SDK_$(VBOX_WINPSDK)_LIB.x86)/wbemuuid.lib \
-	$(PATH_TOOL_$(VBOX_VCC_TOOL_STEM)X86_LIB)/delayimp.lib
+	$(PATH_SDK_$(VRA_WINPSDK)_LIB.x86)/mpr.lib \
+	$(PATH_SDK_$(VRA_WINPSDK)_LIB.x86)/wbemuuid.lib \
+	$(PATH_TOOL_$(VRA_VCC_TOOL_STEM)X86_LIB)/delayimp.lib
 
 VBoxRT-x86_SOURCES.win = $(filter-out %.def %.rc,$(VBoxRT_SOURCES.win)) \
 	$(VBoxRT-x86_0_OUTDIR)/VBoxRT-x86.def
 VBoxRT-x86_CLEAN += $(VBoxRT-x86_0_OUTDIR)/VBoxRT-x86.def
 
 if1of (VBoxRT-x86, $(DLLS))
- $(call VBOX_SET_VER_INFO_DLL,VBoxRT-x86,VirtualBox 32-bit Runtime)
+ $(call VRA_SET_VER_INFO_DLL,VBoxRT-x86,VirtualAgent 32-bit Runtime)
 endif
 
 if1of ($(DLLS), VBoxRT-x86)
  # .def file for windows.
  $(call KB_FN_DO_PASS0_ON_TARGET,VBoxRT-x86)
  $(VBoxRT-x86_0_OUTDIR)/VBoxRT-x86.def: \
- 		$(VBOX_PATH_RUNTIME_SRC)/r3/win/VBoxRT-x86.def \
+ 		$(VRA_PATH_RUNTIME_SRC)/r3/win/VBoxRT-x86.def \
  		| $$(dir $$@) # Hopefully no need to export openssl here.
 	$(RM) -f -- $@
 	$(SED)  --output "$@" \
 		-e "/not-x86/d" \
 		-e "/only-amd64/d" \
 		-e "/only-arm64/d" \
-		$(if-expr defined(VBOX_WITH_R0_MODULES)     ,-e "/no-gip/d",   -e "/with-gip/d") \
-		$(if-expr "$(substr $(if-expr $(KBUILD_TARGET) != 'win',$(VBOX_GCC_std), $(VBOX_VCC_std)),-2)" >= "17" \
+		$(if-expr defined(VRA_WITH_R0_MODULES)     ,-e "/no-gip/d",   -e "/with-gip/d") \
+		$(if-expr "$(substr $(if-expr $(KBUILD_TARGET) != 'win',$(VRA_GCC_std), $(VRA_VCC_std)),-2)" >= "17" \
 		                                            ,-e "/before-noexcept/d", -e "/after-noexcept/d") \
-		$(VBOX_PATH_RUNTIME_SRC)/r3/win/VBoxRT-x86.def
+		$(VRA_PATH_RUNTIME_SRC)/r3/win/VBoxRT-x86.def
 	$(call KB_FN_AUTO_CMD_DEPS_COMMANDS)
  $(call KB_FN_AUTO_CMD_DEPS,$(VBoxRT-x86_0_OUTDIR)/VBoxRT-x86.def)
 endif
@@ -3280,19 +3280,19 @@ endif
 # VBoxRTImp - Import library/hack.
 #
 ifeq ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH),win.amd64)
- $(call VBOX_GENERATE_IMPORT_TARGET_FN,VBoxRTImp,VBoxRT,VBox/VBoxRTImp.def VBox/VBoxRTImp-vcc64.def r3/win/VBoxRT-amd64.def)
+ $(call VRA_GENERATE_IMPORT_TARGET_FN,VBoxRTImp,VBoxRT,VBox/VBoxRTImp.def VBox/VBoxRTImp-vcc64.def r3/win/VBoxRT-amd64.def)
 else ifeq ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH),win.x86)
- $(call VBOX_GENERATE_IMPORT_TARGET_FN,VBoxRTImp,VBoxRT,VBox/VBoxRTImp.def VBox/VBoxRTImp-vcc32.def r3/win/VBoxRT-x86.def)
+ $(call VRA_GENERATE_IMPORT_TARGET_FN,VBoxRTImp,VBoxRT,VBox/VBoxRTImp.def VBox/VBoxRTImp-vcc32.def r3/win/VBoxRT-x86.def)
 else ifeq ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH),win.arm64)
- $(call VBOX_GENERATE_IMPORT_TARGET_FN,VBoxRTImp,VBoxRT,VBox/VBoxRTImp.def VBox/VBoxRTImp-vcc-arm64.def r3/win/VBoxRT-arm64.def)
+ $(call VRA_GENERATE_IMPORT_TARGET_FN,VBoxRTImp,VBoxRT,VBox/VBoxRTImp.def VBox/VBoxRTImp-vcc-arm64.def r3/win/VBoxRT-arm64.def)
 else
- $(call VBOX_GENERATE_IMPORT_TARGET_FN,VBoxRTImp,VBoxRT,VBox/VBoxRTImp.def VBox/VBoxRTImp-gcc.def)
+ $(call VRA_GENERATE_IMPORT_TARGET_FN,VBoxRTImp,VBoxRT,VBox/VBoxRTImp.def VBox/VBoxRTImp-gcc.def)
 endif
 
 
 if1of ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH), win.x86 win.amd64 linux.amd64 darwin.amd64) # remove later
  if1of (VBoxRT, $(DLLS))
-  ifdef VBOX_WITH_LIBCURL
+  ifdef VRA_WITH_LIBCURL
    #
    # VBoxRTImpCheck - Import library check.
    #
@@ -3343,9 +3343,9 @@ if1of ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH), win.x86 win.amd64 linux.amd64 dar
 		$(if-expr "$(KBUILD_TARGET_ARCH)" == "x86"  ,-e "/not-x86/d",  -e "/only-x86/d") \
 		$(if-expr "$(KBUILD_TARGET_ARCH)" == "amd64",-e "/not-amd64/d",-e "/only-amd64/d") \
 		$(if-expr "$(KBUILD_TARGET_ARCH)" == "arm64",-e "/not-arm64/d",-e "/only-arm64/d") \
-		$(if-expr defined(VBOX_WITH_R0_MODULES)     ,-e "/no-gip/d",   -e "/with-gip/d") \
+		$(if-expr defined(VRA_WITH_R0_MODULES)     ,-e "/no-gip/d",   -e "/with-gip/d") \
 		$(if-expr "$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)" == "darwin.arm64",, -e "/only-darwin.arm64/d") \
-		$(if-expr "$(substr $(if-expr $(KBUILD_TARGET) != 'win',$(VBOX_GCC_std),$(VBOX_VCC_std)),-2)" >= "17" \
+		$(if-expr "$(substr $(if-expr $(KBUILD_TARGET) != 'win',$(VRA_GCC_std),$(VRA_VCC_std)),-2)" >= "17" \
 			,-e "/before-noexcept/d", -e "/after-noexcept/d") \
 		$(if-expr $(intersects $(KBUILD_TARGET), linux) && $(intersects $(KBUILD_TARGET_ARCH), amd64 arm64) \
 			,-e "/int64=llong/d", -e "/int64=long/d") \
@@ -3441,22 +3441,22 @@ RuntimeR3NoCrt_SOURCES.win := \
 # RuntimeR0 - Ring-0 library for VMMR0.
 #
 RuntimeR0_TEMPLATE      = VBoxR0
-RuntimeR0_DEFS          = IN_RT_R0 RT_WITH_VBOX NOFILEID
+RuntimeR0_DEFS          = IN_RT_R0 RT_WITH_VRA NOFILEID
 ifn1of ($(KBUILD_TARGET_ARCH), amd64 x86)
  #ifn1of ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH), win.arm64)
  RuntimeR0_DEFS        += RT_NO_GIP
  #endif
 endif
-if defined(VBOX_WITH_DTRACE_R0) && !defined(VBOX_ONLY_VALIDATIONKIT)
- ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
-  RuntimeR0_DEFS        += IPRT_WITH_DTRACE IPRT_DTRACE_PREFIX=VBOXVMM_ IPRT_DTRACE_INCLUDE="dtrace/VBoxVMM.h"
+if defined(VRA_WITH_DTRACE_R0) && !defined(VRA_ONLY_VALIDATIONKIT)
+ ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
+  RuntimeR0_DEFS        += IPRT_WITH_DTRACE IPRT_DTRACE_PREFIX=VRAVMM_ IPRT_DTRACE_INCLUDE="dtrace/VBoxVMM.h"
  else
-  RuntimeR0_DEFS        += IPRT_WITH_DTRACE IPRT_DTRACE_PREFIX=VBOXVMM_ IPRT_DTRACE_INCLUDE=\"dtrace/VBoxVMM.h\"
+  RuntimeR0_DEFS        += IPRT_WITH_DTRACE IPRT_DTRACE_PREFIX=VRAVMM_ IPRT_DTRACE_INCLUDE=\"dtrace/VBoxVMM.h\"
  endif
 endif
 RuntimeR0_INCS          = include
 RuntimeR0_SOURCES      := \
-	$(if $(VBOX_ONLY_VALIDATIONKIT),,../VMM/VBoxVMM.d) \
+	$(if $(VRA_ONLY_VALIDATIONKIT),,../VMM/VBoxVMM.d) \
 	common/checksum/crc32c.cpp \
 	common/log/logellipsis.cpp \
 	common/log/logrelellipsis.cpp \
@@ -3629,13 +3629,13 @@ RuntimeR0Stub_SOURCES.solaris = \
 # RuntimeR0Drv - Ring-0 library for host drivers.
 #
 RuntimeR0Drv_TEMPLATE   = VBoxR0DrvLib
-RuntimeR0Drv_SDKS.win   = ReorderCompilerIncs $(VBOX_WINDDK) $(VBOX_WINPSDK_INCS)
-RuntimeR0Drv_DEFS       = IN_RT_R0 RT_WITH_VBOX RT_WITHOUT_NOCRT_WRAPPERS RT_NO_EXPORT_SYMBOL NOFILEID
+RuntimeR0Drv_SDKS.win   = ReorderCompilerIncs $(VRA_WINDDK) $(VRA_WINPSDK_INCS)
+RuntimeR0Drv_DEFS       = IN_RT_R0 RT_WITH_VRA RT_WITHOUT_NOCRT_WRAPPERS RT_NO_EXPORT_SYMBOL NOFILEID
 RuntimeR0Drv_DEFS.win   = IN_SUP_R0 LDR_ONLY_PE IPRT_WITHOUT_DIGEST_MD4
 RuntimeR0Drv_DEFS.darwin = IN_SUP_R0 LDR_ONLY_MACHO IPRT_WITHOUT_DIGEST_MD4 IN_RING0_DRV_ON_DARWIN
-if   ($(VBOX_SOLARIS_11_UPDATE_VERSION) > 2 \
-  || ($(VBOX_SOLARIS_11_UPDATE_VERSION) == 2 && $(VBOX_SOLARIS_11_BUILD_VERSION) >= 22))
- RuntimeR0Drv_DEFS.solaris += VBOX_NEW_CRASH_DUMP_FORMAT
+if   ($(VRA_SOLARIS_11_UPDATE_VERSION) > 2 \
+  || ($(VRA_SOLARIS_11_UPDATE_VERSION) == 2 && $(VRA_SOLARIS_11_BUILD_VERSION) >= 22))
+ RuntimeR0Drv_DEFS.solaris += VRA_NEW_CRASH_DUMP_FORMAT
 endif
 
 RuntimeR0Drv_INCS      := $(PATH_SUB_CURRENT) include
@@ -3655,7 +3655,7 @@ RuntimeR0Drv_SOURCES    = \
 	common/checksum/ipv4.cpp \
 	common/checksum/ipv6.cpp \
 	common/err/RTErrConvertToErrno.cpp \
-	$(if-expr !defined(VBOX_USE_WATCOM_FOR_OS2) || "$(KBUILD_TARGET)" != "os2", common/err/RTErrConvertFromErrno.cpp,) \
+	$(if-expr !defined(VRA_USE_WATCOM_FOR_OS2) || "$(KBUILD_TARGET)" != "os2", common/err/RTErrConvertFromErrno.cpp,) \
 	common/err/errinfo.cpp \
 	common/log/log.cpp \
 	common/log/log-weak.cpp \
@@ -4212,7 +4212,7 @@ RuntimeR0Drv_SOURCES.os2 = \
 	r0drv/os2/time-r0drv-os2.cpp \
 	r0drv/os2/timer-r0drv-os2.cpp \
 	r0drv/os2/timerA-r0drv-os2.asm
-ifndef VBOX_USE_WATCOM_FOR_OS2
+ifndef VRA_USE_WATCOM_FOR_OS2
  RuntimeR0Drv_SOURCES.os2 += \
  	common/math/gcc/adddi3.c \
  	common/math/gcc/anddi3.c \
@@ -4438,12 +4438,12 @@ RuntimeGuestR0_SOURCES.win.x86 := \
 
 
 
-ifdef VBOX_WITH_RAW_MODE
+ifdef VRA_WITH_RAW_MODE
  #
  # RuntimeRC - Raw-mode context library.
  #
  RuntimeRC_TEMPLATE      = VBoxRc
- RuntimeRC_DEFS          = IN_RT_RC RT_WITH_VBOX IN_SUP_RC IN_VMM_RC NOFILEID
+ RuntimeRC_DEFS          = IN_RT_RC RT_WITH_VRA IN_SUP_RC IN_VMM_RC NOFILEID
  RuntimeRC_INCS          = include
  RuntimeRC_SOURCES      := \
  	common/asm/ASMMemFirstMismatchingU8.asm \
@@ -4524,7 +4524,7 @@ ifdef VBOX_WITH_RAW_MODE
 
  RuntimeRC_SOURCES.win.x86 = $(RuntimeWin32ASM_SOURCES)
 
- ifeq ($(VBOX_LDR_FMT32),lx)
+ ifeq ($(VRA_LDR_FMT32),lx)
   RuntimeRC_SOURCES += os2/sys0.asm
  endif
 
@@ -4562,7 +4562,7 @@ ifdef VBOX_WITH_RAW_MODE
  	nt/NtProcessStartup-stub.cpp
 
 
-endif # VBOX_WITH_RAW_MODE
+endif # VRA_WITH_RAW_MODE
 
 
 #
@@ -4633,9 +4633,9 @@ endif
 # Bag of tricks required for making VCC100 output binaries work on NT4, W2K
 # early XP and early W2K3.  Used by validation kit.
 #
-ifndef VBOX_WITH_NOCRT_STATIC
+ifndef VRA_WITH_NOCRT_STATIC
  RuntimeR3VccTricks_TEMPLATE = VBoxR3Static
- RuntimeR3VccTricks_DEFS     = VCC_FAKES_TARGET_$(VBOX_VCC_TOOL_STEM) VCC_FAKES_TARGET=$(substr $(VBOX_VCC_TOOL_STEM),-3)
+ RuntimeR3VccTricks_DEFS     = VCC_FAKES_TARGET_$(VRA_VCC_TOOL_STEM) VCC_FAKES_TARGET=$(substr $(VRA_VCC_TOOL_STEM),-3)
  RuntimeR3VccTricks_SOURCES  = \
  	r3/win/vcc-fakes-kernel32.cpp \
  	r3/win/vcc-fakes-kernel32-A.asm \
@@ -4645,32 +4645,32 @@ ifndef VBOX_WITH_NOCRT_STATIC
  	r3/win/vcc-fakes-ntdll-A.asm
 endif
 
-if defined(VBOX_WITH_MORE_NT4_COMPAT_BINARIES) && "$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)" == "win.x86" # Ugly hacks... :-)
+if defined(VRA_WITH_MORE_NT4_COMPAT_BINARIES) && "$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)" == "win.x86" # Ugly hacks... :-)
  LIBRARIES += RuntimeR3VccTricks2
  RuntimeR3VccTricks2_TEMPLATE = VBoxR3Dll
  RuntimeR3VccTricks2_DEFS   += $(RuntimeR3VccTricks_DEFS)
  RuntimeR3VccTricks2_SOURCES = $(RuntimeR3VccTricks_SOURCES)
  RuntimeR3VccTricks2_SOURCES += $(RuntimeR3VccTricks2_0_OUTDIR)/dynobjs.lib
  RuntimeR3VccTricks2_CLEAN   = $(RuntimeR3VccTricks2_0_OUTDIR)/dynobjs.lib
- RuntimeR3VccTricks2_VBOX_LIBCMT_NEEDED =
+ RuntimeR3VccTricks2_VRA_LIBCMT_NEEDED =
 
  $$(RuntimeR3VccTricks2_0_OUTDIR)/dynobjs.lib: \
- 		$$(PATH_TOOL_$$(TEMPLATE_VBoxR3Dll_TOOL.win.x86)_LIB)/msvcrt$(VBOX_VCC_CRT_TYPE).lib \
- 		$$(PATH_TOOL_$$(TEMPLATE_VBoxR3Dll_TOOL.win.x86)_LIB)/libcmt$(VBOX_VCC_CRT_TYPE).lib \
+ 		$$(PATH_TOOL_$$(TEMPLATE_VBoxR3Dll_TOOL.win.x86)_LIB)/msvcrt$(VRA_VCC_CRT_TYPE).lib \
+ 		$$(PATH_TOOL_$$(TEMPLATE_VBoxR3Dll_TOOL.win.x86)_LIB)/libcmt$(VRA_VCC_CRT_TYPE).lib \
  		$$(LIB_RUNTIME) \
  		$(MAKEFILE) | $$(dir $$@)
 	$(RM) -f -- "$@"
  #	$(REDIRECT) -C $(dir $@) -- $(KBUILD_DEVTOOLS)/common/openwatcom/v1.9-r2/binnt/wlib \
- #               $(PATH_TOOL_$(TEMPLATE_VBoxR3Dll_TOOL.win.x86)_LIB)/libcmt$(VBOX_VCC_CRT_TYPE).lib \
- #               $(foreach file, $(RuntimeR3VccTricks2_VBOX_LIBCMT_NEEDED), *$(file))
+ #               $(PATH_TOOL_$(TEMPLATE_VBoxR3Dll_TOOL.win.x86)_LIB)/libcmt$(VRA_VCC_CRT_TYPE).lib \
+ #               $(foreach file, $(RuntimeR3VccTricks2_VRA_LIBCMT_NEEDED), *$(file))
 	$(KBUILD_DEVTOOLS)/common/openwatcom/v1.9-r2/binnt/wlib -o=$@.tmp.lib $< \
 		-MSVCR100.dll \
-		$(addprefix $(RuntimeR3VccTricks2_0_OUTDIR)/, $(RuntimeR3VccTricks2_VBOX_LIBCMT_NEEDED)) \
+		$(addprefix $(RuntimeR3VccTricks2_0_OUTDIR)/, $(RuntimeR3VccTricks2_VRA_LIBCMT_NEEDED)) \
                -chandler4gs.obj
 	$(KBUILD_DEVTOOLS)/common/openwatcom/v1.9-r2/binnt/wlib -o=$@ \
                $(LIB_RUNTIME) \
 		+$@.tmp.lib
-	$(RM) -f -- $@.tmp.lib $(addprefix $(RuntimeR3VccTricks2_0_OUTDIR)/, $(RuntimeR3VccTricks_VBOX_LIBCMT_NEEDED))
+	$(RM) -f -- $@.tmp.lib $(addprefix $(RuntimeR3VccTricks2_0_OUTDIR)/, $(RuntimeR3VccTricks_VRA_LIBCMT_NEEDED))
 endif
 
 
@@ -4698,7 +4698,7 @@ $(foreach lib,RuntimeR3 RuntimeBldProg VBoxRT VBoxRT-x86,$(eval $(def_errmsgwin_
 # Generate the status code data.
 #
 $(IPRT_OUT_DIR)/errmsgdata.h: \
-		$(VBOX_PATH_RUNTIME_SRC)/common/err/errmsg.sed \
+		$(VRA_PATH_RUNTIME_SRC)/common/err/errmsg.sed \
 		$(PATH_ROOT)/include/iprt/err.h \
 		$(PATH_ROOT)/include/VBox/err.h \
 		| $$(dir $$@)
@@ -4725,18 +4725,18 @@ $(IPRT_OUT_DIR)/errmsgdata-only-defines.h.ts +| $(IPRT_OUT_DIR)/errmsgdata-only-
 
 
 $(IPRT_OUT_DIR)/errmsgwindata.h: \
-		$(VBOX_PATH_RUNTIME_SRC)/common/err/errmsgcom.sed \
-		$$(qwildcard ,$$(qaddsuffix ,/WinError.h,$$(SDK_$$(VBOX_WINPSDK)_INCS))) \
+		$(VRA_PATH_RUNTIME_SRC)/common/err/errmsgcom.sed \
+		$$(qwildcard ,$$(qaddsuffix ,/WinError.h,$$(SDK_$$(VRA_WINPSDK)_INCS))) \
 		| $$(dir $$@)
 	$(call MSG_GENERATE,,$@,$(deps $@, 2))
 	$(QUIET)$(SED) -f "$<" --output "$@" $(qdeps sh,$@,2)
 
 $(IPRT_OUT_DIR)/errmsgvboxcomdata.h.ts +| $(IPRT_OUT_DIR)/errmsgvboxcomdata.h: \
-		$(VBOX_PATH_RUNTIME_SRC)/VBox/errmsgvboxcom.xsl \
-		$(VBOX_XIDL_FILE_SRC) \
+		$(VRA_PATH_RUNTIME_SRC)/VBox/errmsgvboxcom.xsl \
+		$(VRA_XIDL_FILE_SRC) \
 		| $$(dir $$@)
 	$(call MSG_GENERATE,,$@,$(filter %.xidl,$^))
-	$(QUIET)$(VBOX_XSLTPROC) -o $(IPRT_OUT_DIR)/errmsgvboxcomdata.h.ts $< $(filter %.xidl,$^)
+	$(QUIET)$(VRA_XSLTPROC) -o $(IPRT_OUT_DIR)/errmsgvboxcomdata.h.ts $< $(filter %.xidl,$^)
 	$(QUIET)$(CP) --changed -fv -- $(IPRT_OUT_DIR)/errmsgvboxcomdata.h.ts $(IPRT_OUT_DIR)/errmsgvboxcomdata.h
 
 $(IPRT_OUT_DIR)/errmsgwindata-only-defines.h.ts +| $(IPRT_OUT_DIR)/errmsgwindata-only-defines.h: \
@@ -4780,7 +4780,7 @@ if "$(KBUILD_TARGET)" == "freebsd"
  # generate the header next to the source. So, we'll have to temporarily copy
  # the source file to the destination directory to work.
  #
- VBOX_AWK := /usr/bin/awk
+ VRA_AWK := /usr/bin/awk
  INSTALLS += FreeBSDGeneratedKernelHeaders
  FreeBSDGeneratedKernelHeaders_INST = gen-sys-hdrs/
  FreeBSDGeneratedKernelHeaders_SOURCES = \
@@ -4789,22 +4789,22 @@ if "$(KBUILD_TARGET)" == "freebsd"
  	$(FreeBSDGeneratedKernelHeaders_0_OUTDIR)/pci_if.h
  FreeBSDGeneratedKernelHeaders_CLEAN = $(FreeBSDGeneratedKernelHeaders_SOURCES)
 
- $$(FreeBSDGeneratedKernelHeaders_0_OUTDIR)/bus_if.h: $(VBOX_FREEBSD_SRC)/kern/bus_if.m | $$(dir $$@)
+ $$(FreeBSDGeneratedKernelHeaders_0_OUTDIR)/bus_if.h: $(VRA_FREEBSD_SRC)/kern/bus_if.m | $$(dir $$@)
 	$(call MSG_TOOL,awk,FreeBSDGeneratedKernelHeaders,$<,$@)
 	$(QUIET)$(CP) -f $< $(@D)/bus_if.m
-	$(QUIET)$(VBOX_AWK) -f $(VBOX_FREEBSD_SRC)/tools/makeobjops.awk $(@D)/bus_if.m -h -p
+	$(QUIET)$(VRA_AWK) -f $(VRA_FREEBSD_SRC)/tools/makeobjops.awk $(@D)/bus_if.m -h -p
 	$(QUIET)$(RM) $(@D)/bus_if.m
 
- $$(FreeBSDGeneratedKernelHeaders_0_OUTDIR)/device_if.h: $(VBOX_FREEBSD_SRC)/kern/device_if.m | $$(dir $$@)
+ $$(FreeBSDGeneratedKernelHeaders_0_OUTDIR)/device_if.h: $(VRA_FREEBSD_SRC)/kern/device_if.m | $$(dir $$@)
 	$(call MSG_TOOL,awk,FreeBSDGeneratedKernelHeaders,$<,$@)
 	$(QUIET)$(CP) -f $< $(@D)/device_if.m
-	$(QUIET)$(VBOX_AWK) -f $(VBOX_FREEBSD_SRC)/tools/makeobjops.awk $(@D)/device_if.m -h -p
+	$(QUIET)$(VRA_AWK) -f $(VRA_FREEBSD_SRC)/tools/makeobjops.awk $(@D)/device_if.m -h -p
 	$(QUIET)$(RM) $(@D)/device_if.m
 
- $$(FreeBSDGeneratedKernelHeaders_0_OUTDIR)/pci_if.h: $(VBOX_FREEBSD_SRC)/dev/pci/pci_if.m | $$(dir $$@)
+ $$(FreeBSDGeneratedKernelHeaders_0_OUTDIR)/pci_if.h: $(VRA_FREEBSD_SRC)/dev/pci/pci_if.m | $$(dir $$@)
 	$(call MSG_TOOL,awk,FreeBSDGeneratedKernelHeaders,$<,$@)
 	$(QUIET)$(CP) -f $< $(@D)/pci_if.m
-	$(QUIET)$(VBOX_AWK) -f $(VBOX_FREEBSD_SRC)/tools/makeobjops.awk $(@D)/pci_if.m -h -p
+	$(QUIET)$(VRA_AWK) -f $(VRA_FREEBSD_SRC)/tools/makeobjops.awk $(@D)/pci_if.m -h -p
 	$(QUIET)$(RM) $(@D)/pci_if.m
 endif # FreeBSD
 
@@ -4827,26 +4827,26 @@ IPRT_DOXYFILE_INPUT_DIRS = \
 	$(PATH_ROOT)/include/iprt/nocrt/x86 \
 	$(PATH_ROOT)/include/iprt/nocrt/amd64 \
 	$(PATH_ROOT)/include/iprt/nocrt/compiler \
-	$(VBOX_PATH_RUNTIME_SRC)/include/internal \
-	$(VBOX_PATH_RUNTIME_SRC)/common/alloc \
-	$(VBOX_PATH_RUNTIME_SRC)/common/asm \
-	$(VBOX_PATH_RUNTIME_SRC)/common/checksum \
-	$(VBOX_PATH_RUNTIME_SRC)/common/dbg \
-	$(VBOX_PATH_RUNTIME_SRC)/common/err \
-	$(VBOX_PATH_RUNTIME_SRC)/common/ldr \
-	$(VBOX_PATH_RUNTIME_SRC)/common/log \
-	$(VBOX_PATH_RUNTIME_SRC)/common/math \
-	$(VBOX_PATH_RUNTIME_SRC)/common/math/amd64 \
-	$(VBOX_PATH_RUNTIME_SRC)/common/math/gcc \
-	$(VBOX_PATH_RUNTIME_SRC)/common/math/x86 \
-	$(VBOX_PATH_RUNTIME_SRC)/common/misc \
-	$(VBOX_PATH_RUNTIME_SRC)/common/path \
-	$(VBOX_PATH_RUNTIME_SRC)/common/rand \
-	$(VBOX_PATH_RUNTIME_SRC)/common/string \
-	$(VBOX_PATH_RUNTIME_SRC)/common/table \
-	$(VBOX_PATH_RUNTIME_SRC)/common/time \
-	$(VBOX_PATH_RUNTIME_SRC)/VBox \
-	$(foreach dir, $(VBOX_PATH_RUNTIME_SRC) $(VBOX_PATH_RUNTIME_SRC)/r3 $(VBOX_PATH_RUNTIME_SRC)/r0drv, \
+	$(VRA_PATH_RUNTIME_SRC)/include/internal \
+	$(VRA_PATH_RUNTIME_SRC)/common/alloc \
+	$(VRA_PATH_RUNTIME_SRC)/common/asm \
+	$(VRA_PATH_RUNTIME_SRC)/common/checksum \
+	$(VRA_PATH_RUNTIME_SRC)/common/dbg \
+	$(VRA_PATH_RUNTIME_SRC)/common/err \
+	$(VRA_PATH_RUNTIME_SRC)/common/ldr \
+	$(VRA_PATH_RUNTIME_SRC)/common/log \
+	$(VRA_PATH_RUNTIME_SRC)/common/math \
+	$(VRA_PATH_RUNTIME_SRC)/common/math/amd64 \
+	$(VRA_PATH_RUNTIME_SRC)/common/math/gcc \
+	$(VRA_PATH_RUNTIME_SRC)/common/math/x86 \
+	$(VRA_PATH_RUNTIME_SRC)/common/misc \
+	$(VRA_PATH_RUNTIME_SRC)/common/path \
+	$(VRA_PATH_RUNTIME_SRC)/common/rand \
+	$(VRA_PATH_RUNTIME_SRC)/common/string \
+	$(VRA_PATH_RUNTIME_SRC)/common/table \
+	$(VRA_PATH_RUNTIME_SRC)/common/time \
+	$(VRA_PATH_RUNTIME_SRC)/VBox \
+	$(foreach dir, $(VRA_PATH_RUNTIME_SRC) $(VRA_PATH_RUNTIME_SRC)/r3 $(VRA_PATH_RUNTIME_SRC)/r0drv, \
 		$(dir) \
 		$(dir)/darwin \
 		$(dir)/haiku \
@@ -4884,27 +4884,27 @@ includedep $(IPRT_DOXYFILE_OUTPUT)/Doxyfile.iprt.dep
 
 # Generate the Doxyfile
 $(IPRT_DOXYFILE_OUTPUT)/Doxyfile.iprt: \
-		$(VBOX_PATH_RUNTIME_SRC)/Doxyfile \
-		$(VBOX_PATH_RUNTIME_SRC)/Makefile.kmk \
+		$(VRA_PATH_RUNTIME_SRC)/Doxyfile \
+		$(VRA_PATH_RUNTIME_SRC)/Makefile.kmk \
 		$(comp-vars IPRT_DOXYFILE_INPUT,DOXYGEN_IPRT_INPUT_PREV,FORCE) \
 		$(comp-vars IPRT_DOXYFILE_OUTPUT,DOXYGEN_IPRT_OUTPUT_PREV,FORCE) \
 		| $$(dir $$@)
 	$(QUIET)$(RM) -f $@ $@.tmp $@.dep
-	$(QUIET)$(CP) -f $(VBOX_PATH_RUNTIME_SRC)/Doxyfile $@.tmp
+	$(QUIET)$(CP) -f $(VRA_PATH_RUNTIME_SRC)/Doxyfile $@.tmp
 	$(QUIET)$(APPEND) $@.tmp
 	$(QUIET)$(APPEND) $@.tmp "OUTPUT_DIRECTORY = $(IPRT_DOXYFILE_OUTPUT)"
 	$(QUIET)$(APPEND) $@.tmp "WARN_LOGFILE = $(IPRT_DOXYFILE_OUTPUT)/errors"
 	$(QUIET)$(APPEND) $@.tmp 'INCLUDE_PATH = ' \
 		'$(PATH_ROOT)/include' \
-		'$(VBOX_PATH_RUNTIME_SRC)/include' \
-		'$(VBOX_PATH_RUNTIME_SRC)/' \
-		'$(VBOX_PATH_RUNTIME_SRC)/common/table'
+		'$(VRA_PATH_RUNTIME_SRC)/include' \
+		'$(VRA_PATH_RUNTIME_SRC)/' \
+		'$(VRA_PATH_RUNTIME_SRC)/common/table'
 	$(QUIET)$(APPEND) $@.tmp "INCLUDE_FILE_PATTERNS = *.cpp.h"
 	$(QUIET)$(APPEND) $@.tmp "PREDEFINED += $(ARCH_BITS_DEFS)"
 	$(QUIET)$(APPEND) $@.tmp 'EXCLUDE = '\
-		'$(VBOX_PATH_RUNTIME_SRC)/common/string/unidata-flags.cpp' \
-		'$(VBOX_PATH_RUNTIME_SRC)/common/string/unidata-lower.cpp' \
-		'$(VBOX_PATH_RUNTIME_SRC)/common/string/unidata-upper.cpp' \
+		'$(VRA_PATH_RUNTIME_SRC)/common/string/unidata-flags.cpp' \
+		'$(VRA_PATH_RUNTIME_SRC)/common/string/unidata-lower.cpp' \
+		'$(VRA_PATH_RUNTIME_SRC)/common/string/unidata-upper.cpp' \
 	$(QUIET)$(APPEND) $@.tmp
 	$(QUIET)$(APPEND) $@.tmp 'INPUT = $(foreach x,$(IPRT_DOXYFILE_INPUT),\$(NLTAB)$(x))'
 	$(QUIET)$(APPEND) $@.tmp
@@ -4917,7 +4917,7 @@ $(IPRT_DOXYFILE_OUTPUT)/docs.iprt: $(IPRT_DOXYFILE_OUTPUT)/Doxyfile.iprt $$(IPRT
 		| $(IPRT_DOXYFILE_OUTPUT)/
 	$(QUIET)$(RM) -f $@
 	$(QUIET)$(RM) -Rf $(IPRT_DOXYFILE_OUTPUT)/html/
-	$(VBOX_DOXYGEN) $(DOXYGEN_OPTS) $(IPRT_DOXYFILE_OUTPUT)/Doxyfile.iprt
+	$(VRA_DOXYGEN) $(DOXYGEN_OPTS) $(IPRT_DOXYFILE_OUTPUT)/Doxyfile.iprt
 	$(SED)  -e '/warning. Unexpected tag .dd. found/d' \
 		-e '/warning. Unsupported xml.html tag .globalScope. found/d' \
 		--output $(IPRT_DOXYFILE_OUTPUT)/errors2 \
@@ -4928,7 +4928,7 @@ $(IPRT_DOXYFILE_OUTPUT)/docs.iprt: $(IPRT_DOXYFILE_OUTPUT)/Doxyfile.iprt $$(IPRT
 
 # aliases
 docs.iprt: $(IPRT_DOXYFILE_OUTPUT)/docs.iprt
-if !defined(VBOX_ONLY_DOCS) && defined(VBOX_WITH_ALL_DOXYGEN_TARGETS)
+if !defined(VRA_ONLY_DOCS) && defined(VRA_WITH_ALL_DOXYGEN_TARGETS)
  docs: $(IPRT_DOXYFILE_OUTPUT)/docs.iprt
 endif
 
@@ -4972,7 +4972,7 @@ if1of ($(LIBRARIES), RuntimeR3 RuntimeR0 RuntimeR0Drv RuntimeRC)
 		':ok' \
 		'd'
   # Find the best way to generate a symbol list and subject it to mangling.h.
-  if $(intersects $(KBUILD_TARGET), linux) && "$(VBOX_GCC_fvisibility-hidden)"
+  if $(intersects $(KBUILD_TARGET), linux) && "$(VRA_GCC_fvisibility-hidden)"
 	$(call MSG_L1,IPRT: Testing mangling and visiblity for newer gcc...)
 	$(QUIET)readelf -Ws $^ \
 		| $(SED) \
@@ -5037,7 +5037,7 @@ if1of ($(LIBRARIES), RuntimeR3 RuntimeR0 RuntimeR0Drv RuntimeRC)
 		| $(SED) -nf "$@"
   endif
 	$(call MSG_L1,IPRT: Testing mangling using nm...)
-	$(QUIET)$(VBOX_NM) $^  2> /dev/null \
+	$(QUIET)$(VRA_NM) $^  2> /dev/null \
 		| $(SED) -n \
 			-e 's/^[0-9a-f][0-9a-f]* //' \
 			-e '/^[TUDB] /!d' \
@@ -5084,7 +5084,7 @@ if1of ($(LIBRARIES), RuntimeR3 RuntimeR0 RuntimeR0Drv RuntimeRC)
 endif
 	$(QUIET)$(APPEND) -t $@
 
-if !defined(VBOX_ONLY_ADDITIONS) && !defined(VBOX_ONLY_VALIDATIONKIT) && !defined(VBOX_ONLY_DOCS)
+if !defined(VRA_ONLY_ADDITIONS) && !defined(VRA_ONLY_VALIDATIONKIT) && !defined(VRA_ONLY_DOCS)
  #
  # Windows build tool.
  #

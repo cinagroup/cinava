@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2022-2026 Oracle and/or its affiliates.
+# Copyright (C) 2022-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -46,6 +46,6 @@ else
  providers_rands_SOURCES += \
  	seeding/rand_win.c
 endif
-$(evalcall VBOX_OPENSSL_X86,providers_rands)
+$(evalcall VRA_OPENSSL_X86,providers_rands)
 
 include $(FILE_KBUILD_SUB_FOOTER)

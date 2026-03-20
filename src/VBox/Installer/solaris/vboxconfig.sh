@@ -1,13 +1,13 @@
 #!/bin/sh
 # $Id: vboxconfig.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox Configuration Script, Solaris host.
+# VirtualAgent Configuration Script, Solaris host.
 #
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ export LC_ALL
 LANG=C
 export LANG
 
-VBOX_INSTALL_PATH="$PKG_INSTALL_ROOT/opt/VirtualBox"
+VRA_INSTALL_PATH="$PKG_INSTALL_ROOT/opt/VirtualAgent"
 CONFIG_DIR=/etc/vbox
 CONFIG_FILES=filelist
 DIR_CONF="$PKG_INSTALL_ROOT/platform/i86pc/kernel/drv"
@@ -62,24 +62,24 @@ BIN_PGREP=/usr/bin/pgrep
 BIN_IPADM=/usr/sbin/ipadm
 
 # "vboxdrv" is also used in sed lines here (change those as well if it ever changes)
-MOD_VBOXDRV=vboxdrv
-DESC_VBOXDRV="Host"
+MOD_VRADRV=vboxdrv
+DESC_VRADRV="Host"
 
-MOD_VBOXNET=vboxnet
-DESC_VBOXNET="NetAdapter"
-MOD_VBOXNET_INST=8
+MOD_VRANET=vboxnet
+DESC_VRANET="NetAdapter"
+MOD_VRANET_INST=8
 
-MOD_VBOXFLT=vboxflt
-DESC_VBOXFLT="NetFilter (STREAMS)"
+MOD_VRAFLT=vboxflt
+DESC_VRAFLT="NetFilter (STREAMS)"
 
-MOD_VBOXBOW=vboxbow
-DESC_VBOXBOW="NetFilter (Crossbow)"
+MOD_VRABOW=vboxbow
+DESC_VRABOW="NetFilter (Crossbow)"
 
-MOD_VBOXUSBMON=vboxusbmon
-DESC_VBOXUSBMON="USBMonitor"
+MOD_VRAUSBMON=vboxusbmon
+DESC_VRAUSBMON="USBMonitor"
 
-MOD_VBOXUSB=vboxusb
-DESC_VBOXUSB="USB"
+MOD_VRAUSB=vboxusb
+DESC_VRAUSB="USB"
 
 UPDATEBOOTARCHIVE=0
 REMOTEINST=0
@@ -123,7 +123,7 @@ helpprint()
 
 printusage()
 {
-    helpprint "VirtualBox Configuration Script"
+    helpprint "VirtualAgent Configuration Script"
     helpprint "usage: $0 <operation> [options]"
     helpprint
     helpprint "<operation> must be one of the following:"
@@ -417,7 +417,7 @@ check_isa()
 {
     currentisa=`uname -i`
     if test "x$currentisa" = "xi86xpv"; then
-        errorprint "VirtualBox cannot run under xVM Dom0! Fatal Error, Aborting installation!"
+        errorprint "VirtualAgent cannot run under xVM Dom0! Fatal Error, Aborting installation!"
         exit 1
     fi
 }
@@ -428,7 +428,7 @@ check_module_arch()
 {
     cputype=`isainfo -k`
     if test "x$cputype" != "xamd64" && test "x$cputype" != "xi386"; then
-        errorprint "VirtualBox works only on i386/amd64 hosts, not $cputype"
+        errorprint "VirtualAgent works only on i386/amd64 hosts, not $cputype"
         exit 1
     fi
 }
@@ -650,22 +650,22 @@ load_module()
 load_vboxflt()
 {
     if test -f "$DIR_CONF/vboxflt.conf"; then
-        add_driver "$MOD_VBOXFLT" "$DESC_VBOXFLT" "$FATALOP"
-        load_module "drv/$MOD_VBOXFLT" "$DESC_VBOXFLT" "$FATALOP"
+        add_driver "$MOD_VRAFLT" "$DESC_VRAFLT" "$FATALOP"
+        load_module "drv/$MOD_VRAFLT" "$DESC_VRAFLT" "$FATALOP"
     else
         # For custom pkgs that optionally ship this module, let's not fail but just warn
-        warnprint "$DESC_VBOXFLT installation requested but not shipped in this package."
+        warnprint "$DESC_VRAFLT installation requested but not shipped in this package."
     fi
 }
 
 load_vboxbow()
 {
     if test -f "$DIR_CONF/vboxbow.conf"; then
-        add_driver "$MOD_VBOXBOW" "$DESC_VBOXBOW" "$FATALOP"
-        load_module "drv/$MOD_VBOXBOW" "$DESC_VBOXBOW" "$FATALOP"
+        add_driver "$MOD_VRABOW" "$DESC_VRABOW" "$FATALOP"
+        load_module "drv/$MOD_VRABOW" "$DESC_VRABOW" "$FATALOP"
     else
         # For custom pkgs that optionally ship this module, let's not fail but just warn
-        warnprint "$DESC_VBOXBOW installation requested but not shipped in this package."
+        warnprint "$DESC_VRABOW installation requested but not shipped in this package."
     fi
 }
 
@@ -675,11 +675,11 @@ install_drivers()
 {
     if test -f "$DIR_CONF/vboxdrv.conf"; then
         if test -n "_HARDENED_"; then
-            add_driver "$MOD_VBOXDRV" "$DESC_VBOXDRV" "$FATALOP" "not-$NULLOP" "'* 0600 root sys','vboxdrvu 0666 root sys'"
+            add_driver "$MOD_VRADRV" "$DESC_VRADRV" "$FATALOP" "not-$NULLOP" "'* 0600 root sys','vboxdrvu 0666 root sys'"
         else
-            add_driver "$MOD_VBOXDRV" "$DESC_VBOXDRV" "$FATALOP" "not-$NULLOP" "'* 0666 root sys','vboxdrvu 0666 root sys'"
+            add_driver "$MOD_VRADRV" "$DESC_VRADRV" "$FATALOP" "not-$NULLOP" "'* 0666 root sys','vboxdrvu 0666 root sys'"
         fi
-        load_module "drv/$MOD_VBOXDRV" "$DESC_VBOXDRV" "$FATALOP"
+        load_module "drv/$MOD_VRADRV" "$DESC_VRADRV" "$FATALOP"
     else
         errorprint "Extreme error! Missing $DIR_CONF/vboxdrv.conf, aborting."
         return 1
@@ -690,7 +690,7 @@ install_drivers()
     group=sys
     if [ -f "$PKG_INSTALL_ROOT/etc/dev/reserved_devnames" ]; then
         # Solaris 11 SRU6 and later use group root (check a file which isn't
-        # tainted by VirtualBox install scripts and allow no other group)
+        # tainted by VirtualAgent install scripts and allow no other group)
         refgroup=`LC_ALL=C /usr/bin/ls -lL "$PKG_INSTALL_ROOT/etc/dev/reserved_devnames" | awk '{ print $4 }' 2>/dev/null`
         if [ $? -eq 0 -a "x$refgroup" = "xroot" ]; then
             group=root
@@ -713,23 +713,23 @@ install_drivers()
 
     # Create the device link for non-remote installs (not really relevant any more)
     if test "$REMOTEINST" -eq 0; then
-        /usr/sbin/devfsadm -i "$MOD_VBOXDRV"
+        /usr/sbin/devfsadm -i "$MOD_VRADRV"
         if test "$?" -ne 0 || test ! -h "/dev/vboxdrv" || test ! -h "/dev/vboxdrvu" ; then
-            errorprint "Failed to create device link for $MOD_VBOXDRV."
+            errorprint "Failed to create device link for $MOD_VRADRV."
             exit 1
         fi
     fi
 
     # Load VBoxNetAdp
     if test -f "$DIR_CONF/vboxnet.conf"; then
-        add_driver "$MOD_VBOXNET" "$DESC_VBOXNET" "$FATALOP"
-        load_module "drv/$MOD_VBOXNET" "$DESC_VBOXNET" "$FATALOP"
+        add_driver "$MOD_VRANET" "$DESC_VRANET" "$FATALOP"
+        load_module "drv/$MOD_VRANET" "$DESC_VRANET" "$FATALOP"
     fi
 
     # If both vboxinst_vboxbow and vboxinst_vboxflt exist, bail.
     if test -f "$PKG_INSTALL_ROOT/etc/vboxinst_vboxflt" && test -f "$PKG_INSTALL_ROOT/etc/vboxinst_vboxbow"; then
         errorprint "Force-install files '$PKG_INSTALL_ROOT/etc/vboxinst_vboxflt' and '$PKG_INSTALL_ROOT/etc/vboxinst_vboxbow' both exist."
-        errorprint "Cannot load $DESC_VBOXFLT and $DESC_VBOXBOW drivers at the same time."
+        errorprint "Cannot load $DESC_VRAFLT and $DESC_VRABOW drivers at the same time."
         return 1
     fi
 
@@ -759,7 +759,7 @@ install_drivers()
             subprint "Detected: Force-load file $PKG_INSTALL_ROOT/etc/vboxinst_vboxusb."
             try_vboxusb="yes"
         else
-            # For VirtualBox 3.1 the new USB code requires Nevada > 123 i.e. S12+ or S11 b124+
+            # For VirtualAgent 3.1 the new USB code requires Nevada > 123 i.e. S12+ or S11 b124+
             if     test "$HOST_OS_MAJORVERSION" -gt 11 \
                || (test "$HOST_OS_MAJORVERSION" -eq 11 && test "$HOST_OS_MINORVERSION" -gt 123); then
                 try_vboxusb="yes"
@@ -773,8 +773,8 @@ install_drivers()
         # All users which need host USB-passthrough support will have to be added to this group.
         groupadd vboxuser >/dev/null 2>&1
 
-        add_driver "$MOD_VBOXUSBMON" "$DESC_VBOXUSBMON" "$FATALOP" "not-$NULLOP" "'* 0666 root sys'"
-        load_module "drv/$MOD_VBOXUSBMON" "$DESC_VBOXUSBMON" "$FATALOP"
+        add_driver "$MOD_VRAUSBMON" "$DESC_VRAUSBMON" "$FATALOP" "not-$NULLOP" "'* 0666 root sys'"
+        load_module "drv/$MOD_VRAUSBMON" "$DESC_VRAUSBMON" "$FATALOP"
 
         chown root:vboxuser "/devices/pseudo/vboxusbmon@0:vboxusbmon"
 
@@ -787,9 +787,9 @@ install_drivers()
 
         # Create the device link for non-remote installs
         if test "$REMOTEINST" -eq 0; then
-            /usr/sbin/devfsadm -i  "$MOD_VBOXUSBMON"
+            /usr/sbin/devfsadm -i  "$MOD_VRAUSBMON"
             if test "$?" -ne 0; then
-                errorprint "Failed to create device link for $MOD_VBOXUSBMON."
+                errorprint "Failed to create device link for $MOD_VRAUSBMON."
                 exit 1
             fi
         fi
@@ -799,8 +799,8 @@ install_drivers()
         # USB device to attach to now (it's done at runtime) it will fail to attach so
         # redirect attaching failure output to /dev/null
         if test -f "$DIR_CONF/vboxusb.conf"; then
-            add_driver "$MOD_VBOXUSB" "$DESC_VBOXUSB" "$FATALOP" "$NULLOP"
-            load_module "drv/$MOD_VBOXUSB" "$DESC_VBOXUSB" "$FATALOP"
+            add_driver "$MOD_VRAUSB" "$DESC_VRAUSB" "$FATALOP" "$NULLOP"
+            load_module "drv/$MOD_VRAUSB" "$DESC_VRAUSB" "$FATALOP"
         fi
     fi
 
@@ -818,7 +818,7 @@ remove_drivers()
     group=sys
     if [ -f "$PKG_INSTALL_ROOT/etc/dev/reserved_devnames" ]; then
         # Solaris 11 SRU6 and later use group root (check a file which isn't
-        # tainted by VirtualBox install scripts and allow no other group)
+        # tainted by VirtualAgent install scripts and allow no other group)
         refgroup=`LC_ALL=C /usr/bin/ls -lL "$PKG_INSTALL_ROOT/etc/dev/reserved_devnames" | awk '{ print $4 }' 2>/dev/null`
         if [ $? -eq 0 -a "x$refgroup" = "xroot" ]; then
             group=root
@@ -846,23 +846,23 @@ remove_drivers()
         fi
     fi
 
-    unload_module "$MOD_VBOXUSB" "$DESC_VBOXUSB" 0 "$fatal"
-    rem_driver "$MOD_VBOXUSB" "$DESC_VBOXUSB" "$fatal"
+    unload_module "$MOD_VRAUSB" "$DESC_VRAUSB" 0 "$fatal"
+    rem_driver "$MOD_VRAUSB" "$DESC_VRAUSB" "$fatal"
 
-    unload_module "$MOD_VBOXUSBMON" "$DESC_VBOXUSBMON" 0 "$fatal"
-    rem_driver "$MOD_VBOXUSBMON" "$DESC_VBOXUSBMON" "$fatal"
+    unload_module "$MOD_VRAUSBMON" "$DESC_VRAUSBMON" 0 "$fatal"
+    rem_driver "$MOD_VRAUSBMON" "$DESC_VRAUSBMON" "$fatal"
 
-    unload_module "$MOD_VBOXFLT" "$DESC_VBOXFLT" 0 "$fatal"
-    rem_driver "$MOD_VBOXFLT" "$DESC_VBOXFLT" "$fatal"
+    unload_module "$MOD_VRAFLT" "$DESC_VRAFLT" 0 "$fatal"
+    rem_driver "$MOD_VRAFLT" "$DESC_VRAFLT" "$fatal"
 
-    unload_module "$MOD_VBOXBOW" "$DESC_VBOXBOW" 0 "$fatal"
-    rem_driver "$MOD_VBOXBOW" "$DESC_VBOXBOW" "$fatal"
+    unload_module "$MOD_VRABOW" "$DESC_VRABOW" 0 "$fatal"
+    rem_driver "$MOD_VRABOW" "$DESC_VRABOW" "$fatal"
 
-    unload_module "$MOD_VBOXNET" "$DESC_VBOXNET" 0 "$fatal"
-    rem_driver "$MOD_VBOXNET" "$DESC_VBOXNET" "$fatal"
+    unload_module "$MOD_VRANET" "$DESC_VRANET" 0 "$fatal"
+    rem_driver "$MOD_VRANET" "$DESC_VRANET" "$fatal"
 
-    unload_module "$MOD_VBOXDRV" "$DESC_VBOXDRV" 1 "$fatal"
-    rem_driver "$MOD_VBOXDRV" "$DESC_VBOXDRV" "$fatal"
+    unload_module "$MOD_VRADRV" "$DESC_VRADRV" 1 "$fatal"
+    rem_driver "$MOD_VRADRV" "$DESC_VRADRV" "$fatal"
 
     # remove devlinks
     if test -h "$PKG_INSTALL_ROOT/dev/vboxdrv" || test -f "$PKG_INSTALL_ROOT/dev/vboxdrv"; then
@@ -891,7 +891,7 @@ remove_drivers()
     fi
     nmaskbackupfile=$nmaskfile.vbox
     if test -f "$nmaskfile"; then
-        sed -e '/#VirtualBox_SectionStart/,/#VirtualBox_SectionEnd/d' $nmaskfile > $nmaskbackupfile
+        sed -e '/#VirtualAgent_SectionStart/,/#VirtualAgent_SectionEnd/d' $nmaskfile > $nmaskbackupfile
         mv -f $nmaskbackupfile $nmaskfile
     fi
 
@@ -930,10 +930,10 @@ install_python_bindings()
         return 0
     fi
 
-    MY_PYTHON_INSTALLER_PATH="$VBOX_INSTALL_PATH/sdk/installer/python"
+    MY_PYTHON_INSTALLER_PATH="$VRA_INSTALL_PATH/sdk/installer/python"
 
     # Pass install path via environment
-    export VBOX_INSTALL_PATH
+    export VRA_INSTALL_PATH
     mkdir -p "$CONFIG_DIR"
     rm -f "$CONFIG_DIR/python-$CONFIG_FILES"
 
@@ -953,7 +953,7 @@ install_python_bindings()
 
 ## @todo r=andy Merge this code with linux/routines.sh!
 maybe_run_python_bindings_installer() {
-    MY_PYTHON_INSTALLER_PATH="$VBOX_INSTALL_PATH/sdk/installer/python"
+    MY_PYTHON_INSTALLER_PATH="$VRA_INSTALL_PATH/sdk/installer/python"
 
     if test -f "$MY_PYTHON_INSTALLER_PATH/vboxapisetup.py" || test -h "$MY_PYTHON_INSTALLER_PATH/vboxapisetup.py"; then
         # Install python bindings for non-remote installs
@@ -961,7 +961,7 @@ maybe_run_python_bindings_installer() {
             infoprint "Installing Python bindings..."
 
             # Loop over all usual suspect Python executable names and try installing
-            # the VirtualBox API bindings. Needs to prevent double installs which waste
+            # the VirtualAgent API bindings. Needs to prevent double installs which waste
             # quite a bit of time.
             PYTHON_VER_INSTALLED=""
             PYTHON_BINARIES="\
@@ -1172,7 +1172,7 @@ plumb_net()
             # add the netmask to stay persistent across host reboots
             nmaskbackupfile=$nmaskfile.vbox
             if test -f $nmaskfile; then
-                sed -e '/#VirtualBox_SectionStart/,/#VirtualBox_SectionEnd/d' $nmaskfile > $nmaskbackupfile
+                sed -e '/#VirtualAgent_SectionStart/,/#VirtualAgent_SectionEnd/d' $nmaskfile > $nmaskbackupfile
 
                 if test "$recreatelink" -eq 1; then
                     # Check after removing our settings if /etc/netmasks is identifcal to /etc/inet/netmasks
@@ -1183,7 +1183,7 @@ plumb_net()
                     fi
                 fi
 
-                echo "#VirtualBox_SectionStart" >> $nmaskbackupfile
+                echo "#VirtualAgent_SectionStart" >> $nmaskbackupfile
                 inst=0
                 networkn=56
                 while test "$inst" -ne 1; do
@@ -1191,7 +1191,7 @@ plumb_net()
                     inst=`expr $inst + 1`
                     networkn=`expr $networkn + 1`
                 done
-                echo "#VirtualBox_SectionEnd" >> $nmaskbackupfile
+                echo "#VirtualAgent_SectionEnd" >> $nmaskbackupfile
                 mv -f $nmaskbackupfile $nmaskfile
 
                 # Recreate /etc/netmasks as a link if necessary
@@ -1200,9 +1200,9 @@ plumb_net()
                     ln -sf ./inet/netmasks "$PKG_INSTALL_ROOT/etc/netmasks"
                 elif test "$recreatelink" -eq 2; then
                     warnprint "/etc/netmasks is a symlink (to /etc/inet/netmasks) that older"
-                    warnprint "VirtualBox installers incorrectly overwrote. Now the contents"
+                    warnprint "VirtualAgent installers incorrectly overwrote. Now the contents"
                     warnprint "of /etc/netmasks and /etc/inet/netmasks differ, therefore "
-                    warnprint "VirtualBox will not attempt to overwrite /etc/netmasks as a"
+                    warnprint "VirtualAgent will not attempt to overwrite /etc/netmasks as a"
                     warnprint "symlink to /etc/inet/netmasks. Please resolve this manually"
                     warnprint "by updating /etc/inet/netmasks and creating /etc/netmasks as a"
                     warnprint "symlink to /etc/inet/netmasks"
@@ -1223,13 +1223,13 @@ unplumb_net()
     inst=0
     # use ipadm for Solaris 12, Solaris 11.5 or newer
     if test "$HOST_OS_MAJORVERSION" -ge 12 || (test "$HOST_OS_MAJORVERSION" -eq 11 && test "$HOST_OS_MINORVERSION" -ge 176); then
-        while test "$inst" -ne $MOD_VBOXNET_INST; do
+        while test "$inst" -ne $MOD_VRANET_INST; do
             vboxnetup=`$BIN_IPADM show-addr -p -o addrobj vboxnet$inst >/dev/null 2>&1`
             if test "$?" -eq 0; then
                 $BIN_IPADM delete-addr vboxnet$inst/v4addr
                 $BIN_IPADM delete-ip vboxnet$inst
                 if test "$?" -ne 0; then
-                    errorprint "VirtualBox NetAdapter 'vboxnet$inst' couldn't be removed (probably in use)."
+                    errorprint "VirtualAgent NetAdapter 'vboxnet$inst' couldn't be removed (probably in use)."
                     if test "x$fatal" = "x$FATALOP"; then
                         exit 1
                     fi
@@ -1240,12 +1240,12 @@ unplumb_net()
         done
     else
         inst=0
-        while test "$inst" -ne $MOD_VBOXNET_INST; do
+        while test "$inst" -ne $MOD_VRANET_INST; do
             vboxnetup=`$BIN_IFCONFIG vboxnet$inst >/dev/null 2>&1`
             if test "$?" -eq 0; then
                 $BIN_IFCONFIG vboxnet$inst unplumb
                 if test "$?" -ne 0; then
-                    errorprint "VirtualBox NetAdapter 'vboxnet$inst' couldn't be unplumbed (probably in use)."
+                    errorprint "VirtualAgent NetAdapter 'vboxnet$inst' couldn't be unplumbed (probably in use)."
                     if test "x$fatal" = "x$FATALOP"; then
                         exit 1
                     fi
@@ -1257,7 +1257,7 @@ unplumb_net()
             if test "$?" -eq 0; then
                 $BIN_IFCONFIG vboxnet$inst inet6 unplumb
                 if test "$?" -ne 0; then
-                    errorprint "VirtualBox NetAdapter 'vboxnet$inst' IPv6 couldn't be unplumbed (probably in use)."
+                    errorprint "VirtualAgent NetAdapter 'vboxnet$inst' IPv6 couldn't be unplumbed (probably in use)."
                     if test "x$fatal" = "x$FATALOP"; then
                         exit 1
                     fi
@@ -1311,24 +1311,24 @@ cleanup_install()
         sleep 2
         is_process_running "VBoxSVC"
         if test "$?" -eq 1; then
-            errorprint "Cannot uninstall VirtualBox while VBoxSVC (pid $procpid) is still running."
-            errorprint "Please shutdown all VMs and VirtualBox frontends before uninstalling VirtualBox."
+            errorprint "Cannot uninstall VirtualAgent while VBoxSVC (pid $procpid) is still running."
+            errorprint "Please shutdown all VMs and VirtualAgent frontends before uninstalling VirtualAgent."
             exit 1
         fi
 
         # Some VMs might still be alive after VBoxSVC as they poll less frequently before killing themselves
-        # Just check for VBoxHeadless & VirtualBox frontends for now.
+        # Just check for VBoxHeadless & VirtualAgent frontends for now.
         is_process_running "VBoxHeadless"
         if test "$?" -eq 1; then
-            errorprint "Cannot uninstall VirtualBox while VBoxHeadless is still running."
-            errorprint "Please shutdown all VMs and VirtualBox frontends before uninstalling VirtualBox."
+            errorprint "Cannot uninstall VirtualAgent while VBoxHeadless is still running."
+            errorprint "Please shutdown all VMs and VirtualAgent frontends before uninstalling VirtualAgent."
             exit 1
         fi
 
-        is_process_running "VirtualBox"
+        is_process_running "VirtualAgent"
         if test "$?" -eq 1; then
-            errorprint "Cannot uninstall VirtualBox while any VM is still running."
-            errorprint "Please shutdown all VMs and VirtualBox frontends before uninstalling VirtualBox."
+            errorprint "Cannot uninstall VirtualAgent while any VM is still running."
+            errorprint "Please shutdown all VMs and VirtualAgent frontends before uninstalling VirtualAgent."
             exit 1
         fi
     fi
@@ -1349,9 +1349,9 @@ postinstall()
     infoprint "Detected Solaris $HOST_OS_MAJORVERSION Version $HOST_OS_MINORVERSION"
 
     # Ensure XPCOM components are re-registered properly on first use.
-    touch "$VBOX_INSTALL_PATH/.autoreg"
+    touch "$VRA_INSTALL_PATH/.autoreg"
 
-    infoprint "Loading VirtualBox kernel modules..."
+    infoprint "Loading VirtualAgent kernel modules..."
     install_drivers
 
     if test "$?" -eq 0; then
@@ -1504,7 +1504,7 @@ case "$drvop" in
     ;;
 --setupdrivers)
     remove_drivers "$fatal"
-    infoprint "Installing VirtualBox drivers:"
+    infoprint "Installing VirtualAgent drivers:"
     install_drivers
     ;;
 *)

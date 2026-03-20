@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -27,10 +27,10 @@
 
 SUB_DEPTH = ../../../..
 include $(KBUILD_PATH)/subheader.kmk
-if !defined(VBOX_WITH_HARDENING) || "$(KBUILD_TARGET)" != "darwin" # No hardened VBoxSDL on darwin.
+if !defined(VRA_WITH_HARDENING) || "$(KBUILD_TARGET)" != "darwin" # No hardened VBoxSDL on darwin.
 
 
- ifdef VBOX_WITH_HARDENING
+ ifdef VRA_WITH_HARDENING
   #
   # Hardened VBoxSDL
   #
@@ -38,19 +38,19 @@ if !defined(VBOX_WITH_HARDENING) || "$(KBUILD_TARGET)" != "darwin" # No hardened
   VBoxSDLHardened_TEMPLATE = VBoxR3HardenedExe
   VBoxSDLHardened_SOURCES = VBoxSDLHardened.cpp
   VBoxSDLHardened_NAME = VBoxSDL
-  $(call VBOX_SET_VER_INFO_EXE,VBoxSDLHardened,VirtualBox Pure SDL Frontend,$(VBOX_WINDOWS_ICON_FILE)) # Version info / description.
+  $(call VRA_SET_VER_INFO_EXE,VBoxSDLHardened,VirtualAgent Pure SDL Frontend,$(VRA_WINDOWS_ICON_FILE)) # Version info / description.
  endif
 
 
  #
  # VBoxSDL
  #
- ifdef VBOX_WITH_HARDENING
+ ifdef VRA_WITH_HARDENING
   DLLS += VBoxSDL
  else
   PROGRAMS += VBoxSDL
  endif
- VBoxSDL_TEMPLATE := $(if $(VBOX_WITH_HARDENING),VBoxMainClientDll,VBoxMainClientSignedExe)
+ VBoxSDL_TEMPLATE := $(if $(VRA_WITH_HARDENING),VBoxMainClientDll,VBoxMainClientSignedExe)
  VBoxSDL_SDKS      = LIBSDL2
  VBoxSDL_SOURCES   = \
  	VBoxSDL.cpp \
@@ -59,22 +59,22 @@ if !defined(VBOX_WITH_HARDENING) || "$(KBUILD_TARGET)" != "darwin" # No hardened
  	../Common/PasswordInput.cpp
 
  VBoxSDL_DEFS      =
- VBoxSDL_DEFS.freebsd = VBOXSDL_WITH_X11
- VBoxSDL_DEFS.linux = _GNU_SOURCE VBOXSDL_WITH_X11
- VBoxSDL_DEFS.solaris = VBOXSDL_WITH_X11
- ifdef VBOX_OPENGL
-  #VBoxSDL_DEFS.linux += VBOX_OPENGL
+ VBoxSDL_DEFS.freebsd = VRASDL_WITH_X11
+ VBoxSDL_DEFS.linux = _GNU_SOURCE VRASDL_WITH_X11
+ VBoxSDL_DEFS.solaris = VRASDL_WITH_X11
+ ifdef VRA_OPENGL
+  #VBoxSDL_DEFS.linux += VRA_OPENGL
  endif
  VBoxSDL_DEFS.win.x86 = _WIN32_WINNT=0x0500
  VBoxSDL_DEFS.win.amd64 = _WIN32_WINNT=0x0510
 
  VBoxSDL_INCS = \
  	$(VBoxSDL_0_OUTDIR) \
- 	$(VBOX_GRAPHICS_INCS) \
+ 	$(VRA_GRAPHICS_INCS) \
  	../Common
  if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd solaris) # X11
   VBoxSDL_INCS += \
-  	$(VBOX_XCURSOR_INCS)
+  	$(VRA_XCURSOR_INCS)
  endif
  ifn1of ($(KBUILD_TARGET), solaris) # Probably wrong with SDL2
   VBoxSDL_LIBS = \
@@ -82,13 +82,13 @@ if !defined(VBOX_WITH_HARDENING) || "$(KBUILD_TARGET)" != "darwin" # No hardened
  endif
  if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd solaris) # X11
   VBoxSDL_LIBS += \
-  	$(PATH_STAGE_DLL)/VBoxKeyboard$(VBOX_SUFF_DLL) \
-  	$(VBOX_XCURSOR_LIBS) \
+  	$(PATH_STAGE_DLL)/VBoxKeyboard$(VRA_SUFF_DLL) \
+  	$(VRA_XCURSOR_LIBS) \
   	X11
   VBoxSDL_LIBPATH = \
-  	$(VBOX_LIBPATH_X11)
+  	$(VRA_LIBPATH_X11)
  endif
- ifdef VBOX_OPENGL
+ ifdef VRA_OPENGL
   #VBoxSDL_LIBS.linux += GL
  endif
 
@@ -99,14 +99,14 @@ if !defined(VBOX_WITH_HARDENING) || "$(KBUILD_TARGET)" != "darwin" # No hardened
 
 
  # Convert the pnm-file to a byte array.
- $$(VBoxSDL_0_OUTDIR)/Ico64x01.h: $(PATH_ROOT)/src/VBox/Frontends/VBoxSDL/ico64x01.pnm $(VBOX_BIN2C) | $$(dir $$@)
+ $$(VBoxSDL_0_OUTDIR)/Ico64x01.h: $(PATH_ROOT)/src/VBox/Frontends/VBoxSDL/ico64x01.pnm $(VRA_BIN2C) | $$(dir $$@)
 	$(call MSG_TOOL,bin2c,VBoxSDL,$<,$@)
-	$(QUIET)$(VBOX_BIN2C) Ico64x01 $< $@
+	$(QUIET)$(VRA_BIN2C) Ico64x01 $< $@
 
- ifdef VBOX_WITH_HARDENING
-  $(call VBOX_SET_VER_INFO_DLL,VBoxSDL,VirtualBox Pure SDL Frontend,$(VBOX_WINDOWS_ICON_FILE)) # Version info / description.
+ ifdef VRA_WITH_HARDENING
+  $(call VRA_SET_VER_INFO_DLL,VBoxSDL,VirtualAgent Pure SDL Frontend,$(VRA_WINDOWS_ICON_FILE)) # Version info / description.
  else
-  $(call VBOX_SET_VER_INFO_EXE,VBoxSDL,VirtualBox Pure SDL Frontend,$(VBOX_WINDOWS_ICON_FILE)) # Version info / description.
+  $(call VRA_SET_VER_INFO_EXE,VBoxSDL,VirtualAgent Pure SDL Frontend,$(VRA_WINDOWS_ICON_FILE)) # Version info / description.
  endif
 
 
@@ -122,8 +122,8 @@ if !defined(VBOX_WITH_HARDENING) || "$(KBUILD_TARGET)" != "darwin" # No hardened
   	VBoxSDLTest.cpp
   tstSDL_DEFS = IN_RING3 IN_RT_R3 _GNU_SOURCE
   tstSDL_DEFS.win.x86 = _WIN32_WINNT=0x0500
-  ifdef VBOX_OPENGL
-   tstSDL_DEFS.linux = VBOX_OPENGL
+  ifdef VRA_OPENGL
+   tstSDL_DEFS.linux = VRA_OPENGL
   endif
 
 
@@ -134,12 +134,12 @@ if !defined(VBOX_WITH_HARDENING) || "$(KBUILD_TARGET)" != "darwin" # No hardened
    	$(LIB_SDK_LIBSDL2_SDLMAIN)
   endif
 
-  ifdef VBOX_OPENGL
+  ifdef VRA_OPENGL
    tstSDL_LIBS.linux += GL
   endif
   if1of ($(KBUILD_TARGET), freebsd linux netbsd openbsd solaris) # X11
    tstSDL_LIBPATH = \
-   	$(VBOX_LIBPATH_X11)
+   	$(VRA_LIBPATH_X11)
   endif
 
   tstSDL_LDFLAGS.darwin = \
@@ -156,5 +156,5 @@ if !defined(VBOX_WITH_HARDENING) || "$(KBUILD_TARGET)" != "darwin" # No hardened
  tstSDL_CXXFLAGS.linux = -O -Wall -Wno-non-virtual-dtor -Wno-long-long -fshort-wchar
 
 
-endif # !VBOX_WITH_HARDENING || "$(KBUILD_TARGET)" != "darwin"
+endif # !VRA_WITH_HARDENING || "$(KBUILD_TARGET)" != "darwin"
 include $(FILE_KBUILD_SUB_FOOTER)

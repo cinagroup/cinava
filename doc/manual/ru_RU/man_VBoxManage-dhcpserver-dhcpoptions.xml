@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Manually generated from src/VBox/Main/idl/VirtualBox.xidl by 'kmk dhcpoptions'.
+    Manually generated from src/VBox/Main/idl/VirtualAgent.xidl by 'kmk dhcpoptions'.
     DO NOT EDIT!
 -->
 <!--
-    Copyright (C) 2019-2026 Oracle and/or its affiliates.
+    Copyright (C) 2019-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or

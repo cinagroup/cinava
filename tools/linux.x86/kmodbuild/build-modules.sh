@@ -1,7 +1,7 @@
 #!/bin/bash -x
 # $Id: build-modules.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# Script for test building the VirtualBox kernel modules against a kernel.
+# Script for test building the VirtualAgent kernel modules against a kernel.
 #
 # This script assumes the kernel directory it is pointed to was prepared using
 # build-kernel.sh, as that script plants a couple of files and symlinks needed
@@ -9,9 +9,9 @@
 #
 
 #
-# Copyright (C) 2019-2026 Oracle and/or its affiliates.
+# Copyright (C) 2019-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -84,11 +84,11 @@ if [ -f "${KERN_DIR}/.bird-make" -a ! -f "${KERN_DIR}/.bird-failed" ]; then
         SYNC_OUTPUT=""
     fi
     "${KERN_DIR}/.bird-make" -C "${BLDDIR}/guest/" \
-        VBOX_NOJOBS=1 -j${JOBS} `cat "${KERN_DIR}/.bird-overrides"` ${SYNC_OUTPUT} "KERN_DIR=${KERN_DIR}" "KERN_VER=${KERN_VER}"
+        VRA_NOJOBS=1 -j${JOBS} `cat "${KERN_DIR}/.bird-overrides"` ${SYNC_OUTPUT} "KERN_DIR=${KERN_DIR}" "KERN_VER=${KERN_VER}"
     case "${KERN_VER}" in
         [3-9].*|2.6.3[789]*) ## todo fix this so it works back to 2.6.18 (-fno-pie, -Wno-declaration-after-statement)
             "${KERN_DIR}/.bird-make" -C "${BLDDIR}/host/"  \
-                VBOX_NOJOBS=1 -j${JOBS} `cat "${KERN_DIR}/.bird-overrides"` ${SYNC_OUTPUT} "KERN_DIR=${KERN_DIR}" "KERN_VER=${KERN_VER}"
+                VRA_NOJOBS=1 -j${JOBS} `cat "${KERN_DIR}/.bird-overrides"` ${SYNC_OUTPUT} "KERN_DIR=${KERN_DIR}" "KERN_VER=${KERN_VER}"
             ;;
     esac
 else

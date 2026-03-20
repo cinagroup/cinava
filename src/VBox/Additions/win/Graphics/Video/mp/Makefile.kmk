@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2011-2026 Oracle and/or its affiliates.
+# Copyright (C) 2011-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -33,18 +33,18 @@ include $(KBUILD_PATH)/subheader.kmk
 #
 # Note. This has to run on NT4! (*_NT4 => *_W2K3 when targeting 64-bit.)
 #
-ifdef VBOX_WITH_XPDM
+ifdef VRA_WITH_XPDM
  SYSMODS += VBoxVideo
  VBoxVideo_TEMPLATE      = VBoxGuestR0Drv
- VBoxVideo_SDKS          = ReorderCompilerIncs $(VBOX_WINDDK_GST_NT4)
- VBoxVideo_DEFS          = VBOX_XPDM_MINIPORT VBOX_WITH_8BPP_MODES VBOX_USING_$(VBOX_WINDDK_GST_NT4)
+ VBoxVideo_SDKS          = ReorderCompilerIncs $(VRA_WINDDK_GST_NT4)
+ VBoxVideo_DEFS          = VRA_XPDM_MINIPORT VRA_WITH_8BPP_MODES VRA_USING_$(VRA_WINDDK_GST_NT4)
  VBoxVideo_DEFS         += LOG_TO_BACKDOOR #LOG_ENABLED
- VBoxVideo_DEFS         += VBOX_SVN_REV=$(VBOX_SVN_REV)
+ VBoxVideo_DEFS         += VRA_SVN_REV=$(VRA_SVN_REV)
  VBoxVideo_INCS          = \
  	../../../include \
  	.. \
  	. \
- 	$(VBOX_GRAPHICS_INCS)
+ 	$(VRA_GRAPHICS_INCS)
  VBoxVideo_LDFLAGS.x86   = /Entry:DriverEntry@8
  VBoxVideo_LDFLAGS.amd64 = /Entry:DriverEntry
  VBoxVideo_SOURCES       = \
@@ -63,47 +63,47 @@ ifdef VBOX_WITH_XPDM
  	$(PATH_ROOT)/src/VBox/Additions/common/VBoxVideo/HGSMIHostCmd.cpp \
  	$(PATH_ROOT)/src/VBox/Additions/common/VBoxVideo/Modesetting.cpp
  VBoxVideo_LIBS          = \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/videoprt.lib \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/ntoskrnl.lib \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/hal.lib \
- 	$(VBOX_LIB_VBGL_R0) \
- 	$(VBOX_LIB_IPRT_GUEST_R0_NT4) \
- 	$(VBOX_PATH_ADDITIONS_LIB)/HGSMIGuestR0Lib$(VBOX_SUFF_LIB)
+ 	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/videoprt.lib \
+ 	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/ntoskrnl.lib \
+ 	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/hal.lib \
+ 	$(VRA_LIB_VBGL_R0) \
+ 	$(VRA_LIB_IPRT_GUEST_R0_NT4) \
+ 	$(VRA_PATH_ADDITIONS_LIB)/HGSMIGuestR0Lib$(VRA_SUFF_LIB)
  ifeq ($(KBUILD_TARGET_ARCH),x86)
   VBoxVideo_LIBS         += \
-  	$(PATH_SDK_$(VBOX_WINDDK_GST_NT4)_LIB)/exsup.lib \
-  	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB)/BufferOverflowK.lib # Needed for ___security_cookie.
+  	$(PATH_SDK_$(VRA_WINDDK_GST_NT4)_LIB)/exsup.lib \
+  	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB)/BufferOverflowK.lib # Needed for ___security_cookie.
  endif
  VBoxVideo_USES.win = vboximportchecker
- VBoxVideo_VBOX_IMPORT_CHECKER.win.x86 = nt4/r0
- VBoxVideo_VBOX_IMPORT_CHECKER.win.amd64 = xp64/r0
+ VBoxVideo_VRA_IMPORT_CHECKER.win.x86 = nt4/r0
+ VBoxVideo_VRA_IMPORT_CHECKER.win.amd64 = xp64/r0
 endif
 
-ifdef VBOX_WITH_WDDM
+ifdef VRA_WITH_WDDM
  #
  # VBoxWddm - Windows Guest Additions WDDM Miniport Video Driver
  #
  SYSMODS += VBoxWddm
  VBoxWddm_TEMPLATE         = VBoxGuestR0Drv
- VBoxWddm_SDKS             = $(VBOX_WINDDK_GST_W8)
- VBoxWddm_DEFS            += VBOX_WDDM_MINIPORT VBOX_WITH_WDDM VBOX_WITH_HGCM
+ VBoxWddm_SDKS             = $(VRA_WINDDK_GST_W8)
+ VBoxWddm_DEFS            += VRA_WDDM_MINIPORT VRA_WITH_WDDM VRA_WITH_HGCM
  # WIN9X_COMPAT_SPINLOCK inlines KeInitializeSpinLock in W8 DDK (Windows 7 or older ntoskrnl does not export it).
  VBoxWddm_DEFS            += WIN9X_COMPAT_SPINLOCK
- VBoxWddm_DEFS            += VBOX_WITH_8BPP_MODES
- ifdef VBOXWDDM_WITH_VBVA
-  VBoxWddm_DEFS           += VBOXWDDM_WITH_VBVA
-  VBoxWddm_DEFS           += VBOXWDDM_RENDER_FROM_SHADOW
-  ifdef VBOXVDMA_WITH_VBVA
-   VBoxWddm_DEFS          += VBOXVDMA_WITH_VBVA
+ VBoxWddm_DEFS            += VRA_WITH_8BPP_MODES
+ ifdef VRAWDDM_WITH_VBVA
+  VBoxWddm_DEFS           += VRAWDDM_WITH_VBVA
+  VBoxWddm_DEFS           += VRAWDDM_RENDER_FROM_SHADOW
+  ifdef VRAVDMA_WITH_VBVA
+   VBoxWddm_DEFS          += VRAVDMA_WITH_VBVA
   endif
  endif
  VBoxWddm_DEFS            += LOG_TO_BACKDOOR
- VBoxWddm_DEFS            += VBOX_SVN_REV=$(VBOX_SVN_REV)
+ VBoxWddm_DEFS            += VRA_SVN_REV=$(VRA_SVN_REV)
  VBoxWddm_INCS            += \
  	../../../include \
  	.. \
  	. \
- 	$(VBOX_GRAPHICS_INCS)
+ 	$(VRA_GRAPHICS_INCS)
 
  VBoxWddm_LDFLAGS.x86     += /Entry:DriverEntry@8
  VBoxWddm_LDFLAGS.amd64   += /Entry:DriverEntry
@@ -132,31 +132,31 @@ ifdef VBOX_WITH_WDDM
   	$(PATH_ROOT)/src/VBox/Additions/common/VBoxVideo/HGSMIHostCmd.cpp \
   	$(PATH_ROOT)/src/VBox/Additions/common/VBoxVideo/VBVABase.cpp \
   	$(PATH_ROOT)/src/VBox/Additions/common/VBoxVideo/Modesetting.cpp
-  ifdef VBOXWDDM_WITH_VBVA
+  ifdef VRAWDDM_WITH_VBVA
    VBoxWddm_SOURCES        += \
    	wddm/VBoxMPVbva.cpp
   endif
  endif
 
  VBoxWddm_LIBS             = \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST_W8)_LIB)/ntoskrnl.lib \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST_W8)_LIB)/hal.lib \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST_W8)_LIB)/displib.lib \
- 	$(VBOX_LIB_VBGL_R0) \
- 	$(VBOX_LIB_IPRT_GUEST_R0) \
- 	$(VBOX_PATH_ADDITIONS_LIB)/HGSMIGuestR0Lib$(VBOX_SUFF_LIB)
+ 	$(PATH_SDK_$(VRA_WINDDK_GST_W8)_LIB)/ntoskrnl.lib \
+ 	$(PATH_SDK_$(VRA_WINDDK_GST_W8)_LIB)/hal.lib \
+ 	$(PATH_SDK_$(VRA_WINDDK_GST_W8)_LIB)/displib.lib \
+ 	$(VRA_LIB_VBGL_R0) \
+ 	$(VRA_LIB_IPRT_GUEST_R0) \
+ 	$(VRA_PATH_ADDITIONS_LIB)/HGSMIGuestR0Lib$(VRA_SUFF_LIB)
 
  VBoxWddm_LIBS.x86         = \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST_W8)_LIB)/BufferOverflowK.lib \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST_W8)_LIB)/memcmp.lib
+ 	$(PATH_SDK_$(VRA_WINDDK_GST_W8)_LIB)/BufferOverflowK.lib \
+ 	$(PATH_SDK_$(VRA_WINDDK_GST_W8)_LIB)/memcmp.lib
  VBoxWddm_LIBS.amd64       = \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST_W8)_LIB)/BufferOverflowK.lib
+ 	$(PATH_SDK_$(VRA_WINDDK_GST_W8)_LIB)/BufferOverflowK.lib
  VBoxWddm_LIBS.arm64       = \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST)_LIB.$(KBUILD_TARGET_ARCH))/libcntpr.lib \
- 	$(PATH_SDK_$(VBOX_WINDDK_GST_W8)_LIB)/BufferOverflowFastFailK.lib
+ 	$(PATH_SDK_$(VRA_WINDDK_GST)_LIB.$(KBUILD_TARGET_ARCH))/libcntpr.lib \
+ 	$(PATH_SDK_$(VRA_WINDDK_GST_W8)_LIB)/BufferOverflowFastFailK.lib
 
- ifdef VBOX_WITH_VMSVGA
-  VBoxWddm_DEFS           += VBOX_WITH_VMSVGA
+ ifdef VRA_WITH_VMSVGA
+  VBoxWddm_DEFS           += VRA_WITH_VMSVGA
   VBoxWddm_DEFS           += __STDC_VERSION__=0    # for mesa include/c99_compat.h
   VBoxWddm_DEFS           += WIN9X_COMPAT_SPINLOCK # to avoid multiple KeInitializeSpinLock on amd64
   VBoxWddm_INCS           += \
@@ -173,24 +173,24 @@ ifdef VBOX_WITH_WDDM
   	wddm/gallium/VBoxMPGaWddm.cpp
  endif
 
- ifdef VBOX_WITH_VMSVGA3D_DX
-  VBoxWddm_DEFS           += VBOX_WITH_VMSVGA3D_DX
+ ifdef VRA_WITH_VMSVGA3D_DX
+  VBoxWddm_DEFS           += VRA_WITH_VMSVGA3D_DX
   VBoxWddm_SOURCES        += \
   	wddm/gallium/SvgaRender.cpp \
   	wddm/gallium/VBoxMPDX.cpp
  endif
 
-endif # VBOX_WITH_WDDM
+endif # VRA_WITH_WDDM
 
 #
 # Signing requires both miniport and display drivers so it'll be dealt with in the parent makefile.
 #
-if defined(VBOX_SIGNING_MODE) && defined(VBOX_SIGN_ADDITIONS)
- ifdef VBOX_WITH_XPDM
+if defined(VRA_SIGNING_MODE) && defined(VRA_SIGN_ADDITIONS)
+ ifdef VRA_WITH_XPDM
   VBoxVideo_INSTTYPE            = none
   VBoxVideo_DEBUG_INSTTYPE      = both
  endif
- ifdef VBOX_WITH_WDDM
+ ifdef VRA_WITH_WDDM
   VBoxWddm_INSTTYPE            = none
   VBoxWddm_DEBUG_INSTTYPE      = both
  endif

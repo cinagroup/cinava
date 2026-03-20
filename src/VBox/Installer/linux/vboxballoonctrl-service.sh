@@ -1,13 +1,13 @@
 #!/bin/sh
 # $Id: vboxballoonctrl-service.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox watchdog daemon init script.
+# VirtualAgent watchdog daemon init script.
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 #
 
 # chkconfig: 345 35 65
-# description: VirtualBox watchdog daemon
+# description: VirtualAgent watchdog daemon
 #
 ### BEGIN INIT INFO
 # Provides:       vboxballoonctrl-service
@@ -35,7 +35,7 @@
 # Required-Stop:  vboxdrv
 # Default-Start:  2 3 4 5
 # Default-Stop:   0 1 6
-# Description:    VirtualBox watchdog daemon
+# Description:    VirtualAgent watchdog daemon
 ### END INIT INFO
 
 PATH=$PATH:/bin:/sbin:/usr/sbin
@@ -110,53 +110,53 @@ vboxdrvrunning() {
 
 check_single_user() {
     if [ -n "$2" ]; then
-        fail_msg "VBOXWATCHDOG_USER must not contain multiple users!"
+        fail_msg "VRAWATCHDOG_USER must not contain multiple users!"
         exit 1
     fi
 }
 
 start() {
     if ! test -f $PIDFILE; then
-        [ -z "$VBOXWATCHDOG_USER" -a -z "$VBOXBALLOONCTRL_USER" ] && exit 0
-        [ -z "$VBOXWATCHDOG_USER" ] && VBOXWATCHDOG_USER="$VBOXBALLOONCTRL_USER"
-        begin_msg "Starting VirtualBox watchdog service" console;
-        check_single_user $VBOXWATCHDOG_USER
+        [ -z "$VRAWATCHDOG_USER" -a -z "$VRABALLOONCTRL_USER" ] && exit 0
+        [ -z "$VRAWATCHDOG_USER" ] && VRAWATCHDOG_USER="$VRABALLOONCTRL_USER"
+        begin_msg "Starting VirtualAgent watchdog service" console;
+        check_single_user $VRAWATCHDOG_USER
         vboxdrvrunning || {
-            fail_msg "VirtualBox kernel module not loaded!"
+            fail_msg "VirtualAgent kernel module not loaded!"
             exit 0
         }
         # Handle legacy parameters, do not add any further ones unless absolutely necessary.
-        [ -z "$VBOXWATCHDOG_BALLOON_INTERVAL" -a -n "$VBOXBALLOONCTRL_INTERVAL" ]           && VBOXWATCHDOG_BALLOON_INTERVAL="$VBOXBALLOONCTRL_INTERVAL"
-        [ -z "$VBOXWATCHDOG_BALLOON_INCREMENT" -a -n "$VBOXBALLOONCTRL_INCREMENT" ]         && VBOXWATCHDOG_BALLOON_INCREMENT="$VBOXBALLOONCTRL_INCREMENT"
-        [ -z "$VBOXWATCHDOG_BALLOON_DECREMENT" -a -n "$VBOXBALLOONCTRL_DECREMENT" ]         && VBOXWATCHDOG_BALLOON_DECREMENT="$VBOXBALLOONCTRL_DECREMENT"
-        [ -z "$VBOXWATCHDOG_BALLOON_LOWERLIMIT" -a -n "$VBOXBALLOONCTRL_LOWERLIMIT" ]       && VBOXWATCHDOG_BALLOON_LOWERLIMIT="$VBOXBALLOONCTRL_LOWERLIMIT"
-        [ -z "$VBOXWATCHDOG_BALLOON_SAFETYMARGIN" -a -n "$VBOXBALLOONCTRL_SAFETYMARGIN" ]   && VBOXWATCHDOG_BALLOON_SAFETYMARGIN="$VBOXBALLOONCTRL_SAFETYMARGIN"
-        [ -z "$VBOXWATCHDOG_ROTATE" -a -n "$VBOXBALLOONCTRL_ROTATE" ]           && VBOXWATCHDOG_ROTATE="$VBOXBALLOONCTRL_ROTATE"
-        [ -z "$VBOXWATCHDOG_LOGSIZE" -a -n "$VBOXBALLOONCTRL_LOGSIZE" ]         && VBOXWATCHDOG_LOGSIZE="$VBOXBALLOONCTRL_LOGSIZE"
-        [ -z "$VBOXWATCHDOG_LOGINTERVAL" -a -n "$VBOXBALLOONCTRL_LOGINTERVAL" ] && VBOXWATCHDOG_LOGINTERVAL="$VBOXBALLOONCTRL_LOGINTERVAL"
+        [ -z "$VRAWATCHDOG_BALLOON_INTERVAL" -a -n "$VRABALLOONCTRL_INTERVAL" ]           && VRAWATCHDOG_BALLOON_INTERVAL="$VRABALLOONCTRL_INTERVAL"
+        [ -z "$VRAWATCHDOG_BALLOON_INCREMENT" -a -n "$VRABALLOONCTRL_INCREMENT" ]         && VRAWATCHDOG_BALLOON_INCREMENT="$VRABALLOONCTRL_INCREMENT"
+        [ -z "$VRAWATCHDOG_BALLOON_DECREMENT" -a -n "$VRABALLOONCTRL_DECREMENT" ]         && VRAWATCHDOG_BALLOON_DECREMENT="$VRABALLOONCTRL_DECREMENT"
+        [ -z "$VRAWATCHDOG_BALLOON_LOWERLIMIT" -a -n "$VRABALLOONCTRL_LOWERLIMIT" ]       && VRAWATCHDOG_BALLOON_LOWERLIMIT="$VRABALLOONCTRL_LOWERLIMIT"
+        [ -z "$VRAWATCHDOG_BALLOON_SAFETYMARGIN" -a -n "$VRABALLOONCTRL_SAFETYMARGIN" ]   && VRAWATCHDOG_BALLOON_SAFETYMARGIN="$VRABALLOONCTRL_SAFETYMARGIN"
+        [ -z "$VRAWATCHDOG_ROTATE" -a -n "$VRABALLOONCTRL_ROTATE" ]           && VRAWATCHDOG_ROTATE="$VRABALLOONCTRL_ROTATE"
+        [ -z "$VRAWATCHDOG_LOGSIZE" -a -n "$VRABALLOONCTRL_LOGSIZE" ]         && VRAWATCHDOG_LOGSIZE="$VRABALLOONCTRL_LOGSIZE"
+        [ -z "$VRAWATCHDOG_LOGINTERVAL" -a -n "$VRABALLOONCTRL_LOGINTERVAL" ] && VRAWATCHDOG_LOGINTERVAL="$VRABALLOONCTRL_LOGINTERVAL"
 
         PARAMS="--background"
-        [ -n "$VBOXWATCHDOG_BALLOON_INTERVAL" ]     && PARAMS="$PARAMS --balloon-interval \"$VBOXWATCHDOG_BALLOON_INTERVAL\""
-        [ -n "$VBOXWATCHDOG_BALLOON_INCREMENT" ]    && PARAMS="$PARAMS --balloon-inc \"$VBOXWATCHDOG_BALLOON_INCREMENT\""
-        [ -n "$VBOXWATCHDOG_BALLOON_DECREMENT" ]    && PARAMS="$PARAMS --balloon-dec \"$VBOXWATCHDOG_BALLOON_DECREMENT\""
-        [ -n "$VBOXWATCHDOG_BALLOON_LOWERLIMIT" ]   && PARAMS="$PARAMS --balloon-lower-limit \"$VBOXWATCHDOG_BALLOON_LOWERLIMIT\""
-        [ -n "$VBOXWATCHDOG_BALLOON_SAFETYMARGIN" ] && PARAMS="$PARAMS --balloon-safety-margin \"$VBOXWATCHDOG_BALLOON_SAFETYMARGIN\""
-        [ -n "$VBOXWATCHDOG_ROTATE" ]       && PARAMS="$PARAMS -R \"$VBOXWATCHDOG_ROTATE\""
-        [ -n "$VBOXWATCHDOG_LOGSIZE" ]      && PARAMS="$PARAMS -S \"$VBOXWATCHDOG_LOGSIZE\""
-        [ -n "$VBOXWATCHDOG_LOGINTERVAL" ]  && PARAMS="$PARAMS -I \"$VBOXWATCHDOG_LOGINTERVAL\""
+        [ -n "$VRAWATCHDOG_BALLOON_INTERVAL" ]     && PARAMS="$PARAMS --balloon-interval \"$VRAWATCHDOG_BALLOON_INTERVAL\""
+        [ -n "$VRAWATCHDOG_BALLOON_INCREMENT" ]    && PARAMS="$PARAMS --balloon-inc \"$VRAWATCHDOG_BALLOON_INCREMENT\""
+        [ -n "$VRAWATCHDOG_BALLOON_DECREMENT" ]    && PARAMS="$PARAMS --balloon-dec \"$VRAWATCHDOG_BALLOON_DECREMENT\""
+        [ -n "$VRAWATCHDOG_BALLOON_LOWERLIMIT" ]   && PARAMS="$PARAMS --balloon-lower-limit \"$VRAWATCHDOG_BALLOON_LOWERLIMIT\""
+        [ -n "$VRAWATCHDOG_BALLOON_SAFETYMARGIN" ] && PARAMS="$PARAMS --balloon-safety-margin \"$VRAWATCHDOG_BALLOON_SAFETYMARGIN\""
+        [ -n "$VRAWATCHDOG_ROTATE" ]       && PARAMS="$PARAMS -R \"$VRAWATCHDOG_ROTATE\""
+        [ -n "$VRAWATCHDOG_LOGSIZE" ]      && PARAMS="$PARAMS -S \"$VRAWATCHDOG_LOGSIZE\""
+        [ -n "$VRAWATCHDOG_LOGINTERVAL" ]  && PARAMS="$PARAMS -I \"$VRAWATCHDOG_LOGINTERVAL\""
         # prevent inheriting this setting to VBoxSVC
-        unset VBOX_RELEASE_LOG_DEST
-        start_daemon $VBOXWATCHDOG_USER $binary $PARAMS > /dev/null 2>&1
+        unset VRA_RELEASE_LOG_DEST
+        start_daemon $VRAWATCHDOG_USER $binary $PARAMS > /dev/null 2>&1
         # ugly: wait until the final process has forked
         sleep .1
         PID=`pidof $binary 2>/dev/null`
         if [ -n "$PID" ]; then
             echo "$PID" > $PIDFILE
             RETVAL=0
-            succ_msg "VirtualBox watchdog service started"
+            succ_msg "VirtualAgent watchdog service started"
         else
             RETVAL=1
-            fail_msg "VirtualBox watchdog service failed to start"
+            fail_msg "VirtualAgent watchdog service failed to start"
         fi
     fi
     return $RETVAL
@@ -164,14 +164,14 @@ start() {
 
 stop() {
     if test -f $PIDFILE; then
-        begin_msg "Stopping VirtualBox watchdog service" console;
+        begin_msg "Stopping VirtualAgent watchdog service" console;
         killproc $binary
         RETVAL=$?
         if ! pidof $binary > /dev/null 2>&1; then
             rm -f $PIDFILE
-            succ_msg "VirtualBox watchdog service stopped"
+            succ_msg "VirtualAgent watchdog service stopped"
         else
-            fail_msg "VirtualBox watchdog service failed to stop"
+            fail_msg "VirtualAgent watchdog service failed to stop"
         fi
     fi
     return $RETVAL

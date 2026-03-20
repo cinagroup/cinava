@@ -2,9 +2,9 @@
 # $Id: smf-vboxballoonctrl.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 
 #
-# Copyright (C) 2008-2026 Oracle and/or its affiliates.
+# Copyright (C) 2008-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -35,73 +35,73 @@ VW_EXIT=0
 
 case $VW_OPT in
     start)
-        if [ ! -f /opt/VirtualBox/VBoxBalloonCtrl ]; then
-            echo "ERROR: /opt/VirtualBox/VBoxBalloonCtrl does not exist."
+        if [ ! -f /opt/VirtualAgent/VBoxBalloonCtrl ]; then
+            echo "ERROR: /opt/VirtualAgent/VBoxBalloonCtrl does not exist."
             return $SMF_EXIT_ERR_CONFIG
         fi
 
-        if [ ! -x /opt/VirtualBox/VBoxBalloonCtrl ]; then
-            echo "ERROR: /opt/VirtualBox/VBoxBalloonCtrl is not executable."
+        if [ ! -x /opt/VirtualAgent/VBoxBalloonCtrl ]; then
+            echo "ERROR: /opt/VirtualAgent/VBoxBalloonCtrl is not executable."
             return $SMF_EXIT_ERR_CONFIG
         fi
 
         # Get svc configuration
-        VBOXWATCHDOG_USER=`/usr/bin/svcprop -p config/user $SMF_FMRI 2>/dev/null`
-        [ $? != 0 ] && VBOXWATCHDOG_USER=
-        VBOXWATCHDOG_BALLOON_INTERVAL=`/usr/bin/svcprop -p config/balloon_interval $SMF_FMRI 2>/dev/null`
-        [ $? != 0 ] && VBOXWATCHDOG_BALLOON_INTERVAL=
-        VBOXWATCHDOG_BALLOON_INCREMENT=`/usr/bin/svcprop -p config/balloon_increment $SMF_FMRI 2>/dev/null`
-        [ $? != 0 ] && VBOXWATCHDOG_BALLOON_INCREMENT=
-        VBOXWATCHDOG_BALLOON_DECREMENT=`/usr/bin/svcprop -p config/balloon_decrement $SMF_FMRI 2>/dev/null`
-        [ $? != 0 ] && VBOXWATCHDOG_BALLOON_DECREMENT=
-        VBOXWATCHDOG_BALLOON_LOWERLIMIT=`/usr/bin/svcprop -p config/balloon_lowerlimit $SMF_FMRI 2>/dev/null`
-        [ $? != 0 ] && VBOXWATCHDOG_BALLOON_LOWERLIMIT=
-        VBOXWATCHDOG_BALLOON_SAFETYMARGIN=`/usr/bin/svcprop -p config/balloon_safetymargin $SMF_FMRI 2>/dev/null`
-        [ $? != 0 ] && VBOXWATCHDOG_BALLOON_SAFETYMARGIN=
-        VBOXWATCHDOG_ROTATE=`/usr/bin/svcprop -p config/logrotate $SMF_FMRI 2>/dev/null`
-        [ $? != 0 ] && VBOXWATCHDOG_ROTATE=
-        VBOXWATCHDOG_LOGSIZE=`/usr/bin/svcprop -p config/logsize $SMF_FMRI 2>/dev/null`
-        [ $? != 0 ] && VBOXWATCHDOG_LOGSIZE=
-        VBOXWATCHDOG_LOGINTERVAL=`/usr/bin/svcprop -p config/loginterval $SMF_FMRI 2>/dev/null`
-        [ $? != 0 ] && VBOXWATCHDOG_LOGINTERVAL=
+        VRAWATCHDOG_USER=`/usr/bin/svcprop -p config/user $SMF_FMRI 2>/dev/null`
+        [ $? != 0 ] && VRAWATCHDOG_USER=
+        VRAWATCHDOG_BALLOON_INTERVAL=`/usr/bin/svcprop -p config/balloon_interval $SMF_FMRI 2>/dev/null`
+        [ $? != 0 ] && VRAWATCHDOG_BALLOON_INTERVAL=
+        VRAWATCHDOG_BALLOON_INCREMENT=`/usr/bin/svcprop -p config/balloon_increment $SMF_FMRI 2>/dev/null`
+        [ $? != 0 ] && VRAWATCHDOG_BALLOON_INCREMENT=
+        VRAWATCHDOG_BALLOON_DECREMENT=`/usr/bin/svcprop -p config/balloon_decrement $SMF_FMRI 2>/dev/null`
+        [ $? != 0 ] && VRAWATCHDOG_BALLOON_DECREMENT=
+        VRAWATCHDOG_BALLOON_LOWERLIMIT=`/usr/bin/svcprop -p config/balloon_lowerlimit $SMF_FMRI 2>/dev/null`
+        [ $? != 0 ] && VRAWATCHDOG_BALLOON_LOWERLIMIT=
+        VRAWATCHDOG_BALLOON_SAFETYMARGIN=`/usr/bin/svcprop -p config/balloon_safetymargin $SMF_FMRI 2>/dev/null`
+        [ $? != 0 ] && VRAWATCHDOG_BALLOON_SAFETYMARGIN=
+        VRAWATCHDOG_ROTATE=`/usr/bin/svcprop -p config/logrotate $SMF_FMRI 2>/dev/null`
+        [ $? != 0 ] && VRAWATCHDOG_ROTATE=
+        VRAWATCHDOG_LOGSIZE=`/usr/bin/svcprop -p config/logsize $SMF_FMRI 2>/dev/null`
+        [ $? != 0 ] && VRAWATCHDOG_LOGSIZE=
+        VRAWATCHDOG_LOGINTERVAL=`/usr/bin/svcprop -p config/loginterval $SMF_FMRI 2>/dev/null`
+        [ $? != 0 ] && VRAWATCHDOG_LOGINTERVAL=
 
         # Handle legacy parameters, do not add any further ones unless absolutely necessary.
-        if [ -z "$VBOXWATCHDOG_BALLOON_INTERVAL" ]; then
-            VBOXWATCHDOG_BALLOON_INTERVAL=`/usr/bin/svcprop -p config/interval $SMF_FMRI 2>/dev/null`
-            [ $? != 0 ] && VBOXWATCHDOG_BALLOON_INTERVAL=
+        if [ -z "$VRAWATCHDOG_BALLOON_INTERVAL" ]; then
+            VRAWATCHDOG_BALLOON_INTERVAL=`/usr/bin/svcprop -p config/interval $SMF_FMRI 2>/dev/null`
+            [ $? != 0 ] && VRAWATCHDOG_BALLOON_INTERVAL=
         fi
-        if [ -z "$VBOXWATCHDOG_BALLOON_INCREMENT" ]; then
-            VBOXWATCHDOG_BALLOON_INCREMENT=`/usr/bin/svcprop -p config/increment $SMF_FMRI 2>/dev/null`
-            [ $? != 0 ] && VBOXWATCHDOG_BALLOON_INCREMENT=
+        if [ -z "$VRAWATCHDOG_BALLOON_INCREMENT" ]; then
+            VRAWATCHDOG_BALLOON_INCREMENT=`/usr/bin/svcprop -p config/increment $SMF_FMRI 2>/dev/null`
+            [ $? != 0 ] && VRAWATCHDOG_BALLOON_INCREMENT=
         fi
-        if [ -z "$VBOXWATCHDOG_BALLOON_DECREMENT" ]; then
-            VBOXWATCHDOG_BALLOON_DECREMENT=`/usr/bin/svcprop -p config/decrement $SMF_FMRI 2>/dev/null`
-            [ $? != 0 ] && VBOXWATCHDOG_BALLOON_DECREMENT=
+        if [ -z "$VRAWATCHDOG_BALLOON_DECREMENT" ]; then
+            VRAWATCHDOG_BALLOON_DECREMENT=`/usr/bin/svcprop -p config/decrement $SMF_FMRI 2>/dev/null`
+            [ $? != 0 ] && VRAWATCHDOG_BALLOON_DECREMENT=
         fi
-        if [ -z "$VBOXWATCHDOG_BALLOON_LOWERLIMIT" ]; then
-            VBOXWATCHDOG_BALLOON_LOWERLIMIT=`/usr/bin/svcprop -p config/lowerlimit $SMF_FMRI 2>/dev/null`
-            [ $? != 0 ] && VBOXWATCHDOG_BALLOON_LOWERLIMIT=
+        if [ -z "$VRAWATCHDOG_BALLOON_LOWERLIMIT" ]; then
+            VRAWATCHDOG_BALLOON_LOWERLIMIT=`/usr/bin/svcprop -p config/lowerlimit $SMF_FMRI 2>/dev/null`
+            [ $? != 0 ] && VRAWATCHDOG_BALLOON_LOWERLIMIT=
         fi
-        if [ -z "$VBOXWATCHDOG_BALLOON_SAFETYMARGIN" ]; then
-            VBOXWATCHDOG_BALLOON_SAFETYMARGIN=`/usr/bin/svcprop -p config/safetymargin $SMF_FMRI 2>/dev/null`
-            [ $? != 0 ] && VBOXWATCHDOG_BALLOON_SAFETYMARGIN=
+        if [ -z "$VRAWATCHDOG_BALLOON_SAFETYMARGIN" ]; then
+            VRAWATCHDOG_BALLOON_SAFETYMARGIN=`/usr/bin/svcprop -p config/safetymargin $SMF_FMRI 2>/dev/null`
+            [ $? != 0 ] && VRAWATCHDOG_BALLOON_SAFETYMARGIN=
         fi
 
         # Provide sensible defaults
-        [ -z "$VBOXWATCHDOG_USER" ] && VBOXWATCHDOG_USER=root
+        [ -z "$VRAWATCHDOG_USER" ] && VRAWATCHDOG_USER=root
 
         # Assemble the parameter list
         PARAMS="--background"
-        [ -n "$VBOXWATCHDOG_BALLOON_INTERVAL" ]     && PARAMS="$PARAMS --balloon-interval \"$VBOXWATCHDOG_BALLOON_INTERVAL\""
-        [ -n "$VBOXWATCHDOG_BALLOON_INCREMENT" ]    && PARAMS="$PARAMS --balloon-inc \"$VBOXWATCHDOG_BALLOON_INCREMENT\""
-        [ -n "$VBOXWATCHDOG_BALLOON_DECREMENT" ]    && PARAMS="$PARAMS --balloon-dec \"$VBOXWATCHDOG_BALLOON_DECREMENT\""
-        [ -n "$VBOXWATCHDOG_BALLOON_LOWERLIMIT" ]   && PARAMS="$PARAMS --balloon-lower-limit \"$VBOXWATCHDOG_BALLOON_LOWERLIMIT\""
-        [ -n "$VBOXWATCHDOG_BALLOON_SAFETYMARGIN" ] && PARAMS="$PARAMS --balloon-safety-margin \"$VBOXWATCHDOG_BALLOON_SAFETYMARGIN\""
-        [ -n "$VBOXWATCHDOG_ROTATE" ]       && PARAMS="$PARAMS -R \"$VBOXWATCHDOG_ROTATE\""
-        [ -n "$VBOXWATCHDOG_LOGSIZE" ]      && PARAMS="$PARAMS -S \"$VBOXWATCHDOG_LOGSIZE\""
-        [ -n "$VBOXWATCHDOG_LOGINTERVAL" ]  && PARAMS="$PARAMS -I \"$VBOXWATCHDOG_LOGINTERVAL\""
+        [ -n "$VRAWATCHDOG_BALLOON_INTERVAL" ]     && PARAMS="$PARAMS --balloon-interval \"$VRAWATCHDOG_BALLOON_INTERVAL\""
+        [ -n "$VRAWATCHDOG_BALLOON_INCREMENT" ]    && PARAMS="$PARAMS --balloon-inc \"$VRAWATCHDOG_BALLOON_INCREMENT\""
+        [ -n "$VRAWATCHDOG_BALLOON_DECREMENT" ]    && PARAMS="$PARAMS --balloon-dec \"$VRAWATCHDOG_BALLOON_DECREMENT\""
+        [ -n "$VRAWATCHDOG_BALLOON_LOWERLIMIT" ]   && PARAMS="$PARAMS --balloon-lower-limit \"$VRAWATCHDOG_BALLOON_LOWERLIMIT\""
+        [ -n "$VRAWATCHDOG_BALLOON_SAFETYMARGIN" ] && PARAMS="$PARAMS --balloon-safety-margin \"$VRAWATCHDOG_BALLOON_SAFETYMARGIN\""
+        [ -n "$VRAWATCHDOG_ROTATE" ]       && PARAMS="$PARAMS -R \"$VRAWATCHDOG_ROTATE\""
+        [ -n "$VRAWATCHDOG_LOGSIZE" ]      && PARAMS="$PARAMS -S \"$VRAWATCHDOG_LOGSIZE\""
+        [ -n "$VRAWATCHDOG_LOGINTERVAL" ]  && PARAMS="$PARAMS -I \"$VRAWATCHDOG_LOGINTERVAL\""
 
-        exec su - "$VBOXWATCHDOG_USER" -c "/opt/VirtualBox/VBoxBalloonCtrl $PARAMS"
+        exec su - "$VRAWATCHDOG_USER" -c "/opt/VirtualAgent/VBoxBalloonCtrl $PARAMS"
 
         VW_EXIT=$?
         if [ $VW_EXIT != 0 ]; then

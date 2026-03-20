@@ -10,9 +10,9 @@ from __future__ import print_function;
 
 __copyright__ = \
 """
-Copyright (C) 2012-2026 Oracle and/or its affiliates.
+Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -2814,11 +2814,11 @@ class BuildCategoryDataTestCase(unittest.TestCase):
         ( "23.206",     "23.06",            1  ),
         ( "23.2",       "23.060",           -1 ),
 
-        ( "VirtualBox-2.0.8-Beta2",     "VirtualBox-2.0.8_Beta3-r12345",    -1 ),
-        ( "VirtualBox-2.2.4-Beta2",     "VirtualBox-2.2.2",                  1 ),
-        ( "VirtualBox-2.2.4-Beta3",     "VirtualBox-2.2.2-Beta4",            1 ),
-        ( "VirtualBox-3.1.8-Alpha1",    "VirtualBox-3.1.8-Alpha1-r61454",   -1 ),
-        ( "VirtualBox-3.1.0",           "VirtualBox-3.1.2_Beta1",           -1 ),
+        ( "VirtualAgent-2.0.8-Beta2",     "VirtualAgent-2.0.8_Beta3-r12345",    -1 ),
+        ( "VirtualAgent-2.2.4-Beta2",     "VirtualAgent-2.2.2",                  1 ),
+        ( "VirtualAgent-2.2.4-Beta3",     "VirtualAgent-2.2.2-Beta4",            1 ),
+        ( "VirtualAgent-3.1.8-Alpha1",    "VirtualAgent-3.1.8-Alpha1-r61454",   -1 ),
+        ( "VirtualAgent-3.1.0",           "VirtualAgent-3.1.2_Beta1",           -1 ),
         ( "3.1.0_BETA-r12345",          "3.1.2",                            -1 ),
         ( "3.1.0_BETA1r12345",          "3.1.0",                            -1 ),
         ( "3.1.0_BETAr12345",           "3.1.0",                            -1 ),

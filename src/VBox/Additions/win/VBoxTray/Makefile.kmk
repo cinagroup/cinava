@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -30,21 +30,21 @@ include $(KBUILD_PATH)/subheader.kmk
 
 PROGRAMS += VBoxTray
 VBoxTray_TEMPLATE = VBoxGuestR3Exe
-if defined(VBOX_SIGNING_MODE) && defined(VBOX_SIGN_ADDITIONS) # (See the parent makefile.)
+if defined(VRA_SIGNING_MODE) && defined(VRA_SIGN_ADDITIONS) # (See the parent makefile.)
  VBoxTray_INSTTYPE       := none
  VBoxTray_DEBUG_INSTTYPE := both
 endif
-VBoxTray_SDKS     = ReorderCompilerIncs $(VBOX_WINDDK_GST)
-ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
- VBoxTray_DEFS   := VBOX_WITH_HGCM VBOX_BUILD_TARGET="$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)"
+VBoxTray_SDKS     = ReorderCompilerIncs $(VRA_WINDDK_GST)
+ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
+ VBoxTray_DEFS   := VRA_WITH_HGCM VRA_BUILD_TARGET="$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)"
 else
- VBoxTray_DEFS   := VBOX_WITH_HGCM VBOX_BUILD_TARGET=\"$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)\"
+ VBoxTray_DEFS   := VRA_WITH_HGCM VRA_BUILD_TARGET=\"$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)\"
 endif
 VBoxTray_LDFLAGS  = -SubSystem:Windows
 VBoxTray_INCS     = \
 	../include \
 	$(PATH_ROOT)/src/VBox/Additions/win/Graphics/Video/disp/wddm/shared \
-	$(VBOX_GRAPHICS_INCS)
+	$(VRA_GRAPHICS_INCS)
 VBoxTray_SOURCES  = \
 	VBoxTray.cpp \
 	VBoxTrayLogging.cpp \
@@ -59,18 +59,18 @@ VBoxTray_SOURCES  = \
 	VBoxIPC.cpp \
 	VBoxHelpers.cpp
 VBoxTray_USES.win = vboximportchecker
-VBoxTray_VBOX_IMPORT_CHECKER.win.x86 = nt4 #nt350
-VBoxTray_VBOX_IMPORT_CHECKER.win.amd64 = xp64
-ifdef VBOX_WITH_SHARED_CLIPBOARD
+VBoxTray_VRA_IMPORT_CHECKER.win.x86 = nt4 #nt350
+VBoxTray_VRA_IMPORT_CHECKER.win.amd64 = xp64
+ifdef VRA_WITH_SHARED_CLIPBOARD
  VBoxTray_DEFS     += \
- 	$(if $(VBOX_WITH_SHARED_CLIPBOARD),VBOX_WITH_SHARED_CLIPBOARD,) \
- 	$(if $(VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS),VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS,)
+ 	$(if $(VRA_WITH_SHARED_CLIPBOARD),VRA_WITH_SHARED_CLIPBOARD,) \
+ 	$(if $(VRA_WITH_SHARED_CLIPBOARD_TRANSFERS),VRA_WITH_SHARED_CLIPBOARD_TRANSFERS,)
  VBoxTray_SOURCES  += \
  	VBoxClipboard.cpp \
  	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-win.cpp \
  	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-common.cpp
- ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
-  VBoxTray_DEFS     += VBOX_WITH_SHARED_CLIPBOARD_GUEST
+ ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
+  VBoxTray_DEFS     += VRA_WITH_SHARED_CLIPBOARD_GUEST
   VBoxTray_SOURCES  += \
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/ClipboardDataObjectImpl-win.cpp \
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/ClipboardEnumFormatEtcImpl-win.cpp \
@@ -80,10 +80,10 @@ ifdef VBOX_WITH_SHARED_CLIPBOARD
   	$(PATH_ROOT)/src/VBox/GuestHost/SharedClipboard/clipboard-transfers-provider-local.cpp
  endif
 endif
-ifdef VBOX_WITH_DRAG_AND_DROP
+ifdef VRA_WITH_DRAG_AND_DROP
  VBoxTray_DEFS     += \
- 	VBOX_WITH_DRAG_AND_DROP \
- 	$(if $(VBOX_WITH_DRAG_AND_DROP_GH),VBOX_WITH_DRAG_AND_DROP_GH,)
+ 	VRA_WITH_DRAG_AND_DROP \
+ 	$(if $(VRA_WITH_DRAG_AND_DROP_GH),VRA_WITH_DRAG_AND_DROP_GH,)
  VBoxTray_SOURCES  += \
  	VBoxDnD.cpp \
  	VBoxDnDDataObject.cpp \
@@ -91,24 +91,24 @@ ifdef VBOX_WITH_DRAG_AND_DROP
  	VBoxDnDDropSource.cpp \
  	VBoxDnDDropTarget.cpp
  VBoxTray_LIBS     += \
- 	$(PATH_STAGE_LIB)/additions/VBoxDnDGuestR3Lib$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/additions/VBoxDnDGuestR3Lib$(VRA_SUFF_LIB)
 endif
-ifdef VBOX_WITH_GUEST_PROPS
- VBoxTray_DEFS     += _WIN32_IE=0x500 VBOX_WITH_GUEST_PROPS
+ifdef VRA_WITH_GUEST_PROPS
+ VBoxTray_DEFS     += _WIN32_IE=0x500 VRA_WITH_GUEST_PROPS
  VBoxTray_SOURCES  += \
  	VBoxHostVersion.cpp \
  	VBoxLA.cpp
 endif
-ifdef VBOX_WITH_WDDM
- VBoxTray_DEFS    += VBOX_WITH_WDDM
+ifdef VRA_WITH_WDDM
+ VBoxTray_DEFS    += VRA_WITH_WDDM
  VBoxTray_SOURCES += $(PATH_ROOT)/src/VBox/Additions/win/Graphics/Video/disp/wddm/shared/VBoxDispKmt.cpp
 endif
 
-# VBoxTray.cpp uses VBOX_SVN_REV.
-VBoxTray.cpp_DEFS += VBOX_SVN_REV=$(VBOX_SVN_REV)
-VBoxTray.cpp_DEPS = $(VBOX_SVN_REV_KMK)
+# VBoxTray.cpp uses VRA_SVN_REV.
+VBoxTray.cpp_DEFS += VRA_SVN_REV=$(VRA_SVN_REV)
+VBoxTray.cpp_DEPS = $(VRA_SVN_REV_KMK)
 
 # Version info / description + icon.
-$(call VBOX_SET_VER_INFO_EXE,VBoxTray,VirtualBox Guest Additions Tray Application,$(VBOX_WINDOWS_ADDITIONS_ICON_FILE))
+$(call VRA_SET_VER_INFO_EXE,VBoxTray,VirtualAgent Guest Additions Tray Application,$(VRA_WINDOWS_ADDITIONS_ICON_FILE))
 
 include $(FILE_KBUILD_SUB_FOOTER)

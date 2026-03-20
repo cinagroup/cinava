@@ -1,13 +1,13 @@
 #!/bin/sh
 # $Id: makepackage.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox package creation script, Solaris hosts.
+# VirtualAgent package creation script, Solaris hosts.
 #
 
 #
-# Copyright (C) 2007-2026 Oracle and/or its affiliates.
+# Copyright (C) 2007-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 # Usage:
 #       makepackage.sh [--hardened] [--ips] [--without-VBoxBugReport] [--without-VBoxBalloonCtrl] \
 #           [--without-VBoxAutostart] [--without-vboxwebsrv] \
-#           $(PATH_TARGET)/install packagename {$(KBUILD_TARGET_ARCH)|neutral} $(VBOX_SVN_REV)
+#           $(PATH_TARGET)/install packagename {$(KBUILD_TARGET_ARCH)|neutral} $(VRA_SVN_REV)
 
 
 # Parse options.
@@ -72,31 +72,31 @@ done
 
 if [ -z "$4" ]; then
     echo "Usage: $0 installdir packagename x86|amd64 svnrev"
-    echo "-- packagename must not have any extension (e.g. VirtualBox-SunOS-amd64-r28899)"
+    echo "-- packagename must not have any extension (e.g. VirtualAgent-SunOS-amd64-r28899)"
     exit 1
 fi
 
 PKG_BASE_DIR="$1"
 PACKAGE_SPEC="$PKG_BASE_DIR/$PACKAGE_SPEC"
-VBOX_INSTALLED_DIR=/opt/VirtualBox
+VRA_INSTALLED_DIR=/opt/VirtualAgent
 if [ -n "$IPS_PACKAGE" ]; then
-    VBOX_PKGFILE="$2".p5p
+    VRA_PKGFILE="$2".p5p
 else
-    VBOX_PKGFILE="$2".pkg
+    VRA_PKGFILE="$2".pkg
 fi
-# VBOX_PKG_ARCH is currently unused.
-VBOX_PKG_ARCH="$3"
-VBOX_SVN_REV="$4"
+# VRA_PKG_ARCH is currently unused.
+VRA_PKG_ARCH="$3"
+VRA_SVN_REV="$4"
 
 if [ -n "$IPS_PACKAGE" ] ; then
-    VBOX_PKGNAME=system/virtualbox
+    VRA_PKGNAME=system/virtualbox
 else
-    VBOX_PKGNAME=SUNWvbox
+    VRA_PKGNAME=SUNWvbox
 fi
 # any egrep should do the job, the one from /usr/xpg4/bin isn't required
-VBOX_EGREP=/usr/bin/egrep
+VRA_EGREP=/usr/bin/egrep
 # need dynamic regex support which isn't available in S11 /usr/bin/awk
-VBOX_AWK=/usr/xpg4/bin/awk
+VRA_AWK=/usr/xpg4/bin/awk
 
 # bail out on non-zero exit status
 set -e
@@ -133,10 +133,10 @@ package_spec_fixup_content()
 
 package_create()
 {
-    VBOX_DEF_HARDENED=
-    [ -z "$HARDENED" ] && VBOX_DEF_HARDENED='#'
+    VRA_DEF_HARDENED=
+    [ -z "$HARDENED" ] && VRA_DEF_HARDENED='#'
 
-    pkgmogrify -DVBOX_PKGNAME="$VBOX_PKGNAME" -DHARDENED_ONLY="$VBOX_DEF_HARDENED" "$PACKAGE_SPEC" "$1/vbox-ips.mog" | pkgfmt > "$PACKAGE_SPEC.1"
+    pkgmogrify -DVRA_PKGNAME="$VRA_PKGNAME" -DHARDENED_ONLY="$VRA_DEF_HARDENED" "$PACKAGE_SPEC" "$1/vbox-ips.mog" | pkgfmt > "$PACKAGE_SPEC.1"
 
     pkgdepend generate -m -d "$1" "$PACKAGE_SPEC.1" | pkgfmt > "$PACKAGE_SPEC.2"
 
@@ -190,19 +190,19 @@ package_spec_append_content()
     cd "$1"
     # Exclude directories to not cause install-time conflicts with existing system directories.
     # Also exclude various unpackaged files as well as two unnecessary GTK2 shared objects.
-    find . ! -type d | "$VBOX_EGREP" -v '^\./(LICENSE|prototype|makepackage\.sh|vbox\.pkginfo|postinstall\.sh|checkinstall\.sh|preremove\.sh|vbox\.space|vbox-ips.mog|virtualbox\.p5m.*)$|libqgtk2styleVBox\.so|libqgtk2VBox\.so' | LC_COLLATE=C sort | pkgproto >> "$PACKAGE_SPEC"
+    find . ! -type d | "$VRA_EGREP" -v '^\./(LICENSE|prototype|makepackage\.sh|vbox\.pkginfo|postinstall\.sh|checkinstall\.sh|preremove\.sh|vbox\.space|vbox-ips.mog|virtualbox\.p5m.*)$|libqgtk2styleVBox\.so|libqgtk2VBox\.so' | LC_COLLATE=C sort | pkgproto >> "$PACKAGE_SPEC"
     cd -
-    "$VBOX_AWK" 'NF == 3 && $1 == "s" && $2 == "none" { $3="/"$3 } { print }' "$PACKAGE_SPEC" > "$PACKAGE_SPEC.tmp"
+    "$VRA_AWK" 'NF == 3 && $1 == "s" && $2 == "none" { $3="/"$3 } { print }' "$PACKAGE_SPEC" > "$PACKAGE_SPEC.tmp"
     mv -f "$PACKAGE_SPEC.tmp" "$PACKAGE_SPEC"
-    "$VBOX_AWK" 'NF == 6 && ($1 == "f" || $1 == "l") && ($2 == "none" || $2 == "manifest") { $3="/"$3 } { print }' "$PACKAGE_SPEC" > "$PACKAGE_SPEC.tmp"
+    "$VRA_AWK" 'NF == 6 && ($1 == "f" || $1 == "l") && ($2 == "none" || $2 == "manifest") { $3="/"$3 } { print }' "$PACKAGE_SPEC" > "$PACKAGE_SPEC.tmp"
     mv -f "$PACKAGE_SPEC.tmp" "$PACKAGE_SPEC"
 
     cd "$1"
-    # Include opt/VirtualBox and subdirectories as we want uninstall to clean up directory structure.
+    # Include opt/VirtualAgent and subdirectories as we want uninstall to clean up directory structure.
     # Include var/svc for manifest class action script does not create them.
-    find . -type d | "$VBOX_EGREP" 'opt/VirtualBox|var/svc/manifest/application/virtualbox' | LC_COLLATE=C sort | pkgproto >> "$PACKAGE_SPEC"
+    find . -type d | "$VRA_EGREP" 'opt/VirtualAgent|var/svc/manifest/application/virtualbox' | LC_COLLATE=C sort | pkgproto >> "$PACKAGE_SPEC"
     cd -
-    "$VBOX_AWK" 'NF == 6 && $1 == "d" && $2 == "none" { $3="/"$3 } { print }' "$PACKAGE_SPEC" > "$PACKAGE_SPEC.tmp"
+    "$VRA_AWK" 'NF == 6 && $1 == "d" && $2 == "none" { $3="/"$3 } { print }' "$PACKAGE_SPEC" > "$PACKAGE_SPEC.tmp"
     mv -f "$PACKAGE_SPEC.tmp" "$PACKAGE_SPEC"
 }
 
@@ -217,13 +217,13 @@ package_spec_append_hardlink()
 # params: filename condition action
 package_spec_fixup_filelist()
 {
-    "$VBOX_AWK" 'NF == 6 && '"$1"' { '"$2"' } { print }' "$PACKAGE_SPEC" > "$PACKAGE_SPEC.tmp"
+    "$VRA_AWK" 'NF == 6 && '"$1"' { '"$2"' } { print }' "$PACKAGE_SPEC" > "$PACKAGE_SPEC.tmp"
     mv -f "$PACKAGE_SPEC.tmp" "$PACKAGE_SPEC"
 }
 
 package_spec_fixup_dirlist()
 {
-    "$VBOX_AWK" 'NF == 6 && $1 == "d" && '"$1"' { '"$2"' } { print }' "$PACKAGE_SPEC" > "$PACKAGE_SPEC.tmp"
+    "$VRA_AWK" 'NF == 6 && $1 == "d" && '"$1"' { '"$2"' } { print }' "$PACKAGE_SPEC" > "$PACKAGE_SPEC.tmp"
     mv -f "$PACKAGE_SPEC.tmp" "$PACKAGE_SPEC"
 }
 
@@ -270,21 +270,21 @@ package_spec_fixup_content()
 
     # Hardening requires some executables to be marked setuid.
     if [ -n "$HARDENED" ]; then
-        package_spec_fixup_filelist '(   $3 == "/opt/VirtualBox/amd64/VirtualBoxVM" \
-                                      || $3 == "/opt/VirtualBox/amd64/VBoxHeadless" \
-                                      || $3 == "/opt/VirtualBox/amd64/VBoxSDL" \
-                                      || $3 == "/opt/VirtualBox/i386/VirtualBox" \
-                                      || $3 == "/opt/VirtualBox/i386/VBoxHeadless" \
-                                      || $3 == "/opt/VirtualBox/i386/VBoxSDL" )'                                '$4 = "4755"'
+        package_spec_fixup_filelist '(   $3 == "/opt/VirtualAgent/amd64/VirtualAgentVM" \
+                                      || $3 == "/opt/VirtualAgent/amd64/VBoxHeadless" \
+                                      || $3 == "/opt/VirtualAgent/amd64/VBoxSDL" \
+                                      || $3 == "/opt/VirtualAgent/i386/VirtualAgent" \
+                                      || $3 == "/opt/VirtualAgent/i386/VBoxHeadless" \
+                                      || $3 == "/opt/VirtualAgent/i386/VBoxSDL" )'                                '$4 = "4755"'
     fi
 
     # Other executables that need setuid root (hardened or otherwise)
-    package_spec_fixup_filelist '(   $3 == "/opt/VirtualBox/amd64/VBoxNetAdpCtl" \
-                                  || $3 == "/opt/VirtualBox/i386/VBoxNetAdpCtl" \
-                                  || $3 == "/opt/VirtualBox/amd64/VBoxNetDHCP" \
-                                  || $3 == "/opt/VirtualBox/i386/VBoxNetDHCP" \
-                                  || $3 == "/opt/VirtualBox/amd64/VBoxNetNAT" \
-                                  || $3 == "/opt/VirtualBox/i386/VBoxNetNAT" )'                                 '$4 = "4755"'
+    package_spec_fixup_filelist '(   $3 == "/opt/VirtualAgent/amd64/VBoxNetAdpCtl" \
+                                  || $3 == "/opt/VirtualAgent/i386/VBoxNetAdpCtl" \
+                                  || $3 == "/opt/VirtualAgent/amd64/VBoxNetDHCP" \
+                                  || $3 == "/opt/VirtualAgent/i386/VBoxNetDHCP" \
+                                  || $3 == "/opt/VirtualAgent/amd64/VBoxNetNAT" \
+                                  || $3 == "/opt/VirtualAgent/i386/VBoxNetNAT" )'                                 '$4 = "4755"'
 
     echo " --- start of $PACKAGE_SPEC  ---"
     cat "$PACKAGE_SPEC"
@@ -315,25 +315,25 @@ package_spec_append_info "$PKG_BASE_DIR"
 package_spec_append_content "$PKG_BASE_DIR"
 
 # Add hardlinks for executables to launch the 32-bit or 64-bit executable
-for f in VBoxManage VBoxSDL VBoxZoneAccess VBoxSVC VirtualBox VirtualBoxVM vbox-img VBoxHeadless; do
-    package_spec_append_hardlink VBoxISAExec $f "$PKG_BASE_DIR" "$VBOX_INSTALLED_DIR"
+for f in VBoxManage VBoxSDL VBoxZoneAccess VBoxSVC VirtualAgent VirtualAgentVM vbox-img VBoxHeadless; do
+    package_spec_append_hardlink VBoxISAExec $f "$PKG_BASE_DIR" "$VRA_INSTALLED_DIR"
 done
 if [ -z "${OPT_WITHOUT_VBoxBugReport}" ]; then
-    package_spec_append_hardlink VBoxISAExec VBoxBugReport "$PKG_BASE_DIR" "$VBOX_INSTALLED_DIR"
+    package_spec_append_hardlink VBoxISAExec VBoxBugReport "$PKG_BASE_DIR" "$VRA_INSTALLED_DIR"
 fi
 if [ -z "${OPT_WITHOUT_VBoxBalloonCtrl}" ]; then
-    package_spec_append_hardlink VBoxISAExec VBoxBalloonCtrl "$PKG_BASE_DIR" "$VBOX_INSTALLED_DIR"
+    package_spec_append_hardlink VBoxISAExec VBoxBalloonCtrl "$PKG_BASE_DIR" "$VRA_INSTALLED_DIR"
 fi
 if [ -z "${OPT_WITHOUT_VBoxAutostart}" ]; then
-    package_spec_append_hardlink VBoxISAExec VBoxAutostart "$PKG_BASE_DIR" "$VBOX_INSTALLED_DIR"
+    package_spec_append_hardlink VBoxISAExec VBoxAutostart "$PKG_BASE_DIR" "$VRA_INSTALLED_DIR"
 fi
 if [ -z "${OPT_WITHOUT_vboxwebsrv}" ]; then
-    package_spec_append_hardlink VBoxISAExec vboxwebsrv "$PKG_BASE_DIR" "$VBOX_INSTALLED_DIR"
+    package_spec_append_hardlink VBoxISAExec vboxwebsrv "$PKG_BASE_DIR" "$VRA_INSTALLED_DIR"
 fi
 
 package_spec_fixup_content
 
-package_create "$PKG_BASE_DIR" "$VBOX_PKGFILE" "$VBOX_PKGNAME" "$VBOX_SVN_REV"
+package_create "$PKG_BASE_DIR" "$VRA_PKGFILE" "$VRA_PKGNAME" "$VRA_SVN_REV"
 
 echo "## Package file created successfully!"
 

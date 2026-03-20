@@ -26,26 +26,26 @@ exit 1
 
 from __future__ import print_function
 
-# VirtualBox Python Shell.
+# VirtualAgent Python Shell.
 #
-# This program is a simple interactive shell for VirtualBox. You can query
+# This program is a simple interactive shell for VirtualAgent. You can query
 # information and issue commands from a simple command line.
 #
-# It also provides you with examples on how to use VirtualBox's Python API.
+# It also provides you with examples on how to use VirtualAgent's Python API.
 # This shell is even somewhat documented, supports TAB-completion and
 # history if you have Python readline installed.
 #
 # Finally, shell allows arbitrary custom extensions, just create
-# .VirtualBox/shexts/ and drop your extensions there.
+# .VirtualAgent/shexts/ and drop your extensions there.
 #                                                Enjoy.
 #
 # P.S. Our apologies for the code quality.
 
 __copyright__ = \
 """
-Copyright (C) 2009-2026 Oracle and/or its affiliates.
+Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -1609,7 +1609,7 @@ def colorsCmd(_ctx, args):
 def hostCmd(ctx, _args):
     vbox = ctx['vb']
     try:
-        print("VirtualBox version %s" % (colored(vbox.version, 'blue')))
+        print("VirtualAgent version %s" % (colored(vbox.version, 'blue')))
     except Exception as e:
         printErr(ctx, e)
         if g_fVerbose:
@@ -1959,7 +1959,7 @@ def connectCmd(ctx, args):
     ctx['wsinfo'] = [url, user, passwd]
     ctx['vb'] = ctx['global'].platform.connect(url, user, passwd)
     try:
-        print("Running VirtualBox version %s" % (ctx['vb'].version))
+        print("Running VirtualAgent version %s" % (ctx['vb'].version))
     except Exception as e:
         printErr(ctx, e)
         if g_fVerbose:
@@ -1998,7 +1998,7 @@ def reconnectCmd(ctx, _args):
     [url, user, passwd] = ctx['wsinfo']
     ctx['vb'] = ctx['global'].platform.connect(url, user, passwd)
     try:
-        print("Running VirtualBox version %s" % (ctx['vb'].version))
+        print("Running VirtualAgent version %s" % (ctx['vb'].version))
     except Exception as e:
         printErr(ctx, e)
         if g_fVerbose:
@@ -2633,7 +2633,7 @@ def guiCmd(ctx, args):
 
     binDir = ctx['global'].getBinDir()
 
-    vbox = os.path.join(binDir, 'VirtualBox')
+    vbox = os.path.join(binDir, 'VirtualAgent')
     try:
         os.system(vbox)
     except KeyboardInterrupt:
@@ -3361,7 +3361,7 @@ commands = {'help':['Prints help information', helpCmd, 0],
             'monitorGuestKbd':['Monitor guest keyboard for some time: monitorGuestKbd mytestvm 10', monitorGuestKbdCmd, 0],
             'monitorGuestMouse':['Monitor guest mouse for some time: monitorGuestMouse mytestvm 10', monitorGuestMouseCmd, 0],
             'monitorGuestMultiTouch':['Monitor guest touch screen for some time: monitorGuestMultiTouch mytestvm 10', monitorGuestMultiTouchCmd, 0],
-            'monitorVBox':['Monitor what happens with VirtualBox for some time: monitorVBox 10', monitorVBoxCmd, 0],
+            'monitorVBox':['Monitor what happens with VirtualAgent for some time: monitorVBox 10', monitorVBoxCmd, 0],
             'portForward':['Setup permanent port forwarding for a VM, takes adapter number host port and guest port: portForward mytestvm 0 8080 80', portForwardCmd, 0],
             'showLog':['Show log file of the VM, : showLog mytestvm', showLogCmd, 0],
             'findLog':['Show entries matching pattern in log file of the VM, : findLog mytestvm PDM|CPUM', findLogCmd, 0],
@@ -3383,12 +3383,12 @@ commands = {'help':['Prints help information', helpCmd, 0],
             'unplugcpu':['Remove a CPU from a running VM (additions required, Windows cannot unplug): unplugcpu Linux 1', unplugcpuCmd, 0],
             'createHdd': ['Create virtual HDD:  createHdd 1000 /disk.vdi ', createHddCmd, 0],
             'removeHdd': ['Permanently remove virtual HDD: removeHdd /disk.vdi', removeHddCmd, 0],
-            'registerHdd': ['Register HDD image with VirtualBox instance: registerHdd /disk.vdi', registerHddCmd, 0],
-            'unregisterHdd': ['Unregister HDD image with VirtualBox instance: unregisterHdd /disk.vdi', unregisterHddCmd, 0],
+            'registerHdd': ['Register HDD image with VirtualAgent instance: registerHdd /disk.vdi', registerHddCmd, 0],
+            'unregisterHdd': ['Unregister HDD image with VirtualAgent instance: unregisterHdd /disk.vdi', unregisterHddCmd, 0],
             'attachHdd': ['Attach HDD to the VM: attachHdd mytestvm /disk.vdi "IDE Controller" 0:1', attachHddCmd, 0],
             'detachHdd': ['Detach HDD from the VM: detachHdd mytestvm /disk.vdi', detachHddCmd, 0],
-            'registerIso': ['Register CD/DVD image with VirtualBox instance: registerIso /os.iso', registerIsoCmd, 0],
-            'unregisterIso': ['Unregister CD/DVD image with VirtualBox instance: unregisterIso /os.iso', unregisterIsoCmd, 0],
+            'registerIso': ['Register CD/DVD image with VirtualAgent instance: registerIso /os.iso', registerIsoCmd, 0],
+            'unregisterIso': ['Unregister CD/DVD image with VirtualAgent instance: unregisterIso /os.iso', unregisterIsoCmd, 0],
             'removeIso': ['Permanently remove CD/DVD image: removeIso /os.iso', removeIsoCmd, 0],
             'attachIso': ['Attach CD/DVD to the VM: attachIso mytestvm /os.iso "IDE Controller" 0:1', attachIsoCmd, 0],
             'detachIso': ['Detach CD/DVD from the VM: detachIso mytestvm /os.iso', detachIsoCmd, 0],
@@ -3441,7 +3441,7 @@ def runCommand(ctx, cmd):
 
 #
 # To write your own custom commands to vboxshell, create
-# file ~/.VirtualBox/shellext.py with content like
+# file ~/.VirtualAgent/shellext.py with content like
 #
 # def runTestCmd(ctx, args):
 #    print("Testy test", ctx['vb'])
@@ -3453,7 +3453,7 @@ def runCommand(ctx, cmd):
 # and issue reloadExt shell command.
 # This file also will be read automatically on startup or 'reloadExt'.
 #
-# Also one can put shell extensions into ~/.VirtualBox/shexts and
+# Also one can put shell extensions into ~/.VirtualAgent/shexts and
 # they will also be picked up, so this way one can exchange
 # shell extensions easily.
 def addExtsFromFile(_ctx, cmds, filename):
@@ -3489,9 +3489,9 @@ def checkUserExtensions(ctx, cmds, folder):
 
 def getHomeFolder(ctx):
     if ctx['remote'] or ctx['vb'] is None:
-        if 'VBOX_USER_HOME' in os.environ:
-            return os.path.join(os.environ['VBOX_USER_HOME'])
-        return os.path.join(os.path.expanduser("~"), ".VirtualBox")
+        if 'VRA_USER_HOME' in os.environ:
+            return os.path.join(os.environ['VRA_USER_HOME'])
+        return os.path.join(os.path.expanduser("~"), ".VirtualAgent")
 
     return ctx['vb'].homeFolder
 
@@ -3505,7 +3505,7 @@ def interpret(ctx):
     vbox = ctx['vb']
     if vbox is not None:
         try:
-            print("Running VirtualBox version %s" % (vbox.version))
+            print("Running VirtualAgent version %s" % (vbox.version))
         except Exception as e:
             printErr(ctx, e)
             if g_fVerbose:
@@ -3631,25 +3631,25 @@ def main(_argv):
             asLocations.append(sScriptDir)
 
 
-        sPath = os.environ.get("VBOX_PROGRAM_PATH")
+        sPath = os.environ.get("VRA_PROGRAM_PATH")
         if sPath is None:
             for sCurLoc in asLocations:
-                if   os.path.isfile(os.path.join(sCurLoc, "VirtualBox")) \
-                  or os.path.isfile(os.path.join(sCurLoc, "VirtualBox.exe")):
-                    print("Autodetected VBOX_PROGRAM_PATH as", sCurLoc)
-                    os.environ["VBOX_PROGRAM_PATH"] = sCurLoc
+                if   os.path.isfile(os.path.join(sCurLoc, "VirtualAgent")) \
+                  or os.path.isfile(os.path.join(sCurLoc, "VirtualAgent.exe")):
+                    print("Autodetected VRA_PROGRAM_PATH as", sCurLoc)
+                    os.environ["VRA_PROGRAM_PATH"] = sCurLoc
                     sPath = sCurLoc
                     break
         if sPath:
             sys.path.append(os.path.join(sPath, "sdk", "installer"))
 
-        sPath = os.environ.get("VBOX_SDK_PATH")
+        sPath = os.environ.get("VRA_SDK_PATH")
         if sPath is None:
             for sCurLoc in asLocations:
-                if os.path.isfile(os.path.join(sCurLoc, "sdk", "bindings", "VirtualBox.xidl")):
+                if os.path.isfile(os.path.join(sCurLoc, "sdk", "bindings", "VirtualAgent.xidl")):
                     sCurLoc = os.path.join(sCurLoc, "sdk")
-                    print("Autodetected VBOX_SDK_PATH as", sCurLoc)
-                    os.environ["VBOX_SDK_PATH"] = sCurLoc
+                    print("Autodetected VRA_SDK_PATH as", sCurLoc)
+                    os.environ["VRA_SDK_PATH"] = sCurLoc
                     sPath = sCurLoc
                     break
         if sPath:
@@ -3663,11 +3663,11 @@ def main(_argv):
     #
     # Set up the shell interpreter context and start working.
     #
-    from vboxapi import VirtualBoxManager
-    oVBoxMgr = VirtualBoxManager(style, params)
+    from vboxapi import VirtualAgentManager
+    oVBoxMgr = VirtualAgentManager(style, params)
     ctx = {
         'global':       oVBoxMgr,
-        'vb':           oVBoxMgr.getVirtualBox(),
+        'vb':           oVBoxMgr.getVirtualAgent(),
         'const':        oVBoxMgr.constants,
         'remote':       oVBoxMgr.remote,
         'type':         oVBoxMgr.type,

@@ -1,14 +1,14 @@
 #!/bin/sh
 # $Id: postinst-common.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# Oracle VirtualBox
-# VirtualBox Linux post-installer common portions
+# CINA VirtualAgent
+# VirtualAgent Linux post-installer common portions
 #
 
 #
-# Copyright (C) 2015-2026 Oracle and/or its affiliates.
+# Copyright (C) 2015-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@
 # distributions installer.
 #
 # We assume that all required files are in the same folder as this script
-# (e.g. /opt/VirtualBox, /usr/lib/VirtualBox, the build output directory).
+# (e.g. /opt/VirtualAgent, /usr/lib/VirtualAgent, the build output directory).
 
 # The below is GNU-specific.  See VBox.sh for the longer Solaris/OS X version.
 TARGET=`readlink -e -- "${0}"` || exit 1
@@ -97,11 +97,11 @@ if [ -x /usr/bin/chcon ]; then
     chcon -t texrel_shlib_t "${MY_PATH}"/*VBox* > /dev/null 2>&1
     chcon -t texrel_shlib_t "${MY_PATH}"/VBoxAuth.so \
         > /dev/null 2>&1
-    chcon -t texrel_shlib_t "${MY_PATH}"/VirtualBox.so \
+    chcon -t texrel_shlib_t "${MY_PATH}"/VirtualAgent.so \
         > /dev/null 2>&1
     chcon -t texrel_shlib_t "${MY_PATH}"/components/VBox*.so \
         > /dev/null 2>&1
-    chcon -t java_exec_t    "${MY_PATH}"/VirtualBox > /dev/null 2>&1
+    chcon -t java_exec_t    "${MY_PATH}"/VirtualAgent > /dev/null 2>&1
     chcon -t java_exec_t    "${MY_PATH}"/VBoxSDL > /dev/null 2>&1
     chcon -t java_exec_t    "${MY_PATH}"/VBoxHeadless \
         > /dev/null 2>&1
@@ -123,7 +123,7 @@ test -n "${START}" &&
     if ! "${MY_PATH}/vboxdrv.sh" setup; then
         "${MY_PATH}/check_module_dependencies.sh" >&2
         echo >&2
-        echo "There were problems setting up VirtualBox.  To re-start the set-up process, run" >&2
+        echo "There were problems setting up VirtualAgent.  To re-start the set-up process, run" >&2
         echo "  /sbin/vboxconfig" >&2
         echo "as root.  If your system is using EFI Secure Boot you may need to sign the" >&2
         echo "kernel modules (vboxdrv, vboxnetflt, vboxnetadp, vboxpci) before you can load" >&2

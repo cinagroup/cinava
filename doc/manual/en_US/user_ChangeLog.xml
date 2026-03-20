@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@
     <title>Change Logs for Legacy Versions</title>
 
     <para>
-      To view the change log for a legacy version of VirtualBox see the
+      To view the change log for a legacy version of VirtualAgent see the
       documentation for the relevant &product-name; release.
     </para>
 

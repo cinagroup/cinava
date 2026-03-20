@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ include $(KBUILD_PATH)/subheader.kmk
 #
 # The main target: libssl.
 #
-if "$(SDK_VBoxOpenSslStatic_INCS)" == "$(SDK_VBoxOpenSslStatic_VBOX_DEFAULT_INCS)"
+if "$(SDK_VBoxOpenSslStatic_INCS)" == "$(SDK_VBoxOpenSslStatic_VRA_DEFAULT_INCS)"
  LIBRARIES += VBox-libssl
 endif
 VBox-libssl_TEMPLATE = LibCrypto
@@ -88,31 +88,31 @@ VBox-libssl_SOURCES  = \
 	tls_depr.c \
 	tls_srp.c
 
-ifdef VBOX_WITH_32_ON_64_MAIN_API # 32-bit edition.
+ifdef VRA_WITH_32_ON_64_MAIN_API # 32-bit edition.
  LIBRARIES += VBox-libssl-x86
  VBox-libssl-x86_TEMPLATE = VBoxLibCrypto-x86
  VBox-libssl-x86_EXTENDS = VBox-libssl
 endif
 
 
-ifdef VBOX_NEED_EXTPACK_OPENSSL
+ifdef VRA_NEED_EXTPACK_OPENSSL
  #
  # For the extension pack.
  #
  LIBRARIES += VBoxExtPack-libssl
  VBoxExtPack-libssl_EXTENDS = VBox-libssl
- VBoxExtPack-libssl_DEFS = VBOX_IN_EXTPACK
+ VBoxExtPack-libssl_DEFS = VRA_IN_EXTPACK
 endif
 
 
-ifdef VBOX_WITH_BLD_RTSIGNTOOL_SIGNING
+ifdef VRA_WITH_BLD_RTSIGNTOOL_SIGNING
  #
  # The build program version.
  #
  LIBRARIES += VBoxBldProg-libssl
  VBoxBldProg-libssl_EXTENDS = VBox-libssl
  VBoxBldProg-libssl_TEMPLATE = VBoxLibCryptoBldProg
-endif # VBOX_WITH_BLD_RTSIGNTOOL_SIGNING
+endif # VRA_WITH_BLD_RTSIGNTOOL_SIGNING
 
 include $(FILE_KBUILD_SUB_FOOTER)
 

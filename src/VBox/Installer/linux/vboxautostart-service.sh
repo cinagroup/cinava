@@ -1,13 +1,13 @@
 #!/bin/sh
 # $Id: vboxautostart-service.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox autostart service init script.
+# VirtualAgent autostart service init script.
 #
 
 #
-# Copyright (C) 2012-2026 Oracle and/or its affiliates.
+# Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 #
 
 # chkconfig: 345 35 65
-# description: VirtualBox autostart service
+# description: VirtualAgent autostart service
 #
 ### BEGIN INIT INFO
 # Provides:       vboxautostart-service
@@ -35,7 +35,7 @@
 # Required-Stop:  vboxdrv
 # Default-Start:  2 3 4 5
 # Default-Stop:   0 1 6
-# Description:    VirtualBox autostart service
+# Description:    VirtualAgent autostart service
 ### END INIT INFO
 
 PATH=$PATH:/bin:/sbin:/usr/sbin
@@ -124,19 +124,19 @@ valid_db_entry() {
 }
 
 start() {
-    [ -z "$VBOXAUTOSTART_DB" ] && exit 0
-    [ -z "$VBOXAUTOSTART_CONFIG" ] && exit 0
-    begin_msg "Starting VirtualBox VMs configured for autostart" console;
+    [ -z "$VRAAUTOSTART_DB" ] && exit 0
+    [ -z "$VRAAUTOSTART_CONFIG" ] && exit 0
+    begin_msg "Starting VirtualAgent VMs configured for autostart" console;
     vboxdrvrunning || {
-        fail_msg "VirtualBox kernel module not loaded!"
+        fail_msg "VirtualAgent kernel module not loaded!"
         exit 0
     }
-    PARAMS="--background --start --config $VBOXAUTOSTART_CONFIG"
+    PARAMS="--background --start --config $VRAAUTOSTART_CONFIG"
 
     # prevent inheriting this setting to VBoxSVC
-    unset VBOX_RELEASE_LOG_DEST
+    unset VRA_RELEASE_LOG_DEST
 
-    for entry in "$VBOXAUTOSTART_DB"/*.start
+    for entry in "$VRAAUTOSTART_DB"/*.start
     do
         user=$(basename "$entry" .start)
         [ "$user" = "*" ] && break
@@ -149,15 +149,15 @@ start() {
 }
 
 stop() {
-    [ -z "$VBOXAUTOSTART_DB" ] && exit 0
-    [ -z "$VBOXAUTOSTART_CONFIG" ] && exit 0
+    [ -z "$VRAAUTOSTART_DB" ] && exit 0
+    [ -z "$VRAAUTOSTART_CONFIG" ] && exit 0
 
-    PARAMS="--stop --config $VBOXAUTOSTART_CONFIG"
+    PARAMS="--stop --config $VRAAUTOSTART_CONFIG"
 
     # prevent inheriting this setting to VBoxSVC
-    unset VBOX_RELEASE_LOG_DEST
+    unset VRA_RELEASE_LOG_DEST
 
-    for entry in "$VBOXAUTOSTART_DB"/*.stop
+    for entry in "$VRAAUTOSTART_DB"/*.stop
     do
         user=$(basename "$entry" .stop)
         [ "$user" = "*" ] && break

@@ -5,9 +5,9 @@
 #
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -317,18 +317,18 @@ my_generate_all_projects()
         my_generate_project "FE-VBoxShell"  "src/VBox/Frontends/VBoxShell"      --begin-incs "include" "src/VBox/Frontends/VBoxShell"           --end-includes "src/VBox/Frontends/VBoxShell"
         my_generate_project "FE-VBoxBFE"    "src/VBox/Frontends/VBoxBFE"        --begin-incs "include" "src/VBox/Frontends/VBoxBFE"             --end-includes "src/VBox/Frontends/VBoxBFE"
     fi
-    FE_VBOX_WRAPPERS=""
+    FE_VRA_WRAPPERS=""
     for d in ${MY_OUT_DIRS};
     do
-        if test -d "${MY_ROOT_DIR}/${d}/obj/VirtualBox/include"; then
-            FE_VBOX_WRAPPERS="${d}/obj/VirtualBox/include"
+        if test -d "${MY_ROOT_DIR}/${d}/obj/VirtualAgent/include"; then
+            FE_VRA_WRAPPERS="${d}/obj/VirtualAgent/include"
             break
         fi
     done
-    if test -n "${FE_VBOX_WRAPPERS}"; then
-        my_generate_project "FE-VirtualBox" "src/VBox/Frontends/VirtualBox"     --begin-incs "include" "${FE_VBOX_WRAPPERS}"                    --end-includes "src/VBox/Frontends/VirtualBox" "${FE_VBOX_WRAPPERS}/COMWrappers.cpp" "${FE_VBOX_WRAPPERS}/COMWrappers.h"
+    if test -n "${FE_VRA_WRAPPERS}"; then
+        my_generate_project "FE-VirtualAgent" "src/VBox/Frontends/VirtualAgent"     --begin-incs "include" "${FE_VRA_WRAPPERS}"                    --end-includes "src/VBox/Frontends/VirtualAgent" "${FE_VRA_WRAPPERS}/COMWrappers.cpp" "${FE_VRA_WRAPPERS}/COMWrappers.h"
     else
-        my_generate_project "FE-VirtualBox" "src/VBox/Frontends/VirtualBox"     --begin-incs "include"                                          --end-includes "src/VBox/Frontends/VirtualBox"
+        my_generate_project "FE-VirtualAgent" "src/VBox/Frontends/VirtualAgent"     --begin-incs "include"                                          --end-includes "src/VBox/Frontends/VirtualAgent"
     fi
 
     # src/VBox/GuestHost

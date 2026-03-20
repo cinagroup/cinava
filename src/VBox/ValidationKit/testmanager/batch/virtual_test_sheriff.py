@@ -16,9 +16,9 @@ from __future__ import print_function;
 
 __copyright__ = \
 """
-Copyright (C) 2012-2026 Oracle and/or its affiliates.
+Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -161,7 +161,7 @@ class VirtualTestSheriffCaseFile(object):
     #
 
     def isVBoxTest(self):
-        """ Test classification: VirtualBox (using the build) """
+        """ Test classification: VirtualAgent (using the build) """
         return self.oBuild.oCat.sProduct.lower() in [ 'virtualbox', 'vbox' ];
 
     def isVBoxUnitTest(self):
@@ -170,38 +170,38 @@ class VirtualTestSheriffCaseFile(object):
            and (self.oTestCase.sName.lower() == 'unit tests' or self.oTestCase.sName.lower().startswith('misc: unit tests'));
 
     def isVBoxInstallTest(self):
-        """ Test case classification: VirtualBox Guest installation test. """
+        """ Test case classification: VirtualAgent Guest installation test. """
         return self.isVBoxTest() \
            and self.oTestCase.sName.lower().startswith('install:');
 
     def isVBoxUnattendedInstallTest(self):
-        """ Test case classification: VirtualBox Guest installation test. """
+        """ Test case classification: VirtualAgent Guest installation test. """
         return self.isVBoxTest() \
            and self.oTestCase.sName.lower().startswith('uinstall:');
 
     def isVBoxUSBTest(self):
-        """ Test case classification: VirtualBox USB test. """
+        """ Test case classification: VirtualAgent USB test. """
         return self.isVBoxTest() \
            and self.oTestCase.sName.lower().startswith('usb:');
 
     def isVBoxStorageTest(self):
-        """ Test case classification: VirtualBox Storage test. """
+        """ Test case classification: VirtualAgent Storage test. """
         return self.isVBoxTest() \
            and self.oTestCase.sName.lower().startswith('storage:');
 
     def isVBoxGAsTest(self):
-        """ Test case classification: VirtualBox Guest Additions test. """
+        """ Test case classification: VirtualAgent Guest Additions test. """
         return self.isVBoxTest() \
            and (   self.oTestCase.sName.lower().startswith('guest additions')
                 or self.oTestCase.sName.lower().startswith('ga\'s tests'));
 
     def isVBoxAPITest(self):
-        """ Test case classification: VirtualBox API test. """
+        """ Test case classification: VirtualAgent API test. """
         return self.isVBoxTest() \
            and self.oTestCase.sName.lower().startswith('api:');
 
     def isVBoxBenchmarkTest(self):
-        """ Test case classification: VirtualBox Benchmark test. """
+        """ Test case classification: VirtualAgent Benchmark test. """
         return self.isVBoxTest() \
            and self.oTestCase.sName.lower().startswith('benchmark:');
 
@@ -703,7 +703,7 @@ class VirtualTestSheriff(object): # pylint: disable=too-few-public-methods
     ktReason_Ignore_Buggy_Test_Driver                  = ( 'Ignore',            'Buggy test driver' );
     ktReason_Ignore_Stale_Files                        = ( 'Ignore',            'Stale files' );
     ktReason_Buggy_Build_Broken_Build                  = ( 'Broken Build',      'Buggy build' );
-    ktReason_GuestBug_CompizVBoxQt                     = ( 'Guest Bug',         'Compiz + VirtualBox Qt GUI crash' );
+    ktReason_GuestBug_CompizVBoxQt                     = ( 'Guest Bug',         'Compiz + VirtualAgent Qt GUI crash' );
     ## @}
 
     ## BSOD category.
@@ -973,12 +973,12 @@ class VirtualTestSheriff(object): # pylint: disable=too-few-public-methods
                 self.vprint('TODO: toplevel failure');
                 cRelevantOnes += 1
 
-            elif oFailedResult.sName == 'Installing VirtualBox':
+            elif oFailedResult.sName == 'Installing VirtualAgent':
                 sResultLog = TestSetData.extractLogSectionElapsed(sMainLog, oFailedResult.tsCreated, oFailedResult.tsElapsed);
                 self.investigateInstallUninstallFailure(oCaseFile, oFailedResult, sResultLog, fInstall = True)
                 cRelevantOnes += 1
 
-            elif oFailedResult.sName == 'Uninstalling VirtualBox':
+            elif oFailedResult.sName == 'Uninstalling VirtualAgent':
                 sResultLog = TestSetData.extractLogSectionElapsed(sMainLog, oFailedResult.tsCreated, oFailedResult.tsElapsed);
                 self.investigateInstallUninstallFailure(oCaseFile, oFailedResult, sResultLog, fInstall = False)
                 cRelevantOnes += 1
@@ -1586,7 +1586,7 @@ class VirtualTestSheriff(object): # pylint: disable=too-few-public-methods
                 return self.caseClosed(oCaseFile);
 
             # Hang after starting VBoxSVC (e.g. idTestSet=136307258)
-            if self.isThisFollowedByTheseLines(sMainLog, 'oVBoxMgr=<vboxapi.VirtualBoxManager object at',
+            if self.isThisFollowedByTheseLines(sMainLog, 'oVBoxMgr=<vboxapi.VirtualAgentManager object at',
                                                (' Timeout: ', ' Attempting to abort child...',) ):
                 if sMainLog.find('*** glibc detected *** /') > 0:
                     oCaseFile.noteReason(self.ktReason_XPCOM_VBoxSVC_Hang_Plus_Heap_Corruption);
@@ -1624,10 +1624,10 @@ class VirtualTestSheriff(object): # pylint: disable=too-few-public-methods
         for oFailedResult in aoFailedResults:
             self.dprint(u'Looking at test result #%u - %s' % (oFailedResult.idTestResult, oFailedResult.getFullName(),));
             sResultLog = TestSetData.extractLogSectionElapsed(sMainLog, oFailedResult.tsCreated, oFailedResult.tsElapsed);
-            if oFailedResult.sName == 'Installing VirtualBox':
+            if oFailedResult.sName == 'Installing VirtualAgent':
                 self.investigateInstallUninstallFailure(oCaseFile, oFailedResult, sResultLog, fInstall = True)
 
-            elif oFailedResult.sName == 'Uninstalling VirtualBox':
+            elif oFailedResult.sName == 'Uninstalling VirtualAgent':
                 self.investigateInstallUninstallFailure(oCaseFile, oFailedResult, sResultLog, fInstall = False)
 
             elif self.isResultFromVMRun(oFailedResult, sResultLog):
@@ -1705,9 +1705,9 @@ class VirtualTestSheriff(object): # pylint: disable=too-few-public-methods
           'Exception: 0x800706be (Call to remote object failed (NS_ERROR_CALL_FAILED))' ),
         ( True,  ktReason_API_std_bad_alloc,                        'Unexpected exception: std::bad_alloc' ),
         ( True,  ktReason_API_Digest_Mismatch,                      'Digest mismatch (VERR_NOT_EQUAL)' ),
-        ( True,  ktReason_API_MoveVM_SharingViolation,              'rc=VBOX_E_IPRT_ERROR text="Could not copy the log file ' ),
+        ( True,  ktReason_API_MoveVM_SharingViolation,              'rc=VRA_E_IPRT_ERROR text="Could not copy the log file ' ),
         ( True,  ktReason_API_MoveVM_InvalidParameter,
-          'rc=VBOX_E_IPRT_ERROR text="Could not copy the setting file ' ),
+          'rc=VRA_E_IPRT_ERROR text="Could not copy the setting file ' ),
         ( True,  ktReason_API_Open_Session_Failed,                  'error: failed to open session for' ),
     ];
 
@@ -1728,10 +1728,10 @@ class VirtualTestSheriff(object): # pylint: disable=too-few-public-methods
         for oFailedResult in aoFailedResults:
             self.dprint(u'Looking at test result #%u - %s' % (oFailedResult.idTestResult, oFailedResult.getFullName(),));
             sResultLog = TestSetData.extractLogSectionElapsed(sMainLog, oFailedResult.tsCreated, oFailedResult.tsElapsed);
-            if oFailedResult.sName == 'Installing VirtualBox':
+            if oFailedResult.sName == 'Installing VirtualAgent':
                 self.investigateInstallUninstallFailure(oCaseFile, oFailedResult, sResultLog, fInstall = True)
 
-            elif oFailedResult.sName == 'Uninstalling VirtualBox':
+            elif oFailedResult.sName == 'Uninstalling VirtualAgent':
                 self.investigateInstallUninstallFailure(oCaseFile, oFailedResult, sResultLog, fInstall = False)
 
             elif sResultLog.find('Exception: 0x800706be (Call to remote object failed (NS_ERROR_CALL_FAILED))') > 0:

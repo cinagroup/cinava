@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2016-2026 Oracle and/or its affiliates.
+# Copyright (C) 2016-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -32,9 +32,9 @@ DLLS       += VBoxNine
 DLLS.amd64 += VBoxNine-x86
 
 VBoxNine_TEMPLATE = VBoxMesa3DGuestR3DllMinVista
-if $(VBOX_MESA_V_MAJOR) >= 24
+if $(VRA_MESA_V_MAJOR) >= 24
  VBoxNine_DEFS     = \
- 	VBOX_MESA_STATIC_DRIVER
+ 	VRA_MESA_STATIC_DRIVER
 endif
 #  -wd4100: unreferenced formal parameter
 #  -wd4200: nonstandard extension used : zero-sized array in struct/union
@@ -43,20 +43,20 @@ endif
 #  -wd4668: 'something' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 VBoxNine_CFLAGS   = -wd4100 -wd4200 -wd4245 -wd4255 -wd4668
 VBoxNine_INCS     = \
-	$(VBOX_PATH_MESA)/src/gallium/frontends/nine
-if $(VBOX_MESA_V_MAJOR) >= 24
+	$(VRA_PATH_MESA)/src/gallium/frontends/nine
+if $(VRA_MESA_V_MAJOR) >= 24
  VBoxNine_INCS    += \
- 	$(VBOX_PATH_3D)/win/include \
- 	$(VBOX_PATH_3D)/win/VBoxSVGA \
- 	$(VBOX_PATH_MESA)/src/gallium/drivers/svga \
- 	$(VBOX_PATH_MESA)/src/gallium/drivers/svga/include \
- 	$(VBOX_PATH_MESA)/src/gallium/winsys/svga/drm
+ 	$(VRA_PATH_3D)/win/include \
+ 	$(VRA_PATH_3D)/win/VBoxSVGA \
+ 	$(VRA_PATH_MESA)/src/gallium/drivers/svga \
+ 	$(VRA_PATH_MESA)/src/gallium/drivers/svga/include \
+ 	$(VRA_PATH_MESA)/src/gallium/winsys/svga/drm
 endif
 VBoxNine_SOURCES  = \
 	nine/nine_memory_helper.c \
 	VBoxNine.c \
 	VBoxNine.rc
-if $(VBOX_MESA_V_MAJOR) < 24
+if $(VRA_MESA_V_MAJOR) < 24
  VBoxNine_SOURCES += \
  	VBoxNine.def
 else
@@ -68,18 +68,18 @@ else
  	../VBoxSVGA/winsys/vmw_screen_ioctl.c
 endif
 VBoxNine_LIBS     = \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaGalliumAuxLib$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaLib$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaUtilLib$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaNineLib$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxWddmUmHlp$(VBOX_SUFF_LIB)
-if $(VBOX_MESA_V_MAJOR) >= 24
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaGalliumAuxLib$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaLib$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaUtilLib$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaNineLib$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxWddmUmHlp$(VRA_SUFF_LIB)
+if $(VRA_MESA_V_MAJOR) >= 24
  VBoxNine_LIBS    += \
- 	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaSVGAWinsysLib$(VBOX_SUFF_LIB) \
- 	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaSVGALib$(VBOX_SUFF_LIB)
+ 	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaSVGAWinsysLib$(VRA_SUFF_LIB) \
+ 	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaSVGALib$(VRA_SUFF_LIB)
 endif
 
-if defined(VBOX_SIGNING_MODE) && defined(VBOX_SIGN_ADDITIONS)
+if defined(VRA_SIGNING_MODE) && defined(VRA_SIGN_ADDITIONS)
  VBoxNine_INSTTYPE       = none
  VBoxNine_DEBUG_INSTTYPE = both
 endif
@@ -90,17 +90,17 @@ endif
 VBoxNine-x86_EXTENDS      = VBoxNine
 VBoxNine-x86_BLD_TRG_ARCH = x86
 VBoxNine-x86_LIBS         = \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxWddmUmHlp-x86$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaGalliumAuxLib-x86$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaLib-x86$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaUtilLib-x86$(VBOX_SUFF_LIB) \
-	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaNineLib-x86$(VBOX_SUFF_LIB)
-if $(VBOX_MESA_V_MAJOR) >= 24
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxWddmUmHlp-x86$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaGalliumAuxLib-x86$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaLib-x86$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaUtilLib-x86$(VRA_SUFF_LIB) \
+	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaNineLib-x86$(VRA_SUFF_LIB)
+if $(VRA_MESA_V_MAJOR) >= 24
  VBoxNine-x86_LIBS    += \
- 	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaSVGAWinsysLib-x86$(VBOX_SUFF_LIB) \
- 	$(VBOX_PATH_ADDITIONS_LIB)/VBoxMesaSVGALib-x86$(VBOX_SUFF_LIB)
+ 	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaSVGAWinsysLib-x86$(VRA_SUFF_LIB) \
+ 	$(VRA_PATH_ADDITIONS_LIB)/VBoxMesaSVGALib-x86$(VRA_SUFF_LIB)
 endif
-VBoxNine-x86_DEFS         = $(VBoxNine_DEFS) VBOX_WOW64
+VBoxNine-x86_DEFS         = $(VBoxNine_DEFS) VRA_WOW64
 
 include $(FILE_KBUILD_SUB_FOOTER)
 

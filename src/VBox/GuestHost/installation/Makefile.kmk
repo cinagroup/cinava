@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2024-2026 Oracle and/or its affiliates.
+# Copyright (C) 2024-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -28,17 +28,17 @@
 SUB_DEPTH = ../../../..
 include $(KBUILD_PATH)/subheader.kmk
 
-ifdef VBOX_WITH_TESTCASES
+ifdef VRA_WITH_TESTCASES
  include $(PATH_SUB_CURRENT)/testcase/Makefile.kmk
 endif
 
-ifndef VBOX_ONLY_ADDITIONS
+ifndef VRA_ONLY_ADDITIONS
  #
  # The host variant of VBoxDrvInst.
  #
  PROGRAMS.win += VBoxDrvInstHost
  VBoxDrvInstHost_TEMPLATE    = VBoxR3Exe
- VBoxDrvInstHost_DEFS        = _UNICODE UNICODE VBOX_SVN_REV=$(VBOX_SVN_REV)
+ VBoxDrvInstHost_DEFS        = _UNICODE UNICODE VRA_SVN_REV=$(VRA_SVN_REV)
  VBoxDrvInstHost_INST       := $(INST_BIN)
  VBoxDrvInstHost_NAME       := VBoxDrvInst
  VBoxDrvInstHost_SOURCES     = \

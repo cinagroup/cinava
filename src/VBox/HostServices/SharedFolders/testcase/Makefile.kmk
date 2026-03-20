@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ include $(KBUILD_PATH)/subheader.kmk
 #
 PROGRAMS += tstShflSizes
 TESTING  += $(tstShflSizes_0_OUTDIR)/tstShflSizes.run
-ifndef VBOX_ONLY_SDK
+ifndef VRA_ONLY_SDK
  ifeq ($(KBUILD_TARGET),$(KBUILD_HOST))
   if1of ($(KBUILD_TARGET_ARCH).$(KBUILD_HOST_ARCH), x86.x86 amd64.amd64 x86.amd64)
    OTHERS  += $(tstShflSizes_0_OUTDIR)/tstShflSizes.run
@@ -41,22 +41,22 @@ ifndef VBOX_ONLY_SDK
  endif
 endif
 tstShflSizes_TEMPLATE = VBoxR3AutoTest
-tstShflSizes_DEFS     = VBOX_WITH_HGCM
+tstShflSizes_DEFS     = VRA_WITH_HGCM
 tstShflSizes_SOURCES  = tstShflSizes.cpp
 tstShflSizes_CLEAN    = $(tstShflSizes_0_OUTDIR)/tstShflSizes.run
 
-$$(tstShflSizes_0_OUTDIR)/tstShflSizes.run: $$(tstShflSizes_1_STAGE_TARGET) | $$(dir $$@) $$(VBOX_RUN_TARGET_ORDER_DEPS)
+$$(tstShflSizes_0_OUTDIR)/tstShflSizes.run: $$(tstShflSizes_1_STAGE_TARGET) | $$(dir $$@) $$(VRA_RUN_TARGET_ORDER_DEPS)
 	$(tstShflSizes_1_STAGE_TARGET) quiet
 	$(QUIET)$(APPEND) -t "$@" "done"
 
 
-ifdef VBOX_WITH_TESTCASES
+ifdef VRA_WITH_TESTCASES
  #
  # Case conversion testcase.
  #
  PROGRAMS += tstShflCase
  tstShflCase_TEMPLATE = VBoxR3TstExe
- tstShflCase_DEFS    = VBOX_WITH_HGCM
+ tstShflCase_DEFS    = VRA_WITH_HGCM
  tstShflCase_SOURCES = tstShflCase.cpp
  tstShflCase_LIBS    = $(LIB_RUNTIME)
 
@@ -66,13 +66,13 @@ ifdef VBOX_WITH_TESTCASES
 
  PROGRAMS += tstSharedFolderService
  tstSharedFolderService_TEMPLATE = VBoxR3TstExe
- tstSharedFolderService_DEFS    = VBOX_WITH_HGCM UNITTEST
+ tstSharedFolderService_DEFS    = VRA_WITH_HGCM UNITTEST
  tstSharedFolderService_INCS    = ..
  ifneq ($(KBUILD_TARGET),win)
-  tstSharedFolderService_DEFS  += VBOX_WITH_XPCOM
-  tstSharedFolderService_INCS  += $(VBOX_XPCOM_INCS)
+  tstSharedFolderService_DEFS  += VRA_WITH_XPCOM
+  tstSharedFolderService_INCS  += $(VRA_XPCOM_INCS)
  endif
- tstSharedFolderService_INCS.win += $(VBOX_PATH_SDK)/bindings/mscom/include
+ tstSharedFolderService_INCS.win += $(VRA_PATH_SDK)/bindings/mscom/include
  tstSharedFolderService_SOURCES = \
  	tstSharedFolderService.cpp \
  	../mappings.cpp \
@@ -102,7 +102,7 @@ ifdef VBOX_WITH_TESTCASES
   tstSharedFolderService-win_LIBS   = $(tstSharedFolderService_LIBS)
  endif
 
-endif # VBOX_WITH_TESTCASES
+endif # VRA_WITH_TESTCASES
 
 
 include $(FILE_KBUILD_SUB_FOOTER)

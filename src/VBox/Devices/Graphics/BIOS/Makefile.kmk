@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2012-2026 Oracle and/or its affiliates.
+# Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ SUB_DEPTH = ../../../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 
-ifdef VBOX_WITH_OPEN_WATCOM
+ifdef VRA_WITH_OPEN_WATCOM
 
  #
  # VBoxVgaBios - The VGA BIOS.
@@ -38,8 +38,8 @@ ifdef VBOX_WITH_OPEN_WATCOM
  VBoxVgaBios386_TEMPLATE = VBoxBios
  VBoxVgaBios386_ASFLAGS = -0
  VBoxVgaBios386_CFLAGS = -3
- VBoxVgaBios386_DEFS = VBE VBOX_BIOS_CPU=80386
- VBoxVgaBios386_INCS = $(VBOX_GRAPHICS_INCS)
+ VBoxVgaBios386_DEFS = VBE VRA_BIOS_CPU=80386
+ VBoxVgaBios386_INCS = $(VRA_GRAPHICS_INCS)
  VBoxVgaBios386_SOURCES = \
  	vgarom.asm \
  	vberom.asm \
@@ -58,12 +58,12 @@ ifdef VBOX_WITH_OPEN_WATCOM
  MISCBINS += VBoxVgaBios286
  VBoxVgaBios286_EXTENDS = VBoxVgaBios386
  VBoxVgaBios286_CFLAGS  = -2
- VBoxVgaBios286_DEFS    = $(filter-out VBOX_BIOS_CPU=80386,$(VBoxVgaBios386_DEFS)) VBOX_BIOS_CPU=80286
+ VBoxVgaBios286_DEFS    = $(filter-out VRA_BIOS_CPU=80386,$(VBoxVgaBios386_DEFS)) VRA_BIOS_CPU=80286
 
  MISCBINS += VBoxVgaBios8086
  VBoxVgaBios8086_EXTENDS = VBoxVgaBios386
  VBoxVgaBios8086_CFLAGS  = -0
- VBoxVgaBios8086_DEFS    = $(filter-out VBOX_BIOS_CPU=80386,$(VBoxVgaBios386_DEFS)) VBOX_BIOS_CPU=8086
+ VBoxVgaBios8086_DEFS    = $(filter-out VRA_BIOS_CPU=80386,$(VBoxVgaBios386_DEFS)) VRA_BIOS_CPU=8086
 
  #
  # Updates the alternative source file.
@@ -71,10 +71,10 @@ ifdef VBOX_WITH_OPEN_WATCOM
  define def_VBoxVgaBiosUpdateAltSource
   $$(PATH_SUB_CURRENT)/VBoxVgaBiosAlternative$(1).asm +| $$(PATH_SUB_CURRENT)/VBoxVgaBiosAlternative$(1).md5sum: \
   		$$$$(VBoxVgaBios$(1)_1_TARGET) \
-  		$$(VBOX_MAKE_ALTERNATIVE_SOURCE) \
-  		$$(VBOX_VBOXCMP)
+  		$$(VRA_MAKE_ALTERNATIVE_SOURCE) \
+  		$$(VRA_VRACMP)
   if1of ($$(KBUILD_TYPE), release)
-	$$(VBOX_MAKE_ALTERNATIVE_SOURCE) \
+	$$(VRA_MAKE_ALTERNATIVE_SOURCE) \
 		--bios-image $$< \
 		--bios-map $$(basename $$<).map \
 		--bios-sym $$(basename $$<).sym \
@@ -84,7 +84,7 @@ ifdef VBOX_WITH_OPEN_WATCOM
 		-o $$(VBoxVgaBios$(1)_0_OUTDIR)/VBoxVgaBiosAlternative$(1).bin \
 		-l $$(VBoxVgaBios$(1)_0_OUTDIR)/VBoxVgaBiosAlternative$(1).lst \
 		$$(VBoxVgaBios$(1)_0_OUTDIR)/VBoxVgaBiosAlternative$(1).asm
-	$$(VBOX_VBOXCMP) $$< $$(VBoxVgaBios$(1)_0_OUTDIR)/VBoxVgaBiosAlternative$(1).bin
+	$$(VRA_VRACMP) $$< $$(VBoxVgaBios$(1)_0_OUTDIR)/VBoxVgaBiosAlternative$(1).bin
 	$$(CP) --changed -- $$(VBoxVgaBios$(1)_0_OUTDIR)/VBoxVgaBiosAlternative$(1).asm $$(PATH_ROOT)/src/VBox/Devices/Graphics/BIOS/VBoxVgaBiosAlternative$(1).asm
 	$$(REDIRECT) -C $$(dir $$(VBoxVgaBios$(1)_1_TARGET)) -- \
 		$$(MD5SUM_EXT) -bo $$(VBoxVgaBios$(1)_0_OUTDIR)/VBoxVgaBiosAlternative$(1).md5sum $$(notdir $$(VBoxVgaBios$(1)_1_TARGET))
@@ -108,7 +108,7 @@ ifdef VBOX_WITH_OPEN_WATCOM
  		$(PATH_SUB_CURRENT)/VBoxVgaBiosAlternative286.asm \
  		$(PATH_SUB_CURRENT)/VBoxVgaBiosAlternative8086.asm
 
-endif # VBOX_WITH_OPEN_WATCOM
+endif # VRA_WITH_OPEN_WATCOM
 
 
 #
@@ -116,7 +116,7 @@ endif # VBOX_WITH_OPEN_WATCOM
 #
 LIBRARIES += VgaBiosBin
 VgaBiosBin_TEMPLATE  = VBoxR3Dll
-VgaBiosBin_DEFS      = IN_VBOXDD2
+VgaBiosBin_DEFS      = IN_VRADD2
 VgaBiosBin_SOURCES   =
 VgaBiosBin_DEPS      = $(VgaBiosBin_0_OUTDIR)/vbetables.h
 VgaBiosBin_CLEAN     = $(VgaBiosBin_0_OUTDIR)/vbetables.h
@@ -124,22 +124,22 @@ VgaBiosBin_CLEAN     = $(VgaBiosBin_0_OUTDIR)/vbetables.h
 define def_VBoxVgaBiosBin
  VgaBiosBin_SOURCES += $$(VgaBiosBin_0_OUTDIR)/VgaBiosBin$(1).c
  VgaBiosBin_CLEAN   += $$(VgaBiosBin_0_OUTDIR)/VgaBiosBin$(1).c
- ifdef VBOX_WITH_OPEN_WATCOM
-  $$$$(VgaBiosBin_0_OUTDIR)/VgaBiosBin$(1).c: $$$$(VBoxVgaBios$(1)_1_TARGET) $$(VBOX_BIN2C) | $$$$(dir $$$$@)
+ ifdef VRA_WITH_OPEN_WATCOM
+  $$$$(VgaBiosBin_0_OUTDIR)/VgaBiosBin$(1).c: $$$$(VBoxVgaBios$(1)_1_TARGET) $$(VRA_BIN2C) | $$$$(dir $$$$@)
 	$$(call MSG_TOOL,bin2c,VgaBiosBin,$$<,$$@)
-	$$(QUIET)$$(VBOX_BIN2C) -min 32 -max 36 -mask 0x0fff -ascii -export VgaBiosBinary$(1) $$< $$@
+	$$(QUIET)$$(VRA_BIN2C) -min 32 -max 36 -mask 0x0fff -ascii -export VgaBiosBinary$(1) $$< $$@
  else
   VgaBiosBin_CLEAN  += $$(VgaBiosBin_0_OUTDIR)/VBoxVgaBios$(1).rom
 
   $$$$(VgaBiosBin_0_OUTDIR)/VgaBiosBin$(1).c + $$$$(VgaBiosBin_0_OUTDIR)/VBoxVgaBios$(1).rom: \
   		$$(PATH_SUB_CURRENT)/VBoxVgaBiosAlternative$(1).asm \
   		$$(PATH_SUB_CURRENT)/VBoxVgaBiosAlternative$(1).md5sum \
-  		$$(VBOX_BIN2C) | $$$$(dir $$$$@)
+  		$$(VRA_BIN2C) | $$$$(dir $$$$@)
 	$$(call MSG_TOOL,bin2c,VgaBiosBin,$$<,$$@)
 	$$(QUIET)$$(TOOL_YASM_AS) -f bin -o $$(VgaBiosBin_0_OUTDIR)/VBoxVgaBios$(1).rom $$<
 	$$(QUIET)$$(REDIRECT) -C $$(VgaBiosBin_0_OUTDIR) -- \
 		$$(MD5SUM_EXT) -c $$(basename $$<).md5sum
-	$$(QUIET)$$(VBOX_BIN2C) -min 32 -max 36 -mask 0x0fff -ascii -export VgaBiosBinary$(1) $$(VgaBiosBin_0_OUTDIR)/VBoxVgaBios$(1).rom $$@
+	$$(QUIET)$$(VRA_BIN2C) -min 32 -max 36 -mask 0x0fff -ascii -export VgaBiosBinary$(1) $$(VgaBiosBin_0_OUTDIR)/VBoxVgaBios$(1).rom $$@
 	$$(QUIET)$$(RM) -f -- $$$$(VgaBiosBin_0_OUTDIR)/VBoxVgaBios$(1).rom
  endif
 endef
@@ -167,17 +167,17 @@ vbetables-gen_CLEAN    = $(vbetables-gen)
 #
 LIBRARIES += VgaDefBiosLogo
 VgaDefBiosLogo_TEMPLATE  = VBoxR3Dll
-VgaDefBiosLogo_INCS      = $(VBOX_PATH_DEVICES_SRC)
+VgaDefBiosLogo_INCS      = $(VRA_PATH_DEVICES_SRC)
 VgaDefBiosLogo_SOURCES   = $(VgaDefBiosLogo_0_OUTDIR)/VgaDefBiosLogo.c
 VgaDefBiosLogo_CLEAN     = $(VgaDefBiosLogo_0_OUTDIR)/VgaDefBiosLogo.c
 
 # Rule for making the bios logo.
-$$(VgaDefBiosLogo_0_OUTDIR)/VgaDefBiosLogo.c: $(VBOX_BRAND_BIOS_LOGO) $(VBOX_BIN2C) | $$(dir $$@)
+$$(VgaDefBiosLogo_0_OUTDIR)/VgaDefBiosLogo.c: $(VRA_BRAND_BIOS_LOGO) $(VRA_BIN2C) | $$(dir $$@)
 	$(call MSG_TOOL,bin2c,VgaDefBiosLogo,$<,$@)
-	$(QUIET)$(VBOX_BIN2C) VgaDefBiosLogo $< $@
+	$(QUIET)$(VRA_BIN2C) VgaDefBiosLogo $< $@
 
 
-ifdef VBOX_WITH_OPEN_WATCOM
+ifdef VRA_WITH_OPEN_WATCOM
  #
  # Install the symbol file for the BIOS.
  #

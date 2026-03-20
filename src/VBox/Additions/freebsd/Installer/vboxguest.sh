@@ -1,13 +1,13 @@
 #!/bin/bash
 # $Id: vboxguest.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox Guest Additions kernel module control script for FreeBSD.
+# VirtualAgent Guest Additions kernel module control script for FreeBSD.
 #
 
 #
-# Copyright (C) 2008-2026 Oracle and/or its affiliates.
+# Copyright (C) 2008-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 #
 
-VBOXGUESTFILE=""
+VRAGUESTFILE=""
 SILENTUNLOAD=""
 
 abort()
@@ -45,18 +45,18 @@ get_module_path()
     moduledir="/boot/kernel";
     modulepath=$moduledir/vboxguest.ko
     if test -f "$modulepath"; then
-        VBOXGUESTFILE="$modulepath"
+        VRAGUESTFILE="$modulepath"
     else
-        VBOXGUESTFILE=""
+        VRAGUESTFILE=""
     fi
 }
 
 check_if_installed()
 {
-    if test "$VBOXGUESTFILE" -a -f "$VBOXGUESTFILE"; then
+    if test "$VRAGUESTFILE" -a -f "$VRAGUESTFILE"; then
         return 0
     fi
-    abort "VirtualBox kernel module (vboxguest) not installed."
+    abort "VirtualAgent kernel module (vboxguest) not installed."
 }
 
 module_loaded()

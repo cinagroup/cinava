@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage setproperty
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@
       to change global settings that affect the entire &product-name;
       installation. Some of these settings correspond to the settings in
       the <emphasis role="bold">Preferences</emphasis> dialog in the
-      VirtualBox Manager.
+      VirtualAgent Manager.
     </para>
     <para>
       The following properties are available:
@@ -192,7 +192,7 @@
       <varlistentry>
         <term><literal>vrdeextpack</literal></term>
         <listitem><para>
-            Specifies the library that implements the VirtualBox Remote
+            Specifies the library that implements the VirtualAgent Remote
             Desktop Extension (RDE). Valid values are
             <literal>null</literal>, which disables the RDE, or the name
             of the library to use.
@@ -206,7 +206,7 @@
             specifies the default library, <literal>null</literal>,
             which disables authentication, or the name of the library to
             use. For information about the &product-name; web service,
-            see <xref linkend="VirtualBoxAPI" />.
+            see <xref linkend="VirtualAgentAPI" />.
           </para></listitem>
       </varlistentry>
     </variablelist>

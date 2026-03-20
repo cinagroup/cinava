@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2022-2026 Oracle and/or its affiliates.
+# Copyright (C) 2022-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -41,8 +41,8 @@ tstDragAndDropQt_TEMPLATE = VBoxQtGuiExe
 tstDragAndDropQt_DEFS     = UNIT_TEST TESTCASE
 tstDragAndDropQt_NAME     = tstDragAndDropQt
 tstDragAndDropQt_CXXFLAGS = \
-	$(VBOX_GCC_Wno-implicit-fallthrough) \
-	$(VBOX_GCC_Wno-deprecated-declarations)
+	$(VRA_GCC_Wno-implicit-fallthrough) \
+	$(VRA_GCC_Wno-deprecated-declarations)
 
 tstDragAndDropQt_SOURCES = \
 	tstDragAndDropQt.cpp

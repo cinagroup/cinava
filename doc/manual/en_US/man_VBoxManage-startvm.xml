@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage startvm
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -84,7 +84,7 @@
         <term><option>--putenv=<replaceable>name</replaceable>=<replaceable>value</replaceable></option></term>
         <listitem><para>
             Assigns a value to an environment variable as a name-value
-            pair. For example, VBOX_DISABLE_HOST_DISK_CACHE=1.
+            pair. For example, VRA_DISABLE_HOST_DISK_CACHE=1.
           </para><para>
             The short form of this option is <option>-E</option>.
           </para></listitem>

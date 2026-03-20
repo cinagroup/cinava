@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -57,18 +57,18 @@ VBox-zlib_SOURCES = \
 
 VBox-zlib-static_TEMPLATE = VBoxR3StaticNonPedantic
 VBox-zlib-static_DEFS = $(VBox-zlib_DEFS)
-ifdef VBOX_WITH_NOCRT_STATIC
+ifdef VRA_WITH_NOCRT_STATIC
  VBox-zlib-static_DEFS += IPRT_NO_CRT_FOR_3RD_PARTY
 endif
 VBox-zlib-static_SOURCES = $(VBox-zlib_SOURCES)
 
-ifdef VBOX_WITH_32_ON_64_MAIN_API # 32-bit edition.
+ifdef VRA_WITH_32_ON_64_MAIN_API # 32-bit edition.
  LIBRARIES += VBox-zlib-x86
  VBox-zlib-x86_TEMPLATE = VBoxR3DllNonPedantic-x86
  VBox-zlib-x86_EXTENDS = VBox-zlib
 endif
 
-if !defined(VBOX_ONLY_BUILD) || defined(VBOX_ONLY_EXTPACKS)
+if !defined(VRA_ONLY_BUILD) || defined(VRA_ONLY_EXTPACKS)
  # For bldRTTar.
  LIBRARIES += VBoxBldProg-zlib
  VBoxBldProg-zlib_TEMPLATE = VBoxAdvBldProg
@@ -80,7 +80,7 @@ endif
 # Required for building NSIS (Windows Guest Additions installer) from source.
 #
 # We always build the x86 version, regardless of the actual target, as NSIS is 32-bit only (even on amd64).
-if !defined(VBOX_OSE) && defined(VBOX_WITH_ADDITIONS) && !defined(VBOX_WITHOUT_ADDITIONS)
+if !defined(VRA_OSE) && defined(VRA_WITH_ADDITIONS) && !defined(VRA_WITHOUT_ADDITIONS)
  DLLS.win += nsis-zlib-dll
  nsis-zlib-dll_EXTENDS      := VBox-zlib
  nsis-zlib-dll_NAME         := zlib1

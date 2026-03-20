@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -40,27 +40,27 @@ endif
 #
 PROGRAMS        += tstVMStructSize
 PROGRAMS.amd64  += tstAsmStructs
-ifdef VBOX_WITH_RAW_MODE
+ifdef VRA_WITH_RAW_MODE
  PROGRAMS       += tstVMStructRC
  PROGRAMS.amd64 += tstAsmStructsRC
 endif
-if   !defined(VBOX_ONLY_EXTPACKS) \
-  && (   defined(VBOX_WITH_DTRACE_R3) \
-      || defined(VBOX_WITH_DTRACE_R0) \
-  || defined(VBOX_WITH_DTRACE_RC))
+if   !defined(VRA_ONLY_EXTPACKS) \
+  && (   defined(VRA_WITH_DTRACE_R3) \
+      || defined(VRA_WITH_DTRACE_R0) \
+  || defined(VRA_WITH_DTRACE_RC))
  PROGRAMS += tstVMStructDTrace
  INSTALLS += VMMLibDTraceStructTest
 endif
-ifndef VBOX_ONLY_EXTPACKS_USE_IMPLIBS
- if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ifndef VRA_ONLY_EXTPACKS_USE_IMPLIBS
+ if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
   PROGRAMS += tstGlobalConfigHardened
   DLL    += tstGlobalConfig
  else
   PROGRAMS += tstGlobalConfig
  endif
 
- ifdef VBOX_WITH_RAW_MODE
-  if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ ifdef VRA_WITH_RAW_MODE
+  if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
    PROGRAMS += tstVMMHardened
    DLLS  += tstVMM
   else
@@ -70,8 +70,8 @@ ifndef VBOX_ONLY_EXTPACKS_USE_IMPLIBS
    PROGRAMS += tstVMMFork
   endif
  endif
- ifdef VBOX_WITH_TESTCASES
-  if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ ifdef VRA_WITH_TESTCASES
+  if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
    PROGRAMS += tstCFGMHardened tstVMREQHardened tstAnimateHardened
    DLLS  += tstCFGM tstVMREQ tstAnimate
   else
@@ -86,10 +86,10 @@ ifndef VBOX_ONLY_EXTPACKS_USE_IMPLIBS
   	tstSSM \
   	tstVMMUnitTests-1
   PROGRAMS.amd64 += tstIEMAImplAsm
-  if defined(VBOX_WITH_IEM_NATIVE_RECOMPILER) && defined(VBOX_WITH_IEM_RECOMPILER)
+  if defined(VRA_WITH_IEM_NATIVE_RECOMPILER) && defined(VRA_WITH_IEM_RECOMPILER)
    PROGRAMS += tstIEMN8veProfiling
   endif
-  if defined(VBOX_WITH_VIRT_ARMV8)
+  if defined(VRA_WITH_VIRT_ARMV8)
    PROGRAMS += tstPGMAllGst-armv8
   endif
 
@@ -105,8 +105,8 @@ ifndef VBOX_ONLY_EXTPACKS_USE_IMPLIBS
   ifeq ($(KBUILD_TARGET_ARCH),arm64)
    PROGRAMS += tstArm64-1
   endif
-  ifdef VBOX_WITH_RAW_MODE
-   if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+  ifdef VRA_WITH_RAW_MODE
+   if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
     PROGRAMS += tstMicroHardened
     DLLS += tstMicro
    else
@@ -114,129 +114,129 @@ ifndef VBOX_ONLY_EXTPACKS_USE_IMPLIBS
    endif
    SYSMODS += tstMicroRC
   endif
-  ifdef VBOX_WITH_PDM_ASYNC_COMPLETION
-   if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+  ifdef VRA_WITH_PDM_ASYNC_COMPLETION
+   if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
     PROGRAMS += tstPDMAsyncCompletionHardened tstPDMAsyncCompletionStressHardened
     DLLS += tstPDMAsyncCompletion tstPDMAsyncCompletionStress
    else
     PROGRAMS += tstPDMAsyncCompletion tstPDMAsyncCompletionStress
    endif
   endif
- endif # VBOX_WITH_TESTCASES
-endif # !VBOX_ONLY_EXTPACKS_USE_IMPLIBS
+ endif # VRA_WITH_TESTCASES
+endif # !VRA_ONLY_EXTPACKS_USE_IMPLIBS
 
 # Where we put our temporary files (just for simplicity)
-VBOX_VMM_TESTCASE_OUT_DIR := $(PATH_TARGET)/VMM
-BLDDIRS += $(VBOX_VMM_TESTCASE_OUT_DIR)
+VRA_VMM_TESTCASE_OUT_DIR := $(PATH_TARGET)/VMM
+BLDDIRS += $(VRA_VMM_TESTCASE_OUT_DIR)
 
 #
 # We setup two 'other' targets for executing the two structure & alignment
 # validation testcases. Perhaps a bit hackish, but extremely useful.
 #
 ifeq ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH),$(KBUILD_HOST).$(KBUILD_HOST_ARCH))
- OTHERS       += $(VBOX_VMM_TESTCASE_OUT_DIR)/tstVMStructSize.run
- ## @todo kBuild bug: OTHERS.amd64 += $(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run
+ OTHERS       += $(VRA_VMM_TESTCASE_OUT_DIR)/tstVMStructSize.run
+ ## @todo kBuild bug: OTHERS.amd64 += $(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run
  ifeq ($(KBUILD_TARGET_ARCH),amd64)
-  OTHERS      += $(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run
+  OTHERS      += $(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run
  endif
 endif
 
 # The normal testing pass.
-TESTING       += $(VBOX_VMM_TESTCASE_OUT_DIR)/tstVMStructSize.run
-TESTING.amd64 += $(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run
+TESTING       += $(VRA_VMM_TESTCASE_OUT_DIR)/tstVMStructSize.run
+TESTING.amd64 += $(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run
 
 OTHER_CLEAN += \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)/tstVMStructSize.run \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o.dep \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.mac \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.mac.o \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.mac.lst \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsRC.h \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsHC.h \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)/tstVMStructRC.h
+	$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run \
+	$(VRA_VMM_TESTCASE_OUT_DIR)/tstVMStructSize.run \
+	$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o \
+	$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o.dep \
+	$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.mac \
+	$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.mac.o \
+	$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.mac.lst \
+	$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsRC.h \
+	$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsHC.h \
+	$(VRA_VMM_TESTCASE_OUT_DIR)/tstVMStructRC.h
 
 #
 # Globals
 #
-VBOX_PATH_VMM_SRC = $(PATH_ROOT)/src/VBox/VMM
+VRA_PATH_VMM_SRC = $(PATH_ROOT)/src/VBox/VMM
 
 #
 # Targets
 #
-ifdef VBOX_WITH_RAW_MODE
+ifdef VRA_WITH_RAW_MODE
  tstVMStructRC_TEMPLATE = VBoxRcExe
- tstVMStructRC_DEFS     = VBOX_VMM_TARGET_AGNOSTIC VBOX_IN_VMM IN_VMM_RC IN_DIS IN_RT_RC VBOX_WITH_RAW_MODE $(VMM_COMMON_DEFS)
- ifdef VBOX_WITH_R0_LOGGING
-  tstVMStructRC_DEFS   += VBOX_WITH_R0_LOGGING
+ tstVMStructRC_DEFS     = VRA_VMM_TARGET_AGNOSTIC VRA_IN_VMM IN_VMM_RC IN_DIS IN_RT_RC VRA_WITH_RAW_MODE $(VMM_COMMON_DEFS)
+ ifdef VRA_WITH_R0_LOGGING
+  tstVMStructRC_DEFS   += VRA_WITH_R0_LOGGING
  endif
  tstVMStructRC_SOURCES  = tstVMStructRC.cpp
  tstVMStructRC_INCS     = \
- 	$(VBOX_PATH_VMM_SRC)/include \
- 	$(VBOX_PATH_VMM_SRC)/PATM
+ 	$(VRA_PATH_VMM_SRC)/include \
+ 	$(VRA_PATH_VMM_SRC)/PATM
 endif
 
 tstVMStructSize_TEMPLATE = VBoxR3AutoTest
 ifneq ($(KBUILD_TARGET),win)
- tstVMStructSize_CXXFLAGS += $(VBOX_GCC_Wno-invalid-offsetof)
+ tstVMStructSize_CXXFLAGS += $(VRA_GCC_Wno-invalid-offsetof)
 endif
-tstVMStructSize_DEFS    = VBOX_VMM_TARGET_AGNOSTIC VBOX_IN_VMM IN_VMM_R3 IN_DIS $(VMM_COMMON_DEFS)
-ifdef VBOX_WITH_RAW_MODE
- tstVMStructSize_DEFS  += VBOX_WITH_RAW_MODE
+tstVMStructSize_DEFS    = VRA_VMM_TARGET_AGNOSTIC VRA_IN_VMM IN_VMM_R3 IN_DIS $(VMM_COMMON_DEFS)
+ifdef VRA_WITH_RAW_MODE
+ tstVMStructSize_DEFS  += VRA_WITH_RAW_MODE
 endif
 tstVMStructSize_INCS    = \
-	$(VBOX_PATH_VMM_SRC)/include \
+	$(VRA_PATH_VMM_SRC)/include \
 	$(tstVMStructSize_0_OUTDIR) \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)
+	$(VRA_VMM_TESTCASE_OUT_DIR)
 tstVMStructSize_SOURCES = tstVMStructSize.cpp
-ifdef VBOX_WITH_RAW_MODE
- tstVMStructSize.cpp_DEPS = $(VBOX_VMM_TESTCASE_OUT_DIR)/tstVMStructRC.h
+ifdef VRA_WITH_RAW_MODE
+ tstVMStructSize.cpp_DEPS = $(VRA_VMM_TESTCASE_OUT_DIR)/tstVMStructRC.h
 endif
-ifdef VBOX_WITH_R0_LOGGING
- tstVMStructSize_DEFS  += VBOX_WITH_R0_LOGGING
+ifdef VRA_WITH_R0_LOGGING
+ tstVMStructSize_DEFS  += VRA_WITH_R0_LOGGING
 endif
 $(call KB_FN_DO_PASS0_ON_TARGET,tstVMStructSize)
 $(evalcall2 def_VBoxGenIEMInstructionStatisticsTmpl_Header,tstVMStructSize,$(tstVMStructSize_0_OUTDIR))
 
 tstAsmStructs_TEMPLATE  = VBoxR3AutoTest
 ifneq ($(KBUILD_TARGET),win)
- tstAsmStructSize_CXXFLAGS += $(VBOX_GCC_Wno-invalid-offsetof)
+ tstAsmStructSize_CXXFLAGS += $(VRA_GCC_Wno-invalid-offsetof)
 endif
-tstAsmStructs_DEFS      = VBOX_VMM_TARGET_AGNOSTIC VBOX_IN_VMM IN_VMM_R3 IN_DIS $(VMM_COMMON_DEFS)
-ifdef VBOX_WITH_RAW_MODE
- tstAsmStructs_DEFS    += VBOX_WITH_RAW_MODE
+tstAsmStructs_DEFS      = VRA_VMM_TARGET_AGNOSTIC VRA_IN_VMM IN_VMM_R3 IN_DIS $(VMM_COMMON_DEFS)
+ifdef VRA_WITH_RAW_MODE
+ tstAsmStructs_DEFS    += VRA_WITH_RAW_MODE
 endif
-ifdef VBOX_WITH_R0_LOGGING
- tstAsmStructs_DEFS    += VBOX_WITH_R0_LOGGING
+ifdef VRA_WITH_R0_LOGGING
+ tstAsmStructs_DEFS    += VRA_WITH_R0_LOGGING
 endif
 tstAsmStructs_INCS      = \
-	$(VBOX_PATH_VMM_SRC)/include \
-	$(VBOX_VMM_TESTCASE_OUT_DIR)
+	$(VRA_PATH_VMM_SRC)/include \
+	$(VRA_VMM_TESTCASE_OUT_DIR)
 tstAsmStructs_SOURCES   = tstAsmStructs.cpp
-tstAsmStructs.cpp_DEPS  = $(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsHC.h
+tstAsmStructs.cpp_DEPS  = $(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsHC.h
 
-ifdef VBOX_WITH_RAW_MODE
+ifdef VRA_WITH_RAW_MODE
  tstAsmStructsRC_TEMPLATE = VBoxRcExe
- tstAsmStructsRC_DEFS   = VBOX_VMM_TARGET_AGNOSTIC VBOX_IN_VMM IN_VMM_RC IN_DIS IN_RT_RC VBOX_WITH_RAW_MODE $(VMM_COMMON_DEFS)
- ifdef VBOX_WITH_R0_LOGGING
-  tstAsmStructsRC_DEFS += VBOX_WITH_R0_LOGGING
+ tstAsmStructsRC_DEFS   = VRA_VMM_TARGET_AGNOSTIC VRA_IN_VMM IN_VMM_RC IN_DIS IN_RT_RC VRA_WITH_RAW_MODE $(VMM_COMMON_DEFS)
+ ifdef VRA_WITH_R0_LOGGING
+  tstAsmStructsRC_DEFS += VRA_WITH_R0_LOGGING
  endif
  tstAsmStructsRC_INCS   = \
- 	$(VBOX_PATH_VMM_SRC)/include \
- 	$(VBOX_VMM_TESTCASE_OUT_DIR)
+ 	$(VRA_PATH_VMM_SRC)/include \
+ 	$(VRA_VMM_TESTCASE_OUT_DIR)
  tstAsmStructsRC_SOURCES = tstAsmStructs.cpp
- tstAsmStructs.cpp_DEPS += $(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsRC.h
-endif # VBOX_WITH_RAW_MODE
+ tstAsmStructs.cpp_DEPS += $(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsRC.h
+endif # VRA_WITH_RAW_MODE
 
 
 #
 # Global config tool.
 #
-if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
  tstGlobalConfigHardened_TEMPLATE = VBoxR3HardenedTstExe
  tstGlobalConfigHardened_NAME    = tstGlobalConfig
- ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+ ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
   tstGlobalConfigHardened_DEFS   = PROGRAM_NAME_STR="tstGlobalConfig"
  else
   tstGlobalConfigHardened_DEFS   = PROGRAM_NAME_STR=\"tstGlobalConfig\"
@@ -254,7 +254,7 @@ tstGlobalConfig_LIBS     = $(LIB_RUNTIME)
 # Testcase for bencharmking
 #
 tstInt_TEMPLATE       = VBoxR3SignedExe
-tstInt_DEFS           = VBOX_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS) VBOX_SVN_REV=$(VBOX_SVN_REV)
+tstInt_DEFS           = VRA_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS) VRA_SVN_REV=$(VRA_SVN_REV)
 tstInt_SOURCES        = tstInt.cpp
 tstInt_LIBS           = $(LIB_RUNTIME)
 
@@ -675,12 +675,12 @@ TSTIEMAIMPL_TEST_DATA_DEPS := \
 	tstIEMAImplDataSsePcmpxstrx-pcmpestrm_u128.bin.gz
 
 tstIEMAImpl_TEMPLATE  = VBoxR3TstExe
-tstIEMAImpl_DEFS      = VBOX_VMM_TARGET_X86 $(VMM_COMMON_DEFS) IEM_WITHOUT_ASSEMBLY IEM_WITHOUT_INSTRUCTION_STATS
+tstIEMAImpl_DEFS      = VRA_VMM_TARGET_X86 $(VMM_COMMON_DEFS) IEM_WITHOUT_ASSEMBLY IEM_WITHOUT_INSTRUCTION_STATS
 tstIEMAImpl_SDKS      = VBoxSoftFloatR3Shared
 tstIEMAImpl_INCS      = \
-	$(VBOX_PATH_VMM_SRC)/include \
-	$(VBOX_PATH_VMM_SRC) \
-	$(VBOX_PATH_VMM_SRC)/testcase
+	$(VRA_PATH_VMM_SRC)/include \
+	$(VRA_PATH_VMM_SRC) \
+	$(VRA_PATH_VMM_SRC)/testcase
 tstIEMAImpl_SOURCES   = \
 	tstIEMAImpl.cpp \
 	../VMMAll/target-x86/IEMAllAImplC-x86.cpp \
@@ -700,13 +700,13 @@ $(call KB_FN_DO_PASS0_ON_TARGET,tstIEMAImpl)
 # This variant mainly for generating data.
 tstIEMAImplAsm_TEMPLATE      := VBoxR3TstExe
 tstIEMAImplAsm_SDKS          := VBoxSoftFloatR3Shared
-tstIEMAImplAsm_DEFS           = VBOX_VMM_TARGET_X86 $(VMM_COMMON_DEFS) IEM_WITH_ASSEMBLY IEM_WITHOUT_INSTRUCTION_STATS TSTIEMAIMPL_WITH_GENERATOR
+tstIEMAImplAsm_DEFS           = VRA_VMM_TARGET_X86 $(VMM_COMMON_DEFS) IEM_WITH_ASSEMBLY IEM_WITHOUT_INSTRUCTION_STATS TSTIEMAIMPL_WITH_GENERATOR
 tstIEMAImplAsm_ASFLAGS.amd64 := -Werror
 tstIEMAImplAsm_ASFLAGS.x86   := -Werror
 tstIEMAImplAsm_INCS          := \
-	$(VBOX_PATH_VMM_SRC)/include \
-	$(VBOX_PATH_VMM_SRC) \
-	$(VBOX_PATH_VMM_SRC)/testcase
+	$(VRA_PATH_VMM_SRC)/include \
+	$(VRA_PATH_VMM_SRC) \
+	$(VRA_PATH_VMM_SRC)/testcase
 tstIEMAImplAsm_SOURCES        = \
 	tstIEMAImpl.cpp \
 	../VMMAll/target-x86/IEMAllAImpl-x86-amd64.asm \
@@ -727,22 +727,22 @@ tstIEMAImplDataSseBinary.S_DEPS   = \
 #
 tstIEMCheckMc_TEMPLATE  = VBoxR3TstExe
 tstIEMCheckMc_SOURCES   = tstIEMCheckMc.cpp
-tstIEMCheckMc_DEFS      = VBOX_VMM_TARGET_X86 $(VMM_COMMON_DEFS) IEM_WITHOUT_INSTRUCTION_STATS
+tstIEMCheckMc_DEFS      = VRA_VMM_TARGET_X86 $(VMM_COMMON_DEFS) IEM_WITHOUT_INSTRUCTION_STATS
 tstIEMCheckMc_INCS     := \
-	$(VBOX_PATH_VMM_SRC)/include \
-	$(VBOX_PATH_VMM_SRC)
+	$(VRA_PATH_VMM_SRC)/include \
+	$(VRA_PATH_VMM_SRC)
 tstIEMCheckMc_LIBS      = $(LIB_RUNTIME)
 ifeq ($(KBUILD_TARGET),win)
- tstIEMCheckMc_CXXFLAGS = $(VBOX_C_CXX_FLAGS_NO_UNUSED_PARAMETERS) -wd4189 # local variable is initialized but not used.
+ tstIEMCheckMc_CXXFLAGS = $(VRA_C_CXX_FLAGS_NO_UNUSED_PARAMETERS) -wd4189 # local variable is initialized but not used.
 else
- tstIEMCheckMc_CXXFLAGS = $(VBOX_C_CXX_FLAGS_NO_UNUSED_PARAMETERS) -Wno-unused-value -Wno-unused-variable -Wno-return-type
+ tstIEMCheckMc_CXXFLAGS = $(VRA_C_CXX_FLAGS_NO_UNUSED_PARAMETERS) -Wno-unused-value -Wno-unused-variable -Wno-return-type
 endif
 
 #
 # Testcase for profiling the native recompiler.
 #
 tstIEMN8veProfiling_TEMPLATE := VBoxR3Exe
-tstIEMN8veProfiling_DEFS      = VBOX_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
+tstIEMN8veProfiling_DEFS      = VRA_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
 tstIEMN8veProfiling_SOURCES  := tstIEMN8veProfiling.cpp
 tstIEMN8veProfiling_LIBS      = $(LIB_VMM) $(LIB_RUNTIME)
 
@@ -750,18 +750,18 @@ tstIEMN8veProfiling_LIBS      = $(LIB_VMM) $(LIB_RUNTIME)
 # Saved state manager testcase.
 #
 tstSSM_TEMPLATE         = VBoxR3TstExe
-tstSSM_INCS             = $(VBOX_PATH_VMM_SRC)/include
-tstSSM_DEFS             = VBOX_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
+tstSSM_INCS             = $(VRA_PATH_VMM_SRC)/include
+tstSSM_DEFS             = VRA_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
 tstSSM_SOURCES          = tstSSM.cpp
 tstSSM_LIBS             = $(LIB_VMM) $(LIB_REM) $(LIB_RUNTIME)
 
 #
 # VMM configuration manager tests.
 #
-if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
  tstCFGMHardened_TEMPLATE = VBoxR3HardenedTstExe
  tstCFGMHardened_NAME    = tstCFGM
- ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+ ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
   tstCFGMHardened_DEFS   = PROGRAM_NAME_STR="tstCFGM"
  else
   tstCFGMHardened_DEFS   = PROGRAM_NAME_STR=\"tstCFGM\"
@@ -771,7 +771,7 @@ if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
 else
  tstCFGM_TEMPLATE        = VBoxR3SignedTstExe
 endif
-tstCFGM_DEFS             = VBOX_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
+tstCFGM_DEFS             = VRA_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
 tstCFGM_SOURCES          = tstCFGM.cpp
 tstCFGM_LIBS             = $(LIB_VMM) $(LIB_REM) $(LIB_RUNTIME)
 
@@ -785,21 +785,21 @@ tstCompressionBenchmark_SOURCES  = tstCompressionBenchmark.cpp
 # Two testcases for checking the ring-0 setjmp/longjmp code.
 #
 tstVMMR0CallHost-1_TEMPLATE = VBoxR3TstExe
-tstVMMR0CallHost-1_INCS = $(VBOX_PATH_VMM_SRC)/include
+tstVMMR0CallHost-1_INCS = $(VRA_PATH_VMM_SRC)/include
 tstVMMR0CallHost-1_SOURCES = \
 	tstVMMR0CallHost-1.cpp
 tstVMMR0CallHost-1_SOURCES.amd64 = \
-	$(VBOX_PATH_VMM_SRC)/VMMR0/VMMR0JmpA-amd64.asm \
-	$(VBOX_PATH_VMM_SRC)/../Runtime/common/misc/setjmp.asm
+	$(VRA_PATH_VMM_SRC)/VMMR0/VMMR0JmpA-amd64.asm \
+	$(VRA_PATH_VMM_SRC)/../Runtime/common/misc/setjmp.asm
 
 
 #
 # For testing the VM request queue code.
 #
-if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
  tstVMREQHardened_TEMPLATE = VBoxR3HardenedExe
  tstVMREQHardened_NAME    = tstVMREQ
- ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+ ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
   tstVMREQHardened_DEFS   = PROGRAM_NAME_STR="tstVMREQ"
  else
   tstVMREQHardened_DEFS   = PROGRAM_NAME_STR=\"tstVMREQ\"
@@ -809,17 +809,17 @@ if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
 else
  tstVMREQ_TEMPLATE        = VBoxR3SignedExe
 endif
-tstVMREQ_DEFS             = VBOX_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
+tstVMREQ_DEFS             = VRA_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
 tstVMREQ_SOURCES          = tstVMREQ.cpp
 tstVMREQ_LIBS             = $(LIB_VMM) $(LIB_REM) $(LIB_RUNTIME)
 
 #
 # Tool for reanimate things like OS/2 dumps.
 #
-if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
  tstAnimateHardened_TEMPLATE = VBoxR3HardenedExe
  tstAnimateHardened_NAME    = tstAnimate
- ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+ ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
   tstAnimateHardened_DEFS   = PROGRAM_NAME_STR="tstAnimate"
  else
   tstAnimateHardened_DEFS   = PROGRAM_NAME_STR=\"tstAnimate\"
@@ -829,14 +829,14 @@ if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
 else
  tstAnimate_TEMPLATE        = VBoxR3SignedExe
 endif
-tstAnimate_DEFS             = VBOX_VMM_TARGET_X86 $(VMM_COMMON_DEFS)
+tstAnimate_DEFS             = VRA_VMM_TARGET_X86 $(VMM_COMMON_DEFS)
 tstAnimate_SOURCES          = tstAnimate.cpp
 tstAnimate_LIBS             = $(LIB_VMM) $(LIB_REM) $(LIB_RUNTIME)
 
 tstX86-1_TEMPLATE      = VBoxR3TstExe
 tstX86-1_SOURCES       = tstX86-1.cpp tstX86-1A.asm
 tstX86-1_LIBS          = $(LIB_RUNTIME)
-tstX86-1_LDFLAGS.linux = $(VBOX_GCC_no-pie)
+tstX86-1_LDFLAGS.linux = $(VRA_GCC_no-pie)
 
 tstX86-FpuSaveRestore_TEMPLATE = VBoxR3TstExe
 tstX86-FpuSaveRestore_SOURCES  = tstX86-FpuSaveRestore.cpp tstX86-FpuSaveRestoreA.asm
@@ -857,7 +857,7 @@ $(call KB_FN_DO_PASS0_ON_TARGET,tstArm64-1)
 
 $(tstArm64-1_0_OUTDIR)/tstArm64-1-generated.S: $(PATH_SUB_CURRENT)/tstArm64-1-codegen.py | $$(dir $$@)
 	$(call MSG_GENERATE,tstArm64-1,$@,$<)
-	$(VBOX_BLD_PYTHON) "$<" --output "$@"
+	$(VRA_BLD_PYTHON) "$<" --output "$@"
 
 #
 # Process python source(s).
@@ -870,11 +870,11 @@ define def_vbox_vmm_testcase_py_check
  pylint: $(name)-py-phony.o
  $(name).o: $(name)-py-phony.o
  $(PATH_TARGET)/pylint/$(name).o $(name)-py-phony.o:: $(py) | $(PATH_TARGET)/pylint/
- ifdef VBOX_WITH_PYLINT
+ ifdef VRA_WITH_PYLINT
 	$(QUIET2)$(call MSG_L1,Subjecting $(py) to pylint...)
 	$(QUIET)$(REDIRECT) -C "$(dir $(py))" -E LC_ALL=C -- \
-		$(VBOX_PYLINT) --rcfile=$(PATH_TARGET)/no-such-pylintrc \
-			$$(VBOX_PYLINT_FLAGS) $$($(py)_VBOX_PYLINT_FLAGS) ./$(notdir $(py))
+		$(VRA_PYLINT) --rcfile=$(PATH_TARGET)/no-such-pylintrc \
+			$$(VRA_PYLINT_FLAGS) $$($(py)_VRA_PYLINT_FLAGS) ./$(notdir $(py))
  endif
 	$(QUIET)$(APPEND) -t "$(PATH_TARGET)/pylint/$(name).o"
 
@@ -884,15 +884,15 @@ endef # def_vbox_vmm_testcase_py_check
 $(foreach py, $(PATH_SUB_CURRENT)/tstArm64-1-codegen.py, $(eval $(def_vbox_vmm_testcase_py_check)))
 
 
-ifdef VBOX_WITH_RAW_MODE
+ifdef VRA_WITH_RAW_MODE
 
  #
  # Raw-mode VMM testcase.
  #
- if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
   tstVMMHardened_TEMPLATE = VBoxR3HardenedExe
   tstVMMHardened_NAME   = tstVMM
-  ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+  ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
    tstVMMHardened_DEFS  = PROGRAM_NAME_STR="tstVMM"
   else
    tstVMMHardened_DEFS  = PROGRAM_NAME_STR=\"tstVMM\"
@@ -922,10 +922,10 @@ ifdef VBOX_WITH_RAW_MODE
  #
  # Raw-mode micro benchmark.
  #
- if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
   tstMicroHardened_TEMPLATE = VBoxR3HardenedExe
   tstMicroHardened_NAME   = tstMicro
-  ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+  ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
    tstMicroHardened_DEFS  = PROGRAM_NAME_STR="tstMicro"
   else
    tstMicroHardened_DEFS  = PROGRAM_NAME_STR=\"tstMicro\"
@@ -937,30 +937,30 @@ ifdef VBOX_WITH_RAW_MODE
  endif
  tstMicro_SOURCES         = tstMicro.cpp
  tstMicro_LIBS            = $(LIB_VMM) $(LIB_REM) $(LIB_RUNTIME)
- tstMicro_DEFS            = $(if $(VBOX_WITH_RAW_MODE),VBOX_WITH_RAW_MODE,)
+ tstMicro_DEFS            = $(if $(VRA_WITH_RAW_MODE),VRA_WITH_RAW_MODE,)
 
  tstMicroRC_TEMPLATE      = VBoxRc
  tstMicroRC_SOURCES       = tstMicroRC.cpp tstMicroRCA.asm
- tstMicroRC_DEFS          = $(if $(VBOX_WITH_RAW_MODE),VBOX_WITH_RAW_MODE,)
- tstMicroRC_INCS          = $(VBOX_PATH_VMM_SRC)/testcase
- ifeq ($(VBOX_LDR_FMT32),pe)
+ tstMicroRC_DEFS          = $(if $(VRA_WITH_RAW_MODE),VRA_WITH_RAW_MODE,)
+ tstMicroRC_INCS          = $(VRA_PATH_VMM_SRC)/testcase
+ ifeq ($(VRA_LDR_FMT32),pe)
   tstMicroRC_LDFLAGS      = -Entry:tstMicroRC
  endif
  tstMicroRC_SYSSUFF       = .gc
  tstMicroRC_LIBS          = \
- 	$(PATH_STAGE_LIB)/DisasmRC$(VBOX_SUFF_LIB) \
- 	$(PATH_STAGE_LIB)/RuntimeRC$(VBOX_SUFF_LIB)
- ifeq ($(filter-out pe lx,$(VBOX_LDR_FMT32)),)
+ 	$(PATH_STAGE_LIB)/DisasmRC$(VRA_SUFF_LIB) \
+ 	$(PATH_STAGE_LIB)/RuntimeRC$(VRA_SUFF_LIB)
+ ifeq ($(filter-out pe lx,$(VRA_LDR_FMT32)),)
   tstMicroRC_LIBS        += \
-  	$(PATH_STAGE_LIB)/VMMRCBuiltin$(VBOX_SUFF_LIB) \
+  	$(PATH_STAGE_LIB)/VMMRCBuiltin$(VRA_SUFF_LIB) \
   	$(LIB_VMMRC)
  endif
  tstMicroRC_SOURCES.win = tstMicroRC.def
 
-endif # VBOX_WITH_RAW_MODE
+endif # VRA_WITH_RAW_MODE
 
 
-if !defined(VBOX_ONLY_EXTPACKS_USE_IMPLIBS)
+if !defined(VRA_ONLY_EXTPACKS_USE_IMPLIBS)
  #
  # Special NEM host testcase.
  #
@@ -968,7 +968,7 @@ if !defined(VBOX_ONLY_EXTPACKS_USE_IMPLIBS)
   if1of ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH), darwin.amd64 linux.amd64 win.amd64 linux.arm64)
    PROGRAMS += NemRawBench-1
   endif
- else ifdef VBOX_WITH_NATIVE_NEM
+ else ifdef VRA_WITH_NATIVE_NEM
   if1of ($(KBUILD_TARGET).$(KBUILD_TARGET_ARCH), darwin.amd64 linux.amd64 win.amd64)
    PROGRAMS += NemRawBench-1
   endif
@@ -988,19 +988,19 @@ endif
 # PDM Queue tests.
 #
 tstPDMQueue_TEMPLATE := VBoxR3Exe
-tstPDMQueue_DEFS      = VBOX_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
+tstPDMQueue_DEFS      = VRA_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
 tstPDMQueue_SOURCES  := tstPDMQueue.cpp
 tstPDMQueue_LIBS     := $(LIB_VMM) $(LIB_RUNTIME)
 
 
-ifdef VBOX_WITH_PDM_ASYNC_COMPLETION
+ifdef VRA_WITH_PDM_ASYNC_COMPLETION
  #
  # PDM asynchronous completation test.
  #
- if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
   tstPDMAsyncCompletionHardened_TEMPLATE = VBoxR3HardenedExe
   tstPDMAsyncCompletionHardened_NAME   = tstPDMAsyncCompletion
-  ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+  ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
    tstPDMAsyncCompletionHardened_DEFS  = PROGRAM_NAME_STR="tstPDMAsyncCompletion"
   else
    tstPDMAsyncCompletionHardened_DEFS  = PROGRAM_NAME_STR=\"tstPDMAsyncCompletion\"
@@ -1010,18 +1010,18 @@ ifdef VBOX_WITH_PDM_ASYNC_COMPLETION
  else
   tstPDMAsyncCompletion_TEMPLATE       = VBoxR3SignedExe
  endif
- tstPDMAsyncCompletion_DEFS            = VBOX_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
- tstPDMAsyncCompletion_INCS            = $(VBOX_PATH_VMM_SRC)/include
+ tstPDMAsyncCompletion_DEFS            = VRA_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
+ tstPDMAsyncCompletion_INCS            = $(VRA_PATH_VMM_SRC)/include
  tstPDMAsyncCompletion_SOURCES         = tstPDMAsyncCompletion.cpp
  tstPDMAsyncCompletion_LIBS            = $(LIB_VMM) $(LIB_REM) $(LIB_RUNTIME)
 
  #
  # PDM asynchronous completation stress test.
  #
- if defined(VBOX_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
+ if defined(VRA_WITH_HARDENING) && "$(KBUILD_TARGET)" == "win"
   tstPDMAsyncCompletionStressHardened_TEMPLATE = VBoxR3HardenedExe
   tstPDMAsyncCompletionStressHardened_NAME   = tstPDMAsyncCompletionStress
-  ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+  ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
    tstPDMAsyncCompletionStressHardened_DEFS  = PROGRAM_NAME_STR="tstPDMAsyncCompletionStress"
   else
    tstPDMAsyncCompletionStressHardened_DEFS  = PROGRAM_NAME_STR=\"tstPDMAsyncCompletionStress\"
@@ -1031,18 +1031,18 @@ ifdef VBOX_WITH_PDM_ASYNC_COMPLETION
  else
   tstPDMAsyncCompletionStress_TEMPLATE = VBoxR3SignedExe
  endif
- tstPDMAsyncCompletionStress_DEFS      = VBOX_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
- tstPDMAsyncCompletionStress_INCS      = $(VBOX_PATH_VMM_SRC)/include
+ tstPDMAsyncCompletionStress_DEFS      = VRA_VMM_TARGET_AGNOSTIC $(VMM_COMMON_DEFS)
+ tstPDMAsyncCompletionStress_INCS      = $(VRA_PATH_VMM_SRC)/include
  tstPDMAsyncCompletionStress_SOURCES   = tstPDMAsyncCompletionStress.cpp
  tstPDMAsyncCompletionStress_LIBS      = $(LIB_VMM) $(LIB_REM) $(LIB_RUNTIME)
 endif
 
-ifndef VBOX_ONLY_EXTPACKS
+ifndef VRA_ONLY_EXTPACKS
  PROGRAMS += tstSSM-2
  tstSSM-2_TEMPLATE      = VBoxR3TstExe
- tstSSM-2_DEFS          = VBOX_VMM_TARGET_AGNOSTIC IN_VMM_STATIC
+ tstSSM-2_DEFS          = VRA_VMM_TARGET_AGNOSTIC IN_VMM_STATIC
  tstSSM-2_SOURCES       = tstSSM-2.cpp
- tstSSM-2_LIBS          = $(PATH_STAGE_LIB)/SSMStandalone$(VBOX_SUFF_LIB)
+ tstSSM-2_LIBS          = $(PATH_STAGE_LIB)/SSMStandalone$(VRA_SUFF_LIB)
 endif
 
 
@@ -1051,16 +1051,16 @@ endif
 #
 tstVMMUnitTests-1_TEMPLATE  := VBoxR3Exe
 tstVMMUnitTests-1_SDKS      := VBoxSoftFloatR3Shared
-tstVMMUnitTests-1_DEFS       = IN_VMM_R3 $(filter-out VBOX_WITH_DEBUGGER VBOX_WITH_IEM_RECOMPILER VBOX_WITH_IEM_NATIVE_RECOMPILER,$(VMM_COMMON_DEFS))
-tstVMMUnitTests-1_DEFS.amd64 = VBOX_VMM_TARGET_X86
-tstVMMUnitTests-1_DEFS.arm64 = VBOX_VMM_TARGET_ARMV8
-tstVMMUnitTests-1_INCS       = $(VBOX_PATH_VMM_SRC)/include
+tstVMMUnitTests-1_DEFS       = IN_VMM_R3 $(filter-out VRA_WITH_DEBUGGER VRA_WITH_IEM_RECOMPILER VRA_WITH_IEM_NATIVE_RECOMPILER,$(VMM_COMMON_DEFS))
+tstVMMUnitTests-1_DEFS.amd64 = VRA_VMM_TARGET_X86
+tstVMMUnitTests-1_DEFS.arm64 = VRA_VMM_TARGET_ARMV8
+tstVMMUnitTests-1_INCS       = $(VRA_PATH_VMM_SRC)/include
 tstVMMUnitTests-1_SOURCES   := \
 	tstVMMUnitTests-1.cpp \
 	tstPGM-1.cpp
 tstVMMUnitTests-1_LIBS      := \
-	$(PATH_STAGE_LIB)/VMMStatic$(VBOX_SUFF_LIB) \
-	$(PATH_STAGE_LIB)/DisasmR3$(VBOX_SUFF_LIB) \
+	$(PATH_STAGE_LIB)/VMMStatic$(VRA_SUFF_LIB) \
+	$(PATH_STAGE_LIB)/DisasmR3$(VRA_SUFF_LIB) \
 	$(LIB_RUNTIME)
 tstVMMUnitTests-1_LDFLAGS.darwin.arm64 := -framework Hypervisor
 
@@ -1070,9 +1070,9 @@ tstVMMUnitTests-1_LDFLAGS.darwin.arm64 := -framework Hypervisor
 # ARMv8 PGM guest page table walking testcase.
 #
 tstPGMAllGst-armv8_TEMPLATE        := VBoxR3TstExe
-tstPGMAllGst-armv8_DEFS             = IN_VMM_R3 VBOX_VMM_TARGET_ARMV8 $(VMM_COMMON_DEFS)
+tstPGMAllGst-armv8_DEFS             = IN_VMM_R3 VRA_VMM_TARGET_ARMV8 $(VMM_COMMON_DEFS)
 tstPGMAllGst-armv8_INCS             = \
-	$(VBOX_PATH_VMM_SRC)/include \
+	$(VRA_PATH_VMM_SRC)/include \
 	.
 tstPGMAllGst-armv8_SOURCES          = \
 	tstPGMAllGst-armv8.cpp \
@@ -1089,14 +1089,14 @@ TST_PGMALLGST_ARMV8_PATH_SOURCES   := $(PATH_SUB_CURRENT)
 
 $(tstPGMAllGst-armv8_0_OUTDIR)/tstPGMAllGst-armv8-tests.cpp: $(MAKEFILE_CURRENT) \
 		$(foreach source,$(TST_PGMALLGST_ARMV8_SOURCES),$(TST_PGMALLGST_ARMV8_PATH_SOURCES)/$(lastword $(subst =,$(SP),$(source)))) \
-		$(VBOX_BIN2C) \
+		$(VRA_BIN2C) \
 		| $$(dir $$@)
 	$(QUIET)$(RM) -f -- $@
 	$(QUIET)$(APPEND) -n "$@" \
 		'' \
 		'#include "tstPGMAllGst-armv8-tests.h"' \
 		''
-	$(foreach source,$(TST_PGMALLGST_ARMV8_SOURCES), $(NLTAB)$(VBOX_BIN2C) -ascii --append \
+	$(foreach source,$(TST_PGMALLGST_ARMV8_SOURCES), $(NLTAB)$(VRA_BIN2C) -ascii --append \
 		"$(firstword $(subst =,$(SP),$(source)))" \
 		"$(TST_PGMALLGST_ARMV8_PATH_SOURCES)/$(lastword $(subst =,$(SP),$(source)))" \
 		"$@")
@@ -1105,26 +1105,26 @@ $(tstPGMAllGst-armv8_0_OUTDIR)/tstPGMAllGst-armv8-tests.cpp: $(MAKEFILE_CURRENT)
 #
 # Generate VM structure tests.
 #
-if   !defined(VBOX_ONLY_EXTPACKS) \
-  && (   defined(VBOX_WITH_DTRACE_R3) \
-      || defined(VBOX_WITH_DTRACE_R0) \
-  || defined(VBOX_WITH_DTRACE_RC))
+if   !defined(VRA_ONLY_EXTPACKS) \
+  && (   defined(VRA_WITH_DTRACE_R3) \
+      || defined(VRA_WITH_DTRACE_R0) \
+  || defined(VRA_WITH_DTRACE_RC))
  tstVMStructDTrace_TEMPLATE = VBoxR3AutoTest
- tstVMStructDTrace_DEFS    = VBOX_VMM_TARGET_AGNOSTIC VBOX_IN_VMM IN_VMM_R3 IN_DIS $(VMM_COMMON_DEFS) IEM_WITHOUT_INSTRUCTION_STATS
- ifdef VBOX_WITH_RAW_MODE
-  tstVMStructDTrace_DEFS  += VBOX_WITH_RAW_MODE
+ tstVMStructDTrace_DEFS    = VRA_VMM_TARGET_AGNOSTIC VRA_IN_VMM IN_VMM_R3 IN_DIS $(VMM_COMMON_DEFS) IEM_WITHOUT_INSTRUCTION_STATS
+ ifdef VRA_WITH_RAW_MODE
+  tstVMStructDTrace_DEFS  += VRA_WITH_RAW_MODE
  endif
  tstVMStructDTrace_INCS    = \
- 	$(VBOX_PATH_VMM_SRC)/include \
- 	$(VBOX_PATH_VMM_SRC)/PATM \
- 	$(VBOX_VMM_TESTCASE_OUT_DIR)
+ 	$(VRA_PATH_VMM_SRC)/include \
+ 	$(VRA_PATH_VMM_SRC)/PATM \
+ 	$(VRA_VMM_TESTCASE_OUT_DIR)
  tstVMStructDTrace_SOURCES = tstVMStructDTrace.cpp
- ifdef VBOX_WITH_R0_LOGGING
-  tstVMStructDTrace_DEFS  += VBOX_WITH_R0_LOGGING
+ ifdef VRA_WITH_R0_LOGGING
+  tstVMStructDTrace_DEFS  += VRA_WITH_R0_LOGGING
  endif
 
 
- VMMLibDTraceStructTest_INST = $(VBOX_INST_DTRACE_TST)$(KBUILD_TARGET_ARCH)/
+ VMMLibDTraceStructTest_INST = $(VRA_INST_DTRACE_TST)$(KBUILD_TARGET_ARCH)/
  VMMLibDTraceStructTest_SOURCES = \
  	$(tstVMStructDTrace_0_OUTDIR)/vbox-vm-struct-test.d
  VMMLibDTraceStructTest_CLEAN = \
@@ -1152,45 +1152,45 @@ MY_ASA_ASM_STUFF = \
 		IN_RING3 $(ARCH_BITS_DEFS) \
 		$(DEFS.$(KBUILD_TARGET_ARCH)) \
 		$(DEFS.$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)) \
-		VBOX_VMM_TARGET_X86 $(VMM_COMMON_DEFS) \
+		VRA_VMM_TARGET_X86 $(VMM_COMMON_DEFS) \
 		) \
 	-f $(if $(eq $(KBUILD_TARGET),darwin),macho,$(if $(eq $(KBUILD_TARGET),win),coff,elf)) \
-	$(foreach inc,$(INCS) $(VBOX_PATH_VMM_SRC)/testcase $(VBOX_PATH_VMM_SRC)/include $(VBOX_VMM_TESTCASE_OUT_DIR) \
+	$(foreach inc,$(INCS) $(VRA_PATH_VMM_SRC)/testcase $(VRA_PATH_VMM_SRC)/include $(VRA_VMM_TESTCASE_OUT_DIR) \
 		,-I$(inc)/)
 
 # 1a. make a header file which makes all the structures+members globals.
-$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.mac: \
-		$(VBOX_PATH_VMM_SRC)/testcase/tstAsmStructsAsm.asm \
-		$(VBOX_PATH_VMM_SRC)/testcase/tstAsmStructsAsm-lst.sed \
+$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.mac: \
+		$(VRA_PATH_VMM_SRC)/testcase/tstAsmStructsAsm.asm \
+		$(VRA_PATH_VMM_SRC)/testcase/tstAsmStructsAsm-lst.sed \
 		$(DEPTH)/include/iprt/asmdefs.mac \
 		$(DEPTH)/include/VBox/vmm/cpum.mac \
 		$(DEPTH)/include/VBox/vmm/vm.mac \
 		$(DEPTH)/include/VBox/vmm/gvm.mac \
 		$(DEPTH)/include/VBox/sup.mac \
 		$(DEPTH)/include/iprt/x86.mac \
-		$(VBOX_PATH_VMM_SRC)/include/CPUMInternal.mac \
-		$(VBOX_PATH_VMM_SRC)/include/HMInternal.mac \
-		$(VBOX_PATH_VMM_SRC)/include/VMMInternal.mac \
-		$(VBOX_PATH_VMM_SRC)/testcase/Makefile.kmk \
+		$(VRA_PATH_VMM_SRC)/include/CPUMInternal.mac \
+		$(VRA_PATH_VMM_SRC)/include/HMInternal.mac \
+		$(VRA_PATH_VMM_SRC)/include/VMMInternal.mac \
+		$(VRA_PATH_VMM_SRC)/testcase/Makefile.kmk \
 		$(PATH_ROOT)/Config.kmk $(LOCALCFG) $(AUTOCFG) \
 		| $$(dir $$@)
 	$(call MSG_GENERATE,tstVMStructSize,$@,$<)
 ifndef DONT_USE_YASM
 	$(QUIET)$(TOOL_YASM_AS) $(MY_ASA_ASM_STUFF) -o $@.o -l $@.lst $<
-	$(SED) -f $(VBOX_PATH_VMM_SRC)/testcase/tstAsmStructsAsm-lst.sed --output $@ $@.lst
+	$(SED) -f $(VRA_PATH_VMM_SRC)/testcase/tstAsmStructsAsm-lst.sed --output $@ $@.lst
 else
 	$(QUIET)$(TOOL_NASM_AS) -g $(MY_ASA_ASM_STUFF) -o $@.o -l $@.lst $<
-	$(VBOX_NM) $@.o | $(SED) \
+	$(VRA_NM) $@.o | $(SED) \
 			-e '/[0-9a-fA-F][0-9a-fA-F]* [^a] /d' \
 			-e 's/[0-9a-fA-F][0-9a-fA-F]* a \([^ ]*\)/global \1/' \
 			> $@
 endif
 
 # 1b. make an elf/macho object containing the offsets.
-includedep $(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o.dep
-$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o: \
-		$(VBOX_PATH_VMM_SRC)/testcase/tstAsmStructsAsm.asm \
-		$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.mac \
+includedep $(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o.dep
+$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o: \
+		$(VRA_PATH_VMM_SRC)/testcase/tstAsmStructsAsm.asm \
+		$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.mac \
 		$(DEPTH)/include/iprt/asmdefs.mac \
 		$(DEPTH)/include/VBox/vmm/cpum.mac \
 		$(DEPTH)/include/VBox/vmm/hm_vmx.mac \
@@ -1198,10 +1198,10 @@ $(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o: \
 		$(DEPTH)/include/VBox/vmm/vm.mac \
 		$(DEPTH)/include/VBox/sup.mac \
 		$(DEPTH)/include/iprt/x86.mac \
-		$(VBOX_PATH_VMM_SRC)/include/CPUMInternal.mac \
-		$(VBOX_PATH_VMM_SRC)/include/HMInternal.mac \
-		$(VBOX_PATH_VMM_SRC)/include/VMMInternal.mac \
-		$(VBOX_PATH_VMM_SRC)/testcase/Makefile.kmk \
+		$(VRA_PATH_VMM_SRC)/include/CPUMInternal.mac \
+		$(VRA_PATH_VMM_SRC)/include/HMInternal.mac \
+		$(VRA_PATH_VMM_SRC)/include/VMMInternal.mac \
+		$(VRA_PATH_VMM_SRC)/testcase/Makefile.kmk \
 		$$(if $$(eq $$(tstAsmStructsAsmDep_STUFF),$$(MY_ASA_ASM_STUFF)),,FORCE) \
 		| $$(dir $$@)
 	$(call MSG_COMPILE,tstAsmStructsasm,$<,$@,AS)
@@ -1210,15 +1210,15 @@ ifndef DONT_USE_YASM
 else
 	$(QUIET)$(TOOL_NASM_AS) $(MY_ASA_ASM_STUFF) -DDO_GLOBALS -o $@ $<
 endif
-	%$(QUIET2)$(RM) -f -- $(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o.dep
-	%$(QUIET2)$(APPEND) '$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o.dep' 'tstAsmStructsAsmDep_STUFF=$(MY_ASA_ASM_STUFF)'
+	%$(QUIET2)$(RM) -f -- $(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o.dep
+	%$(QUIET2)$(APPEND) '$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o.dep' 'tstAsmStructsAsmDep_STUFF=$(MY_ASA_ASM_STUFF)'
 
 # 2. use nm and sed to transform this into the header we want.
-$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsHC.h: $(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o
+$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsHC.h: $(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructsAsm.o
 	$(call MSG_GENERATE,tstVMStructSize,$@,$<)
 	$(QUIET)$(RM) -f $@ $@.dump $@.tmp
 ifeq ($(KBUILD_TARGET),win)
-	$(QUIET)$(REDIRECT) -wo $@.dump -- $(TOOL_$(VBOX_VCC_TOOL)_DUMPBIN) /nologo /symbols $<
+	$(QUIET)$(REDIRECT) -wo $@.dump -- $(TOOL_$(VRA_VCC_TOOL)_DUMPBIN) /nologo /symbols $<
 	$(QUIET)$(SED) \
 		-e '/STAMPROFILEADV/d' \
 		\
@@ -1237,7 +1237,7 @@ ifeq ($(KBUILD_TARGET),win)
 		-e 's/^[0-9a-fA-F]\{1,\} \(00[0-9a-fA-F]*\) ABS *notype *External *| \([^_.]\{1,\}\)_size$$/    CHECK_SIZE(\2, 0x0\1);/' \
 		--append $@.tmp $@.dump
 else
-	$(QUIET)$(REDIRECT) -wo $@.dump -- $(VBOX_NM) $<
+	$(QUIET)$(REDIRECT) -wo $@.dump -- $(VRA_NM) $<
 	$(QUIET)$(SED) \
 		-e '/STAMPROFILEADV/d' \
 		\
@@ -1260,13 +1260,13 @@ endif
 	$(QUIET)$(RM) -f $@.dump
 
 # 3. run it.
-$(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run: \
+$(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run: \
 		$$(tstAsmStructs_1_STAGE_TARGET) \
-		$(if-expr defined(VBOX_WITH_RAW_MODE),$$(tstAsmStructsRC_1_STAGE_TARGET),) \
-		| $$(dir $$@) $$(VBOX_RUN_TARGET_ORDER_DEPS)
+		$(if-expr defined(VRA_WITH_RAW_MODE),$$(tstAsmStructsRC_1_STAGE_TARGET),) \
+		| $$(dir $$@) $$(VRA_RUN_TARGET_ORDER_DEPS)
 	$(QUIET)$(RM) -f $@
 	$(tstAsmStructs_1_STAGE_TARGET)
-ifdef VBOX_WITH_RAW_MODE
+ifdef VRA_WITH_RAW_MODE
 	$(tstAsmStructsRC_1_STAGE_TARGET)
 endif
 	$(QUIET)$(APPEND) "$@" "done"
@@ -1277,21 +1277,21 @@ endif
 # Run rule for tstVMStructSize.
 #
 
-ifdef VBOX_WITH_RAW_MODE
+ifdef VRA_WITH_RAW_MODE
  # 1. Manually dump selected structures and members.
- $(VBOX_VMM_TESTCASE_OUT_DIR)/tstVMStructRC.h: $$(tstVMStructRC_1_STAGE_TARGET) | $$(dir $$@)
+ $(VRA_VMM_TESTCASE_OUT_DIR)/tstVMStructRC.h: $$(tstVMStructRC_1_STAGE_TARGET) | $$(dir $$@)
 	$(call MSG_GENERATE,tstVMStructSize,$@)
 	$(QUIET)$(REDIRECT) -wo $@ -- $<
-endif # VBOX_WITH_RAW_MODE
+endif # VRA_WITH_RAW_MODE
 
 # 2. run it.
-$(VBOX_VMM_TESTCASE_OUT_DIR)/tstVMStructSize.run: \
+$(VRA_VMM_TESTCASE_OUT_DIR)/tstVMStructSize.run: \
 		$$(tstVMStructSize_1_STAGE_TARGET) \
-		| $$(dir $$@) $$(VBOX_RUN_TARGET_ORDER_DEPS)
+		| $$(dir $$@) $$(VRA_RUN_TARGET_ORDER_DEPS)
 	$(QUIET)$(RM) -f $@
 	$<
 	$(QUIET)$(APPEND) "$@" "done"
 
 # alias for the two struct tests.
-run-struct-tests: $(VBOX_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run $(VBOX_VMM_TESTCASE_OUT_DIR)/tstVMStructSize.run
+run-struct-tests: $(VRA_VMM_TESTCASE_OUT_DIR)/tstAsmStructs.run $(VRA_VMM_TESTCASE_OUT_DIR)/tstVMStructSize.run
 

@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxHeadless
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@
     <para>
       The <command>VBoxHeadless</command> command is an alternate front
       end that enables you to remotely manage virtual machines (VMs).
-      The front end is a CLI rather than the VirtualBox Manager
+      The front end is a CLI rather than the VirtualAgent Manager
       graphical user interface (GUI).
     </para>
     <para>
@@ -142,7 +142,7 @@
               command line, <command>VBoxHeadless</command> prompts you
               for the password.
             </para><remark>
-              This design does not conform to Oracle's security
+              This design does not conform to CINASEEK's security
               guidelines. You should not be able to specify a password
               on the command line because the password can be seen in a
               process listing.

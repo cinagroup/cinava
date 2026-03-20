@@ -5,9 +5,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -35,16 +35,16 @@ if [ -r "$vboxdir/src/VBox/ExtPacks/Puel/ExtPack.xml" ]; then
   echo "Found PUEL ExtPack stuff, refused to build OSE tarball!"
   exit 1
 fi
-vermajor=`grep "^VBOX_VERSION_MAJOR *=" "$vboxdir/Version.kmk"|sed -e "s|.*= *\(.*\)|\1|g"`
-verminor=`grep "^VBOX_VERSION_MINOR *=" "$vboxdir/Version.kmk"|sed -e "s|.*= *\(.*\)|\1|g"`
-verbuild=`grep "^VBOX_VERSION_BUILD *=" "$vboxdir/Version.kmk"|sed -e "s|.*= *\(.*\)|\1|g"`
-verpre=`grep "^VBOX_VERSION_PRERELEASE *=" "$vboxdir/Version.kmk"|sed -e "s|.*= *\(.*\)|\1|g"`
-verpub=`grep "^VBOX_BUILD_PUBLISHER *=" "$vboxdir/Version.kmk"|sed -e "s|.*= *\(.*\)|\1|g"`
+vermajor=`grep "^VRA_VERSION_MAJOR *=" "$vboxdir/Version.kmk"|sed -e "s|.*= *\(.*\)|\1|g"`
+verminor=`grep "^VRA_VERSION_MINOR *=" "$vboxdir/Version.kmk"|sed -e "s|.*= *\(.*\)|\1|g"`
+verbuild=`grep "^VRA_VERSION_BUILD *=" "$vboxdir/Version.kmk"|sed -e "s|.*= *\(.*\)|\1|g"`
+verpre=`grep "^VRA_VERSION_PRERELEASE *=" "$vboxdir/Version.kmk"|sed -e "s|.*= *\(.*\)|\1|g"`
+verpub=`grep "^VRA_BUILD_PUBLISHER *=" "$vboxdir/Version.kmk"|sed -e "s|.*= *\(.*\)|\1|g"`
 verstr="$vermajor.$verminor.$verbuild"
 [ -n "$verpre" ] && verstr="$verstr"_"$verpre"
 [ -n "$verpub" ] && verstr="$verstr$verpub"
 rootpath=`cd ..;pwd`
-rootname="VirtualBox-$verstr"
+rootname="VirtualAgent-$verstr"
 if [ $# -eq 1 ]; then
     tarballname="$1"
 else

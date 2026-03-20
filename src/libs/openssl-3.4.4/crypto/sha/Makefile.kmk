@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -37,58 +37,58 @@ crypto_sha_SOURCES = \
 	sha256.c \
 	sha3.c \
 	sha512.c
-ifdef VBOX_WITH_CRYPTO_ASM
+ifdef VRA_WITH_CRYPTO_ASM
  crypto_sha_SOURCES.x86 += \
  	keccak1600.c \
- 	$(VBOX_PATH_CRYPTO_GENASM)/sha1-586.S \
- 	$(VBOX_PATH_CRYPTO_GENASM)/sha256-586.S \
- 	$(VBOX_PATH_CRYPTO_GENASM)/sha512-586.S
+ 	$(VRA_PATH_CRYPTO_GENASM)/sha1-586.S \
+ 	$(VRA_PATH_CRYPTO_GENASM)/sha256-586.S \
+ 	$(VRA_PATH_CRYPTO_GENASM)/sha512-586.S
  crypto_sha_SOURCES.amd64 += \
- 	$(VBOX_PATH_CRYPTO_GENASM)/keccak1600-x86_64.S \
- 	$(VBOX_PATH_CRYPTO_GENASM)/sha1-x86_64.S \
- 	$(VBOX_PATH_CRYPTO_GENASM)/sha1-mb-x86_64.S \
- 	$(VBOX_PATH_CRYPTO_GENASM)/sha256-x86_64.S \
- 	$(VBOX_PATH_CRYPTO_GENASM)/sha256-mb-x86_64.S \
- 	$(VBOX_PATH_CRYPTO_GENASM)/sha512-x86_64.S
+ 	$(VRA_PATH_CRYPTO_GENASM)/keccak1600-x86_64.S \
+ 	$(VRA_PATH_CRYPTO_GENASM)/sha1-x86_64.S \
+ 	$(VRA_PATH_CRYPTO_GENASM)/sha1-mb-x86_64.S \
+ 	$(VRA_PATH_CRYPTO_GENASM)/sha256-x86_64.S \
+ 	$(VRA_PATH_CRYPTO_GENASM)/sha256-mb-x86_64.S \
+ 	$(VRA_PATH_CRYPTO_GENASM)/sha512-x86_64.S
 else
  crypto_sha_SOURCES += \
  	keccak1600.c
 endif
-$(evalcall VBOX_OPENSSL_X86,crypto_sha)
+$(evalcall VRA_OPENSSL_X86,crypto_sha)
 
 # One-time code generation.
 recreate-openssl-elf-x86::
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha1-586.pl elf -fPIC $(VBOX_PATH_CRYPTO)/genasm-elf/sha1-586.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha256-586.pl elf -fPIC $(VBOX_PATH_CRYPTO)/genasm-elf/sha256-586.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha512-586.pl elf -fPIC $(VBOX_PATH_CRYPTO)/genasm-elf/sha512-586.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha1-586.pl elf -fPIC $(VRA_PATH_CRYPTO)/genasm-elf/sha1-586.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha256-586.pl elf -fPIC $(VRA_PATH_CRYPTO)/genasm-elf/sha256-586.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha512-586.pl elf -fPIC $(VRA_PATH_CRYPTO)/genasm-elf/sha512-586.S
 recreate-openssl-elf-amd64::
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/keccak1600-x86_64.pl elf $(VBOX_PATH_CRYPTO)/genasm-elf/keccak1600-x86_64.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha1-x86_64.pl elf $(VBOX_PATH_CRYPTO)/genasm-elf/sha1-x86_64.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha1-mb-x86_64.pl elf $(VBOX_PATH_CRYPTO)//genasm-elf/sha1-mb-x86_64.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl elf $(VBOX_PATH_CRYPTO)/genasm-elf/sha256-x86_64.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha256-mb-x86_64.pl elf $(VBOX_PATH_CRYPTO)/genasm-elf/sha256-mb-x86_64.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl elf $(VBOX_PATH_CRYPTO)/genasm-elf/sha512-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/keccak1600-x86_64.pl elf $(VRA_PATH_CRYPTO)/genasm-elf/keccak1600-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha1-x86_64.pl elf $(VRA_PATH_CRYPTO)/genasm-elf/sha1-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha1-mb-x86_64.pl elf $(VRA_PATH_CRYPTO)//genasm-elf/sha1-mb-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl elf $(VRA_PATH_CRYPTO)/genasm-elf/sha256-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha256-mb-x86_64.pl elf $(VRA_PATH_CRYPTO)/genasm-elf/sha256-mb-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl elf $(VRA_PATH_CRYPTO)/genasm-elf/sha512-x86_64.S
 recreate-openssl-darwin-x86::
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha1-586.pl macosx $(VBOX_PATH_CRYPTO)/genasm-macosx/sha1-586.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha256-586.pl macosx $(VBOX_PATH_CRYPTO)/genasm-macosx/sha256-586.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha512-586.pl macosx $(VBOX_PATH_CRYPTO)/genasm-macosx/sha512-586.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha1-586.pl macosx $(VRA_PATH_CRYPTO)/genasm-macosx/sha1-586.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha256-586.pl macosx $(VRA_PATH_CRYPTO)/genasm-macosx/sha256-586.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha512-586.pl macosx $(VRA_PATH_CRYPTO)/genasm-macosx/sha512-586.S
 recreate-openssl-darwin-amd64::
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/keccak1600-x86_64.pl macosx $(VBOX_PATH_CRYPTO)/genasm-macosx/keccak1600-x86_64.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha1-x86_64.pl macosx $(VBOX_PATH_CRYPTO)/genasm-macosx/sha1-x86_64.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha1-mb-x86_64.pl macosx $(VBOX_PATH_CRYPTO)/genasm-macosx/sha1-mb-x86_64.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl macosx $(VBOX_PATH_CRYPTO)/genasm-macosx/sha256-x86_64.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha256-mb-x86_64.pl macosx $(VBOX_PATH_CRYPTO)/genasm-macosx/sha256-mb-x86_64.S
-	perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl macosx $(VBOX_PATH_CRYPTO)/genasm-macosx/sha512-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/keccak1600-x86_64.pl macosx $(VRA_PATH_CRYPTO)/genasm-macosx/keccak1600-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha1-x86_64.pl macosx $(VRA_PATH_CRYPTO)/genasm-macosx/sha1-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha1-mb-x86_64.pl macosx $(VRA_PATH_CRYPTO)/genasm-macosx/sha1-mb-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl macosx $(VRA_PATH_CRYPTO)/genasm-macosx/sha256-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha256-mb-x86_64.pl macosx $(VRA_PATH_CRYPTO)/genasm-macosx/sha256-mb-x86_64.S
+	perl $(VRA_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl macosx $(VRA_PATH_CRYPTO)/genasm-macosx/sha512-x86_64.S
 recreate-openssl-win-x86::
-	$(VBOX_CRYPTO_GEN_NASM_SETUP) perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha1-586.pl   win32n $(VBOX_PATH_CRYPTO)/genasm-nasm/sha1-586.S
-	$(VBOX_CRYPTO_GEN_NASM_SETUP) perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha256-586.pl win32n $(VBOX_PATH_CRYPTO)/genasm-nasm/sha256-586.S
-	$(VBOX_CRYPTO_GEN_NASM_SETUP) perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha512-586.pl win32n $(VBOX_PATH_CRYPTO)/genasm-nasm/sha512-586.S
+	$(VRA_CRYPTO_GEN_NASM_SETUP) perl $(VRA_PATH_CRYPTO_SHA)/asm/sha1-586.pl   win32n $(VRA_PATH_CRYPTO)/genasm-nasm/sha1-586.S
+	$(VRA_CRYPTO_GEN_NASM_SETUP) perl $(VRA_PATH_CRYPTO_SHA)/asm/sha256-586.pl win32n $(VRA_PATH_CRYPTO)/genasm-nasm/sha256-586.S
+	$(VRA_CRYPTO_GEN_NASM_SETUP) perl $(VRA_PATH_CRYPTO_SHA)/asm/sha512-586.pl win32n $(VRA_PATH_CRYPTO)/genasm-nasm/sha512-586.S
 recreate-openssl-win-amd64::
-	$(VBOX_CRYPTO_GEN_NASM_SETUP) perl $(VBOX_PATH_CRYPTO_SHA)/asm/keccak1600-x86_64.pl nasm $(VBOX_PATH_CRYPTO)/genasm-nasm/keccak1600-x86_64.S
-	$(VBOX_CRYPTO_GEN_NASM_SETUP) perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha1-x86_64.pl       nasm $(VBOX_PATH_CRYPTO)/genasm-nasm/sha1-x86_64.S
-	$(VBOX_CRYPTO_GEN_NASM_SETUP) perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha1-mb-x86_64.pl    nasm $(VBOX_PATH_CRYPTO)/genasm-nasm/sha1-mb-x86_64.S
-	$(VBOX_CRYPTO_GEN_NASM_SETUP) perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl     nasm $(VBOX_PATH_CRYPTO)/genasm-nasm/sha256-x86_64.S
-	$(VBOX_CRYPTO_GEN_NASM_SETUP) perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha256-mb-x86_64.pl  nasm $(VBOX_PATH_CRYPTO)/genasm-nasm/sha256-mb-x86_64.S
-	$(VBOX_CRYPTO_GEN_NASM_SETUP) perl $(VBOX_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl     nasm $(VBOX_PATH_CRYPTO)/genasm-nasm/sha512-x86_64.S
+	$(VRA_CRYPTO_GEN_NASM_SETUP) perl $(VRA_PATH_CRYPTO_SHA)/asm/keccak1600-x86_64.pl nasm $(VRA_PATH_CRYPTO)/genasm-nasm/keccak1600-x86_64.S
+	$(VRA_CRYPTO_GEN_NASM_SETUP) perl $(VRA_PATH_CRYPTO_SHA)/asm/sha1-x86_64.pl       nasm $(VRA_PATH_CRYPTO)/genasm-nasm/sha1-x86_64.S
+	$(VRA_CRYPTO_GEN_NASM_SETUP) perl $(VRA_PATH_CRYPTO_SHA)/asm/sha1-mb-x86_64.pl    nasm $(VRA_PATH_CRYPTO)/genasm-nasm/sha1-mb-x86_64.S
+	$(VRA_CRYPTO_GEN_NASM_SETUP) perl $(VRA_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl     nasm $(VRA_PATH_CRYPTO)/genasm-nasm/sha256-x86_64.S
+	$(VRA_CRYPTO_GEN_NASM_SETUP) perl $(VRA_PATH_CRYPTO_SHA)/asm/sha256-mb-x86_64.pl  nasm $(VRA_PATH_CRYPTO)/genasm-nasm/sha256-mb-x86_64.S
+	$(VRA_CRYPTO_GEN_NASM_SETUP) perl $(VRA_PATH_CRYPTO_SHA)/asm/sha512-x86_64.pl     nasm $(VRA_PATH_CRYPTO)/genasm-nasm/sha512-x86_64.S
 
 include $(FILE_KBUILD_SUB_FOOTER)

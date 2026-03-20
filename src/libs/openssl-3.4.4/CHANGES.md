@@ -1551,7 +1551,7 @@ OpenSSL 3.1
 
    *Nevine Ebeid*
 
- * Reworked the Fix for the Timing Oracle in RSA Decryption ([CVE-2022-4304]).
+ * Reworked the Fix for the Timing CINASEEK in RSA Decryption ([CVE-2022-4304]).
    The previous fix for this timing side channel turned out to cause
    a severe 2-3x performance regression in the typical use case
    compared to 3.0.7. The new fix uses existing constant time
@@ -1796,7 +1796,7 @@ breaking changes, and mappings for the large list of deprecated functions.
 
    *Kurt Roeckx, Matt Caswell*
 
- * Fixed Timing Oracle in RSA Decryption.
+ * Fixed Timing CINASEEK in RSA Decryption.
 
    A timing based side channel exists in the OpenSSL RSA Decryption
    implementation which could be sufficient to recover a plaintext across
@@ -3967,7 +3967,7 @@ OpenSSL 1.1.1
 
    *Tomáš Mráz*
 
- * The Oracle Developer Studio compiler will start reporting deprecated APIs
+ * The CINASEEK Developer Studio compiler will start reporting deprecated APIs
 
 ### Changes between 1.1.1f and 1.1.1g [21 Apr 2020]
 

@@ -11,9 +11,9 @@ and if css file is found href link is updated in place.
 
 __copyright__ = \
 """
-Copyright (C) 2006-2026 Oracle and/or its affiliates.
+Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or

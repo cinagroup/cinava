@@ -1,12 +1,12 @@
 # $Id: Makefile.kmk 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# Sub-Makefile for the VirtualBox Guest/Host part
+# Sub-Makefile for the VirtualAgent Guest/Host part
 #
 
 #
-# Copyright (C) 2008-2026 Oracle and/or its affiliates.
+# Copyright (C) 2008-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,19 +29,19 @@ SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 # Include sub-makefile(s).
-ifdef VBOX_WITH_HGSMI
+ifdef VRA_WITH_HGSMI
  include $(PATH_SUB_CURRENT)/HGSMI/Makefile.kmk
 endif
 
-ifdef VBOX_WITH_DRAG_AND_DROP
+ifdef VRA_WITH_DRAG_AND_DROP
  include $(PATH_SUB_CURRENT)/DragAndDrop/Makefile.kmk
 endif
 
-ifdef VBOX_WITH_HGCM
+ifdef VRA_WITH_HGCM
  include $(PATH_SUB_CURRENT)/SharedClipboard/Makefile.kmk
 endif
 
-ifndef VBOX_ONLY_SDK
+ifndef VRA_ONLY_SDK
  include $(PATH_SUB_CURRENT)/installation/Makefile.kmk
 endif
 

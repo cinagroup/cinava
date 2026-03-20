@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
 """
-Copyright (C) 2009-2026 Oracle and/or its affiliates.
+Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -68,14 +68,14 @@ def checkPair(p, v, dllpre, dllsuff, bitness_magic):
         return [incdir, lib, lib64]
 
 def print_vars(vers, known, sep, bitness_magic):
-    print("VBOX_PYTHON%s_INC=%s%s" %(vers, known[0], sep))
+    print("VRA_PYTHON%s_INC=%s%s" %(vers, known[0], sep))
     if bitness_magic > 0:
         if known[2]:
-            print("VBOX_PYTHON%s_LIB=%s%s" %(vers, known[2], sep))
+            print("VRA_PYTHON%s_LIB=%s%s" %(vers, known[2], sep))
         if known[1]:
-            print("VBOX_PYTHON%s_LIB_X86=%s%s" %(vers, known[1], sep))
+            print("VRA_PYTHON%s_LIB_X86=%s%s" %(vers, known[1], sep))
     else:
-        print("VBOX_PYTHON%s_LIB=%s%s" %(vers, known[1], sep))
+        print("VRA_PYTHON%s_LIB=%s%s" %(vers, known[1], sep))
 
 
 def main(argv):
@@ -106,7 +106,7 @@ def main(argv):
                     str(sys.version_info[0])+'.'+str(sys.version_info[1])+'m']
 
     if target == 'darwin':
-        ## @todo Pick up the locations from VBOX_PATH_MACOSX_SDK_10_*.
+        ## @todo Pick up the locations from VRA_PATH_MACOSX_SDK_10_*.
         prefixes = ['/Developer/SDKs/MacOSX10.4u.sdk/usr',
                     '/Developer/SDKs/MacOSX10.5.sdk/usr',
                     '/Developer/SDKs/MacOSX10.6.sdk/usr',

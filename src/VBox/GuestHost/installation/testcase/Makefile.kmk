@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2024-2026 Oracle and/or its affiliates.
+# Copyright (C) 2024-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -28,13 +28,13 @@
 SUB_DEPTH = ../../../../..
 include $(KBUILD_PATH)/subheader.kmk
 
-if defined(VBOX_WITH_TESTCASES) && !defined(VBOX_ONLY_ADDITIONS) && !defined(VBOX_ONLY_SDK)
+if defined(VRA_WITH_TESTCASES) && !defined(VRA_ONLY_ADDITIONS) && !defined(VRA_ONLY_SDK)
  PROGRAMS.win += tstVBoxWinDrvInstInf
  TESTING.win  += $(tstVBoxWinDrvInstInf_0_OUTDIR)/tstVBoxWinDrvInstInf.run
 
  tstVBoxWinDrvInstInf_TEMPLATE = VBoxR3TstExe
  # Only test AMD64 on all platform for now, as the INF test files have the architecture hardcoded.
- tstVBoxWinDrvInstInf_DEFS     = TESTCASE VBOXWINDRVINF_NATIVE_ARCH_STR="AMD64"
+ tstVBoxWinDrvInstInf_DEFS     = TESTCASE VRAWINDRVINF_NATIVE_ARCH_STR="AMD64"
  tstVBoxWinDrvInstInf_SOURCES  = \
  	tstVBoxWinDrvInstInf.cpp \
  	../VBoxWinDrvCommon.cpp \

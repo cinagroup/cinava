@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2010-2026 Oracle and/or its affiliates.
+# Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -38,18 +38,18 @@ include $(PATH_SUB_CURRENT)/testcase/Makefile.kmk
 PROGRAMS += VBoxGuestInstallHelper
 VBoxGuestInstallHelper_TEMPLATE = VBoxGuestR3Exe
 VBoxGuestInstallHelper_DEFS     = _UNICODE UNICODE
-VBoxGuestInstallHelper_DEFS    += VBOX_SVN_REV=$(VBOX_SVN_REV)
-ifdef VBOX_WITH_WDDM
- VBoxGuestInstallHelper_DEFS   += VBOX_WITH_WDDM
+VBoxGuestInstallHelper_DEFS    += VRA_SVN_REV=$(VRA_SVN_REV)
+ifdef VRA_WITH_WDDM
+ VBoxGuestInstallHelper_DEFS   += VRA_WITH_WDDM
 endif
 if1of ($(KBUILD_TARGET_ARCH), x86)
  VBoxGuestInstallHelper_DEFS   += _WIN32_WINNT=0x0400
 else
  # As we target NT4 for x86 as the lowest OS version we support, skip using stuff which uses the NT APIs.
- VBoxGuestInstallHelper_DEFS   += VBOX_WINDRVINST_USE_NT_APIS
+ VBoxGuestInstallHelper_DEFS   += VRA_WINDRVINST_USE_NT_APIS
 endif
-VBoxGuestInstallHelper_DEPS     = $(VBOX_SVN_REV_KMK)
-VBoxGuestInstallHelper_SDKS     = ReorderCompilerIncs $(VBOX_WINPSDK_GST) $(VBOX_WINDDK_GST)
+VBoxGuestInstallHelper_DEPS     = $(VRA_SVN_REV_KMK)
+VBoxGuestInstallHelper_SDKS     = ReorderCompilerIncs $(VRA_WINPSDK_GST) $(VRA_WINDDK_GST)
 VBoxGuestInstallHelper_INCS     = ../../include
 VBoxGuestInstallHelper_LDFLAGS  = -SubSystem:console ## @todo arm64 -Entry:CustomMainEntrypoint (NOCRT for arm64)
 VBoxGuestInstallHelper_LDFLAGS.x86   = -Entry:CustomMainEntrypoint
@@ -60,7 +60,7 @@ VBoxGuestInstallHelper_SOURCES = \
 	$(PATH_ROOT)/src/VBox/GuestHost/Installation/VBoxWinDrvCommon.cpp \
 	$(PATH_ROOT)/src/VBox/GuestHost/Installation/VBoxWinDrvInst.cpp \
 	$(PATH_ROOT)/src/VBox/GuestHost/Installation/VBoxWinDrvStore.cpp
-VBoxGuestInstallHelper_VBOX_IMPORT_CHECKER.win.x86 := nt4 # setupapi was introduced in NT4
+VBoxGuestInstallHelper_VRA_IMPORT_CHECKER.win.x86 := nt4 # setupapi was introduced in NT4
 
 
 #
@@ -79,26 +79,26 @@ TEMPLATE_VBoxGuestInstallHelperDllTemplateWithFewerLibs_LATE_LIBS.x86  = \
 DLLS += VBoxGuestInstallHelperDll
 VBoxGuestInstallHelperDll_TEMPLATE        := VBoxGuestInstallHelperDllTemplateWithFewerLibs
 VBoxGuestInstallHelperDll_NAME            := VBoxGuestInstallHelper
-ifndef VBOX_WITH_NATIVE_NSIS_INSTALLER
+ifndef VRA_WITH_NATIVE_NSIS_INSTALLER
  VBoxGuestInstallHelperDll_BLD_TRG_ARCH   := x86
 endif
 VBoxGuestInstallHelperDll_INST            := repackadd/resources/VBoxGuestInstallHelperDll/
-ifdef VBOX_SIGN_ADDITIONS # (See the parent makefile.)
+ifdef VRA_SIGN_ADDITIONS # (See the parent makefile.)
  VBoxGuestInstallHelperDll_INSTTYPE       := stage
  VBoxGuestInstallHelperDll_DEBUG_INSTTYPE := both
 endif
 VBoxGuestInstallHelperDll_DEFS            := WIN32_LEAN_AND_MEAN=1 UNICODE _UNICODE
 if1of ($(KBUILD_TARGET_ARCH), x86)
  VBoxGuestInstallHelperDll_DEFS           += _WIN32_WINNT=0x0400
- VBoxGuestInstallHelperDll_VBOX_IMPORT_CHECKER.win.x86   := nt4
+ VBoxGuestInstallHelperDll_VRA_IMPORT_CHECKER.win.x86   := nt4
 else if1of ($(KBUILD_TARGET_ARCH), amd64)
  VBoxGuestInstallHelperDll_DEFS           += _WIN32_WINNT=0x0501
- VBoxGuestInstallHelperDll_VBOX_IMPORT_CHECKER.win.x86   := xp
- VBoxGuestInstallHelperDll_VBOX_IMPORT_CHECKER.win.amd64 := xp64
+ VBoxGuestInstallHelperDll_VRA_IMPORT_CHECKER.win.x86   := xp
+ VBoxGuestInstallHelperDll_VRA_IMPORT_CHECKER.win.amd64 := xp64
 else
  VBoxGuestInstallHelperDll_DEFS           += _WIN32_WINNT=0x0a00
- VBoxGuestInstallHelperDll_VBOX_IMPORT_CHECKER.win.x86   := w8
- VBoxGuestInstallHelperDll_VBOX_IMPORT_CHECKER.win.arm64 := w10-1709
+ VBoxGuestInstallHelperDll_VRA_IMPORT_CHECKER.win.x86   := w8
+ VBoxGuestInstallHelperDll_VRA_IMPORT_CHECKER.win.arm64 := w10-1709
 endif
 VBoxGuestInstallHelperDll_SOURCES         := \
 	VBoxGuestInstallHelperDll.cpp \

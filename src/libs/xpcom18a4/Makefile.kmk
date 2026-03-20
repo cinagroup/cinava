@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 # Make sure our Config.kmk is included.
-ifndef VBOX_PATH_XPCOM_SRC
+ifndef VRA_PATH_XPCOM_SRC
  include $(PATH_SUB_CURRENT)/Config.kmk
 endif
 
@@ -40,11 +40,11 @@ endif
 # File for filtering out C symbols from the XPCOM library. Used to avoid
 # symbol namespace pollution, causing trouble with system libraries.
 # (llvm/clang doesn't have __bss_start, _edata or _end, so use edited version.)
-XPCOM_C_NAMESPACE_MAP = $(VBOX_PATH_XPCOM_SRC)/xpcom-namespace-cleanup.map
-ifdef VBOX_USE_CLANG
- XPCOM_C_NAMESPACE_MAP = $(VBOX_PATH_XPCOM_SRC)/xpcom-namespace-cleanup-llvm.map
+XPCOM_C_NAMESPACE_MAP = $(VRA_PATH_XPCOM_SRC)/xpcom-namespace-cleanup.map
+ifdef VRA_USE_CLANG
+ XPCOM_C_NAMESPACE_MAP = $(VRA_PATH_XPCOM_SRC)/xpcom-namespace-cleanup-llvm.map
 endif
-ifdef VBOX_WITH_XPCOM_NAMESPACE_CLEANUP
+ifdef VRA_WITH_XPCOM_NAMESPACE_CLEANUP
  # At the moment, only Solaris uses the generated map file. GNU ld is smart
  # enough to handle symbol wildcards itself.
  if1of ($(KBUILD_TARGET), solaris)
@@ -87,9 +87,9 @@ IMPORT_LIBS += VBoxXPCOMImp
 # We build several libraries so that any linker command line
 # length restrictions limit will be avoided. (Solaris, Mac?)
 #
-if !defined(VBOX_ONLY_SDK) && (!defined(VBOX_ONLY_EXTPACKS) || !defined(VBOX_ONLY_EXTPACKS_USE_IMPLIBS))
+if !defined(VRA_ONLY_SDK) && (!defined(VRA_ONLY_EXTPACKS) || !defined(VRA_ONLY_EXTPACKS_USE_IMPLIBS))
 
- VBOX_XPCOM_LIBRARIES := \
+ VRA_XPCOM_LIBRARIES := \
  	VBox-xpcom-nspr \
  	VBox-xpcom-typelib \
  	VBox-xpcom-string \
@@ -103,23 +103,23 @@ if !defined(VBOX_ONLY_SDK) && (!defined(VBOX_ONLY_EXTPACKS) || !defined(VBOX_ONL
  	VBox-xpcom-proxy \
  	VBox-xpcom-ipcshared \
  	VBoxXPCOMGlue_s \
- 	$(if $(VBOX_WITH_XPCOM_GLUE_WHICH_IS_UNUSED),VBoxXPCOMGlue,)
- LIBRARIES += $(VBOX_XPCOM_LIBRARIES)
+ 	$(if $(VRA_WITH_XPCOM_GLUE_WHICH_IS_UNUSED),VBoxXPCOMGlue,)
+ LIBRARIES += $(VRA_XPCOM_LIBRARIES)
 
- VBOX_XPCOM_DLLS := \
+ VRA_XPCOM_DLLS := \
  	VBoxXPCOM \
  	VBoxXPCOMIPCC \
  	VBoxXPCOMIPCD
 
- DLLS += $(VBOX_XPCOM_DLLS)
+ DLLS += $(VRA_XPCOM_DLLS)
 
- ifdef VBOX_WITH_32_ON_64_MAIN_API
-  LIBRARIES += $(addsuffix -x86,$(VBOX_XPCOM_LIBRARIES))
-  DLLS    += $(addsuffix -x86,$(VBOX_XPCOM_DLLS))
+ ifdef VRA_WITH_32_ON_64_MAIN_API
+  LIBRARIES += $(addsuffix -x86,$(VRA_XPCOM_LIBRARIES))
+  DLLS    += $(addsuffix -x86,$(VRA_XPCOM_DLLS))
  endif
 
 
- ifdef VBOX_WITH_TESTCASES
+ ifdef VRA_WITH_TESTCASES
   PROGRAMS += \
   	tstnsIFileTest \
   	tstTestArray \
@@ -138,9 +138,9 @@ if !defined(VBOX_ONLY_SDK) && (!defined(VBOX_ONLY_EXTPACKS) || !defined(VBOX_ONL
   	tstTestMinStringAPI \
   	tstTestStrings \
   	tstPrimitiveTest
- endif # VBOX_WITH_TESTCASES
+ endif # VRA_WITH_TESTCASES
 
-endif # !VBOX_ONLY_SDK && (!defined(VBOX_ONLY_EXTPACKS) || !defined(VBOX_ONLY_EXTPACKS_USE_IMPLIBS))
+endif # !VRA_ONLY_SDK && (!defined(VRA_ONLY_EXTPACKS) || !defined(VRA_ONLY_EXTPACKS_USE_IMPLIBS))
 
 
 
@@ -354,7 +354,7 @@ VBox-xpcom-nspr_SOURCES  = \
 
 $(call KB_FN_DO_PASS0_ON_TARGET,VBox-xpcom-nspr)
 
-$(evalcall2 VBOX_XPCOM_X86,VBox-xpcom-nspr)
+$(evalcall2 VRA_XPCOM_X86,VBox-xpcom-nspr)
 
 
 VBox-xpcom-typelib_TEMPLATE = XPComDll
@@ -363,7 +363,7 @@ VBox-xpcom-typelib_SOURCES = \
 	xpcom/typelib/xpt/src/xpt_arena.c \
 	xpcom/typelib/xpt/src/xpt_struct.c \
 	xpcom/typelib/xpt/src/xpt_xdr.c
-$(evalcall VBOX_XPCOM_X86,VBox-xpcom-typelib)
+$(evalcall VRA_XPCOM_X86,VBox-xpcom-typelib)
 
 VBox-xpcom-string_TEMPLATE = XPComDll
 VBox-xpcom-string_INSTTYPE = none
@@ -379,7 +379,7 @@ VBox-xpcom-string_SOURCES = \
 	xpcom/string/src/nsString.cpp \
 	xpcom/string/src/nsStringComparator.cpp \
 	xpcom/string/src/nsStringObsolete.cpp
-$(evalcall VBOX_XPCOM_X86,VBox-xpcom-string)
+$(evalcall VRA_XPCOM_X86,VBox-xpcom-string)
 
 VBox-xpcom-base_TEMPLATE = XPComDll
 VBox-xpcom-base_INSTTYPE = none
@@ -390,7 +390,7 @@ VBox-xpcom-base_SOURCES = \
 	xpcom/base/nsExceptionService.cpp \
 	xpcom/base/nsID.cpp \
 	xpcom/base/nsTraceRefcntImpl.cpp
-$(evalcall VBOX_XPCOM_X86,VBox-xpcom-base)
+$(evalcall VRA_XPCOM_X86,VBox-xpcom-base)
 
 VBox-xpcom-ds_TEMPLATE = XPComDll
 VBox-xpcom-ds_INSTTYPE = none
@@ -418,21 +418,21 @@ VBox-xpcom-ds_SOURCES = \
 	xpcom/ds/nsCOMArray.cpp \
 	xpcom/ds/nsArray.cpp \
 	xpcom/ds/nsArrayEnumerator.cpp
-$(evalcall VBOX_XPCOM_X86,VBox-xpcom-ds)
+$(evalcall VRA_XPCOM_X86,VBox-xpcom-ds)
 
 # @todo what about MOZ_USER_DIR?
 VBox-xpcom-io_TEMPLATE = XPComDll
 VBox-xpcom-io_INSTTYPE = none
-ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
  VBox-xpcom-io_DEFS = _IMPL_NS_COM MOZ_USER_DIR=".mozilla"
 else
  VBox-xpcom-io_DEFS = _IMPL_NS_COM MOZ_USER_DIR=\".mozilla\"
 endif
-if defined(VBOX_WITH_HARDENING) && defined(VBOX_PATH_APP_PRIVATE_ARCH)
- ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
-  VBox-xpcom-io_DEFS += MOZ_DEFAULT_VBOX_XPCOM_HOME="$(VBOX_PATH_APP_PRIVATE_ARCH)"
+if defined(VRA_WITH_HARDENING) && defined(VRA_PATH_APP_PRIVATE_ARCH)
+ ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
+  VBox-xpcom-io_DEFS += MOZ_DEFAULT_VRA_XPCOM_HOME="$(VRA_PATH_APP_PRIVATE_ARCH)"
  else
-  VBox-xpcom-io_DEFS += MOZ_DEFAULT_VBOX_XPCOM_HOME=\"$(VBOX_PATH_APP_PRIVATE_ARCH)\"
+  VBox-xpcom-io_DEFS += MOZ_DEFAULT_VRA_XPCOM_HOME=\"$(VRA_PATH_APP_PRIVATE_ARCH)\"
  endif
 endif
 VBox-xpcom-io_SOURCES = \
@@ -445,7 +445,7 @@ if1of ($(KBUILD_TARGET) $(KBUILD_TARGET).$(KBUILD_TARGET_ARCH), freebsd linux ne
  VBox-xpcom-io_SOURCES += \
  	xpcom/io/nsLocalFileUnix.cpp
 endif
-$(evalcall VBOX_XPCOM_X86,VBox-xpcom-io)
+$(evalcall VRA_XPCOM_X86,VBox-xpcom-io)
 
 VBox-xpcom-components_TEMPLATE = XPComDll
 VBox-xpcom-components_INSTTYPE = none
@@ -458,7 +458,7 @@ VBox-xpcom-components_SOURCES = \
 	xpcom/components/nsServiceManagerObsolete.cpp \
 	xpcom/components/xcDll.cpp \
 	xpcom/components/nsStaticComponentLoader.cpp
-$(evalcall VBOX_XPCOM_X86,VBox-xpcom-components)
+$(evalcall VRA_XPCOM_X86,VBox-xpcom-components)
 
 VBox-xpcom-threads_TEMPLATE = XPComDll
 VBox-xpcom-threads_INSTTYPE = none
@@ -468,7 +468,7 @@ VBox-xpcom-threads_SOURCES = \
 	xpcom/threads/nsAutoLock.cpp \
 	xpcom/threads/nsEventQueue.cpp \
 	xpcom/threads/nsEventQueueService.cpp
-$(evalcall VBOX_XPCOM_X86,VBox-xpcom-threads)
+$(evalcall VRA_XPCOM_X86,VBox-xpcom-threads)
 
 VBox-xpcom-xptinfo_TEMPLATE = XPComDll
 VBox-xpcom-xptinfo_INSTTYPE = none
@@ -483,7 +483,7 @@ VBox-xpcom-xptinfo_SOURCES = \
 	xpcom/reflect/xptinfo/src/xptiWorkingSet.cpp \
 	xpcom/reflect/xptinfo/src/xptiZipItem.cpp \
 	xpcom/reflect/xptinfo/src/xptiZipLoader.cpp
-$(evalcall VBOX_XPCOM_X86,VBox-xpcom-xptinfo)
+$(evalcall VRA_XPCOM_X86,VBox-xpcom-xptinfo)
 
 
 VBox-xpcom-xptcall_TEMPLATE = XPComDll
@@ -503,7 +503,7 @@ VBox-xpcom-xptcall_SOURCES.arm64         = xpcom/reflect/xptcall/src/md/unix/xpt
 VBox-xpcom-xptcall_SOURCES.darwin.amd64  = xpcom/reflect/xptcall/src/md/unix/xptcstubs_amd64_darwin.cpp # Underscore prefix.
 VBox-xpcom-xptcall_SOURCES.freebsd.amd64 = xpcom/reflect/xptcall/src/md/unix/xptcstubs_x86_64_linux.cpp
 VBox-xpcom-xptcall_SOURCES.linux.amd64   = xpcom/reflect/xptcall/src/md/unix/xptcstubs_x86_64_linux.cpp
-ifndef VBOX_GCC_USING_SOLARIS_AS
+ifndef VRA_GCC_USING_SOLARIS_AS
  VBox-xpcom-xptcall_SOURCES.solaris.amd64 = xpcom/reflect/xptcall/src/md/unix/xptcstubs_x86_64_linux.cpp
 else
  VBox-xpcom-xptcall_SOURCES.solaris.amd64 = xpcom/reflect/xptcall/src/md/unix/xptcstubs_x86_64_solaris.cpp
@@ -515,7 +515,7 @@ xpcom/reflect/xptcall/src/md/unix/xptcstubs_x86_solaris.cpp_CXXFLAGS = -O0
 # that triggers is, while -O1 -fno-omit-frame-pointer does not work. Anyway, it's probably a gcc/mozila
 # bug and it's not worth investigating as I'm not the maintainger of the solaris gcc port. [bird, 2007-09-17]
 
-$(evalcall VBOX_XPCOM_X86,VBox-xpcom-xptcall)
+$(evalcall VRA_XPCOM_X86,VBox-xpcom-xptcall)
 
 
 VBox-xpcom-proxy_TEMPLATE = XPComDll
@@ -527,17 +527,17 @@ VBox-xpcom-proxy_SOURCES  = \
 	xpcom/proxy/src/nsProxyEventObject.cpp \
 	xpcom/proxy/src/nsProxyObjectManager.cpp \
 	xpcom/proxy/src/nsProxyRelease.cpp
-$(evalcall VBOX_XPCOM_X86,VBox-xpcom-proxy)
+$(evalcall VRA_XPCOM_X86,VBox-xpcom-proxy)
 
 
 #
 # The VBoxXPCOM Glue static libraries.
 #
 # This isn't the normal XPCOM glue (see the places in XPCOM where XPCOM_GLUE is
-# checked), VirtualBox has its own glue library and this means this isn't used
+# checked), VirtualAgent has its own glue library and this means this isn't used
 # much (one reason is that we don't provide frozen APIs yet). All VBox XPCOM
 # client applications are dependent on the given version of both the VBox XPCOM
-# runtime (binary dependency) and VirtualBox component library (COM interface
+# runtime (binary dependency) and VirtualAgent component library (COM interface
 # dependency). For this reason, VBox client applications link to the VBox XPCOM
 # shared library directly (instead of linking to the standalone XPCOM glue
 # library that would dynamically search for and load the installed XPCOM
@@ -563,14 +563,14 @@ VBoxXPCOMGlue_s_TEMPLATE = XPComDll
 VBoxXPCOMGlue_s_INSTTYPE = none
 VBoxXPCOMGlue_s_DEFS     = _IMPL_NS_COM
 VBoxXPCOMGlue_s_SOURCES  = $(VBoxXPCOMGlue_COMMON_SOURCES)
-$(evalcall VBOX_XPCOM_X86,VBoxXPCOMGlue_s)
+$(evalcall VRA_XPCOM_X86,VBoxXPCOMGlue_s)
 
 # standalone glue library which all third-party client apps (if any) will
 # link with (currently completely unused and nit built, to be part of the SDK)
 VBoxXPCOMGlue_TEMPLATE = XPComDll
 VBoxXPCOMGlue_SOURCES  = $(VBoxXPCOMGlue_COMMON_SOURCES)
 #VBoxXPCOMGlue_INST     = lib/ $(INST_SDK)lib/
-$(evalcall VBOX_XPCOM_X86,VBoxXPCOMGlue)
+$(evalcall VRA_XPCOM_X86,VBoxXPCOMGlue)
 
 
 #
@@ -579,7 +579,7 @@ $(evalcall VBOX_XPCOM_X86,VBoxXPCOMGlue)
 VBoxXPCOM_TEMPLATE = XPComDll
 VBoxXPCOM_NAME = $(basename $(notdir $(LIB_XPCOM)))
 VBoxXPCOM_DEFS = BUILD_DCONNECT=1 _IMPL_NS_COM
-ifdef VBOX_WITH_XPCOM_NAMESPACE_CLEANUP
+ifdef VRA_WITH_XPCOM_NAMESPACE_CLEANUP
  VBoxXPCOM_LDFLAGS.linux    = -Wl,--version-script=$(XPCOM_C_NAMESPACE_MAP)
  VBoxXPCOM_LNK_DEPS.linux  += $(XPCOM_C_NAMESPACE_MAP)
  VBoxXPCOM_LDFLAGS.solaris  = -Wl,-M,$(XPCOM_C_NAMESPACE_MAP)
@@ -643,7 +643,7 @@ VBoxXPCOM_LDFLAGS.solaris += -Wl,-z,allextract \
 # EF heap
 #VBoxXPCOM_LIBS += $(LIB_RUNTIME_EF)
 #VBoxXPCOM_LDFLAGS = -Wl,--whole-archive $(VBoxXPCOM_LIBS) -Wl,--no-whole-archive $(LIB_RUNTIME)
-VBoxXPCOM_LDFLAGS.darwin = -install_name $(VBOX_DYLD_EXECUTABLE_PATH)/VBoxXPCOM.dylib
+VBoxXPCOM_LDFLAGS.darwin = -install_name $(VRA_DYLD_EXECUTABLE_PATH)/VBoxXPCOM.dylib
 
 #
 # The 32-bit VBoxXPCOM Shared Object, assembling all lib files.
@@ -701,17 +701,17 @@ VBoxXPCOM-x86_LDFLAGS.solaris += -Wl,-z,allextract \
 #
 # VBoxXPCOMImp - Import library/hack.
 #
-ifdef VBOX_WITH_XPCOM_NAMESPACE_CLEANUP
- $(call VBOX_GENERATE_IMPORT_TARGET_FN,VBoxXPCOMImp,VBoxXPCOM,VBoxXPCOM-mangled.def)
+ifdef VRA_WITH_XPCOM_NAMESPACE_CLEANUP
+ $(call VRA_GENERATE_IMPORT_TARGET_FN,VBoxXPCOMImp,VBoxXPCOM,VBoxXPCOM-mangled.def)
 else
- $(call VBOX_GENERATE_IMPORT_TARGET_FN,VBoxXPCOMImp,VBoxXPCOM,VBoxXPCOM.def)
+ $(call VRA_GENERATE_IMPORT_TARGET_FN,VBoxXPCOMImp,VBoxXPCOM,VBoxXPCOM.def)
 endif
 
 
 #
 # IPC templates.
 #
-ifdef VBOX_IPC_RELEASE_LOG
+ifdef VRA_IPC_RELEASE_LOG
  IPC_LOGGING = 1
 else ifneq ($(KBUILD_TYPE),release)
  IPC_LOGGING = 1
@@ -723,7 +723,7 @@ TEMPLATE_XPComIpcDll_DEFS             = \
 	$(TEMPLATE_XPComDll_DEFS) \
 	BUILD_DCONNECT=1
 
-ifdef VBOX_WITH_AUTOMATIC_DEFS_QUOTING
+ifdef VRA_WITH_AUTOMATIC_DEFS_QUOTING
  TEMPLATE_XPComIpcDll_DEFS           += IPC_DAEMON_APP_NAME="VBoxSVC$(SUFF_EXE)"
 else
  TEMPLATE_XPComIpcDll_DEFS           += IPC_DAEMON_APP_NAME=\"VBoxSVC$(SUFF_EXE)\"
@@ -734,12 +734,12 @@ endif
 TEMPLATE_XPComIpcDll_LATE_LIBS        = $(VBoxXPCOM_1_TARGET) $(TEMPLATE_XPComDll_LATE_LIBS)
 ifneq ($(KBUILD_TARGET),win)
  ifeq ($(filter-out solaris.x86 %.amd64 %.sparc32 %.sparc64,$(KBUILD_TARGET).$(KBUILD_TARGET_ARCH)),) ## TODO: cleanup!
-  if defined(VBOX_WITH_RELATIVE_RUNPATH) && !defined(VBOX_WITH_HARDENING)
-   TEMPLATE_XPComIpcDll_LDFLAGS = $(filter-out '$(VBOX_GCC_RPATH_OPT)%',$(TEMPLATE_XPComDll_LDFLAGS)) '$(VBOX_GCC_RPATH_OPT)$(VBOX_WITH_RELATIVE_RUNPATH)/..'
+  if defined(VRA_WITH_RELATIVE_RUNPATH) && !defined(VRA_WITH_HARDENING)
+   TEMPLATE_XPComIpcDll_LDFLAGS = $(filter-out '$(VRA_GCC_RPATH_OPT)%',$(TEMPLATE_XPComDll_LDFLAGS)) '$(VRA_GCC_RPATH_OPT)$(VRA_WITH_RELATIVE_RUNPATH)/..'
   endif
- else ifndef VBOX_WITH_HARDENING
-  ifdef VBOX_WITH_RELATIVE_RUNPATH
-   TEMPLATE_XPComIpcDll_LDFLAGS = $(filter-out '$(VBOX_GCC_RPATH_OPT)%',$(TEMPLATE_XPComDll_LDFLAGS)) '$(VBOX_GCC_RPATH_OPT)$(VBOX_WITH_RELATIVE_RUNPATH)/..'
+ else ifndef VRA_WITH_HARDENING
+  ifdef VRA_WITH_RELATIVE_RUNPATH
+   TEMPLATE_XPComIpcDll_LDFLAGS = $(filter-out '$(VRA_GCC_RPATH_OPT)%',$(TEMPLATE_XPComDll_LDFLAGS)) '$(VRA_GCC_RPATH_OPT)$(VRA_WITH_RELATIVE_RUNPATH)/..'
   endif
  endif
 endif
@@ -766,7 +766,7 @@ VBox-xpcom-ipcshared_SOURCES = \
 	ipc/ipcd/shared/src/ipcStringList.cpp \
 	ipc/ipcd/shared/src/ipcIDList.cpp \
 	ipc/ipcd/shared/src/ipcm.cpp
-$(evalcall VBOX_XPCOM_X86,VBox-xpcom-ipcshared)
+$(evalcall VRA_XPCOM_X86,VBox-xpcom-ipcshared)
 
 
 #
@@ -781,12 +781,12 @@ VBoxXPCOMIPCC_SOURCES = \
 	ipc/ipcd/client/src/ipcDConnectService.cpp \
 	\
 	ipc/ipcd/client/src/ipcConnectionUnix.cpp
-VBoxXPCOMIPCC_LDFLAGS.darwin = -install_name $(VBOX_DYLD_EXECUTABLE_PATH)/components/VBoxXPCOMIPCC.dylib
+VBoxXPCOMIPCC_LDFLAGS.darwin = -install_name $(VRA_DYLD_EXECUTABLE_PATH)/components/VBoxXPCOMIPCC.dylib
 VBoxXPCOMIPCC_LIBS = \
 	$(VBox-xpcom-ipcshared_1_TARGET)
 
 # 32-bit version of the component.
-$(evalcall VBOX_XPCOM_X86,VBoxXPCOMIPCC)
+$(evalcall VRA_XPCOM_X86,VBoxXPCOMIPCC)
 VBoxXPCOMIPCC-x86_LIBS = \
 	$(VBox-xpcom-ipcshared-x86_1_TARGET)
 
@@ -799,7 +799,7 @@ VBoxXPCOMIPCD_SOURCES = \
 	ipc/ipcd/daemon/src/ipcd.cpp \
 	ipc/ipcd/daemon/src/ipcClient.cpp \
 	ipc/ipcd/daemon/src/ipcCommandModule.cpp
-VBoxXPCOMIPCD_LDFLAGS.darwin = -install_name $(VBOX_DYLD_EXECUTABLE_PATH)/VBoxXPCOMIPCD.dylib
+VBoxXPCOMIPCD_LDFLAGS.darwin = -install_name $(VRA_DYLD_EXECUTABLE_PATH)/VBoxXPCOMIPCD.dylib
 VBoxXPCOMIPCD_LIBS = \
 	$(VBox-xpcom-ipcshared_1_TARGET) \
 	$(VBoxXPCOM_1_TARGET) \
@@ -809,16 +809,16 @@ VBoxXPCOMIPCD_LIBS = \
 #
 # Include sub-makefiles for the Python<->XPCOM and Java<->XPCOM bridges.
 #
-ifndef VBOX_ONLY_EXTPACKS
+ifndef VRA_ONLY_EXTPACKS
  # Find the Python headers for the Python<->XPCOM bridge if enabled.
- ifdef VBOX_WITH_PYTHON
+ ifdef VRA_WITH_PYTHON
   include $(PATH_SUB_CURRENT)/python/Makefile.kmk
  endif
 
- ifdef VBOX_WITH_JXPCOM
+ ifdef VRA_WITH_JXPCOM
   include $(PATH_SUB_CURRENT)/java/Makefile.kmk
  endif
-endif # !VBOX_ONLY_EXTPACKS
+endif # !VRA_ONLY_EXTPACKS
 
 
 #
@@ -865,9 +865,9 @@ tstPrimitiveTest_SOURCES       = xpcom/typelib/xpt/tests/PrimitiveTest.c
 
 OTHER_CLEAN += \
 	$(PATH_TARGET)/VBox-xpcom-idl-timestamp \
-	$(addprefix $(VBOX_PATH_SDK)/bindings/xpcom/include,$(notdir $(subst .idl,.h,$(XPCOM_IDLFILES)))) \
-	$(addprefix $(VBOX_PATH_SDK)/bindings/xpcom/include,$(notdir $(subst .idl,.xpt,$(XPCOM_IDLFILES)))) \
-	$(addprefix $(VBOX_PATH_SDK)/bindings/xpcom/idl/,$(notdir $(XPCOM_IDLFILES))) \
+	$(addprefix $(VRA_PATH_SDK)/bindings/xpcom/include,$(notdir $(subst .idl,.h,$(XPCOM_IDLFILES)))) \
+	$(addprefix $(VRA_PATH_SDK)/bindings/xpcom/include,$(notdir $(subst .idl,.xpt,$(XPCOM_IDLFILES)))) \
+	$(addprefix $(VRA_PATH_SDK)/bindings/xpcom/idl/,$(notdir $(XPCOM_IDLFILES))) \
 	$(addprefix $(PATH_TARGET)/VBox-xpcom-xpt-files/,$(notdir $(subst .idl,.xpt,$(XPCOM_IDLFILES))))
 
 
@@ -875,7 +875,7 @@ OTHER_CLEAN += \
 # Create and install VBoxXPCOMBase.xpt
 #
 INSTALLS += VBoxXPCOMBase-xpt-inst
-VBOX_XPTFILES = $(addprefix $(PATH_TARGET)/VBox-xpcom-xpt-files/, \
+VRA_XPTFILES = $(addprefix $(PATH_TARGET)/VBox-xpcom-xpt-files/, \
 		nsIErrorService.xpt \
 		nsIException.xpt \
 		nsIExceptionService.xpt \
@@ -934,11 +934,11 @@ VBoxXPCOMBase-xpt-inst_MODE = 0644
 VBoxXPCOMBase-xpt-inst_SOURCES = \
 	$(PATH_TARGET)/VBox-xpcom-xpt-files/VBoxXPCOMBase.xpt
 VBoxXPCOMBase-xpt-inst_CLEAN = \
-	$(VBOX_XPTFILES) \
+	$(VRA_XPTFILES) \
 	$(PATH_TARGET)/VBox-xpcom-xpt-files/VBoxXPCOMBase.xpt
 
 # combined typelib library
-$(PATH_TARGET)/VBox-xpcom-xpt-files/VBoxXPCOMBase.xpt: $$(VBOX_XPTFILES) | $$(xpt_link_1_TARGET) $(PATH_TARGET)/VBox-xpcom-xpt-files/
+$(PATH_TARGET)/VBox-xpcom-xpt-files/VBoxXPCOMBase.xpt: $$(VRA_XPTFILES) | $$(xpt_link_1_TARGET) $(PATH_TARGET)/VBox-xpcom-xpt-files/
 	$(call MSG_LINK,XPCOM_TYPELIB,$@)
 	$(QUIET)$(MKDIR) -p -- $(PATH_STAGE_BIN)/components
 	$(QUIET)$(xpt_link_1_TARGET) $@ $^
@@ -972,22 +972,22 @@ include $(FILE_KBUILD_SUB_FOOTER)
 # Define for compiling one IDL into a header and a typelib
 # @param idl     The filename with everything.
 define def_IDL
- $(VBOX_PATH_SDK)/bindings/xpcom/include/$(notdir $(subst .idl,.h,$(idl))) \
+ $(VRA_PATH_SDK)/bindings/xpcom/include/$(notdir $(subst .idl,.h,$(idl))) \
  + $(PATH_TARGET)/VBox-xpcom-xpt-files/$(notdir $(subst .idl,.xpt,$(idl))): \
- 		$(VBOX_PATH_XPCOM_SRC)/$(idl) \
+ 		$(VRA_PATH_XPCOM_SRC)/$(idl) \
  		| $$$$(xpidl_1_TARGET) \
  		$(PATH_TARGET)/VBox-xpcom-xpt-files/
 	$$(call MSG_TOOL,xpidl,XPCOM,$$<,$$@)
-	$$(QUIET)$(MKDIR) -p $(VBOX_PATH_SDK)/bindings/xpcom/include $(VBOX_PATH_SDK)/bindings/xpcom/idl
+	$$(QUIET)$(MKDIR) -p $(VRA_PATH_SDK)/bindings/xpcom/include $(VRA_PATH_SDK)/bindings/xpcom/idl
 	$$(QUIET)$$(xpidl_1_TARGET) -m header $(XPIDL_INCS) -e $$@ $$<
 	$$(QUIET)$$(xpidl_1_TARGET) -m typelib $(XPIDL_INCS) -e $(addprefix $(PATH_TARGET)/VBox-xpcom-xpt-files/,$(notdir $(subst .idl,.xpt,$(idl)))) $$<
-	$$(QUIET)$(CP) $$< $$(VBOX_PATH_SDK)/bindings/xpcom/idl
+	$$(QUIET)$(CP) $$< $$(VRA_PATH_SDK)/bindings/xpcom/idl
 endef
 
 $(foreach idl, $(XPCOM_IDLFILES), $(eval $(def_IDL)))
 
 # dummy target.
-$(PATH_TARGET)/VBox-xpcom-idl-timestamp: $$(addprefix $$(VBOX_PATH_SDK)/bindings/xpcom/include/,$$(notdir $$(subst .idl,.h,$$(XPCOM_IDLFILES))))
+$(PATH_TARGET)/VBox-xpcom-idl-timestamp: $$(addprefix $$(VRA_PATH_SDK)/bindings/xpcom/include/,$$(notdir $$(subst .idl,.h,$$(XPCOM_IDLFILES))))
 	$(call MSG_L1,IDL processing completed.)
 	$(QUIET)$(MKDIR) -p $(dir $@)
 	$(QUIET)$(APPEND) -t $@
@@ -995,10 +995,10 @@ $(PATH_TARGET)/VBox-xpcom-idl-timestamp: $$(addprefix $$(VBOX_PATH_SDK)/bindings
 #
 # HACK ALERT! Make sure main doesn't start using xpidl before we're done
 # with the idl files here. The trick here is that we're using TARGET_xpidl,
-# i.e. the copy residing in obj/, while VBOX_XPIDL is pointing to
+# i.e. the copy residing in obj/, while VRA_XPIDL is pointing to
 # xpidl_1_STAGE_TARGET which is the one in bin/.
 #
-$(VBOX_XPIDL): | $(PATH_TARGET)/VBox-xpcom-idl-timestamp
+$(VRA_XPIDL): | $(PATH_TARGET)/VBox-xpcom-idl-timestamp
 
 
 #
@@ -1007,7 +1007,7 @@ $(VBOX_XPIDL): | $(PATH_TARGET)/VBox-xpcom-idl-timestamp
 $(PATH_TARGET)/xpcom-namespace-cleanup.map foo.map: $$(VBoxXPCOM_LIBS) $$(VBoxXPCOM_2_OBJS)
 	$(call MSG_L1, Creating linker map $@ for scrubbing the symbol namespace)
 	$(QUIET)$(APPEND) -t $@ '{ local: *; global: '
-	$(QUIET)$(VBOX_NM) -p -g $^ \
+	$(QUIET)$(VRA_NM) -p -g $^ \
 	| $(SED) -n \
 		-e '/^$$/b' \
 		-e '/:$$/b' \
@@ -1024,7 +1024,7 @@ $(PATH_TARGET)/xpcom-namespace-cleanup.map foo.map: $$(VBoxXPCOM_LIBS) $$(VBoxXP
 	$(QUIET)$(APPEND) $@ '};'
 #ifeq ($(KBUILD_TARGET),solaris)
 # # Temporary gcc 4.5.2 hack on Solaris which emits unknown mangled symbols for ctors/dtors for certain objects. See @bugref{5838}.
-# if $(VBOX_GCC_VERSION_CXX) == 40502
+# if $(VRA_GCC_VERSION_CXX) == 40502
 #	$(QUIET)$(SED) -re '/^_Z.*[C-D]5E/d' $@ > $@-sedtmp
 #	$(QUIET)$(MV) $@-sedtmp $@
 # endif

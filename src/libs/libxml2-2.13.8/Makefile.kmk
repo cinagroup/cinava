@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2007-2026 Oracle and/or its affiliates.
+# Copyright (C) 2007-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -28,7 +28,7 @@
 SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
 
-if !defined(VBOX_ONLY_VALIDATIONKIT) || defined(VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING) # Needed for VBoxRT for Validation Kit unit tests.
+if !defined(VRA_ONLY_VALIDATIONKIT) || defined(VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING) # Needed for VBoxRT for Validation Kit unit tests.
  LIBRARIES += VBox-libxml2
 endif
 VBox-libxml2_TEMPLATE       = VBoxR3RuntimeDllNonPedantic
@@ -47,18 +47,18 @@ VBox-libxml2_CFLAGS.win    += -wd4024 # warning C4024: 'xmlMutexLock': different
 VBox-libxml2_CFLAGS.win    += -wd4098 # warning C4098: 'xmlInitMemoryInternal': 'void' function returning a value
 VBox-libxml2_CFLAGS.win    += -wd4703 # warning C4703: potentially uninitialized local pointer variable 'nsuri' used
 VBox-libxml2_CFLAGS.win    += -wd4013 # warning C4013: 'sprintf' undefined; assuming extern returning int
-if "$(VBOX_VCC_TOOL_STEM)" >= "VCC120"
+if "$(VRA_VCC_TOOL_STEM)" >= "VCC120"
  VBox-libxml2_CFLAGS.win   += -wd4311 # parser.c(1346) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'long'
  VBox-libxml2_CFLAGS.win   += -wd4312 # parser.c(1327) : warning C4312: 'type cast' : conversion from 'long' to 'void *' of greater size
  VBox-libxml2_CFLAGS.win   += -wd4005 # sdk\v7.1\include\sal_supp.h(57) : warning C4005: '__useHeader' : macro redefinition
 endif
-if "$(VBOX_VCC_TOOL_STEM)" >= "VCC140"
+if "$(VRA_VCC_TOOL_STEM)" >= "VCC140"
  VBox-libxml2_CFLAGS.win   += -wd4777 # timsort.h(326): warning C4777: 'fprintf' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 1 has type 'unsigned int'
  VBox-libxml2_CFLAGS.win   += -wd4477 # timsort.h(326): warning C4477: 'fprintf' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 1 has type 'size_t'
  VBox-libxml2_CFLAGS.win   += -wd4723 # xpath.c(505) : warning C4723: potential divide by 0
 endif
 ifn1of ($(KBUILD_TARGET), win)
- VBox-libxml2_CFLAGS        = -Wno-format-security -Wno-strict-prototypes -Wno-format-extra-args $(VBOX_GCC_Wno-tautological-pointer-compare)
+ VBox-libxml2_CFLAGS        = -Wno-format-security -Wno-strict-prototypes -Wno-format-extra-args $(VRA_GCC_Wno-tautological-pointer-compare)
 endif
 VBox-libxml2_INCS           = include
 VBox-libxml2_SOURCES        = \
@@ -92,7 +92,7 @@ VBox-libxml2_SOURCES        = \
 # VBox-libxml2_LDFLAGS.win    = /VERSION:$(LIBXML_MAJOR_VERSION).$(LIBXML_MINOR_VERSION)
 # VBox-libxml2_SDKS.win      += WINPSDK
 
-ifdef VBOX_WITH_32_ON_64_MAIN_API # 32-bit edition.
+ifdef VRA_WITH_32_ON_64_MAIN_API # 32-bit edition.
  LIBRARIES += VBox-libxml2-x86
  VBox-libxml2-x86_TEMPLATE = VBoxR3RuntimeDllNonPedantic-x86
  VBox-libxml2-x86_EXTENDS = VBox-libxml2
@@ -101,7 +101,7 @@ endif
 LIBRARIES += VBox-libxml2-static
 VBox-libxml2-static_TEMPLATE = VBoxR3StaticNonPedantic
 VBox-libxml2-static_EXTENDS = VBox-libxml2
-ifdef VBOX_WITH_NOCRT_STATIC
+ifdef VRA_WITH_NOCRT_STATIC
  VBox-libxml2-static_DEFS = $(VBox-libxml2_DEFS) IPRT_NO_CRT_FOR_3RD_PARTY
 endif
 

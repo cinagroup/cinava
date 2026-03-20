@@ -5,9 +5,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 # a systemd unit.
 
 # chkconfig: 345 35 65
-# description: VirtualBox Additions service
+# description: VirtualAgent Additions service
 #
 ### BEGIN INIT INFO
 # Provides:       vboxadd-service
@@ -39,7 +39,7 @@
 # Default-Start:  2 3 4 5
 # Default-Stop:   0 1 6
 # X-Conflicts-With: systemd-timesyncd.service
-# Description:    VirtualBox Additions Service
+# Description:    VirtualAgent Additions Service
 ### END INIT INFO
 
 PATH=$PATH:/bin:/sbin:/usr/sbin
@@ -111,29 +111,29 @@ vboxaddrunning() {
 
 start() {
     if ! test -f $PIDFILE; then
-        begin "Starting VirtualBox Guest Addition service" console;
+        begin "Starting VirtualAgent Guest Addition service" console;
         vboxaddrunning || {
-            echo "VirtualBox Additions module not loaded!"
+            echo "VirtualAgent Additions module not loaded!"
             exit 1
         }
         testbinary
         daemon $binary --pidfile $PIDFILE > /dev/null
         RETVAL=$?
-        succ_msg "VirtualBox Guest Addition service started"
+        succ_msg "VirtualAgent Guest Addition service started"
     fi
     return $RETVAL
 }
 
 stop() {
     if test -f $PIDFILE; then
-        begin "Stopping VirtualBox Guest Addition service" console;
+        begin "Stopping VirtualAgent Guest Addition service" console;
         killproc $binary
         RETVAL=$?
         if ! pidof VBoxService > /dev/null 2>&1; then
             rm -f $PIDFILE
-            succ_msg "VirtualBox Guest Addition service stopped"
+            succ_msg "VirtualAgent Guest Addition service stopped"
         else
-            fail_msg "VirtualBox Guest Addition service failed to stop"
+            fail_msg "VirtualAgent Guest Addition service failed to stop"
         fi
     fi
     return $RETVAL

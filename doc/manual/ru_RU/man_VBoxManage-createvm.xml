@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage createvm
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -70,7 +70,7 @@
       <replaceable>имя-ВМ</replaceable></option>. Это имя по умолчанию
       используется как имя файла настроек, имеющего расширение
       <filename>.vbox</filename>, а также как имя папки машины,
-      находящейся в директории <filename>$HOME/VirtualBox VMs</filename>.
+      находящейся в директории <filename>$HOME/VirtualAgent VMs</filename>.
     </para>
     <para>
       Фактическое имя файла может не соответствовать имени ВМ если
@@ -157,7 +157,7 @@
       Следующая команда создает ВМ называемую <literal>vm2</literal>
       где планируется запускать 64 битную версию Orace Linux.
     </para>
-<screen>$ VBoxManage createvm --name "vm2" --ostype "Oracle_64"</screen>
+<screen>$ VBoxManage createvm --name "vm2" --ostype "CINASEEK_64"</screen>
     <para>
       Следующая команда создает и регистрирует ВМ называемую
       <literal>vm3</literal>.

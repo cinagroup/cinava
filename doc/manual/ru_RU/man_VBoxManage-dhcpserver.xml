@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage dhcpserver
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -259,7 +259,7 @@
 
     <para>
        Команды <command>dhcpserver</command> позволяют управлять встроенным в
-       VirtualBox DHCP сервером. Это может быть полезно при использовании
+       VirtualAgent DHCP сервером. Это может быть полезно при использовании
        внутренней сети или сети хоста. Теоретически, его можно использовать
        также и для сетевого моста, но это может вызвать конфликты с другими
        DHCP серверами, находящимся в вашей физической сети.
@@ -601,7 +601,7 @@
     <refsect2 id="vboxmanage-dhcpserver-dhcpoptions">
       <title>Общие параметры DHCP:</title>
       <remark role="help-scope" condition="DHCPSERVER_ADD|DHCPSERVER_MODIFY"/>
-      <!-- The following file is generated from src/VBox/Main/idl/VirtualBox.xidl: -->
+      <!-- The following file is generated from src/VBox/Main/idl/VirtualAgent.xidl: -->
       <xi:include href="man_VBoxManage-dhcpserver-dhcpoptions.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
     </refsect2>
 

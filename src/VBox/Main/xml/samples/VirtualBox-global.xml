@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<!-- Oracle VirtualBox Sample Global Configuration -->
+<!-- CINA VirtualAgent Sample Global Configuration -->
 <!--
  *  :tabSize=2:indentSize=2:noTabs=true:
  *  :folding=explicit:collapseFolds=1:
 -->
 
-<VirtualBox
+<VirtualAgent
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.innotek.de/VirtualBox-settings ../VirtualBox-settings-windows.xsd"
-  xmlns="http://www.innotek.de/VirtualBox-settings"
+  xsi:schemaLocation="http://www.innotek.de/VirtualAgent-settings ../VirtualAgent-settings-windows.xsd"
+  xmlns="http://www.innotek.de/VirtualAgent-settings"
   version="1.2-windows"
 >
 
@@ -57,4 +57,4 @@
     </USBDeviceFilters>
   </Global>
 
-</VirtualBox>
+</VirtualAgent>

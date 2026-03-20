@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage cloud
 -->
 <!--
-    Copyright (C) 2018-2026 Oracle and/or its affiliates.
+    Copyright (C) 2018-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -530,7 +530,7 @@
       </para>
       <variablelist>
         <varlistentry>
-          <term><option>--id</option></term><listitem><para>Уникальный идентификатор образа в VirtualBox.</para></listitem>
+          <term><option>--id</option></term><listitem><para>Уникальный идентификатор образа в VirtualAgent.</para></listitem>
         </varlistentry>
         <varlistentry>
           <term><option>--display-name</option></term><listitem><para>Имя для нового образа в облаке.</para></listitem>
@@ -572,7 +572,7 @@
           <term><option>--tunnel-network-range</option></term><listitem><para>Диапазон IP адресов, используемый для туннелирования.</para></listitem>
         </varlistentry>
         <varlistentry>
-          <term><option>--guest-additions-iso</option></term><listitem><para>Локальный путь к установочному носителю Дополнений Гостевой ОС VirtualBox.</para></listitem>
+          <term><option>--guest-additions-iso</option></term><listitem><para>Локальный путь к установочному носителю Дополнений Гостевой ОС VirtualAgent.</para></listitem>
         </varlistentry>
         <varlistentry>
           <term><option>--proxy</option></term><listitem><para>URL прокси, используемый в установке локального шлюза.</para></listitem>

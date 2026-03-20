@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2022-2026 Oracle and/or its affiliates.
+# Copyright (C) 2022-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -28,9 +28,9 @@
 SUB_DEPTH = ../../..
 include $(KBUILD_PATH)/subheader.kmk
 
-VBOX_SOFTFLOAT_SPECIALIZATION := 8086
+VRA_SOFTFLOAT_SPECIALIZATION := 8086
 
-ifndef defined(VBOX_ONLY_ADDITIONS)
+ifndef defined(VRA_ONLY_ADDITIONS)
  LIBRARIES += VBox-SoftFloat
 endif
 VBox-SoftFloat_TEMPLATE    := VBoxR3DllNonPedantic
@@ -38,7 +38,7 @@ VBox-SoftFloat_DEFS        := \
 	INLINE_LEVEL=5
 VBox-SoftFloat_INCS        := \
 	build/vbox \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION) \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION) \
 	source/include
 
 # -wd4146: primitives.h(74): warning C4146: unary minus operator applied to unsigned type, result still unsigned
@@ -81,24 +81,24 @@ VBox-SoftFloat_SOURCES     := \
 # Specialization (target FPU behaviour):
 # @todo maybe use 8086-SSE here...
 VBox-SoftFloat_SOURCES += \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/softfloat_raiseFlags.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_f16UIToCommonNaN.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_commonNaNToF16UI.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_propagateNaNF16UI.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_f32UIToCommonNaN.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_commonNaNToF32UI.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_propagateNaNF32UI.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_f64UIToCommonNaN.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_commonNaNToF64UI.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_propagateNaNF64UI.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/extF80M_isSignalingNaN.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_extF80UIToCommonNaN.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_commonNaNToExtF80UI.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_propagateNaNExtF80UI.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/f128M_isSignalingNaN.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_f128UIToCommonNaN.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_commonNaNToF128UI.c \
-	source/$(VBOX_SOFTFLOAT_SPECIALIZATION)/s_propagateNaNF128UI.c
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/softfloat_raiseFlags.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_f16UIToCommonNaN.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_commonNaNToF16UI.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_propagateNaNF16UI.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_f32UIToCommonNaN.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_commonNaNToF32UI.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_propagateNaNF32UI.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_f64UIToCommonNaN.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_commonNaNToF64UI.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_propagateNaNF64UI.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/extF80M_isSignalingNaN.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_extF80UIToCommonNaN.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_commonNaNToExtF80UI.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_propagateNaNExtF80UI.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/f128M_isSignalingNaN.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_f128UIToCommonNaN.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_commonNaNToF128UI.c \
+	source/$(VRA_SOFTFLOAT_SPECIALIZATION)/s_propagateNaNF128UI.c
 
 # Others:
 VBox-SoftFloat_SOURCES += \
@@ -364,7 +364,7 @@ VBox-SoftFloat_SOURCES += \
 #
 # Ring-0 version of the above (has different compiler settings).
 #
-if defined(VBOX_WITH_R0_MODULES) && !defined(VBOX_ONLY_EXTPACKS) && !defined(VBOX_ONLY_ADDITIONS)
+if defined(VRA_WITH_R0_MODULES) && !defined(VRA_ONLY_EXTPACKS) && !defined(VRA_ONLY_ADDITIONS)
  LIBRARIES += VBox-SoftFloatR0
 endif
 VBox-SoftFloatR0_EXTENDS   := VBox-SoftFloat
@@ -379,7 +379,7 @@ ifn1of ($(KBUILD_TARGET), win)
 endif
 
 
-ifdef VBOX_WITH_NOCRT_STATIC
+ifdef VRA_WITH_NOCRT_STATIC
  #
  # Static No-CRT version of the above for use with VBoxGL.dll in the GAs.
  #
@@ -401,7 +401,7 @@ ifdef VBOX_WITH_NOCRT_STATIC
  VBox-SoftFloatGuestR3Shared-x86_TEMPLATE    := NewerVccVBoxGuestR3Dll
  VBox-SoftFloatGuestR3Shared-x86_EXTENDS     := VBox-SoftFloatGuestR3Shared
  VBox-SoftFloatGuestR3Shared-x86_BLD_TRG_ARCH := x86
-endif # VBOX_WITH_NOCRT_STATIC
+endif # VRA_WITH_NOCRT_STATIC
 
 
 include $(FILE_KBUILD_SUB_FOOTER)

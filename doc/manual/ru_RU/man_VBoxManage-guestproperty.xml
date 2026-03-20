@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage guestproperty
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -109,7 +109,7 @@
       связи небольшого объема для строк при условии, что гость работает
       и установлены Дополнения Гостевой ОС. Также, Дополнения
       Гостевой ОС автоматически устанавливают и поддерживают значения
-      ключей, начинающихся с <literal>/VirtualBox/</literal>.
+      ключей, начинающихся с <literal>/VirtualAgent/</literal>.
     </para>
     <refsect2 id="vboxmanage-guestproperty-common">
       <title>Общие командные операнды</title>
@@ -144,9 +144,9 @@
                 <term><literal>*</literal> (звездочка)</term>
                 <listitem><para>
                     Представляет любое количество произвольных символов.
-                    Например, шаблон <literal>/VirtualBox*</literal>
+                    Например, шаблон <literal>/VirtualAgent*</literal>
                     соответствует всем свойствам, начинающимся с
-                    <literal>/VirtualBox</literal>.
+                    <literal>/VirtualAgent</literal>.
                   </para></listitem>
               </varlistentry>
               <varlistentry>

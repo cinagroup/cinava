@@ -1,13 +1,13 @@
 #!/bin/sh
 # $Id: postinstall.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox postinstall script for Solaris Guest Additions.
+# VirtualAgent postinstall script for Solaris Guest Additions.
 #
 
 #
-# Copyright (C) 2008-2026 Oracle and/or its affiliates.
+# Copyright (C) 2008-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -81,7 +81,7 @@ uncompress_files()
 
 solaris64dir="amd64"
 solaris32dir="i386"
-vboxadditions_path="${PKG_INSTALL_ROOT}/opt/VirtualBoxAdditions"
+vboxadditions_path="${PKG_INSTALL_ROOT}/opt/VirtualAgentAdditions"
 vboxadditions32_path=$vboxadditions_path/$solaris32dir
 vboxadditions64_path=$vboxadditions_path/$solaris64dir
 
@@ -112,7 +112,7 @@ fi
 
 if test "$currentzone" = "global"; then
     # vboxguest.sh would've been installed, we just need to call it.
-    echo "Configuring VirtualBox guest kernel module..."
+    echo "Configuring VirtualAgent guest kernel module..."
     # stop all previous modules (vboxguest, vboxfs) and load vboxguest
     # ('vboxguest.sh start' only starts vboxguest).
     if test "$REMOTE_INST" -eq 0; then
@@ -125,7 +125,7 @@ if test "$currentzone" = "global"; then
     group=sys
     if [ -f /etc/dev/reserved_devnames ]; then
         # Solaris 11 SRU6 and later use group root (check a file which isn't
-        # tainted by VirtualBox install scripts and allow no other group)
+        # tainted by VirtualAgent install scripts and allow no other group)
         refgroup=`LC_ALL=C /usr/bin/ls -lL /etc/dev/reserved_devnames | awk '{ print $4 }' 2>/dev/null`
         if [ $? -eq 0 -a "x$refgroup" = "xroot" ]; then
             group=root
@@ -190,7 +190,7 @@ if test ! -z "$xorgbin"; then
     retval=0
     if test -z "$vboxvideo_src"; then
         echo "*** Unknown version of the X Window System installed."
-        echo "*** Failed to install the VirtualBox X Window System drivers."
+        echo "*** Failed to install the VirtualAgent X Window System drivers."
 
         # Exit as partially failed installation
         retval=2
@@ -199,7 +199,7 @@ if test ! -z "$xorgbin"; then
             # Xorg 1.19 and later (delivered first in st_006) already contain a driver
             # for vboxvideo so advise users to install the required package if it isn't
             # already present.
-            echo "As of X.Org Server 1.19, the VirtualBox graphics driver (vboxvideo) is part"
+            echo "As of X.Org Server 1.19, the VirtualAgent graphics driver (vboxvideo) is part"
             echo "of Solaris.  Please install the package pkg:/x11/server/xorg/driver/xorg-video-vboxvideo"
             echo "from the package repository for the vboxvideo_drv.so graphics driver."
         fi
@@ -233,7 +233,7 @@ if test ! -z "$xorgbin"; then
         # Make sure destination path exists
         if test ! -d $vboxvideo64_dest_base; then
             echo "*** Missing destination paths for video module. Aborting."
-            echo "*** Failed to install the VirtualBox X Window System driver."
+            echo "*** Failed to install the VirtualAgent X Window System driver."
 
             # Exit as partially failed installation
             retval=2
@@ -282,7 +282,7 @@ if test ! -z "$xorgbin"; then
                 rm -f $vboxadditions_path/$xorgconf_unfit
             fi
 
-            # Check for VirtualBox graphics card
+            # Check for VirtualAgent graphics card
             # S10u10's prtconf doesn't support the '-d' option, so let's use -v even though it's slower.
             is_vboxgraphics=`${PKG_INSTALL_ROOT}/usr/sbin/prtconf -v | grep -i pci80ee,beef`
             if test "$?" -eq 0; then

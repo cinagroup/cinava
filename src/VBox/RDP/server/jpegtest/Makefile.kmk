@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -36,13 +36,13 @@ jpegtest_LIBS     = $(LIB_RUNTIME)
 ifdef TJ
  jpegtest_INCS     += $(PATH_ROOT)/src/libs/libjpeg-turbo-1.0.0
  jpegtest_INCS     += $(PATH_ROOT)/src/libs/libjpeg-turbo-1.0.0/win
- jpegtest_LIBS     += $(PATH_STAGE_LIB)/VBox-libjpeg-t$(VBOX_SUFF_LIB)
+ jpegtest_LIBS     += $(PATH_STAGE_LIB)/VBox-libjpeg-t$(VRA_SUFF_LIB)
 else
- jpegtest_INCS     += $(VBOX_JPEG_INCS) $(VBOX_GRAPHICS_INCS)
+ jpegtest_INCS     += $(VRA_JPEG_INCS) $(VRA_GRAPHICS_INCS)
  jpegtest_LIBS     += \
- 	$(PATH_STAGE_LIB)/VBox-libjpeg$(VBOX_SUFF_LIB) \
- 	$(PATH_STAGE_LIB)/VBox-libjpeg12$(VBOX_SUFF_LIB) \
- 	$(PATH_STAGE_LIB)/VBox-libjpeg16$(VBOX_SUFF_LIB)
+ 	$(PATH_STAGE_LIB)/VBox-libjpeg$(VRA_SUFF_LIB) \
+ 	$(PATH_STAGE_LIB)/VBox-libjpeg12$(VRA_SUFF_LIB) \
+ 	$(PATH_STAGE_LIB)/VBox-libjpeg16$(VRA_SUFF_LIB)
 endif
 ifneq ($(KBUILD_TARGET),win)
  jpegtest_CXXFLAGS += -Wno-unused-function -Wno-multichar

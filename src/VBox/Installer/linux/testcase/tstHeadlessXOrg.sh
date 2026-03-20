@@ -1,13 +1,13 @@
 #!/bin/sh
 # $Id: tstHeadlessXOrg.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox X Server auto-start service unit test.
+# VirtualAgent X Server auto-start service unit test.
 #
 
 #
-# Copyright (C) 2012-2026 Oracle and/or its affiliates.
+# Copyright (C) 2012-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -91,10 +91,10 @@ EOF
 # Get the directory where the script is located and the parent.
 OUR_FOLDER="$(dirname "$0")"
 OUR_FOLDER=$(cd "${OUR_FOLDER}" && pwd)
-VBOX_FOLDER=$(cd "${OUR_FOLDER}/.." && pwd)
-[ -d "${VBOX_FOLDER}" ] ||
-  abort "Failed to change to directory ${VBOX_FOLDER}.\n"
-cd "${VBOX_FOLDER}"
+VRA_FOLDER=$(cd "${OUR_FOLDER}/.." && pwd)
+[ -d "${VRA_FOLDER}" ] ||
+  abort "Failed to change to directory ${VRA_FOLDER}.\n"
+cd "${VRA_FOLDER}"
 
 # Get our name for output.
 TEST_NAME="$(basename "$0" .sh)"

@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2008-2026 Oracle and/or its affiliates.
+# Copyright (C) 2008-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@ VBoxWindowsAdditions_INCS    = ../../include
 VBoxWindowsAdditions_SOURCES = \
 	VBoxWindowsAdditions.cpp \
 	VBoxWindowsAdditions.rc
-ifdef VBOX_WITH_NOCRT_STATIC
+ifdef VRA_WITH_NOCRT_STATIC
  VBoxWindowsAdditions_LDFLAGS = /SubSystem:Windows
 else
  VBoxWindowsAdditions_LDFLAGS = \
@@ -59,11 +59,11 @@ else
  	$(PATH_TOOL_$(TEMPLATE_VBoxR3Exe_TOOL.win.$(VBoxWindowsAdditions_BLD_TRG_ARCH))_LIB)/libcmt.lib \
  	$(PATH_TOOL_$(TEMPLATE_VBoxR3Exe_TOOL.win.$(VBoxWindowsAdditions_BLD_TRG_ARCH))_LIB)/libcpmt.lib
 endif
-VBoxWindowsAdditions_VBOX_IMPORT_CHECKER.win.x86 := nt4
+VBoxWindowsAdditions_VRA_IMPORT_CHECKER.win.x86 := nt4
 
 # Version stuff.
-VBoxWindowsAdditions.cpp_DEFS += VBOX_SVN_REV=$(VBOX_SVN_REV)
-VBoxWindowsAdditions.cpp_DEPS = $(VBOX_SVN_REV_KMK)
+VBoxWindowsAdditions.cpp_DEFS += VRA_SVN_REV=$(VRA_SVN_REV)
+VBoxWindowsAdditions.cpp_DEPS = $(VRA_SVN_REV_KMK)
 
 # The icon location is configurable.
 VBoxWindowsAdditions.rc_INCS += $(VBoxWindowsAdditions_0_OUTDIR)
@@ -73,20 +73,20 @@ VBoxWindowsAdditions.rc_CLEAN = $(VBoxWindowsAdditions_0_OUTDIR)/VBoxWindowsAddi
 
 # Icon include file.
 $$(VBoxWindowsAdditions_0_OUTDIR)/VBoxWindowsAdditions-icon.rc: \
-		$(VBOX_WINDOWS_ADDITIONS_ICON_FILE) $(MAKEFILE_CURRENT) | $$(dir $$@)
+		$(VRA_WINDOWS_ADDITIONS_ICON_FILE) $(MAKEFILE_CURRENT) | $$(dir $$@)
 	$(RM) -f $@
-	$(APPEND) $@ 'IDI_VIRTUALBOX ICON DISCARDABLE "$(subst /,\\,$(VBOX_WINDOWS_ADDITIONS_ICON_FILE))"'
+	$(APPEND) $@ 'IDI_VIRTUALBOX ICON DISCARDABLE "$(subst /,\\,$(VRA_WINDOWS_ADDITIONS_ICON_FILE))"'
 
 
 # Signing certificate.
-ifdef VBOX_SIGNING_MODE
- if1of ($(VBOX_SIGNING_MODE), test)
+ifdef VRA_SIGNING_MODE
+ if1of ($(VRA_SIGNING_MODE), test)
   # If signing the installer, the loader stub must be signed as well.
   # Hack alert! Using POST_CMDS.win to place the signing after VBoxPeSetVersion.
-  VBoxWindowsAdditions_POST_CMDS.win = $(call VBOX_SIGN_IMAGE_FN,$(out),,2)
-  VBoxWindowsAdditions_ORDERDEPS     = $(VBOX_SIGN_IMAGE_ORDERDEPS)
+  VBoxWindowsAdditions_POST_CMDS.win = $(call VRA_SIGN_IMAGE_FN,$(out),,2)
+  VBoxWindowsAdditions_ORDERDEPS     = $(VRA_SIGN_IMAGE_ORDERDEPS)
  endif
- VBoxWindowsAdditions_DEFS          += VBOX_SIGNING_MODE
+ VBoxWindowsAdditions_DEFS          += VRA_SIGNING_MODE
  VBoxWindowsAdditions_INCS          += $(VBoxWindowsAdditions_0_OUTDIR)
  VBoxWindowsAdditions_INTERMEDIATES += \
  	$(VBoxWindowsAdditions_0_OUTDIR)/BuildCerts.h \
@@ -99,21 +99,21 @@ ifdef VBOX_SIGNING_MODE
  BLDPROGS += bldAddSignedDummy
  bldAddSignedDummy_TEMPLATE := VBoxBldProg
  bldAddSignedDummy_SOURCES  := bldAddSignedDummy.cpp
- bldAddSignedDummy_ORDERDEPS = $(VBOX_SIGN_IMAGE_ORDERDEPS)
- bldAddSignedDummy_POST_CMDS.win = $(call VBOX_SIGN_IMAGE_FN,$(out),,2)
+ bldAddSignedDummy_ORDERDEPS = $(VRA_SIGN_IMAGE_ORDERDEPS)
+ bldAddSignedDummy_POST_CMDS.win = $(call VRA_SIGN_IMAGE_FN,$(out),,2)
 
  # The certificate include files.
- $$(VBoxWindowsAdditions_0_OUTDIR)/BuildCerts.h: $(VBOX_RTSIGNTOOL) $$(bldAddSignedDummy_1_TARGET) | $$(dir $$@)
+ $$(VBoxWindowsAdditions_0_OUTDIR)/BuildCerts.h: $(VRA_RTSIGNTOOL) $$(bldAddSignedDummy_1_TARGET) | $$(dir $$@)
 	$(QUIET)$(RM) -f -- "$@"
-	$(VBOX_RTSIGNTOOL) extract-exe-signer-cert --as-c-array "BuildCerts" "$(bldAddSignedDummy_1_TARGET)" --output "$@"
+	$(VRA_RTSIGNTOOL) extract-exe-signer-cert --as-c-array "BuildCerts" "$(bldAddSignedDummy_1_TARGET)" --output "$@"
 
- $$(VBoxWindowsAdditions_0_OUTDIR)/TimestampRootCerts.h: $(VBOX_RTSIGNTOOL) $$(bldAddSignedDummy_1_TARGET) | $$(dir $$@)
+ $$(VBoxWindowsAdditions_0_OUTDIR)/TimestampRootCerts.h: $(VRA_RTSIGNTOOL) $$(bldAddSignedDummy_1_TARGET) | $$(dir $$@)
 	$(QUIET)$(RM) -f -- "$@"
-	$(VBOX_RTSIGNTOOL) extract-timestamp-root -R --as-c-array "TimestampRootCerts" "$(bldAddSignedDummy_1_TARGET)" --output "$@"
+	$(VRA_RTSIGNTOOL) extract-timestamp-root -R --as-c-array "TimestampRootCerts" "$(bldAddSignedDummy_1_TARGET)" --output "$@"
 
- OTHER_CLEAN += $(VBOX_SUP_WIN_CERTS_FILE)
+ OTHER_CLEAN += $(VRA_SUP_WIN_CERTS_FILE)
 
-endif # VBOX_SIGNING_MODE
+endif # VRA_SIGNING_MODE
 
 
 include $(FILE_KBUILD_SUB_FOOTER)

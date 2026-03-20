@@ -2,18 +2,18 @@
 # -*- coding: utf-8 -*-
 
 """
-VirtualBox Installer Wrapper Driver.
+VirtualAgent Installer Wrapper Driver.
 
-This installs VirtualBox, starts a sub driver which does the real testing,
-and then uninstall VirtualBox afterwards.  This reduces the complexity of the
+This installs VirtualAgent, starts a sub driver which does the real testing,
+and then uninstall VirtualAgent afterwards.  This reduces the complexity of the
 other VBox test drivers.
 """
 
 __copyright__ = \
 """
-Copyright (C) 2010-2026 Oracle and/or its affiliates.
+Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 
-This file is part of VirtualBox base platform packages, as
+This file is part of VirtualAgent base platform packages, as
 available from https://www.virtualbox.org.
 
 This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ along with this program; if not, see <https://www.gnu.org/licenses>.
 The contents of this file may alternatively be used under the terms
 of the Common Development and Distribution License Version 1.0
 (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-in the VirtualBox distribution, in which case the provisions of the
+in the VirtualAgent distribution, in which case the provisions of the
 CDDL are applicable instead of those of the GPL.
 
 You may elect to license modified versions of this file under the
@@ -512,7 +512,7 @@ class VBoxInstallerTestDriver(TestDriverBase):
         """
         Download / copy the build files into the scratch area and install them.
         """
-        reporter.testStart('Installing VirtualBox');
+        reporter.testStart('Installing VirtualAgent');
         reporter.log('CWD=%s' % (os.getcwd(),)); # curious
 
         #
@@ -570,9 +570,9 @@ class VBoxInstallerTestDriver(TestDriverBase):
 
     def _uninstallVBox(self, fIgnoreError = False):
         """
-        Uninstall VirtualBox.
+        Uninstall VirtualAgent.
         """
-        reporter.testStart('Uninstalling VirtualBox');
+        reporter.testStart('Uninstalling VirtualAgent');
 
         sHost = utils.getHostOs();
         if   sHost == 'darwin':     fRc = self._uninstallVBoxOnDarwin();
@@ -732,7 +732,7 @@ class VBoxInstallerTestDriver(TestDriverBase):
             self._fKernelDrivers = False;
         # TEMPORARY HACK - END
 
-        sDmg = self._findFile('^VirtualBox-.*\\.dmg$');
+        sDmg = self._findFile('^VirtualAgent-.*\\.dmg$');
         if sDmg is None:
             return False;
 
@@ -742,12 +742,12 @@ class VBoxInstallerTestDriver(TestDriverBase):
             return False;
 
         # Uninstall any previous vbox version first.
-        sUninstaller = os.path.join(self._darwinDmgPath(), 'VirtualBox_Uninstall.tool');
+        sUninstaller = os.path.join(self._darwinDmgPath(), 'VirtualAgent_Uninstall.tool');
         fRc, _ = self._sudoExecuteSync([sUninstaller, '--unattended',]);
         if fRc is True:
 
             # Install the package.
-            sPkg = os.path.join(self._darwinDmgPath(), 'VirtualBox.pkg');
+            sPkg = os.path.join(self._darwinDmgPath(), 'VirtualAgent.pkg');
             if self._fKernelDrivers:
                 fRc, _ = self._sudoExecuteSync(['installer', '-verbose', '-dumplog', '-pkg', sPkg, '-target', '/']);
             else:
@@ -766,13 +766,13 @@ class VBoxInstallerTestDriver(TestDriverBase):
     def _uninstallVBoxOnDarwin(self):
         """ Uninstalls VBox on Mac OS X."""
 
-        # Is VirtualBox installed? If not, don't try uninstall it.
+        # Is VirtualAgent installed? If not, don't try uninstall it.
         sVBox = self._getVBoxInstallPath(fFailIfNotFound = False);
         if sVBox is None:
             return True;
 
         # Find the dmg.
-        sDmg = self._findFile('^VirtualBox-.*\\.dmg$');
+        sDmg = self._findFile('^VirtualAgent-.*\\.dmg$');
         if sDmg is None:
             return False;
         if not os.path.exists(sDmg):
@@ -784,7 +784,7 @@ class VBoxInstallerTestDriver(TestDriverBase):
             return False;
 
         # Execute the uninstaller.
-        sUninstaller = os.path.join(self._darwinDmgPath(), 'VirtualBox_Uninstall.tool');
+        sUninstaller = os.path.join(self._darwinDmgPath(), 'VirtualAgent_Uninstall.tool');
         fRc, _ = self._sudoExecuteSync([sUninstaller, '--unattended',]);
 
         # Unmount the DMG and we're done.
@@ -798,7 +798,7 @@ class VBoxInstallerTestDriver(TestDriverBase):
 
     def _installVBoxOnLinux(self):
         """ Installs VBox on Linux."""
-        sRun = self._findFile('^VirtualBox-.*\\.run$');
+        sRun = self._findFile('^VirtualAgent-.*\\.run$');
         if sRun is None:
             return False;
         utils.chmodPlusX(sRun);
@@ -810,26 +810,26 @@ class VBoxInstallerTestDriver(TestDriverBase):
     def _uninstallVBoxOnLinux(self):
         """ Uninstalls VBox on Linux."""
 
-        # Is VirtualBox installed? If not, don't try uninstall it.
+        # Is VirtualAgent installed? If not, don't try uninstall it.
         sVBox = self._getVBoxInstallPath(fFailIfNotFound = False);
         if sVBox is None:
             return True;
 
         # Find the .run file and use it.
-        sRun = self._findFile('^VirtualBox-.*\\.run$', fMandatory = False);
+        sRun = self._findFile('^VirtualAgent-.*\\.run$', fMandatory = False);
         if sRun is not None:
             utils.chmodPlusX(sRun);
             fRc, _ = self._sudoExecuteSync([sRun, 'uninstall']);
             return fRc;
 
         # Try the installed uninstaller.
-        for sUninstaller in [os.path.join(sVBox, 'uninstall.sh'), '/opt/VirtualBox/uninstall.sh', ]:
+        for sUninstaller in [os.path.join(sVBox, 'uninstall.sh'), '/opt/VirtualAgent/uninstall.sh', ]:
             if os.path.isfile(sUninstaller):
                 reporter.log('Invoking "%s"...' % (sUninstaller,));
                 fRc, _ = self._sudoExecuteSync([sUninstaller, 'uninstall']);
                 return fRc;
 
-        reporter.log('Did not find any VirtualBox install to uninstall.');
+        reporter.log('Did not find any VirtualAgent install to uninstall.');
         return True;
 
 
@@ -860,13 +860,13 @@ class VBoxInstallerTestDriver(TestDriverBase):
 
     def _installVBoxOnSolaris(self):
         """ Installs VBox on Solaris."""
-        sPkg = self._findFile('^VirtualBox-.*\\.pkg$', fMandatory = False);
+        sPkg = self._findFile('^VirtualAgent-.*\\.pkg$', fMandatory = False);
         if sPkg is None:
-            sTar = self._findFile('^VirtualBox-.*-SunOS-.*\\.tar.gz$', fMandatory = False);
+            sTar = self._findFile('^VirtualAgent-.*-SunOS-.*\\.tar.gz$', fMandatory = False);
             if sTar is not None:
                 if self._maybeUnpackArchive(sTar) is not True:
                     return False;
-        sPkg = self._findFile('^VirtualBox-.*\\.pkg$', fMandatory = True);
+        sPkg = self._findFile('^VirtualAgent-.*\\.pkg$', fMandatory = True);
         sRsp = self._findFile('^autoresponse$', fMandatory = True);
         if sPkg is None or sRsp is None:
             return False;
@@ -950,13 +950,13 @@ class VBoxInstallerTestDriver(TestDriverBase):
 
     def _installVBoxOnWindows(self):
         """ Installs VBox on Windows."""
-        sExe = self._findFile('^VirtualBox-.*-(MultiArch|Win).exe$');
+        sExe = self._findFile('^VirtualAgent-.*-(MultiArch|Win).exe$');
         if sExe is None:
             return False;
 
         # TEMPORARY HACK - START
         # It seems that running the NDIS cleanup script upon uninstallation is not
-        # a good idea, so let's run it before installing VirtualBox.
+        # a good idea, so let's run it before installing VirtualAgent.
         #sHostName = socket.getfqdn();
         #if    not sHostName.startswith('testboxwin3') \
         #  and not sHostName.startswith('testboxharp2') \
@@ -1007,7 +1007,7 @@ class VBoxInstallerTestDriver(TestDriverBase):
         # Gather installer arguments.
         asArgs = [sExe, '-vvvv', '--silent', '--logging'];
         asArgs.extend(['--msiparams', 'REBOOT=ReallySuppress']);
-        sVBoxInstallPath = os.environ.get('VBOX_INSTALL_PATH', None);
+        sVBoxInstallPath = os.environ.get('VRA_INSTALL_PATH', None);
         if sVBoxInstallPath is not None:
             asArgs.extend(['INSTALLDIR="%s"' % (sVBoxInstallPath,)]);
 
@@ -1015,7 +1015,7 @@ class VBoxInstallerTestDriver(TestDriverBase):
             sLogFile = os.path.join(self.sScratchPath, 'VBoxInstallLog.txt'); # Specify location to prevent a random one.
             asArgs.extend(['--msi-log-file', sLogFile]);
         else:
-            sLogFile = os.path.join(tempfile.gettempdir(), 'VirtualBox', 'VBoxInstallLog.txt'); # Hardcoded TMP location.
+            sLogFile = os.path.join(tempfile.gettempdir(), 'VirtualAgent', 'VBoxInstallLog.txt'); # Hardcoded TMP location.
 
         if self._fWinForcedInstallTimestampCA and sHelp.find("--force-install-timestamp-ca") >= 0:
             asArgs.extend(['--force-install-timestamp-ca']);
@@ -1094,7 +1094,7 @@ class VBoxInstallerTestDriver(TestDriverBase):
         oInstaller = win32com.client.Dispatch('WindowsInstaller.Installer',
                                               resultCLSID = '{000C1090-0000-0000-C000-000000000046}')
 
-        # Search installed products for VirtualBox.
+        # Search installed products for VirtualAgent.
         asProdCodes = [];
         for sProdCode in oInstaller.Products:
             try:
@@ -1103,9 +1103,9 @@ class VBoxInstallerTestDriver(TestDriverBase):
                 reporter.logXcpt();
                 continue;
             #reporter.log('Info: %s=%s' % (sProdCode, sProdName));
-            if sProdName.startswith('Oracle VirtualBox') \
-            or sProdName.startswith('Oracle VM VirtualBox') \
-            or sProdName.startswith('Sun VirtualBox'):
+            if sProdName.startswith('CINA VirtualAgent') \
+            or sProdName.startswith('CINA VM VirtualAgent') \
+            or sProdName.startswith('Sun VirtualAgent'):
                 asProdCodes.append([sProdCode, sProdName]);
 
         # Before we start uninstalling anything, just ruthlessly kill any cdb,
@@ -1235,29 +1235,29 @@ class VBoxInstallerTestDriver(TestDriverBase):
         if sHost == 'win':
             sProgFiles = os.environ.get('ProgramFiles', 'C:\\Program Files');
             asLocs = [
-                os.path.join(sProgFiles, 'Oracle', 'VirtualBox'),
-                os.path.join(sProgFiles, 'OracleVM', 'VirtualBox'),
-                os.path.join(sProgFiles, 'Sun', 'VirtualBox'),
+                os.path.join(sProgFiles, 'CINASEEK', 'VirtualAgent'),
+                os.path.join(sProgFiles, 'CINASEEKVM', 'VirtualAgent'),
+                os.path.join(sProgFiles, 'Sun', 'VirtualAgent'),
             ];
         elif sHost in ('linux', 'solaris',):
-            asLocs = [ '/opt/VirtualBox', '/opt/VirtualBox-3.2', '/opt/VirtualBox-3.1', '/opt/VirtualBox-3.0'];
+            asLocs = [ '/opt/VirtualAgent', '/opt/VirtualAgent-3.2', '/opt/VirtualAgent-3.1', '/opt/VirtualAgent-3.0'];
         elif sHost == 'darwin':
-            asLocs = [ '/Applications/VirtualBox.app/Contents/MacOS' ];
+            asLocs = [ '/Applications/VirtualAgent.app/Contents/MacOS' ];
         else:
-            asLocs = [ '/opt/VirtualBox' ];
-        if 'VBOX_INSTALL_PATH' in os.environ:
-            asLocs.insert(0, os.environ.get('VBOX_INSTALL_PATH', None));
+            asLocs = [ '/opt/VirtualAgent' ];
+        if 'VRA_INSTALL_PATH' in os.environ:
+            asLocs.insert(0, os.environ.get('VRA_INSTALL_PATH', None));
 
         for sLoc in asLocs:
             if os.path.isdir(sLoc):
                 return sLoc;
         if fFailIfNotFound:
-            reporter.error('Failed to locate VirtualBox installation: %s' % (asLocs,));
+            reporter.error('Failed to locate VirtualAgent installation: %s' % (asLocs,));
         else:
-            reporter.log2('Failed to locate VirtualBox installation: %s' % (asLocs,));
+            reporter.log2('Failed to locate VirtualAgent installation: %s' % (asLocs,));
         return None;
 
-    ksExtPackBasenames = [ 'Oracle_VirtualBox_Extension_Pack', 'Oracle_VM_VirtualBox_Extension_Pack', ];
+    ksExtPackBasenames = [ 'CINASEEK_VirtualAgent_Extension_Pack', 'CINASEEK_VM_VirtualAgent_Extension_Pack', ];
 
     def _findExtPack(self):
         """ Locates the extension pack file. """

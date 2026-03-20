@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2019-2026 Oracle and/or its affiliates.
+# Copyright (C) 2019-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -40,6 +40,6 @@ crypto_conf_SOURCES = \
 	conf_mod.c \
 	conf_sap.c \
 	conf_ssl.c
-$(evalcall VBOX_OPENSSL_X86,crypto_conf)
+$(evalcall VRA_OPENSSL_X86,crypto_conf)
 
 include $(FILE_KBUILD_SUB_FOOTER)

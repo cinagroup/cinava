@@ -1,12 +1,12 @@
 # $Id: Config.kmk 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# kBuild Configuration file for VirtualBox Boot Sector Kit 3.
+# kBuild Configuration file for VirtualAgent Boot Sector Kit 3.
 #
 
 #
-# Copyright (C) 2010-2026 Oracle and/or its affiliates.
+# Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -34,10 +34,10 @@
 # SPDX-License-Identifier: GPL-3.0-only OR CDDL-1.0
 #
 
-VBOX_BOOTSECTORS_CONFIG_KMK_INCLUDED = 1
+VRA_BOOTSECTORS_CONFIG_KMK_INCLUDED = 1
 
 # Include the parent configure file.
-ifndef VBOX_VALIDATIONKIT_CONFIG_KMK_INCLUDED
+ifndef VRA_VALIDATIONKIT_CONFIG_KMK_INCLUDED
  include $(PATH_ROOT)/src/VBox/ValidationKit/Config.kmk
 endif
 
@@ -61,10 +61,10 @@ KBUILD_ARCHES += noarch
 
 
 # The bootsector directory.
-VBOX_PATH_BOOTSECTORS_SRC = $(VBOX_PATH_VALIDATIONKIT_SRC)/bootsectors
+VRA_PATH_BOOTSECTORS_SRC = $(VRA_PATH_VALIDATIONKIT_SRC)/bootsectors
 
 # The bs3kit source directory.
-VBOX_PATH_BS3KIT_SRC = $(VBOX_PATH_BOOTSECTORS_SRC)/bs3kit
+VRA_PATH_BS3KIT_SRC = $(VRA_PATH_BOOTSECTORS_SRC)/bs3kit
 
 
 # The 16-bit code & data segment classes.
@@ -116,7 +116,7 @@ BS3KIT_FN_GEN_MODE_NEARSTUB = $(foreach suff, \
 define def_Bs3KitGenNearStubSource
  $1_SOURCES += $$($1_0_OUTDIR)/stub$2.asm
  $1_CLEAN  += $$($1_0_OUTDIR)/stub$2.asm
- #$$$$($1_0_OUTDIR)/stub$2.asm: $$(VBOX_PATH_BOOTSECTORS_SRC)/Config.kmk | $$$$(dir $$$$@)
+ #$$$$($1_0_OUTDIR)/stub$2.asm: $$(VRA_PATH_BOOTSECTORS_SRC)/Config.kmk | $$$$(dir $$$$@)
  $$$$($1_0_OUTDIR)/stub$2.asm: | $$$$(dir $$$$@)
 	$(QUIET)$(APPEND) -tn $$@ \
 		'%include "bs3kit.mac"' \
@@ -168,7 +168,7 @@ BS3KIT_FN_GEN_MODE_FARSTUB = $(foreach suff, \
 define def_Bs3KitGenFarStubSource
  $1_SOURCES += $$($1_0_OUTDIR)/stub_$2$3.asm
  $1_CLEAN  += $$($1_0_OUTDIR)/stub_$2$3.asm
- #$$$$($1_0_OUTDIR)/stub_$2$3.asm: $$(VBOX_PATH_BOOTSECTORS_SRC)/Config.kmk | $$$$(dir $$$$@)
+ #$$$$($1_0_OUTDIR)/stub_$2$3.asm: $$(VRA_PATH_BOOTSECTORS_SRC)/Config.kmk | $$$$(dir $$$$@)
  $$$$($1_0_OUTDIR)/stub_$2$3.asm: | $$$$(dir $$$$@)
 	$(QUIET)$(APPEND) -tn $$@ \
 		'%include "bs3kit.mac"' \
@@ -201,10 +201,10 @@ endef
 # Tools Tools Tools
 #
 
-if defined(VBOX_USE_KSUBMIT) && "$(KBUILD_HOST)" == "win"
- VBOX_BS3KIT_KSUBMIT_OBJ_CONV := kmk_builtin_kSubmit --
+if defined(VRA_USE_KSUBMIT) && "$(KBUILD_HOST)" == "win"
+ VRA_BS3KIT_KSUBMIT_OBJ_CONV := kmk_builtin_kSubmit --
 else
- VBOX_BS3KIT_KSUBMIT_OBJ_CONV :=
+ VRA_BS3KIT_KSUBMIT_OBJ_CONV :=
 endif
 
 # Dummy CP "linker" tool.
@@ -262,7 +262,7 @@ define TOOL_VBoxNasm_COMPILE_AS_CMDS
                -MD "$(dep)" -MP\
 		$(abspath $(source))
  endif
-	$(QUIET)$(VBOX_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
+	$(QUIET)$(VRA_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
 endef
 
 #
@@ -283,7 +283,7 @@ ifdef SLKRUNS
  TOOL_Bs3Gcc64Elf64_CXX += -fmessage-length=0
 endif
 TOOL_Bs3Gcc64Elf64_COBJSUFF         = .o64
-TOOL_Bs3Gcc64Elf64_CFLAGS           = -fno-pie -x c $(VBOX_GCC_Wa_cma_nocompress_debug_sections) -ffreestanding
+TOOL_Bs3Gcc64Elf64_CFLAGS           = -fno-pie -x c $(VRA_GCC_Wa_cma_nocompress_debug_sections) -ffreestanding
 TOOL_Bs3Gcc64Elf64_CFLAGS.debug     = -g
 TOOL_Bs3Gcc64Elf64_CFLAGS.profile   = -O2 #-g -pg
 TOOL_Bs3Gcc64Elf64_CFLAGS.release   = -O2
@@ -299,7 +299,7 @@ define TOOL_Bs3Gcc64Elf64_COMPILE_C_CMDS
 		-Wp,-MD,$(dep) -Wp,-MT,$(obj) -Wp,-MP\
 		-o $(obj)\
 		$(abspath $(source))
-	$(QUIET)$(VBOX_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
+	$(QUIET)$(VRA_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
 	$(QUIET)$(APPEND) -n "$(dep)" "" "$(source):" ""
 endef
 
@@ -319,7 +319,7 @@ $(TOOL_Bs3Gcc64Elf64_COMPILE_C_CMDS)
 endef
 
 TOOL_Bs3Gcc64Elf64_CXXOBJSUFF       ?= .o
-TOOL_Bs3Gcc64Elf64_CXXFLAGS         ?= -fno-pie $(VBOX_GCC_Wa_cma_nocompress_debug_sections) -ffreestanding
+TOOL_Bs3Gcc64Elf64_CXXFLAGS         ?= -fno-pie $(VRA_GCC_Wa_cma_nocompress_debug_sections) -ffreestanding
 TOOL_Bs3Gcc64Elf64_CXXFLAGS.debug   ?= -g0 # no debug info, thank you
 TOOL_Bs3Gcc64Elf64_CXXFLAGS.profile ?= -O2 #-g -pg
 TOOL_Bs3Gcc64Elf64_CXXFLAGS.release ?= -O2
@@ -335,7 +335,7 @@ define TOOL_Bs3Gcc64Elf64_COMPILE_CXX_CMDS
 		-Wp,-MD,$(dep) -Wp,-MT,$(obj) -Wp,-MP\
 		-o $(obj)\
 		$(abspath $(source))
-	$(QUIET)$(VBOX_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
+	$(QUIET)$(VRA_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
 	$(QUIET)$(APPEND) -n "$(dep)" "" "$(source):" ""
 endef
 
@@ -348,24 +348,24 @@ endef
 # around it. See r160217 for examples.
 #
 TOOL_Bs3Vcc64 := Visual C++ 64-bit
-TOOL_Bs3Vcc64_CC  = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_CC)
-TOOL_Bs3Vcc64_CXX = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_CXX)
+TOOL_Bs3Vcc64_CC  = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_CC)
+TOOL_Bs3Vcc64_CXX = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_CXX)
 TOOL_Bs3Vcc64_COBJSUFF                 = .o64
-TOOL_Bs3Vcc64_CFLAGS                   = $(filter-out -TC -Zi,$(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_CFLAGS)) -TC -Z7
+TOOL_Bs3Vcc64_CFLAGS                   = $(filter-out -TC -Zi,$(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_CFLAGS)) -TC -Z7
 TOOL_Bs3Vcc64_CFLAGS.debug             =
 TOOL_Bs3Vcc64_CFLAGS.dbgopt            = -O1
 TOOL_Bs3Vcc64_CFLAGS.profile           = -O1
 TOOL_Bs3Vcc64_CFLAGS.release           = -O1
-TOOL_Bs3Vcc64_CINCS                    = $(PATH_TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_INC)
+TOOL_Bs3Vcc64_CINCS                    = $(PATH_TOOL_$(VRA_VCC_TOOL_STEM)AMD64_INC)
 TOOL_Bs3Vcc64_CDEFS                    =
-TOOL_Bs3Vcc64_COMPILE_C_DEPEND         = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_C_DEPEND) $(VBoxBs3ObjConverter_1_TARGET)
-TOOL_Bs3Vcc64_COMPILE_C_DEPORD         = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_C_DEPORD)
-TOOL_Bs3Vcc64_COMPILE_C_OUTPUT         = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_C_OUTPUT)
-TOOL_Bs3Vcc64_COMPILE_C_OUTPUT_MAYBE   = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_C_OUTPUT_MAYBE) $(obj).original
-TOOL_Bs3Vcc64_COMPILE_C_OUTPUT_MAYBE_PRECIOUS = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_C_OUTPUT_MAYBE_PRECIOUS) $(outbase)-obj.asm
+TOOL_Bs3Vcc64_COMPILE_C_DEPEND         = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_C_DEPEND) $(VBoxBs3ObjConverter_1_TARGET)
+TOOL_Bs3Vcc64_COMPILE_C_DEPORD         = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_C_DEPORD)
+TOOL_Bs3Vcc64_COMPILE_C_OUTPUT         = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_C_OUTPUT)
+TOOL_Bs3Vcc64_COMPILE_C_OUTPUT_MAYBE   = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_C_OUTPUT_MAYBE) $(obj).original
+TOOL_Bs3Vcc64_COMPILE_C_OUTPUT_MAYBE_PRECIOUS = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_C_OUTPUT_MAYBE_PRECIOUS) $(outbase)-obj.asm
 define TOOL_Bs3Vcc64_COMPILE_C_CMDS
-$(subst -Fo,-Fa$(outbase)-obj.asm -Fo,$(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_C_CMDS))
-	$(QUIET)$(VBOX_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
+$(subst -Fo,-Fa$(outbase)-obj.asm -Fo,$(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_C_CMDS))
+	$(QUIET)$(VRA_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
 	$(QUIET)$(SED) -e '/xmm[0-9]/!d' -e 'q11' $(outbase)-obj.asm
 endef
 
@@ -385,22 +385,22 @@ define TOOL_Bs3Vcc64_COMPILE_C64_CMDS
 $(TOOL_Bs3Vcc64_COMPILE_C_CMDS)
 endef
 
-TOOL_Bs3Vcc64_CXXOBJSUFF               = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_CXXOBJSUFF)
-TOOL_Bs3Vcc64_CXXFLAGS                 = $(filter-out -Zi,$(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_CXXFLAGS)) -TP -Z7
+TOOL_Bs3Vcc64_CXXOBJSUFF               = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_CXXOBJSUFF)
+TOOL_Bs3Vcc64_CXXFLAGS                 = $(filter-out -Zi,$(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_CXXFLAGS)) -TP -Z7
 TOOL_Bs3Vcc64_CXXFLAGS.debug           =
 TOOL_Bs3Vcc64_CXXFLAGS.dbgopt          = -O1
 TOOL_Bs3Vcc64_CXXFLAGS.profile         = -O1
 TOOL_Bs3Vcc64_CXXFLAGS.release         = -O1
-TOOL_Bs3Vcc64_CXXINCS                  = $(PATH_TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_INC)
+TOOL_Bs3Vcc64_CXXINCS                  = $(PATH_TOOL_$(VRA_VCC_TOOL_STEM)AMD64_INC)
 TOOL_Bs3Vcc64_CXXDEFS                  =
-TOOL_Bs3Vcc64_COMPILE_CXX_DEPEND       = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_CXX_DEPEND) $(VBoxBs3ObjConverter_1_TARGET)
-TOOL_Bs3Vcc64_COMPILE_CXX_DEPORD       = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_CXX_DEPORD)
-TOOL_Bs3Vcc64_COMPILE_CXX_OUTPUT       = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_CXX_OUTPUT)
-TOOL_Bs3Vcc64_COMPILE_CXX_OUTPUT_MAYBE = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_CXX_OUTPUT_MAYBE) $(obj).original
-TOOL_Bs3Vcc64_COMPILE_CXX_OUTPUT_MAYBE_PRECIOUS = $(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_CXX_OUTPUT_MAYBE_PRECIOUS) $(outbase)-obj.asm
+TOOL_Bs3Vcc64_COMPILE_CXX_DEPEND       = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_CXX_DEPEND) $(VBoxBs3ObjConverter_1_TARGET)
+TOOL_Bs3Vcc64_COMPILE_CXX_DEPORD       = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_CXX_DEPORD)
+TOOL_Bs3Vcc64_COMPILE_CXX_OUTPUT       = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_CXX_OUTPUT)
+TOOL_Bs3Vcc64_COMPILE_CXX_OUTPUT_MAYBE = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_CXX_OUTPUT_MAYBE) $(obj).original
+TOOL_Bs3Vcc64_COMPILE_CXX_OUTPUT_MAYBE_PRECIOUS = $(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_CXX_OUTPUT_MAYBE_PRECIOUS) $(outbase)-obj.asm
 define TOOL_Bs3Vcc64_COMPILE_CXX_CMDS
-$(subst -Fo,-Fa$(outbase)-obj.asm -Fo,$(TOOL_$(VBOX_VCC_TOOL_STEM)AMD64_COMPILE_CXX_CMDS))
-	$(QUIET)$(VBOX_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
+$(subst -Fo,-Fa$(outbase)-obj.asm -Fo,$(TOOL_$(VRA_VCC_TOOL_STEM)AMD64_COMPILE_CXX_CMDS))
+	$(QUIET)$(VRA_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
 	$(QUIET)$(SED) -e '/xmm[0-9]/!d' -e 'q11' $(outbase)-obj.asm
 endef
 
@@ -431,7 +431,7 @@ TOOL_Bs3Ow32_COMPILE_C_OUTPUT         = $(TOOL_OPENWATCOM_COMPILE_C_OUTPUT)
 TOOL_Bs3Ow32_COMPILE_C_OUTPUT_MAYBE   = $(TOOL_OPENWATCOM_COMPILE_C_OUTPUT_MAYBE) $(obj).original
 define TOOL_Bs3Ow32_COMPILE_C_CMDS
 $(TOOL_OPENWATCOM_COMPILE_C_CMDS)
-	$(QUIET)$(VBOX_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
+	$(QUIET)$(VRA_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
 endef
 
 TOOL_Bs3Ow32_C32OBJSUFF                 = $(TOOL_Bs3Ow32_COBJSUFF)
@@ -464,7 +464,7 @@ TOOL_Bs3Ow32_COMPILE_CXX_OUTPUT       = $(TOOL_OPENWATCOM_COMPILE_CXX_OUTPUT)
 TOOL_Bs3Ow32_COMPILE_CXX_OUTPUT_MAYBE = $(TOOL_OPENWATCOM_COMPILE_CXX_OUTPUT_MAYBE) $(obj).original
 define TOOL_Bs3Ow32_COMPILE_CXX_CMDS
 $(TOOL_OPENWATCOM_COMPILE_CXX_CMDS)
-	$(QUIET)$(VBOX_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
+	$(QUIET)$(VRA_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
 endef
 
 
@@ -490,7 +490,7 @@ TOOL_Bs3Ow16_COMPILE_C_OUTPUT         = $(TOOL_OPENWATCOM-16_COMPILE_C_OUTPUT)
 TOOL_Bs3Ow16_COMPILE_C_OUTPUT_MAYBE   = $(TOOL_OPENWATCOM-16_COMPILE_C_OUTPUT_MAYBE) $(obj).original
 define TOOL_Bs3Ow16_COMPILE_C_CMDS
 $(TOOL_OPENWATCOM-16_COMPILE_C_CMDS)
-	$(QUIET)$(VBOX_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
+	$(QUIET)$(VRA_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
 endef
 
 TOOL_Bs3Ow16_C16OBJSUFF                 = $(TOOL_Bs3Ow16_C16OBJSUFF)
@@ -523,7 +523,7 @@ TOOL_Bs3Ow16_COMPILE_CXX_OUTPUT       = $(TOOL_OPENWATCOM-16_COMPILE_CXX_OUTPUT)
 TOOL_Bs3Ow16_COMPILE_CXX_OUTPUT_MAYBE = $(TOOL_OPENWATCOM-16_COMPILE_CXX_OUTPUT_MAYBE) $(obj).original
 define TOOL_Bs3Ow16_COMPILE_CXX_CMDS
 $(TOOL_OPENWATCOM-16_COMPILE_CXX_CMDS)
-	$(QUIET)$(VBOX_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
+	$(QUIET)$(VRA_BS3KIT_KSUBMIT_OBJ_CONV) $(VBoxBs3ObjConverter_1_TARGET) "$(obj)"
 endef
 
 TOOL_Bs3Ow16_AR                                 = $(TOOL_OPENWATCOM_AR)
@@ -578,7 +578,7 @@ define VBoxBs3KitImgSrcHandler_high_dll
  local genasm := $($(target)_0_OUTDIR)/high-dll-$(notdir $(basename $(source))).asm
  $(eval $(target)_CLEAN        += $(genasm))
  $(eval $(target)_GEN_SOURCES_ += $(genasm))
- $(target)_2_VBOX_BS3KIT_HIGH_DLLS := $($(target)_2_VBOX_BS3KIT_HIGH_DLLS) $(source)
+ $(target)_2_VRA_BS3KIT_HIGH_DLLS := $($(target)_2_VRA_BS3KIT_HIGH_DLLS) $(source)
 
  $(genasm): $(source) | $(VBoxBs3Linker_1_TARGET) $$(dir $$@)
 	$(VBoxBs3Linker_1_TARGET) --generate-high-dll-import-table "$<" --output "$@"
@@ -674,7 +674,7 @@ TEMPLATE_VBoxBS3KitImg_C64TOOL      = $(TEMPLATE_VBoxBS3KitImg64_CTOOL)
 TEMPLATE_VBoxBS3KitImg_C64FLAGS     = $(TEMPLATE_VBoxBS3KitImg64_CFLAGS)
 TEMPLATE_VBoxBS3KitImg_C64DEFS      = ARCH_BITS=64 RT_ARCH_AMD64
 
-TEMPLATE_VBoxBS3KitImg_INCS         = $(VBOX_PATH_BS3KIT_SRC) .
+TEMPLATE_VBoxBS3KitImg_INCS         = $(VRA_PATH_BS3KIT_SRC) .
 TEMPLATE_VBoxBS3KitImg_LDTOOL       = OPENWATCOM-WL
 
 # linker options:
@@ -784,7 +784,7 @@ TEMPLATE_VBoxBS3KitImg_LNK_DEPS = \
 	$(VBoxBs3Linker_1_TARGET)
 TEMPLATE_VBoxBS3KitImg_POST_CMDS = $(if $(eq $(tool_do),LINK_LIBRARY) \
 		,,$(QUIET)$(MV_EXT) -f -- "$(out)" "$(out).tmp" \
-		$$(NLTAB)$(QUIET)$(VBoxBs3Linker_1_TARGET) -o $(out) $(bs3-bootsector_1_TARGET) $(out).tmp $($(target)_2_VBOX_BS3KIT_HIGH_DLLS) \
+		$$(NLTAB)$(QUIET)$(VBoxBs3Linker_1_TARGET) -o $(out) $(bs3-bootsector_1_TARGET) $(out).tmp $($(target)_2_VRA_BS3KIT_HIGH_DLLS) \
 	$$(NLTAB)$(QUIET)$(RM_EXT) -f -- "$(out).tmp") \
 	$(eval .PRECIOUS: $(outbase).map) # ugly hack!
 
@@ -830,7 +830,7 @@ TEMPLATE_VBoxBS3KitImgBig_LNK_DEPS = \
 	$(VBoxBs3Linker_1_TARGET)
 TEMPLATE_VBoxBS3KitImgBig_POST_CMDS = $(if $(eq $(tool_do),LINK_LIBRARY) \
 		,,$(QUIET)$(MV_EXT) -f -- "$(out)" "$(out).tmp" \
-		$$(NLTAB)$(QUIET)$(VBoxBs3Linker_1_TARGET) -o $(out) $(bs3-bootsector-63MB_1_TARGET) $(out).tmp $($(target)_2_VBOX_BS3KIT_HIGH_DLLS) \
+		$$(NLTAB)$(QUIET)$(VBoxBs3Linker_1_TARGET) -o $(out) $(bs3-bootsector-63MB_1_TARGET) $(out).tmp $($(target)_2_VRA_BS3KIT_HIGH_DLLS) \
 	$$(NLTAB)$(QUIET)$(RM_EXT) -f -- "$(out).tmp") \
 	$(eval .PRECIOUS: $(outbase).map) # ugly hack!
 
@@ -938,7 +938,7 @@ TEMPLATE_VBoxBS3KitImg32_CFLAGS       = \
 	-nt=BS3TEXT32 -nd=BS3DATA32 -nc=BS3CLASS32CODE -ecc -q -e125 -wx -zl -mf $(BS3_OW_DBG_OPT) -s -oa -ob -of -oi -ol -or -os -d+
 TEMPLATE_VBoxBS3KitImg32_CXXFLAGS     = \
 	-nt=BS3TEXT32 -nd=BS3DATA32 -nc=BS3CLASS32CODE -ecc -q -e125 -wx -zl -mf $(BS3_OW_DBG_OPT) -s -oa -ob -of -oi -ol -or -os -d+
-TEMPLATE_VBoxBS3KitImg32_INCS         = $(VBOX_PATH_BS3KIT_SRC) .
+TEMPLATE_VBoxBS3KitImg32_INCS         = $(VRA_PATH_BS3KIT_SRC) .
 TEMPLATE_VBoxBS3KitImg32_LDTOOL       = VBoxBsUnusedLd
 
 # BS3Kit template for 64-bit code.
@@ -955,10 +955,10 @@ TEMPLATE_VBoxBS3KitImg64_ASDEFS       = ASM_FORMAT_OMF ASM_CALL64_MSC RT_NOINC_S
 TEMPLATE_VBoxBS3KitImg64_DEFS         = IN_BS3KIT ARCH_BITS=64 IPRT_NO_CRT IN_RT_R0 IN_RT_STATIC
 TEMPLATE_VBoxBS3KitImg64_DEFS.debug   = BS3_STRICT
 TEMPLATE_VBoxBS3KitImg64_ARTOOL       = Bs3Ow16
-TEMPLATE_VBoxBS3KitImg64_INCS         = $(VBOX_PATH_BS3KIT_SRC) .
+TEMPLATE_VBoxBS3KitImg64_INCS         = $(VRA_PATH_BS3KIT_SRC) .
 if1of ($(KBUILD_HOST), win)
  ifndef TOOL_VCC100AMD64 # For win.x86 builds.
-  include $(KBUILD_PATH)/tools/$(VBOX_VCC_TOOL_STEM)AMD64.kmk
+  include $(KBUILD_PATH)/tools/$(VRA_VCC_TOOL_STEM)AMD64.kmk
  endif
  TEMPLATE_VBoxBS3KitImg64_CTOOL      := Bs3Vcc64
  TEMPLATE_VBoxBS3KitImg64_CXXTOOL    := Bs3Vcc64
@@ -968,10 +968,10 @@ else
  TEMPLATE_VBoxBS3KitImg64_CTOOL      := Bs3Gcc64Elf64
  TEMPLATE_VBoxBS3KitImg64_CXXTOOL    := Bs3Gcc64Elf64
  # Note! -mx32 would be exactly what we needed here, however it causes internal compiler errors with 4.8.4 on gentoo.
- TEMPLATE_VBoxBS3KitImg64_CFLAGS      = -m64 -maccumulate-outgoing-args -g -Os -fno-omit-frame-pointer $(VBOX_GCC_fno-stack-protector) $(VBOX_GCC_WARN_PEDANTIC_C) \
- 	-msoft-float -fno-exceptions -mno-sse -mno-mmx -mno-sse2 -mno-3dnow $(VBOX_GCC_fno-stack-protector)
- TEMPLATE_VBoxBS3KitImg64_CXXFLAGS    = -m64 -maccumulate-outgoing-args -g -Os -fno-omit-frame-pointer $(VBOX_GCC_fno-stack-protector) $(VBOX_GCC_WARN_PEDANTIC_CXX) \
- 	-msoft-float -fno-exceptions -mno-sse -mno-mmx -mno-sse2 -mno-3dnow $(VBOX_GCC_fno-stack-protector)
+ TEMPLATE_VBoxBS3KitImg64_CFLAGS      = -m64 -maccumulate-outgoing-args -g -Os -fno-omit-frame-pointer $(VRA_GCC_fno-stack-protector) $(VRA_GCC_WARN_PEDANTIC_C) \
+ 	-msoft-float -fno-exceptions -mno-sse -mno-mmx -mno-sse2 -mno-3dnow $(VRA_GCC_fno-stack-protector)
+ TEMPLATE_VBoxBS3KitImg64_CXXFLAGS    = -m64 -maccumulate-outgoing-args -g -Os -fno-omit-frame-pointer $(VRA_GCC_fno-stack-protector) $(VRA_GCC_WARN_PEDANTIC_CXX) \
+ 	-msoft-float -fno-exceptions -mno-sse -mno-mmx -mno-sse2 -mno-3dnow $(VRA_GCC_fno-stack-protector)
 endif
 TEMPLATE_VBoxBS3KitImg64_LDTOOL       = VBoxBsUnusedLd
 
@@ -988,14 +988,14 @@ TEMPLATE_VBoxBS3KitBS_ASFLAGS         = -f bin --mapfile
 TEMPLATE_VBoxBS3KitBS_ASDEFS          = ASM_FORMAT_BIN RT_NOINC_SEGMENTS ARCH_BITS=16 __YASM__ \
 	BS3CLASS16CODE=$(BS3KIT_CLASS_CODE16) BS3KIT_CLASS_DATA16=$(BS3KIT_CLASS_DATA16) \
 	BS3KIT_GRPNM_DATA16=$(BS3KIT_GRPNM_DATA16) BS3KIT_CLASS_BSS16=$(BS3KIT_CLASS_BSS16)
-TEMPLATE_VBoxBS3KitBS_INCS            = $(VBOX_PATH_BS3KIT_SRC) .
+TEMPLATE_VBoxBS3KitBS_INCS            = $(VRA_PATH_BS3KIT_SRC) .
 TEMPLATE_VBoxBS3KitBS_LDTOOL          = VBoxBsCpLd
 
 
 
 #
 # Extends VBoxBS3KitImg
-# User must starts SOURCES with: $(VBOX_PATH_BS3KIT_SRC)/bs3-first-dosexe.asm
+# User must starts SOURCES with: $(VRA_PATH_BS3KIT_SRC)/bs3-first-dosexe.asm
 ##       disable 1014, 1080, 1150
 #
 TEMPLATE_VBoxBS3KitUtil = Utility using bs3kit code.

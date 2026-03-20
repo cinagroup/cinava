@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -30,18 +30,18 @@ include $(KBUILD_PATH)/subheader.kmk
 
 
 #
-# Populate FILES_VBOXSF_NOBIN
+# Populate FILES_VRASF_NOBIN
 #
 INSTALLS += vboxsf-src
 include $(PATH_SUB_CURRENT)/files_vboxsf
 vboxsf-src_INST         = $(INST_ADDITIONS)src/vboxsf/
 vboxsf-src_SOURCES      = \
-	$(subst $(DQUOTE),,$(FILES_VBOXSF_NOBIN))
+	$(subst $(DQUOTE),,$(FILES_VRASF_NOBIN))
 vboxsf-src_EXEC_SOURCES = \
-	$(subst $(DQUOTE),,$(FILES_VBOXSF_BIN))
+	$(subst $(DQUOTE),,$(FILES_VRASF_BIN))
 
 # Build test for the Guest Additions kernel modules (kmk check).
-$(evalcall2 VBOX_LINUX_KMOD_TEST_BUILD_RULE_FN,vboxsf-src,vboxguest-src,)
+$(evalcall2 VRA_LINUX_KMOD_TEST_BUILD_RULE_FN,vboxsf-src,vboxguest-src,)
 
 #
 # The mount util.

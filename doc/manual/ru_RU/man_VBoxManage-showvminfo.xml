@@ -3,9 +3,9 @@
     manpage, user manual, usage: VBoxManage showvminfo
 -->
 <!--
-    Copyright (C) 2006-2026 Oracle and/or its affiliates.
+    Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 
-    This file is part of VirtualBox base platform packages, as
+    This file is part of VirtualAgent base platform packages, as
     available from https://www.virtualbox.org.
 
     This program is free software; you can redistribute it and/or
@@ -139,9 +139,9 @@
 Группы:          /
 Гостевая ОС:        Windows 10 (64-bit)
 UUID:            1bf3464d-57c6-4d49-92a9-a5cc3816b7e7
-Файл настроек:     /home/username/VirtualBox VMs/Windows 10/Windows 10.vbox
-Папка снимков: /home/username/VirtualBox VMs/Windows 10/Snapshots
-Папка журнала:      /home/username/VirtualBox VMs/Windows 10/Logs
+Файл настроек:     /home/username/VirtualAgent VMs/Windows 10/Windows 10.vbox
+Папка снимков: /home/username/VirtualAgent VMs/Windows 10/Snapshots
+Папка журнала:      /home/username/VirtualAgent VMs/Windows 10/Logs
 UUID оборудования:   1bf3464d-57c6-4d49-92a9-a5cc3816b7e7
 Размер памяти:     2048MB
 Page Fusion:     off
@@ -165,7 +165,7 @@ UUID="1bf3464d-57c6-4d49-92a9-a5cc3816b7e7"
       журнала <filename>VBox.log</filename>:
     </para>
 <screen>$ VBoxManage showvminfo "Windows 10" --log 0
-00:00:02.895106 VirtualBox VM 6.0.0_RC1 r127378 linux.amd64 (Dec 10 2018 17:16:06) release log
+00:00:02.895106 VirtualAgent VM 6.0.0_RC1 r127378 linux.amd64 (Dec 10 2018 17:16:06) release log
 00:00:02.895109 Log opened 2018-12-14T14:31:44.088259000Z
 00:00:02.895111 Build Type: release
 00:00:02.895115 OS Product: Linux

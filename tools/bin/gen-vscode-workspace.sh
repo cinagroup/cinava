@@ -7,9 +7,9 @@
 #
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -321,30 +321,30 @@ my_generate_project()
 
     my_generate_project_config "${MY_FILE}" "Default" "" "" "" "" $*
     my_generate_project_config "${MY_FILE}" "Debug + hardening" \
-        '"KBUILD_TYPE=debug", "VBOX_WITH_HARDENING=1"' \
+        '"KBUILD_TYPE=debug", "VRA_WITH_HARDENING=1"' \
         "" "" "" $*
     my_generate_project_config "${MY_FILE}" "Release + hardening" \
-        '"KBUILD_TYPE=release", "VBOX_WITH_HARDENING=1"' \
+        '"KBUILD_TYPE=release", "VRA_WITH_HARDENING=1"' \
         "" "" "" $*
     my_generate_project_config "${MY_FILE}" "Debug+Release + hardening" \
-        '"KBUILD_TYPE=debug", "VBOX_WITH_HARDENING=1"' \
-        '"KBUILD_TYPE=release", "VBOX_WITH_HARDENING=1"' \
+        '"KBUILD_TYPE=debug", "VRA_WITH_HARDENING=1"' \
+        '"KBUILD_TYPE=release", "VRA_WITH_HARDENING=1"' \
         "" "" $*
     my_generate_project_config "${MY_FILE}" "Debug w/o hardening" \
-        '"KBUILD_TYPE=debug", "VBOX_WITHOUT_HARDENING=1"' \
+        '"KBUILD_TYPE=debug", "VRA_WITHOUT_HARDENING=1"' \
         "" "" "" $*
     my_generate_project_config "${MY_FILE}" "Release w/o hardening" \
-        '"KBUILD_TYPE=release", "VBOX_WITHOUT_HARDENING=1"' \
+        '"KBUILD_TYPE=release", "VRA_WITHOUT_HARDENING=1"' \
         "" "" "" $*
     my_generate_project_config "${MY_FILE}" "Debug+Release w/o hardening" \
-        '"KBUILD_TYPE=debug", "VBOX_WITHOUT_HARDENING=1"' \
-        '"KBUILD_TYPE=release", "VBOX_WITHOUT_HARDENING=1"' \
+        '"KBUILD_TYPE=debug", "VRA_WITHOUT_HARDENING=1"' \
+        '"KBUILD_TYPE=release", "VRA_WITHOUT_HARDENING=1"' \
         "" "" $*
     my_generate_project_config "${MY_FILE}" "Debug+Release with and without hardening" \
-        '"KBUILD_TYPE=debug", "VBOX_WITH_HARDENING=1"' \
-        '"KBUILD_TYPE=release", "VBOX_WITH_HARDENING=1"' \
-        '"KBUILD_TYPE=debug", "VBOX_WITHOUT_HARDENING=1"' \
-        '"KBUILD_TYPE=release", "VBOX_WITHOUT_HARDENING=1"' \
+        '"KBUILD_TYPE=debug", "VRA_WITH_HARDENING=1"' \
+        '"KBUILD_TYPE=release", "VRA_WITH_HARDENING=1"' \
+        '"KBUILD_TYPE=debug", "VRA_WITHOUT_HARDENING=1"' \
+        '"KBUILD_TYPE=release", "VRA_WITHOUT_HARDENING=1"' \
         $*
 
     #

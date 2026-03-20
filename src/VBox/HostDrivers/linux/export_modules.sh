@@ -5,9 +5,9 @@
 #
 
 #
-# Copyright (C) 2007-2026 Oracle and/or its affiliates.
+# Copyright (C) 2007-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -44,7 +44,7 @@ usage_msg="\
 Usage: `basename ${0}` --file <path>|--folder <path> \
     [--override-svn-rev <rev>] [--extra-version-string <string>] [--without-hardening]
 
-Exports the VirtualBox host kernel modules to the tar.gz archive or folder in \
+Exports the VirtualAgent host kernel modules to the tar.gz archive or folder in \
 <path>, optionally adjusting the Make files to build them without hardening.
 
 Examples:
@@ -69,7 +69,7 @@ fail()
 }
 
 unset FILE FOLDER
-VBOX_WITH_HARDENING=1
+VRA_WITH_HARDENING=1
 while test -n "${1}"; do
     case "${1}" in
     --file)
@@ -85,7 +85,7 @@ while test -n "${1}"; do
         EXTRA_VERSION_STRING="${2}"
         shift 2 ;;
     --without-hardening)
-        unset VBOX_WITH_HARDENING
+        unset VRA_WITH_HARDENING
         shift ;;
     -h|--help)
         usage 0 ;;
@@ -108,34 +108,34 @@ PATH_OUT=$PATH_TMP
 PATH_ROOT="`cd ${MY_DIR}/../../../..; pwd`"
 PATH_LOG=/tmp/vbox-export-host.log
 PATH_LINUX="$PATH_ROOT/src/VBox/HostDrivers/linux"
-PATH_VBOXDRV="$PATH_ROOT/src/VBox/HostDrivers/Support"
-PATH_VBOXNET="$PATH_ROOT/src/VBox/HostDrivers/VBoxNetFlt"
-PATH_VBOXADP="$PATH_ROOT/src/VBox/HostDrivers/VBoxNetAdp"
-PATH_VBOXPCI="$PATH_ROOT/src/VBox/HostDrivers/VBoxPci"
+PATH_VRADRV="$PATH_ROOT/src/VBox/HostDrivers/Support"
+PATH_VRANET="$PATH_ROOT/src/VBox/HostDrivers/VBoxNetFlt"
+PATH_VRAADP="$PATH_ROOT/src/VBox/HostDrivers/VBoxNetAdp"
+PATH_VRAPCI="$PATH_ROOT/src/VBox/HostDrivers/VBoxPci"
 
-VBOX_VERSION_MAJOR=`sed -e "s/^ *VBOX_VERSION_MAJOR *= \+\([0-9]\+\)/\1/;t;d" $PATH_ROOT/Version.kmk`
-VBOX_VERSION_MINOR=`sed -e "s/^ *VBOX_VERSION_MINOR *= \+\([0-9]\+\)/\1/;t;d" $PATH_ROOT/Version.kmk`
-VBOX_VERSION_BUILD=`sed -e "s/^ *VBOX_VERSION_BUILD *= \+\([0-9]\+\)/\1/;t;d" $PATH_ROOT/Version.kmk`
-VBOX_VERSION_STRING=$VBOX_VERSION_MAJOR.$VBOX_VERSION_MINOR.$VBOX_VERSION_BUILD
-VBOX_VERSION_BUILD=`sed -e "s/^ *VBOX_VERSION_BUILD *= \+\([0-9]\+\)/\1/;t;d" $PATH_ROOT/Version.kmk`
-VBOX_SVN_CONFIG_REV=`sed -e 's/^ *VBOX_SVN_REV_CONFIG_FALLBACK *:= \+\$(patsubst *%:,, *\$Rev: *\([0-9]\+\) *\$ *) */\1/;t;d' $PATH_ROOT/Config.kmk`
-VBOX_SVN_VERSION_REV=`sed -e 's/^ *VBOX_SVN_REV_VERSION_FALLBACK *:= \+\$(patsubst *%:,, *\$Rev: *\([0-9]\+\) *\$ *) */\1/;t;d' $PATH_ROOT/Version.kmk`
+VRA_VERSION_MAJOR=`sed -e "s/^ *VRA_VERSION_MAJOR *= \+\([0-9]\+\)/\1/;t;d" $PATH_ROOT/Version.kmk`
+VRA_VERSION_MINOR=`sed -e "s/^ *VRA_VERSION_MINOR *= \+\([0-9]\+\)/\1/;t;d" $PATH_ROOT/Version.kmk`
+VRA_VERSION_BUILD=`sed -e "s/^ *VRA_VERSION_BUILD *= \+\([0-9]\+\)/\1/;t;d" $PATH_ROOT/Version.kmk`
+VRA_VERSION_STRING=$VRA_VERSION_MAJOR.$VRA_VERSION_MINOR.$VRA_VERSION_BUILD
+VRA_VERSION_BUILD=`sed -e "s/^ *VRA_VERSION_BUILD *= \+\([0-9]\+\)/\1/;t;d" $PATH_ROOT/Version.kmk`
+VRA_SVN_CONFIG_REV=`sed -e 's/^ *VRA_SVN_REV_CONFIG_FALLBACK *:= \+\$(patsubst *%:,, *\$Rev: *\([0-9]\+\) *\$ *) */\1/;t;d' $PATH_ROOT/Config.kmk`
+VRA_SVN_VERSION_REV=`sed -e 's/^ *VRA_SVN_REV_VERSION_FALLBACK *:= \+\$(patsubst *%:,, *\$Rev: *\([0-9]\+\) *\$ *) */\1/;t;d' $PATH_ROOT/Version.kmk`
 
 if [ -n "$OVERRIDE_SVN_REV" ]; then
-    VBOX_SVN_REV=$OVERRIDE_SVN_REV
-elif [ "$VBOX_SVN_CONFIG_REV" -gt "$VBOX_SVN_VERSION_REV" ]; then
-    VBOX_SVN_REV=$VBOX_SVN_CONFIG_REV
+    VRA_SVN_REV=$OVERRIDE_SVN_REV
+elif [ "$VRA_SVN_CONFIG_REV" -gt "$VRA_SVN_VERSION_REV" ]; then
+    VRA_SVN_REV=$VRA_SVN_CONFIG_REV
 else
-    VBOX_SVN_REV=$VBOX_SVN_VERSION_REV
+    VRA_SVN_REV=$VRA_SVN_VERSION_REV
 fi
-VBOX_VENDOR=`sed -e 's/^ *VBOX_VENDOR *= \+\(.\+\)/\1/;t;d' $PATH_ROOT/Config.kmk`
-VBOX_VENDOR_SHORT=`sed -e 's/^ *VBOX_VENDOR_SHORT *= \+\(.\+\)/\1/;t;d' $PATH_ROOT/Config.kmk`
-VBOX_PRODUCT=`sed -e 's/^ *VBOX_PRODUCT *= \+\(.\+\)/\1/;t;d' $PATH_ROOT/Config.kmk`
-VBOX_C_YEAR=`date +%Y`
+VRA_VENDOR=`sed -e 's/^ *VRA_VENDOR *= \+\(.\+\)/\1/;t;d' $PATH_ROOT/Config.kmk`
+VRA_VENDOR_SHORT=`sed -e 's/^ *VRA_VENDOR_SHORT *= \+\(.\+\)/\1/;t;d' $PATH_ROOT/Config.kmk`
+VRA_PRODUCT=`sed -e 's/^ *VRA_PRODUCT *= \+\(.\+\)/\1/;t;d' $PATH_ROOT/Config.kmk`
+VRA_C_YEAR=`date +%Y`
 
-. $PATH_VBOXDRV/linux/files_vboxdrv
-. $PATH_VBOXNET/linux/files_vboxnetflt
-. $PATH_VBOXADP/linux/files_vboxnetadp
+. $PATH_VRADRV/linux/files_vboxdrv
+. $PATH_VRANET/linux/files_vboxnetflt
+. $PATH_VRAADP/linux/files_vboxnetadp
 
 # Temporary path for creating the modules, will be removed later
 rm -rf "$PATH_TMP"
@@ -145,14 +145,14 @@ mkdir $PATH_TMP || exit 1
 echo "#ifndef ___version_generated_h___" > $PATH_TMP/version-generated.h
 echo "#define ___version_generated_h___" >> $PATH_TMP/version-generated.h
 echo "" >> $PATH_TMP/version-generated.h
-echo "#define VBOX_VERSION_MAJOR $VBOX_VERSION_MAJOR" >> $PATH_TMP/version-generated.h
-echo "#define VBOX_VERSION_MINOR $VBOX_VERSION_MINOR" >> $PATH_TMP/version-generated.h
-echo "#define VBOX_VERSION_BUILD $VBOX_VERSION_BUILD" >> $PATH_TMP/version-generated.h
-echo "#define VBOX_VERSION_STRING_RAW \"$VBOX_VERSION_MAJOR.$VBOX_VERSION_MINOR.$VBOX_VERSION_BUILD\"" >> $PATH_TMP/version-generated.h
-echo "#define VBOX_VERSION_STRING \"$VBOX_VERSION_STRING\"" >> $PATH_TMP/version-generated.h
-echo "#define VBOX_API_VERSION_STRING \"${VBOX_VERSION_MAJOR}_${VBOX_VERSION_MINOR}\"" >> $PATH_TMP/version-generated.h
-[ -n "$EXTRA_VERSION_STRING" ] && echo "#define VBOX_EXTRA_VERSION_STRING \" ${EXTRA_VERSION_STRING}\"" >> $PATH_TMP/version-generated.h
-echo "#define VBOX_PRIVATE_BUILD_DESC \"Private build with export_modules\"" >> $PATH_TMP/version-generated.h
+echo "#define VRA_VERSION_MAJOR $VRA_VERSION_MAJOR" >> $PATH_TMP/version-generated.h
+echo "#define VRA_VERSION_MINOR $VRA_VERSION_MINOR" >> $PATH_TMP/version-generated.h
+echo "#define VRA_VERSION_BUILD $VRA_VERSION_BUILD" >> $PATH_TMP/version-generated.h
+echo "#define VRA_VERSION_STRING_RAW \"$VRA_VERSION_MAJOR.$VRA_VERSION_MINOR.$VRA_VERSION_BUILD\"" >> $PATH_TMP/version-generated.h
+echo "#define VRA_VERSION_STRING \"$VRA_VERSION_STRING\"" >> $PATH_TMP/version-generated.h
+echo "#define VRA_API_VERSION_STRING \"${VRA_VERSION_MAJOR}_${VRA_VERSION_MINOR}\"" >> $PATH_TMP/version-generated.h
+[ -n "$EXTRA_VERSION_STRING" ] && echo "#define VRA_EXTRA_VERSION_STRING \" ${EXTRA_VERSION_STRING}\"" >> $PATH_TMP/version-generated.h
+echo "#define VRA_PRIVATE_BUILD_DESC \"Private build with export_modules\"" >> $PATH_TMP/version-generated.h
 echo "" >> $PATH_TMP/version-generated.h
 echo "#endif" >> $PATH_TMP/version-generated.h
 
@@ -160,7 +160,7 @@ echo "#endif" >> $PATH_TMP/version-generated.h
 echo "#ifndef __revision_generated_h__" > $PATH_TMP/revision-generated.h
 echo "#define __revision_generated_h__" >> $PATH_TMP/revision-generated.h
 echo "" >> $PATH_TMP/revision-generated.h
-echo "#define VBOX_SVN_REV $VBOX_SVN_REV" >> $PATH_TMP/revision-generated.h
+echo "#define VRA_SVN_REV $VRA_SVN_REV" >> $PATH_TMP/revision-generated.h
 echo "" >> $PATH_TMP/revision-generated.h
 echo "#endif" >> $PATH_TMP/revision-generated.h
 
@@ -168,53 +168,53 @@ echo "#endif" >> $PATH_TMP/revision-generated.h
 echo "#ifndef ___product_generated_h___" > $PATH_TMP/product-generated.h
 echo "#define ___product_generated_h___" >> $PATH_TMP/product-generated.h
 echo "" >> $PATH_TMP/product-generated.h
-echo "#define VBOX_VENDOR \"$VBOX_VENDOR\"" >> $PATH_TMP/product-generated.h
-echo "#define VBOX_VENDOR_SHORT \"$VBOX_VENDOR_SHORT\"" >> $PATH_TMP/product-generated.h
+echo "#define VRA_VENDOR \"$VRA_VENDOR\"" >> $PATH_TMP/product-generated.h
+echo "#define VRA_VENDOR_SHORT \"$VRA_VENDOR_SHORT\"" >> $PATH_TMP/product-generated.h
 echo "" >> $PATH_TMP/product-generated.h
-echo "#define VBOX_PRODUCT \"$VBOX_PRODUCT\"" >> $PATH_TMP/product-generated.h
-echo "#define VBOX_C_YEAR \"$VBOX_C_YEAR\"" >> $PATH_TMP/product-generated.h
+echo "#define VRA_PRODUCT \"$VRA_PRODUCT\"" >> $PATH_TMP/product-generated.h
+echo "#define VRA_C_YEAR \"$VRA_C_YEAR\"" >> $PATH_TMP/product-generated.h
 echo "" >> $PATH_TMP/product-generated.h
 echo "#endif" >> $PATH_TMP/product-generated.h
 
-# vboxdrv (VirtualBox host kernel module)
+# vboxdrv (VirtualAgent host kernel module)
 mkdir $PATH_TMP/vboxdrv || exit 1
-for f in $FILES_VBOXDRV_NOBIN; do
+for f in $FILES_VRADRV_NOBIN; do
     install -D -m 0644 `echo $f|cut -d'=' -f1` "$PATH_TMP/vboxdrv/`echo $f|cut -d'>' -f2`"
 done
-for f in $FILES_VBOXDRV_BIN; do
+for f in $FILES_VRADRV_BIN; do
     install -D -m 0755 `echo $f|cut -d'=' -f1` "$PATH_TMP/vboxdrv/`echo $f|cut -d'>' -f2`"
 done
-if [ -n "$VBOX_WITH_HARDENING" ]; then
-    sed -e "s;VBOX_WITH_EFLAGS_AC_SET_IN_VBOXDRV;;g" \
+if [ -n "$VRA_WITH_HARDENING" ]; then
+    sed -e "s;VRA_WITH_EFLAGS_AC_SET_IN_VRADRV;;g" \
         -e "s;IPRT_WITH_EFLAGS_AC_PRESERVING;;g" \
-        < $PATH_VBOXDRV/linux/Makefile > $PATH_TMP/vboxdrv/Makefile
+        < $PATH_VRADRV/linux/Makefile > $PATH_TMP/vboxdrv/Makefile
 else
-    sed -e "s;VBOX_WITH_HARDENING;;g" \
-        -e "s;VBOX_WITH_EFLAGS_AC_SET_IN_VBOXDRV;;g" \
+    sed -e "s;VRA_WITH_HARDENING;;g" \
+        -e "s;VRA_WITH_EFLAGS_AC_SET_IN_VRADRV;;g" \
         -e "s;IPRT_WITH_EFLAGS_AC_PRESERVING;;g" \
-        < $PATH_VBOXDRV/linux/Makefile > $PATH_TMP/vboxdrv/Makefile
+        < $PATH_VRADRV/linux/Makefile > $PATH_TMP/vboxdrv/Makefile
 fi
 
-# vboxnetflt (VirtualBox netfilter kernel module)
+# vboxnetflt (VirtualAgent netfilter kernel module)
 mkdir $PATH_TMP/vboxnetflt || exit 1
-for f in $VBOX_VBOXNETFLT_SOURCES; do
+for f in $VRA_VRANETFLT_SOURCES; do
     install -D -m 0644 `echo $f|cut -d'=' -f1` "$PATH_TMP/vboxnetflt/`echo $f|cut -d'>' -f2`"
 done
-if [ -n "$VBOX_WITH_HARDENING" ]; then
-    cat                                   $PATH_VBOXNET/linux/Makefile > $PATH_TMP/vboxnetflt/Makefile
+if [ -n "$VRA_WITH_HARDENING" ]; then
+    cat                                   $PATH_VRANET/linux/Makefile > $PATH_TMP/vboxnetflt/Makefile
 else
-    sed -e "s;VBOX_WITH_HARDENING;;g" < $PATH_VBOXNET/linux/Makefile > $PATH_TMP/vboxnetflt/Makefile
+    sed -e "s;VRA_WITH_HARDENING;;g" < $PATH_VRANET/linux/Makefile > $PATH_TMP/vboxnetflt/Makefile
 fi
 
-# vboxnetadp (VirtualBox network adapter kernel module)
+# vboxnetadp (VirtualAgent network adapter kernel module)
 mkdir $PATH_TMP/vboxnetadp || exit 1
-for f in $VBOX_VBOXNETADP_SOURCES; do
+for f in $VRA_VRANETADP_SOURCES; do
     install -D -m 0644 `echo $f|cut -d'=' -f1` "$PATH_TMP/vboxnetadp/`echo $f|cut -d'>' -f2`"
 done
-if [ -n "$VBOX_WITH_HARDENING" ]; then
-    cat                                   $PATH_VBOXADP/linux/Makefile > $PATH_TMP/vboxnetadp/Makefile
+if [ -n "$VRA_WITH_HARDENING" ]; then
+    cat                                   $PATH_VRAADP/linux/Makefile > $PATH_TMP/vboxnetadp/Makefile
 else
-    sed -e "s;VBOX_WITH_HARDENING;;g" < $PATH_VBOXADP/linux/Makefile > $PATH_TMP/vboxnetadp/Makefile
+    sed -e "s;VRA_WITH_HARDENING;;g" < $PATH_VRAADP/linux/Makefile > $PATH_TMP/vboxnetadp/Makefile
 fi
 
 install -D -m 0644 $PATH_LINUX/Makefile $PATH_TMP/Makefile

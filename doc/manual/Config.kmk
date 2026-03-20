@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2010-2026 Oracle and/or its affiliates.
+# Copyright (C) 2010-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,11 +25,11 @@
 # SPDX-License-Identifier: GPL-3.0-only
 #
 
-ifndef VBOX_DOC_MANUAL_CONFIG_KMK_INCLUDED
- VBOX_DOC_MANUAL_CONFIG_KMK_INCLUDED = 1
+ifndef VRA_DOC_MANUAL_CONFIG_KMK_INCLUDED
+ VRA_DOC_MANUAL_CONFIG_KMK_INCLUDED = 1
 
  # Include the top-level configure file.
- ifndef VBOX_ROOT_CONFIG_KMK_INCLUDED
+ ifndef VRA_ROOT_CONFIG_KMK_INCLUDED
   include $(PATH_ROOT)/Config.kmk
  endif
 
@@ -39,21 +39,21 @@ ifndef VBOX_DOC_MANUAL_CONFIG_KMK_INCLUDED
  #
 
  # DITA stuff.
- VBOX_DITA_OT_PATH  ?= $(PATH_ROOT)/src/libs/dita-ot-1.8.5
- ifneq ($(VBOX_DITA_OT_PATH),)
-  VBOX_DITA_OT_PATH := $(firstfile \
+ VRA_DITA_OT_PATH  ?= $(PATH_ROOT)/src/libs/dita-ot-1.8.5
+ ifneq ($(VRA_DITA_OT_PATH),)
+  VRA_DITA_OT_PATH := $(firstfile \
   		$(rversortfiles $(qwildcard ,$(KBUILD_DEVTOOLS)/common/dita-ot/v[4-9].*)) \
   		$(KBUILD_DEVTOOLS)/common/dita-ot/v4.0.2-r1)
  endif
 
 
  # Source location.
- VBOX_PATH_MANUAL_SRC     := $(PATH_ROOT)/doc/manual
+ VRA_PATH_MANUAL_SRC     := $(PATH_ROOT)/doc/manual
  # Output location.
- VBOX_PATH_MANUAL_OUTBASE := $(PATH_OBJ)/manual
+ VRA_PATH_MANUAL_OUTBASE := $(PATH_OBJ)/manual
 
  ## List of refentry files (manpages).
- VBOX_MANUAL_XML_REFENTRY_FILES := \
+ VRA_MANUAL_XML_REFENTRY_FILES := \
  	man_VBoxManage-common.xml \
  	man_VBoxManage-list.xml \
  	man_VBoxManage-showvminfo.xml \
@@ -108,54 +108,54 @@ ifndef VBOX_DOC_MANUAL_CONFIG_KMK_INCLUDED
  	man_VBoxManage-objtracker.xml
 
  ## List of user manual XML files common for all languages.
- VBOX_MANUAL_XML_FILES_COMMON = \
- 	$(VBOX_PATH_MANUAL_SRC)/user_ChangeLogImpl.xml
+ VRA_MANUAL_XML_FILES_COMMON = \
+ 	$(VRA_PATH_MANUAL_SRC)/user_ChangeLogImpl.xml
 
 
  # Tool locations.
- ifndef VBOX_OSE
+ ifndef VRA_OSE
   # use docbook from our tools directory
-  VBOX_PATH_DOCBOOK       ?= $(KBUILD_DEVTOOLS)/common/DocBook/v1.69.1
-  VBOX_PATH_DOCBOOK_DTD   ?= $(KBUILD_DEVTOOLS)/common/docbook-xml/v4.5
-  VBOX_PATH_DITA_DTD      ?= $(VBOX_DITA_OT_PATH)/plugins/org.dita.specialization.dita11/dtd/
+  VRA_PATH_DOCBOOK       ?= $(KBUILD_DEVTOOLS)/common/DocBook/v1.69.1
+  VRA_PATH_DOCBOOK_DTD   ?= $(KBUILD_DEVTOOLS)/common/docbook-xml/v4.5
+  VRA_PATH_DITA_DTD      ?= $(VRA_DITA_OT_PATH)/plugins/org.dita.specialization.dita11/dtd/
  else
   # use docbook of the build host
-  VBOX_PATH_DOCBOOK       ?= /usr/share/xml/docbook/stylesheet/docbook-xsl
-  VBOX_PATH_DOCBOOK_DTD   ?= /usr/share/xml/docbook/schema/dtd/4.5
-  VBOX_PATH_DITA_DTD      ?= $(VBOX_DITA_OT_PATH)/plugins/org.dita.specialization.dita11/dtd/
+  VRA_PATH_DOCBOOK       ?= /usr/share/xml/docbook/stylesheet/docbook-xsl
+  VRA_PATH_DOCBOOK_DTD   ?= /usr/share/xml/docbook/schema/dtd/4.5
+  VRA_PATH_DITA_DTD      ?= $(VRA_DITA_OT_PATH)/plugins/org.dita.specialization.dita11/dtd/
  endif
- VBOX_XML_CATALOG         ?= $(VBOX_PATH_MANUAL_OUTBASE)/vbox-doc.cat
- VBOX_XML_CATALOG_DOCBOOK ?= $(VBOX_PATH_MANUAL_OUTBASE)/docbook.cat
- VBOX_XML_CATALOG_DITA    ?= $(VBOX_PATH_MANUAL_OUTBASE)/dita.cat
- VBOX_XML_CATALOG_MANUAL  ?= $(VBOX_PATH_MANUAL_OUTBASE)/manual.cat
- VBOX_XML_ALL_CATALOGS_DEP ?= $(VBOX_XML_CATALOG) $(VBOX_XML_CATALOG_DOCBOOK) $(VBOX_XML_CATALOG_DITA) $(VBOX_XML_CATALOG_MANUAL)
- VBOX_XML_ENTITIES        ?= $(VBOX_PATH_MANUAL_OUTBASE)/all-entities.ent
+ VRA_XML_CATALOG         ?= $(VRA_PATH_MANUAL_OUTBASE)/vbox-doc.cat
+ VRA_XML_CATALOG_DOCBOOK ?= $(VRA_PATH_MANUAL_OUTBASE)/docbook.cat
+ VRA_XML_CATALOG_DITA    ?= $(VRA_PATH_MANUAL_OUTBASE)/dita.cat
+ VRA_XML_CATALOG_MANUAL  ?= $(VRA_PATH_MANUAL_OUTBASE)/manual.cat
+ VRA_XML_ALL_CATALOGS_DEP ?= $(VRA_XML_CATALOG) $(VRA_XML_CATALOG_DOCBOOK) $(VRA_XML_CATALOG_DITA) $(VRA_XML_CATALOG_MANUAL)
+ VRA_XML_ENTITIES        ?= $(VRA_PATH_MANUAL_OUTBASE)/all-entities.ent
 
  # xsltproc with the catalog trick if applicable (set XML_DEBUG_CATALOG to
  # non-zero value to debug file/uri resolution through the catalogs, using
  # one of them is enough, they show the same information).
- ifdef VBOX_XML_CATALOG
-  VBOX_XSLTPROC_WITH_CAT   = $(REDIRECT) -E "XML_CATALOG_FILES=$(if $(2),$(2),$(VBOX_XML_CATALOG))" -E "XML_DEBUG_CATALOG=" $1 -- \
-  	$(VBOX_XSLTPROC) --nonet --xinclude $(VBOX_XSLTPROC_OPTS) --path "$(VBOX_PATH_MANUAL_OUTBASE)"
-  VBOX_XMLLINT_WITH_CAT    = $(REDIRECT) -E "XML_CATALOG_FILES=$(VBOX_XML_CATALOG)" -E "XML_DEBUG_CATALOG=" -- \
-  	$(VBOX_XMLLINT) --nonet --xinclude --noout $(VBOX_XMLLINT_OPTS) --path "$(VBOX_PATH_MANUAL_OUTBASE)"
+ ifdef VRA_XML_CATALOG
+  VRA_XSLTPROC_WITH_CAT   = $(REDIRECT) -E "XML_CATALOG_FILES=$(if $(2),$(2),$(VRA_XML_CATALOG))" -E "XML_DEBUG_CATALOG=" $1 -- \
+  	$(VRA_XSLTPROC) --nonet --xinclude $(VRA_XSLTPROC_OPTS) --path "$(VRA_PATH_MANUAL_OUTBASE)"
+  VRA_XMLLINT_WITH_CAT    = $(REDIRECT) -E "XML_CATALOG_FILES=$(VRA_XML_CATALOG)" -E "XML_DEBUG_CATALOG=" -- \
+  	$(VRA_XMLLINT) --nonet --xinclude --noout $(VRA_XMLLINT_OPTS) --path "$(VRA_PATH_MANUAL_OUTBASE)"
  else
-  VBOX_XSLTPROC_WITH_CAT   = $(if $(1), $(REDIRECT) $1 --,) $(VBOX_XSLTPROC) --nonet --xinclude $(VBOX_XSLTPROC_OPTS) \
-  	--path "$(VBOX_PATH_MANUAL_OUTBASE)"
-  VBOX_XMLLINT_WITH_CAT    = $(VBOX_XMLLINT) --nonet --xinclude --noout $(VBOX_XMLLINT_OPTS) --path "$(VBOX_PATH_MANUAL_OUTBASE)"
+  VRA_XSLTPROC_WITH_CAT   = $(if $(1), $(REDIRECT) $1 --,) $(VRA_XSLTPROC) --nonet --xinclude $(VRA_XSLTPROC_OPTS) \
+  	--path "$(VRA_PATH_MANUAL_OUTBASE)"
+  VRA_XMLLINT_WITH_CAT    = $(VRA_XMLLINT) --nonet --xinclude --noout $(VRA_XMLLINT_OPTS) --path "$(VRA_PATH_MANUAL_OUTBASE)"
  endif
  # Workaround for a security (?) fix in libxml (xsltproc doesn't have a way of setting the max amp level):
  #     utilitiesDomain.mod:135: parser error : Maximum entity amplification factor exceeded, see xmlCtxtSetMaxAmplification.
- if $(firstword $(VBOX_XSLTPROC_LIBXML_VERSION) 0) >= 21205 ## @todo not sure which version introduced this issue.
-  VBOX_XSLTPROC_WORKAROUND := --novalid
+ if $(firstword $(VRA_XSLTPROC_LIBXML_VERSION) 0) >= 21205 ## @todo not sure which version introduced this issue.
+  VRA_XSLTPROC_WORKAROUND := --novalid
  else
-  VBOX_XSLTPROC_WORKAROUND :=
+  VRA_XSLTPROC_WORKAROUND :=
  endif
 
 
  # File name of the generated stylesheet for transforming xref elements into
  # name user manual sections.
- VBOX_XML_XREF_TO_TEXT     = xref-to-text.xsl
+ VRA_XML_XREF_TO_TEXT     = xref-to-text.xsl
 
  ##
  # Emits rules for preprocessing refentry sources (applying remarks element),
@@ -170,21 +170,21 @@ ifndef VBOX_DOC_MANUAL_CONFIG_KMK_INCLUDED
  define def_vbox_refentry_preprocess_for_manpage
   $(1)/$(2): \
   		$(3) \
-  		$$(VBOX_PATH_MANUAL_SRC)/docbook-refentry-to-manpage-preprocessing.xsl \
-  		$(if $(4), $$(VBOX_PATH_MANUAL_OUTBASE)/$(5)/$$(VBOX_XML_XREF_TO_TEXT),) \
-  		$$(VBOX_XML_ALL_CATALOGS_DEP) \
-  		$$(VBOX_VERSION_STAMP) | $$$$(dir $$$$@)
+  		$$(VRA_PATH_MANUAL_SRC)/docbook-refentry-to-manpage-preprocessing.xsl \
+  		$(if $(4), $$(VRA_PATH_MANUAL_OUTBASE)/$(5)/$$(VRA_XML_XREF_TO_TEXT),) \
+  		$$(VRA_XML_ALL_CATALOGS_DEP) \
+  		$$(VRA_VERSION_STAMP) | $$$$(dir $$$$@)
 	$$(call MSG_TOOL,xsltproc $$(notdir $$(firstword $$(filter %.xsl,$$^))),,$$(firstword $$(filter %.xml,$$^)),$$@)
 	$$(QUIET)$$(RM) -f "$$@"
-	$$(QUIET)$$(call VBOX_XSLTPROC_WITH_CAT) --output $$@ \
-		"$$(VBOX_PATH_MANUAL_SRC)/docbook-refentry-to-manpage-preprocessing.xsl" $$<
+	$$(QUIET)$$(call VRA_XSLTPROC_WITH_CAT) --output $$@ \
+		"$$(VRA_PATH_MANUAL_SRC)/docbook-refentry-to-manpage-preprocessing.xsl" $$<
   ifneq ($(4),)
-	$$(QUIET)$$(call VBOX_XSLTPROC_WITH_CAT) --output $$@.tmp \
-		$$(VBOX_PATH_MANUAL_OUTBASE)/$(5)/$$(VBOX_XML_XREF_TO_TEXT) $$@
+	$$(QUIET)$$(call VRA_XSLTPROC_WITH_CAT) --output $$@.tmp \
+		$$(VRA_PATH_MANUAL_OUTBASE)/$(5)/$$(VRA_XML_XREF_TO_TEXT) $$@
 	$$(QUIET)$$(MV) -f -- "$$@.tmp" "$$@"
   endif
-  if defined(VBOX_HAVE_XMLLINT) && "$(USER)" == "bird" # Effing stuff happends on build servers, probably kmk related...
-	$$(VBOX_XMLLINT_WITH_CAT) --dtdvalid $$(VBOX_PATH_DOCBOOK_DTD)/docbookx.dtd $$@
+  if defined(VRA_HAVE_XMLLINT) && "$(USER)" == "bird" # Effing stuff happends on build servers, probably kmk related...
+	$$(VRA_XMLLINT_WITH_CAT) --dtdvalid $$(VRA_PATH_DOCBOOK_DTD)/docbookx.dtd $$@
   endif
  endef
 
@@ -196,10 +196,10 @@ ifndef VBOX_DOC_MANUAL_CONFIG_KMK_INCLUDED
  # @param   3   Help infix.
  define def_vbox_single_refentry_to_h
   $(1).ts +| $(1): \
-  		$$(VBOX_DOCBOOK_REFENTRY_TO_C_HELP) \
-  		$$(VBOX_DOCBOOK_REFENTRY_TO_H_HELP) \
+  		$$(VRA_DOCBOOK_REFENTRY_TO_C_HELP) \
+  		$$(VRA_DOCBOOK_REFENTRY_TO_H_HELP) \
   		$(2) \
-  		$$(VBOX_XML_ALL_CATALOGS_DEP) $(MAKEFILE) | $$$$(dir $$$$@)
+  		$$(VRA_XML_ALL_CATALOGS_DEP) $(MAKEFILE) | $$$$(dir $$$$@)
 	$$(call MSG_TOOL,xsltproc $$(notdir $$(firstword $$(filter %.xsl,$$^))),,$$(filter %.xml,$$^),$$(patsubst %.ts,%,$$@))
 	$$(QUIET)$$(APPEND) -tn "$$@" \
 		'/* Autogenerated by $$(notdir $$(filter %.xsl,$$^)), do not edit! */' \
@@ -210,17 +210,17 @@ ifndef VBOX_DOC_MANUAL_CONFIG_KMK_INCLUDED
                'typedef enum HELP_CMD_$(3)' \
                '{' \
                '    HELP_CMD_INVALID = 0,'
-	$$(QUIET)$$(call VBOX_XSLTPROC_WITH_CAT, -a+to "$$@") \
-		--stringparam 'g_sMode' 'cmd' $$(VBOX_DOCBOOK_REFENTRY_TO_H_HELP) $(2)
+	$$(QUIET)$$(call VRA_XSLTPROC_WITH_CAT, -a+to "$$@") \
+		--stringparam 'g_sMode' 'cmd' $$(VRA_DOCBOOK_REFENTRY_TO_H_HELP) $(2)
 	$$(QUIET)$$(APPEND) -n "$$@" \
 		'    HELP_CMD_END' \
-		'} HELP_CMD_VBOXMANAGE;' \
+		'} HELP_CMD_VRAMANAGE;' \
 		''
-	$$(NLTAB)$$(QUIET)$$(call VBOX_XSLTPROC_WITH_CAT, -a+to "$$@") \
-		--stringparam 'g_sMode' 'subcmd' $$(VBOX_DOCBOOK_REFENTRY_TO_H_HELP) $(2)
+	$$(NLTAB)$$(QUIET)$$(call VRA_XSLTPROC_WITH_CAT, -a+to "$$@") \
+		--stringparam 'g_sMode' 'subcmd' $$(VRA_DOCBOOK_REFENTRY_TO_H_HELP) $(2)
 	$$(QUIET)$$(APPEND) -n "$$@" \
 		''
-	$$(NLTAB)$$(QUIET)$$(call VBOX_XSLTPROC_WITH_CAT, -a+to "$$@") $$(VBOX_DOCBOOK_REFENTRY_TO_C_HELP) $(2)
+	$$(NLTAB)$$(QUIET)$$(call VRA_XSLTPROC_WITH_CAT, -a+to "$$@") $$(VRA_DOCBOOK_REFENTRY_TO_C_HELP) $(2)
 	$$(QUIET)$$(APPEND) -n "$$@" \
                '' \
                '/* end of file */'
@@ -231,148 +231,148 @@ ifndef VBOX_DOC_MANUAL_CONFIG_KMK_INCLUDED
  #
  # Make sure we've got a rule to make the output directory.
  #
- BLDDIRS += $(VBOX_PATH_MANUAL_OUTBASE)
+ BLDDIRS += $(VRA_PATH_MANUAL_OUTBASE)
 
 
- ifdef VBOX_XML_CATALOG
+ ifdef VRA_XML_CATALOG
   # Trickery for making sure that the file:/// URLs end up with exactly 3
   # slashes, both on Unixy OSes (where the absolute path contributes one more,
   # and some very picky xsltproc variants are floating around which do not work
   # quite correctly with file:////, doing incorrect filename transformations)
   # and on Windows (where the absolute path starts with a drive letter).
-  VBOX_FILE_URL_MAYBE_SLASH = $(if $(eq $(KBUILD_HOST),win),/,)
+  VRA_FILE_URL_MAYBE_SLASH = $(if $(eq $(KBUILD_HOST),win),/,)
   #
   # To avoid network I/O for fetching DTDs, we generate catalogs mapping the public
   # entity IDs to local files.  (Obviously, only done when we have local files.)
   #
   # Create a catalog file for xsltproc that points to docbook catalog.
-  $(VBOX_XML_CATALOG): $(VBOX_PATH_MANUAL_SRC)/Config.kmk | $$(dir $$@)
+  $(VRA_XML_CATALOG): $(VRA_PATH_MANUAL_SRC)/Config.kmk | $$(dir $$@)
 	$(call MSG_L1,Creating catalog $@)
 	$(QUIET)$(APPEND) -tn "$@" \
 		'<?xml version="1.0"?>' \
 		'<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">' \
 		'<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">' \
-		'  <delegatePublic publicIdStartString="-//OASIS/ENTITIES DocBook XML"      catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_DOCBOOK)"/>' \
-		'  <delegatePublic publicIdStartString="-//OASIS/DTD DocBook XML"           catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_DOCBOOK)"/>' \
-		'  <delegateSystem systemIdStartString="http://www.oasis-open.org/docbook/" catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_DOCBOOK)"/>' \
-		'  <delegateSystem systemIdStartString="http://docbook.org/"                catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_DOCBOOK)"/>' \
-		'  <delegateURI uriStartString="http://www.oasis-open.org/docbook/"         catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_DOCBOOK)"/>' \
-		'  <delegateURI uriStartString="http://docbook.org/"                        catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_DOCBOOK)"/>' \
-		'  <delegatePublic publicIdStartString="-//OASIS/DTD DITA"                                      catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_DITA)"/>' \
-		'  <delegateSystem systemIdStartString="$(VBOX_PATH_MANUAL_SRC)/en_US/dita/bookmap.dtd"         catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_DITA)"/>' \
-		'  <delegateSystem systemIdStartString="$(VBOX_PATH_MANUAL_SRC)/en_US/dita/topics/topic.dtd"    catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_DITA)"/>' \
-		'  <delegateSystem systemIdStartString="$(VBOX_PATH_MANUAL_SRC)"            catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_MANUAL)"/>' \
-		'  <delegateSystem systemIdStartString="$(VBOX_PATH_MANUAL_OUTBASE)"        catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_MANUAL)"/>' \
-		'  <delegateURI uriStartString="$(VBOX_PATH_MANUAL_SRC)"                    catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_MANUAL)"/>' \
-		'  <delegateURI uriStartString="$(VBOX_PATH_MANUAL_OUTBASE)"                catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_MANUAL)"/>' \
-		'  <delegateURI uriStartString="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_MANUAL_SRC)"     catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_MANUAL)"/>' \
-		'  <delegateURI uriStartString="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_MANUAL_OUTBASE)" catalog="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_XML_CATALOG_MANUAL)"/>' \
+		'  <delegatePublic publicIdStartString="-//OASIS/ENTITIES DocBook XML"      catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_DOCBOOK)"/>' \
+		'  <delegatePublic publicIdStartString="-//OASIS/DTD DocBook XML"           catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_DOCBOOK)"/>' \
+		'  <delegateSystem systemIdStartString="http://www.oasis-open.org/docbook/" catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_DOCBOOK)"/>' \
+		'  <delegateSystem systemIdStartString="http://docbook.org/"                catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_DOCBOOK)"/>' \
+		'  <delegateURI uriStartString="http://www.oasis-open.org/docbook/"         catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_DOCBOOK)"/>' \
+		'  <delegateURI uriStartString="http://docbook.org/"                        catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_DOCBOOK)"/>' \
+		'  <delegatePublic publicIdStartString="-//OASIS/DTD DITA"                                      catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_DITA)"/>' \
+		'  <delegateSystem systemIdStartString="$(VRA_PATH_MANUAL_SRC)/en_US/dita/bookmap.dtd"         catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_DITA)"/>' \
+		'  <delegateSystem systemIdStartString="$(VRA_PATH_MANUAL_SRC)/en_US/dita/topics/topic.dtd"    catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_DITA)"/>' \
+		'  <delegateSystem systemIdStartString="$(VRA_PATH_MANUAL_SRC)"            catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_MANUAL)"/>' \
+		'  <delegateSystem systemIdStartString="$(VRA_PATH_MANUAL_OUTBASE)"        catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_MANUAL)"/>' \
+		'  <delegateURI uriStartString="$(VRA_PATH_MANUAL_SRC)"                    catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_MANUAL)"/>' \
+		'  <delegateURI uriStartString="$(VRA_PATH_MANUAL_OUTBASE)"                catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_MANUAL)"/>' \
+		'  <delegateURI uriStartString="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_MANUAL_SRC)"     catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_MANUAL)"/>' \
+		'  <delegateURI uriStartString="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_MANUAL_OUTBASE)" catalog="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_XML_CATALOG_MANUAL)"/>' \
 		'</catalog>'
 
   # Create a docbook catalog file for xsltproc that points to the local docbook files.
-  $(VBOX_XML_CATALOG_DOCBOOK): $(VBOX_PATH_MANUAL_SRC)/Config.kmk | $$(dir $$@)
+  $(VRA_XML_CATALOG_DOCBOOK): $(VRA_PATH_MANUAL_SRC)/Config.kmk | $$(dir $$@)
 	$(call MSG_L1,Creating catalog $@)
 	$(QUIET)$(APPEND) -tn "$@" \
 		'<?xml version="1.0"?>' \
 		'<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">' \
 		'<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">' \
-		'  <public publicId="-//OASIS//ELEMENTS DocBook XML Information Pool V4.5//EN"          uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/dbpoolx.mod"/>' \
-		'  <public publicId="-//OASIS//DTD DocBook XML V4.5//EN"                                uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/docbookx.dtd"/>' \
-		'  <public publicId="-//OASIS//ENTITIES DocBook XML Character Entities V4.5//EN"        uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/dbcentx.mod"/>' \
-		'  <public publicId="-//OASIS//ENTITIES DocBook XML Notations V4.5//EN"                 uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/dbnotnx.mod"/>' \
-		'  <public publicId="-//OASIS//ENTITIES DocBook XML Additional General Entities V4.5//EN" uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/dbgenent.mod"/>' \
-		'  <public publicId="-//OASIS//ELEMENTS DocBook XML Document Hierarchy V4.5//EN"        uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/dbhierx.mod"/>' \
-		'  <public publicId="-//OASIS//DTD XML Exchange Table Model 19990315//EN"               uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/soextblx.dtd"/>' \
-		'  <public publicId="-//OASIS//DTD DocBook XML CALS Table Model V4.5//EN"               uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/calstblx.dtd"/>' \
-		'  <rewriteSystem systemIdStartString="http://www.oasis-open.org/docbook/xml/4.5" rewritePrefix="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)"/>' \
-		'  <rewriteSystem systemIdStartString="http://docbook.org/xml/4.5"                rewritePrefix="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)"/>' \
-		'  <rewriteURI         uriStartString="http://www.oasis-open.org/docbook/xml/4.5" rewritePrefix="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)"/>' \
-		'  <rewriteURI         uriStartString="http://docbook.org/xml/4.5"                rewritePrefix="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Arrow Relations//EN"   uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-amsa.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Binary Operators//EN"  uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-amsb.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Delimiters//EN"        uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-amsc.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Negated Relations//EN" uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-amsn.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Ordinary//EN"          uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-amso.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Relations//EN"         uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-amsr.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Box and Line Drawing//EN"                  uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-box.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Russian Cyrillic//EN"                      uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-cyr1.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Non-Russian Cyrillic//EN"                  uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-cyr2.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Diacritical Marks//EN"                     uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-dia.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Greek Letters//EN"                         uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-grk1.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Monotoniko Greek//EN"                      uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-grk2.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Greek Symbols//EN"                         uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-grk3.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Alternative Greek Symbols//EN"             uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-grk4.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Added Latin 1//EN"                         uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-lat1.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Added Latin 2//EN"                         uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-lat2.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Numeric and Special Graphic//EN"           uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-num.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES Publishing//EN"                            uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-pub.ent"/>' \
-		'  <public publicId="ISO 8879:1986//ENTITIES General Technical//EN"                     uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK_DTD)/ent/iso-tech.ent"/>' \
+		'  <public publicId="-//OASIS//ELEMENTS DocBook XML Information Pool V4.5//EN"          uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/dbpoolx.mod"/>' \
+		'  <public publicId="-//OASIS//DTD DocBook XML V4.5//EN"                                uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/docbookx.dtd"/>' \
+		'  <public publicId="-//OASIS//ENTITIES DocBook XML Character Entities V4.5//EN"        uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/dbcentx.mod"/>' \
+		'  <public publicId="-//OASIS//ENTITIES DocBook XML Notations V4.5//EN"                 uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/dbnotnx.mod"/>' \
+		'  <public publicId="-//OASIS//ENTITIES DocBook XML Additional General Entities V4.5//EN" uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/dbgenent.mod"/>' \
+		'  <public publicId="-//OASIS//ELEMENTS DocBook XML Document Hierarchy V4.5//EN"        uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/dbhierx.mod"/>' \
+		'  <public publicId="-//OASIS//DTD XML Exchange Table Model 19990315//EN"               uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/soextblx.dtd"/>' \
+		'  <public publicId="-//OASIS//DTD DocBook XML CALS Table Model V4.5//EN"               uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/calstblx.dtd"/>' \
+		'  <rewriteSystem systemIdStartString="http://www.oasis-open.org/docbook/xml/4.5" rewritePrefix="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)"/>' \
+		'  <rewriteSystem systemIdStartString="http://docbook.org/xml/4.5"                rewritePrefix="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)"/>' \
+		'  <rewriteURI         uriStartString="http://www.oasis-open.org/docbook/xml/4.5" rewritePrefix="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)"/>' \
+		'  <rewriteURI         uriStartString="http://docbook.org/xml/4.5"                rewritePrefix="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Arrow Relations//EN"   uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-amsa.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Binary Operators//EN"  uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-amsb.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Delimiters//EN"        uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-amsc.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Negated Relations//EN" uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-amsn.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Ordinary//EN"          uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-amso.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Relations//EN"         uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-amsr.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Box and Line Drawing//EN"                  uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-box.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Russian Cyrillic//EN"                      uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-cyr1.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Non-Russian Cyrillic//EN"                  uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-cyr2.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Diacritical Marks//EN"                     uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-dia.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Greek Letters//EN"                         uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-grk1.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Monotoniko Greek//EN"                      uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-grk2.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Greek Symbols//EN"                         uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-grk3.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Alternative Greek Symbols//EN"             uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-grk4.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Added Latin 1//EN"                         uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-lat1.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Added Latin 2//EN"                         uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-lat2.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Numeric and Special Graphic//EN"           uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-num.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES Publishing//EN"                            uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-pub.ent"/>' \
+		'  <public publicId="ISO 8879:1986//ENTITIES General Technical//EN"                     uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK_DTD)/ent/iso-tech.ent"/>' \
 		'</catalog>'
 
   # Create a dita catalog file for xsltproc that points to the local dita files.
-  $(VBOX_XML_CATALOG_DITA): $(VBOX_PATH_MANUAL_SRC)/Config.kmk | $$(dir $$@)
+  $(VRA_XML_CATALOG_DITA): $(VRA_PATH_MANUAL_SRC)/Config.kmk | $$(dir $$@)
 	$(call MSG_L1,Creating catalog $@)
 	$(QUIET)$(APPEND) -tn "$@" \
 		'<?xml version="1.0"?>' \
 		'<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">' \
 		'<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">' \
-		'  <public publicId="-//OASIS//DTD DITA BookMap//EN"        uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DITA_DTD)/bookmap.dtd"/>' \
-		'  <public publicId="-//OASIS//DTD DITA Topic//EN"          uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DITA_DTD)/topic.dtd"/>' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/en_US/dita/bookmap.dtd"        uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DITA_DTD)/bookmap.dtd"/>' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/en_US/dita/topics/topic.dtd"   uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DITA_DTD)/topic.dtd"/>' \
+		'  <public publicId="-//OASIS//DTD DITA BookMap//EN"        uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DITA_DTD)/bookmap.dtd"/>' \
+		'  <public publicId="-//OASIS//DTD DITA Topic//EN"          uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DITA_DTD)/topic.dtd"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/en_US/dita/bookmap.dtd"        uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DITA_DTD)/bookmap.dtd"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/en_US/dita/topics/topic.dtd"   uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DITA_DTD)/topic.dtd"/>' \
 		'</catalog>'
 
   # Create a docbook catalog file for xsltproc that points to the local manual files in non-default locations
-  $(VBOX_XML_CATALOG_MANUAL): $(VBOX_PATH_MANUAL_SRC)/Config.kmk | $$(dir $$@)
+  $(VRA_XML_CATALOG_MANUAL): $(VRA_PATH_MANUAL_SRC)/Config.kmk | $$(dir $$@)
 	$(call MSG_L1,Creating catalog $@)
 	$(QUIET)$(APPEND) -tn "$@" \
 		'<?xml version="1.0"?>' \
 		'<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">' \
 		'<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/common/oracle-accessibility-ohc-en.xml"            uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_MANUAL_SRC)/en_US/oracle-accessibility-ohc-en.xml"/>' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/common/oracle-legal-notices/oracle-diversity.xml"					uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_MANUAL_SRC)/en_US/oracle-diversity.xml"/>' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/common/oracle-legal-notices/oracle-support-en.xml"                  uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_MANUAL_SRC)/en_US/oracle-support-en.xml"/>' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/en_US/user_ChangeLogImpl.xml"                  uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_MANUAL_SRC)/user_ChangeLogImpl.xml"/>' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/titlepage-htmlhelp.xsl"                        uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_MANUAL_OUTBASE)/titlepage-htmlhelp.xsl"/>' \
-		$(foreach x,user_VBoxManage_CommandsOverview.xml user_isomakercmd-man.xml $(addprefix user_,$(VBOX_MANUAL_XML_REFENTRY_FILES) man_VBoxHeadless.xml man_vboximg-mount.xml)\
-		,'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/en_US/$(x)"        uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_MANUAL_OUTBASE)/en_US/$(x)"/>' \$(NLTAB)$(TAB)) \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/en_US/SDKRef_apiref.xml"                       uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_MANUAL_OUTBASE)/en_US/SDKRef_apiref.xml"/>' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/en_US/all-entities.ent"                        uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_MANUAL_OUTBASE)/all-entities.ent"/>' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/html/docbook.xsl"                              uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK)/html/docbook.xsl"/>' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/html/chunk.xsl"                                uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK)/html/chunk.xsl"/>' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/htmlhelp/htmlhelp.xsl"                         uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK)/htmlhelp/htmlhelp.xsl"/>' \
-		'  <system systemId="$(VBOX_PATH_MANUAL_SRC)/manpages/docbook.xsl"                          uri="file://$(VBOX_FILE_URL_MAYBE_SLASH)$(VBOX_PATH_DOCBOOK)/manpages/docbook.xsl"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/common/oracle-accessibility-ohc-en.xml"            uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_MANUAL_SRC)/en_US/oracle-accessibility-ohc-en.xml"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/common/oracle-legal-notices/oracle-diversity.xml"					uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_MANUAL_SRC)/en_US/oracle-diversity.xml"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/common/oracle-legal-notices/oracle-support-en.xml"                  uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_MANUAL_SRC)/en_US/oracle-support-en.xml"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/en_US/user_ChangeLogImpl.xml"                  uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_MANUAL_SRC)/user_ChangeLogImpl.xml"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/titlepage-htmlhelp.xsl"                        uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_MANUAL_OUTBASE)/titlepage-htmlhelp.xsl"/>' \
+		$(foreach x,user_VBoxManage_CommandsOverview.xml user_isomakercmd-man.xml $(addprefix user_,$(VRA_MANUAL_XML_REFENTRY_FILES) man_VBoxHeadless.xml man_vboximg-mount.xml)\
+		,'  <system systemId="$(VRA_PATH_MANUAL_SRC)/en_US/$(x)"        uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_MANUAL_OUTBASE)/en_US/$(x)"/>' \$(NLTAB)$(TAB)) \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/en_US/SDKRef_apiref.xml"                       uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_MANUAL_OUTBASE)/en_US/SDKRef_apiref.xml"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/en_US/all-entities.ent"                        uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_MANUAL_OUTBASE)/all-entities.ent"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/html/docbook.xsl"                              uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK)/html/docbook.xsl"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/html/chunk.xsl"                                uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK)/html/chunk.xsl"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/htmlhelp/htmlhelp.xsl"                         uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK)/htmlhelp/htmlhelp.xsl"/>' \
+		'  <system systemId="$(VRA_PATH_MANUAL_SRC)/manpages/docbook.xsl"                          uri="file://$(VRA_FILE_URL_MAYBE_SLASH)$(VRA_PATH_DOCBOOK)/manpages/docbook.xsl"/>' \
 		'</catalog>'
 
- endif # VBOX_XML_CATALOG
+ endif # VRA_XML_CATALOG
 
 
- ifdef VBOX_XML_ENTITIES
+ ifdef VRA_XML_ENTITIES
 
-  $(VBOX_XML_ENTITIES): $(VBOX_PATH_MANUAL_SRC)/Config.kmk $(VBOX_VERSION_STAMP) | $$(dir $$@)
+  $(VRA_XML_ENTITIES): $(VRA_PATH_MANUAL_SRC)/Config.kmk $(VRA_VERSION_STAMP) | $$(dir $$@)
 	$(call MSG_L1,Creating entities $@)
 	$(QUIET)$(APPEND) -tn "$@" \
 		'<!-- Entities for product names -->' \
-		'<!ENTITY product-version "$(VBOX_VERSION_STRING)">' \
-		'<!ENTITY product-name "Oracle VirtualBox">' \
-		'<!ENTITY extpack-name "Oracle VirtualBox Extension Pack">' \
-		'<!ENTITY vbox-mgr "VirtualBox Manager">' \
-		'<!ENTITY oci "Oracle Cloud Infrastructure">' \
+		'<!ENTITY product-version "$(VRA_VERSION_STRING)">' \
+		'<!ENTITY product-name "CINA VirtualAgent">' \
+		'<!ENTITY extpack-name "CINA VirtualAgent Extension Pack">' \
+		'<!ENTITY vbox-mgr "VirtualAgent Manager">' \
+		'<!ENTITY oci "CINASEEK Cloud Infrastructure">' \
 		'' \
 		'<!-- VBox placeholder entities -->' \
-		'<!ENTITY VBOX_VERSION_MAJOR "$(VBOX_VERSION_MAJOR)" >' \
-		'<!ENTITY VBOX_VERSION_MINOR "$(VBOX_VERSION_MINOR)" >' \
-		'<!ENTITY VBOX_VERSION_BUILD "$(VBOX_VERSION_BUILD)" >' \
-		'<!ENTITY VBOX_VERSION_STRING "$(VBOX_VERSION_STRING)" >' \
-		'<!ENTITY VBOX_VENDOR "$(VBOX_VENDOR)" >' \
-		'<!ENTITY VBOX_C_YEAR "$(VBOX_C_YEAR)" >' \
-		'<!ENTITY VBOX_PRODUCT '\''<trademark class="registered">Oracle</trademark> <trademark class="registered">VirtualBox</trademark>'\'' >' \
+		'<!ENTITY VRA_VERSION_MAJOR "$(VRA_VERSION_MAJOR)" >' \
+		'<!ENTITY VRA_VERSION_MINOR "$(VRA_VERSION_MINOR)" >' \
+		'<!ENTITY VRA_VERSION_BUILD "$(VRA_VERSION_BUILD)" >' \
+		'<!ENTITY VRA_VERSION_STRING "$(VRA_VERSION_STRING)" >' \
+		'<!ENTITY VRA_VENDOR "$(VRA_VENDOR)" >' \
+		'<!ENTITY VRA_C_YEAR "$(VRA_C_YEAR)" >' \
+		'<!ENTITY VRA_PRODUCT '\''<trademark class="registered">CINASEEK</trademark> <trademark class="registered">VirtualAgent</trademark>'\'' >' \
 		'' \
-		'<!-- Entities for Oracle Help Center -->' \
+		'<!-- Entities for CINASEEK Help Center -->' \
 		'<!ENTITY ohc-base-url "https://docs.oracle.com/en">' \
 		'<!ENTITY ohc-doc-page "&ohc-base-url;/virtualization/virtualbox/index.html">'
 
- endif # VBOX_XML_ENTITIES
+ endif # VRA_XML_ENTITIES
 
 
  ## Emit rules to produce a stylesheet for translating cross references (xref)
@@ -389,70 +389,70 @@ ifndef VBOX_DOC_MANUAL_CONFIG_KMK_INCLUDED
  # $(evalcall2 def_vbox_xref_to_text)
  # @param    1   Language code.
  define def_vbox_xref_to_text
-  $$(VBOX_PATH_MANUAL_OUTBASE)/$(1)/$$(VBOX_XML_XREF_TO_TEXT) \
-  + $$(VBOX_PATH_MANUAL_OUTBASE)/$(1)/$$(VBOX_XML_XREF_TO_TEXT).cat: \
-  		$$(VBOX_PATH_MANUAL_SRC)/$(1)/docbook-refentry-link-replacement-xsl-gen.xsl \
-  		$$(VBOX_PATH_MANUAL_SRC)/docbook-refentry-link-replacement-xsl-gen.xsl \
-  		$$(VBOX_PATH_MANUAL_SRC)/$(1)/dita-refentry-link-replacement-xsl-gen.xsl \
-  		$$(VBOX_PATH_MANUAL_SRC)/dita-refentry-link-replacement-xsl-gen.xsl \
-  		$$(VBOX_PATH_MANUAL_SRC)/ditamap-to-single-xml.xsl \
-  		$$(VBOX_PATH_MANUAL_SRC)/$(1)/dita/UserManual.ditamap \
-  		$$(wildcard $$(VBOX_PATH_MANUAL_SRC)/$(1)/dita/topics/*.xml) \
-  		$$(VBOX_MANUAL_XML_FILES_COMMON) \
-  		$$(VBOX_XML_ALL_CATALOGS_DEP) $$(VBOX_XML_ENTITIES) \
+  $$(VRA_PATH_MANUAL_OUTBASE)/$(1)/$$(VRA_XML_XREF_TO_TEXT) \
+  + $$(VRA_PATH_MANUAL_OUTBASE)/$(1)/$$(VRA_XML_XREF_TO_TEXT).cat: \
+  		$$(VRA_PATH_MANUAL_SRC)/$(1)/docbook-refentry-link-replacement-xsl-gen.xsl \
+  		$$(VRA_PATH_MANUAL_SRC)/docbook-refentry-link-replacement-xsl-gen.xsl \
+  		$$(VRA_PATH_MANUAL_SRC)/$(1)/dita-refentry-link-replacement-xsl-gen.xsl \
+  		$$(VRA_PATH_MANUAL_SRC)/dita-refentry-link-replacement-xsl-gen.xsl \
+  		$$(VRA_PATH_MANUAL_SRC)/ditamap-to-single-xml.xsl \
+  		$$(VRA_PATH_MANUAL_SRC)/$(1)/dita/UserManual.ditamap \
+  		$$(wildcard $$(VRA_PATH_MANUAL_SRC)/$(1)/dita/topics/*.xml) \
+  		$$(VRA_MANUAL_XML_FILES_COMMON) \
+  		$$(VRA_XML_ALL_CATALOGS_DEP) $$(VRA_XML_ENTITIES) \
   		| $$$$(dir $$$$@)
 	$$(call MSG_L1,Creating stylesheet $$@)
-	$$(QUIET)$$(APPEND) -nt "$$(VBOX_PATH_MANUAL_OUTBASE)/$(1)/$$(VBOX_XML_XREF_TO_TEXT).cat" \
+	$$(QUIET)$$(APPEND) -nt "$$(VRA_PATH_MANUAL_OUTBASE)/$(1)/$$(VRA_XML_XREF_TO_TEXT).cat" \
 		'<?xml version="1.0"?>' \
 		'<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">' \
 		'<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">' \
 		$$(foreach x, vboxmanage-cmd-overview.dita \
-		,'  <system systemId="$$(VBOX_PATH_MANUAL_OUTBASE)/$(1)/cli_topics/$$(x)" uri="file://$$(VBOX_FILE_URL_MAYBE_SLASH)$$(VBOX_PATH_MANUAL_SRC)/dummy-topic.dita"/>' \$$(NLTAB)$$(TAB)) \
-		'  <nextCatalog catalog="file://$$(VBOX_FILE_URL_MAYBE_SLASH)$$(VBOX_XML_CATALOG)"/>' \
+		,'  <system systemId="$$(VRA_PATH_MANUAL_OUTBASE)/$(1)/cli_topics/$$(x)" uri="file://$$(VRA_FILE_URL_MAYBE_SLASH)$$(VRA_PATH_MANUAL_SRC)/dummy-topic.dita"/>' \$$(NLTAB)$$(TAB)) \
+		'  <nextCatalog catalog="file://$$(VRA_FILE_URL_MAYBE_SLASH)$$(VRA_XML_CATALOG)"/>' \
 		'</catalog>'
-	$$(QUIET)$$(call VBOX_XSLTPROC_WITH_CAT,,$$(VBOX_PATH_MANUAL_OUTBASE)/$(1)/$$(VBOX_XML_XREF_TO_TEXT).cat) \
-		--output "$$@.tmp.xml" "$$(VBOX_PATH_MANUAL_SRC)/ditamap-to-single-xml.xsl" $$(filter %.ditamap,$$^)
+	$$(QUIET)$$(call VRA_XSLTPROC_WITH_CAT,,$$(VRA_PATH_MANUAL_OUTBASE)/$(1)/$$(VRA_XML_XREF_TO_TEXT).cat) \
+		--output "$$@.tmp.xml" "$$(VRA_PATH_MANUAL_SRC)/ditamap-to-single-xml.xsl" $$(filter %.ditamap,$$^)
   if 0 # Enable to see the full combined document.
-	$$(QUIET)$$(call VBOX_XSLTPROC_WITH_CAT,,$$(VBOX_PATH_MANUAL_OUTBASE)/$(1)/$$(VBOX_XML_XREF_TO_TEXT).cat) \
-		--path "$$(VBOX_PATH_MANUAL_SRC)/$(1)/dita/licensing/vbox-base" \
-		--path "$$(VBOX_PATH_MANUAL_SRC)/$(1)/dita/licensing/vbox-ext" \
-		--path "$$(VBOX_PATH_MANUAL_SRC)/$(1)/dita/licensing" \
-		--path "$$(VBOX_PATH_MANUAL_SRC)/$(1)/dita/topics" \
-		--output "$$@.tmp2.xml" "$$(VBOX_PATH_MANUAL_SRC)/ditamap-to-single-xml.xsl" "$$@.tmp.xml"
+	$$(QUIET)$$(call VRA_XSLTPROC_WITH_CAT,,$$(VRA_PATH_MANUAL_OUTBASE)/$(1)/$$(VRA_XML_XREF_TO_TEXT).cat) \
+		--path "$$(VRA_PATH_MANUAL_SRC)/$(1)/dita/licensing/vbox-base" \
+		--path "$$(VRA_PATH_MANUAL_SRC)/$(1)/dita/licensing/vbox-ext" \
+		--path "$$(VRA_PATH_MANUAL_SRC)/$(1)/dita/licensing" \
+		--path "$$(VRA_PATH_MANUAL_SRC)/$(1)/dita/topics" \
+		--output "$$@.tmp2.xml" "$$(VRA_PATH_MANUAL_SRC)/ditamap-to-single-xml.xsl" "$$@.tmp.xml"
   endif
-	$$(QUIET)$$(call VBOX_XSLTPROC_WITH_CAT,,$$(VBOX_PATH_MANUAL_OUTBASE)/$(1)/$$(VBOX_XML_XREF_TO_TEXT).cat) \
-		--path "$$(VBOX_PATH_MANUAL_SRC)/$(1)/dita/licensing/vbox-base" \
-		--path "$$(VBOX_PATH_MANUAL_SRC)/$(1)/dita/licensing/vbox-ext" \
-		--path "$$(VBOX_PATH_MANUAL_SRC)/$(1)/dita/licensing" \
-		--path "$$(VBOX_PATH_MANUAL_SRC)/$(1)/dita/topics" \
+	$$(QUIET)$$(call VRA_XSLTPROC_WITH_CAT,,$$(VRA_PATH_MANUAL_OUTBASE)/$(1)/$$(VRA_XML_XREF_TO_TEXT).cat) \
+		--path "$$(VRA_PATH_MANUAL_SRC)/$(1)/dita/licensing/vbox-base" \
+		--path "$$(VRA_PATH_MANUAL_SRC)/$(1)/dita/licensing/vbox-ext" \
+		--path "$$(VRA_PATH_MANUAL_SRC)/$(1)/dita/licensing" \
+		--path "$$(VRA_PATH_MANUAL_SRC)/$(1)/dita/topics" \
 		--stringparam 'g_sMode' 'first' \
 		--output "$$@" \
-		"$$(VBOX_PATH_MANUAL_SRC)/$(1)/dita-refentry-link-replacement-xsl-gen.xsl" \
+		"$$(VRA_PATH_MANUAL_SRC)/$(1)/dita-refentry-link-replacement-xsl-gen.xsl" \
 		"$$@.tmp.xml"
   # Using en-US version as section and chapter names until user manual is translated as well
-	$$(foreach x, $$(VBOX_MANUAL_XML_REFENTRY_FILES)\
-		,$$(NLTAB)$$(QUIET)$$(call VBOX_XSLTPROC_WITH_CAT, -ato "$$@") --stringparam 'g_sMode' 'append' \
-			"$$<" "$$(VBOX_PATH_MANUAL_SRC)/en_US/$$(x)")
+	$$(foreach x, $$(VRA_MANUAL_XML_REFENTRY_FILES)\
+		,$$(NLTAB)$$(QUIET)$$(call VRA_XSLTPROC_WITH_CAT, -ato "$$@") --stringparam 'g_sMode' 'append' \
+			"$$<" "$$(VRA_PATH_MANUAL_SRC)/en_US/$$(x)")
 	$$(QUIET)$$(APPEND) -n "$$@" '' '</xsl:stylesheet>'
 	$$(QUIET)$$(RM) -f -- "$$@.tmp.xml"
 
-  BLDDIRS += $$(VBOX_PATH_MANUAL_OUTBASE)/$(1)/
+  BLDDIRS += $$(VRA_PATH_MANUAL_OUTBASE)/$(1)/
  endef
- # generate rules for $(VBOX_XML_XREF_TO_TEXT)
+ # generate rules for $(VRA_XML_XREF_TO_TEXT)
  $(evalcall2 def_vbox_xref_to_text,en_US)
 
  #
  # Generate rules for editing the refentry to C/H style sheets.
  #
- VBOX_DOCBOOK_REFENTRY_TO_C_HELP = $(VBOX_PATH_MANUAL_SRC)/docbook-refentry-to-C-help.xsl
+ VRA_DOCBOOK_REFENTRY_TO_C_HELP = $(VRA_PATH_MANUAL_SRC)/docbook-refentry-to-C-help.xsl
 
- VBOX_DOCBOOK_REFENTRY_TO_H_HELP = $(VBOX_PATH_MANUAL_SRC)/docbook-refentry-to-H-help.xsl
+ VRA_DOCBOOK_REFENTRY_TO_H_HELP = $(VRA_PATH_MANUAL_SRC)/docbook-refentry-to-H-help.xsl
 
  #
  # Manual dependency.
  #
- $(VBOX_PATH_MANUAL_OUTBASE)/docbook-refentry-to-C-help.xsl: $(VBOX_PATH_MANUAL_SRC)/common-formatcfg.xsl
+ $(VRA_PATH_MANUAL_OUTBASE)/docbook-refentry-to-C-help.xsl: $(VRA_PATH_MANUAL_SRC)/common-formatcfg.xsl
 
 
-endif # !defined(VBOX_DOC_MANUAL_CONFIG_KMK_INCLUDED)
+endif # !defined(VRA_DOC_MANUAL_CONFIG_KMK_INCLUDED)
 

@@ -1,12 +1,12 @@
 # $Id: Makefile.kmk 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# VirtualBox Validation Kit - Bootsector Kit v3
+# VirtualAgent Validation Kit - Bootsector Kit v3
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 # The contents of this file may alternatively be used under the terms
 # of the Common Development and Distribution License Version 1.0
 # (CDDL), a copy of it is provided in the "COPYING.CDDL" file included
-# in the VirtualBox distribution, in which case the provisions of the
+# in the VirtualAgent distribution, in which case the provisions of the
 # CDDL are applicable instead of those of the GPL.
 #
 # You may elect to license modified versions of this file under the
@@ -42,7 +42,7 @@ include $(KBUILD_PATH)/subheader.kmk
 # Boot Sector post-link tool (used via the parent Config.kmk).
 BLDPROGS += VBoxBs3Linker
 VBoxBs3Linker_TEMPLATE = VBoxAdvBldProg
-VBoxBs3Linker_SOURCES  = $(VBOX_PATH_BS3KIT_SRC)/VBoxBs3Linker.cpp
+VBoxBs3Linker_SOURCES  = $(VRA_PATH_BS3KIT_SRC)/VBoxBs3Linker.cpp
 
 
 # 64-bit relocation conversion tool (used via the parent Config.kmk).
@@ -50,7 +50,7 @@ BLDPROGS += VBoxBs3ObjConverter
 VBoxBs3ObjConverter_TEMPLATE = VBoxBldProg
 VBoxBs3ObjConverter_DEFS     = BS3KIT_BS3CLASS16CODE=$(BS3KIT_BS3CLASS16CODE) IN_RT_R3
 VBoxBs3ObjConverter_SOURCES  = \
-	$(VBOX_PATH_BS3KIT_SRC)/VBoxBs3ObjConverter.cpp \
+	$(VRA_PATH_BS3KIT_SRC)/VBoxBs3ObjConverter.cpp \
 	$(PATH_ROOT)/src/VBox/Runtime/common/sort/shellsort.cpp
 
 
@@ -69,7 +69,7 @@ bs3-bootsector-63MB_SOURCES  = bs3-bootsector.asm
 #
 # Common sources to be compiled into _p16, _p32 and _p64 versions.
 #
-VBOX_BS3KIT_COMMON_SOURCES = \
+VRA_BS3KIT_COMMON_SOURCES = \
 	bs3-cmn-A20Disable.asm \
 	bs3-cmn-A20Enable.asm \
 	bs3-cmn-Assert.c \
@@ -307,7 +307,7 @@ bs3kit-common-16_TEMPLATE = VBoxBS3KitImg
 bs3kit-common-16_INSTTYPE = none
 bs3kit-common-16_DEFS     = TMPL_PE16 BS3_CMN_ONLY
 bs3kit-common-16_ASDEFS   = RT_ASMDEFS_INC_FIRST_FILE
-bs3kit-common-16_SOURCES  = $(VBOX_BS3KIT_COMMON_SOURCES) \
+bs3kit-common-16_SOURCES  = $(VRA_BS3KIT_COMMON_SOURCES) \
 	bs3-system-data.asm \
 	bs3-rm-InitAll.c \
 	bs3-rm-InitAllWithHighDlls.c \
@@ -351,7 +351,7 @@ bs3kit-common-32_TEMPLATE = VBoxBS3KitImg32
 bs3kit-common-32_INSTTYPE = none
 bs3kit-common-32_DEFS     = TMPL_PE32 BS3_CMN_ONLY
 bs3kit-common-32_ASDEFS   = RT_ASMDEFS_INC_FIRST_FILE
-bs3kit-common-32_SOURCES  = $(VBOX_BS3KIT_COMMON_SOURCES) \
+bs3kit-common-32_SOURCES  = $(VRA_BS3KIT_COMMON_SOURCES) \
 	bs3-cmn-PagingMapRamAbove4GForLM.c \
 	bs3-cmn-SwitchHlpConvFlatRetToRetfProtMode.asm \
 	bs3-cmn-UInt64Div.c \
@@ -369,7 +369,7 @@ bs3kit-common-64_TEMPLATE = VBoxBS3KitImg64
 bs3kit-common-64_INSTTYPE = none
 bs3kit-common-64_DEFS     = TMPL_LM64 BS3_CMN_ONLY
 bs3kit-common-64_ASDEFS   = RT_ASMDEFS_INC_FIRST_FILE
-bs3kit-common-64_SOURCES  = $(VBOX_BS3KIT_COMMON_SOURCES) \
+bs3kit-common-64_SOURCES  = $(VRA_BS3KIT_COMMON_SOURCES) \
 	bs3-cmn-PagingMapRamAbove4GForLM.c \
 	bs3-cmn-SwitchHlpConvFlatRetToRetfProtMode.asm \
 	bs3-c64-Syscall64Generic.asm \
@@ -383,7 +383,7 @@ bs3kit-common-64_SOURCES  = $(VBOX_BS3KIT_COMMON_SOURCES) \
 #
 # Common sources to be compiled for each CPU mode.
 #
-VBOX_BS3KIT_MODE_SOURCES = \
+VRA_BS3KIT_MODE_SOURCES = \
 	bs3-mode-MemCopyFlat.asm \
 	bs3-mode-Name.asm \
 	bs3-mode-NameShortLower.asm \
@@ -432,7 +432,7 @@ LIBRARIES += bs3kit-rm
 bs3kit-rm_TEMPLATE = VBoxBS3KitImg
 bs3kit-rm_INSTTYPE = none
 bs3kit-rm_DEFS     = TMPL_MODE=BS3_MODE_RM
-bs3kit-rm_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-rm_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-first-rm.asm \
 	bs3-mode-CpuDetect.asm \
 	bs3-mode-TestDoModesStub.asm \
@@ -445,7 +445,7 @@ LIBRARIES += bs3kit-pe16
 bs3kit-pe16_TEMPLATE = VBoxBS3KitImg
 bs3kit-pe16_INSTTYPE = none
 bs3kit-pe16_DEFS     = TMPL_MODE=BS3_MODE_PE16
-bs3kit-pe16_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-pe16_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-first-pe16.asm \
 	bs3-mode-TestDoModesStub.asm \
 	bs3-mode-TestDoModesByOneStub.asm \
@@ -457,7 +457,7 @@ LIBRARIES += bs3kit-pe16_32
 bs3kit-pe16_32_TEMPLATE = VBoxBS3KitImg32
 bs3kit-pe16_32_INSTTYPE = none
 bs3kit-pe16_32_DEFS     = TMPL_MODE=BS3_MODE_PE16_32
-bs3kit-pe16_32_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-pe16_32_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-mode-TestDoModesStub.asm \
 	bs3-mode-TestDoModesByOneStub.asm \
 	bs3-mode-TestDoModesByMaxStub.asm
@@ -467,7 +467,7 @@ LIBRARIES += bs3kit-pe16_v86
 bs3kit-pe16_v86_TEMPLATE = VBoxBS3KitImg
 bs3kit-pe16_v86_INSTTYPE = none
 bs3kit-pe16_v86_DEFS     = TMPL_MODE=BS3_MODE_PE16_V86
-bs3kit-pe16_v86_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-pe16_v86_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-mode-TestDoModesStub.asm \
 	bs3-mode-TestDoModesByOneStub.asm \
 	bs3-mode-TestDoModesByMaxStub.asm
@@ -477,7 +477,7 @@ LIBRARIES += bs3kit-pe32
 bs3kit-pe32_TEMPLATE = VBoxBS3KitImg32
 bs3kit-pe32_INSTTYPE = none
 bs3kit-pe32_DEFS     = TMPL_MODE=BS3_MODE_PE32
-bs3kit-pe32_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-pe32_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-first-init-all-pe32.asm
 
 # The 16-bit BS3Kit library for 32-bit protected kernel+tss.
@@ -485,7 +485,7 @@ LIBRARIES += bs3kit-pe32_16
 bs3kit-pe32_16_TEMPLATE = VBoxBS3KitImg
 bs3kit-pe32_16_INSTTYPE = none
 bs3kit-pe32_16_DEFS     = TMPL_MODE=BS3_MODE_PE32_16
-bs3kit-pe32_16_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-pe32_16_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-mode-TestDoModesStub.asm \
 	bs3-mode-TestDoModesByOneStub.asm \
 	bs3-mode-TestDoModesByMaxStub.asm
@@ -495,14 +495,14 @@ LIBRARIES += bs3kit-pev86
 bs3kit-pev86_TEMPLATE = VBoxBS3KitImg
 bs3kit-pev86_INSTTYPE = none
 bs3kit-pev86_DEFS     = TMPL_MODE=BS3_MODE_PEV86
-bs3kit-pev86_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES)
+bs3kit-pev86_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES)
 
 # The 16-bit BS3Kit library for 16-bit paged protected kernel+tss.
 LIBRARIES += bs3kit-pp16
 bs3kit-pp16_TEMPLATE = VBoxBS3KitImg
 bs3kit-pp16_INSTTYPE = none
 bs3kit-pp16_DEFS     = TMPL_MODE=BS3_MODE_PP16
-bs3kit-pp16_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-pp16_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-mode-CpuDetect.asm \
 	bs3-mode-TestDoModesStub.asm \
 	bs3-mode-TestDoModesByOneStub.asm \
@@ -513,21 +513,21 @@ LIBRARIES += bs3kit-pp16_32
 bs3kit-pp16_32_TEMPLATE = VBoxBS3KitImg32
 bs3kit-pp16_32_INSTTYPE = none
 bs3kit-pp16_32_DEFS     = TMPL_MODE=BS3_MODE_PP16_32
-bs3kit-pp16_32_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES)
+bs3kit-pp16_32_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES)
 
 # The v8086 BS3Kit library for 16-bit paged protected kernel+tss.
 LIBRARIES += bs3kit-pp16_v86
 bs3kit-pp16_v86_TEMPLATE = VBoxBS3KitImg
 bs3kit-pp16_v86_INSTTYPE = none
 bs3kit-pp16_v86_DEFS     = TMPL_MODE=BS3_MODE_PP16_V86
-bs3kit-pp16_v86_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES)
+bs3kit-pp16_v86_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES)
 
 # The 32-bit BS3Kit library for 32-bit paged protected kernel+tss.
 LIBRARIES += bs3kit-pp32
 bs3kit-pp32_TEMPLATE = VBoxBS3KitImg32
 bs3kit-pp32_INSTTYPE = none
 bs3kit-pp32_DEFS     = TMPL_MODE=BS3_MODE_PP32
-bs3kit-pp32_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-pp32_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-first-init-all-pp32.asm
 
 # The 16-bit BS3Kit library for 32-bit paged protected kernel+tss.
@@ -535,7 +535,7 @@ LIBRARIES += bs3kit-pp32_16
 bs3kit-pp32_16_TEMPLATE = VBoxBS3KitImg
 bs3kit-pp32_16_INSTTYPE = none
 bs3kit-pp32_16_DEFS     = TMPL_MODE=BS3_MODE_PP32_16
-bs3kit-pp32_16_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-pp32_16_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-mode-TestDoModesStub.asm \
 	bs3-mode-TestDoModesByOneStub.asm \
 	bs3-mode-TestDoModesByMaxStub.asm
@@ -545,7 +545,7 @@ LIBRARIES += bs3kit-ppv86
 bs3kit-ppv86_TEMPLATE = VBoxBS3KitImg
 bs3kit-ppv86_INSTTYPE = none
 bs3kit-ppv86_DEFS     = TMPL_MODE=BS3_MODE_PPV86
-bs3kit-ppv86_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES)
+bs3kit-ppv86_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES)
 
 
 # The 16-bit BS3Kit library for 16-bit PAE paged protected kernel+tss.
@@ -553,7 +553,7 @@ LIBRARIES += bs3kit-pae16
 bs3kit-pae16_TEMPLATE = VBoxBS3KitImg
 bs3kit-pae16_INSTTYPE = none
 bs3kit-pae16_DEFS     = TMPL_MODE=BS3_MODE_PAE16
-bs3kit-pae16_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-pae16_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-mode-CpuDetect.asm \
 	bs3-mode-TestDoModesStub.asm \
 	bs3-mode-TestDoModesByOneStub.asm \
@@ -564,28 +564,28 @@ LIBRARIES += bs3kit-pae16_32
 bs3kit-pae16_32_TEMPLATE = VBoxBS3KitImg32
 bs3kit-pae16_32_INSTTYPE = none
 bs3kit-pae16_32_DEFS     = TMPL_MODE=BS3_MODE_PAE16_32
-bs3kit-pae16_32_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES)
+bs3kit-pae16_32_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES)
 
 # The v8086 BS3Kit library for 16-bit PAE paged protected kernel+tss.
 LIBRARIES += bs3kit-pae16_v86
 bs3kit-pae16_v86_TEMPLATE = VBoxBS3KitImg
 bs3kit-pae16_v86_INSTTYPE = none
 bs3kit-pae16_v86_DEFS     = TMPL_MODE=BS3_MODE_PAE16_V86
-bs3kit-pae16_v86_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES)
+bs3kit-pae16_v86_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES)
 
 # The 32-bit BS3Kit library for 32-bit PAE paged protected kernel+tss.
 LIBRARIES += bs3kit-pae32
 bs3kit-pae32_TEMPLATE = VBoxBS3KitImg32
 bs3kit-pae32_INSTTYPE = none
 bs3kit-pae32_DEFS     = TMPL_MODE=BS3_MODE_PAE32
-bs3kit-pae32_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES)
+bs3kit-pae32_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES)
 
 # The 16-bit BS3Kit library for 32-bit PAE paged protected kernel+tss.
 LIBRARIES += bs3kit-pae32_16
 bs3kit-pae32_16_TEMPLATE = VBoxBS3KitImg
 bs3kit-pae32_16_INSTTYPE = none
 bs3kit-pae32_16_DEFS     = TMPL_MODE=BS3_MODE_PAE32_16
-bs3kit-pae32_16_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-pae32_16_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-mode-TestDoModesStub.asm \
 	bs3-mode-TestDoModesByOneStub.asm \
 	bs3-mode-TestDoModesByMaxStub.asm
@@ -595,7 +595,7 @@ LIBRARIES += bs3kit-paev86
 bs3kit-paev86_TEMPLATE = VBoxBS3KitImg
 bs3kit-paev86_INSTTYPE = none
 bs3kit-paev86_DEFS     = TMPL_MODE=BS3_MODE_PAEV86
-bs3kit-paev86_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES)
+bs3kit-paev86_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES)
 
 
 # The 16-bit long mode BS3Kit library.
@@ -603,7 +603,7 @@ LIBRARIES += bs3kit-lm16
 bs3kit-lm16_TEMPLATE = VBoxBS3KitImg
 bs3kit-lm16_INSTTYPE = none
 bs3kit-lm16_DEFS     = TMPL_MODE=BS3_MODE_LM16
-bs3kit-lm16_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-lm16_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-mode-TestDoModesStub.asm \
 	bs3-mode-TestDoModesByOneStub.asm \
 	bs3-mode-TestDoModesByMaxStub.asm
@@ -613,14 +613,14 @@ LIBRARIES += bs3kit-lm32
 bs3kit-lm32_TEMPLATE = VBoxBS3KitImg32
 bs3kit-lm32_INSTTYPE = none
 bs3kit-lm32_DEFS     = TMPL_MODE=BS3_MODE_LM32
-bs3kit-lm32_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES)
+bs3kit-lm32_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES)
 
 # The 64-bit long mode BS3Kit library.
 LIBRARIES += bs3kit-lm64
 bs3kit-lm64_TEMPLATE = VBoxBS3KitImg64
 bs3kit-lm64_INSTTYPE = none
 bs3kit-lm64_DEFS     = TMPL_MODE=BS3_MODE_LM64
-bs3kit-lm64_SOURCES  = $(VBOX_BS3KIT_MODE_SOURCES) \
+bs3kit-lm64_SOURCES  = $(VRA_BS3KIT_MODE_SOURCES) \
 	bs3-first-init-all-lm64.asm
 
 
@@ -669,9 +669,9 @@ bs3kit-mangling-code-define.h: \
 		 ' */' \
 		 '' \
 		 '/*' \
-		 ' * Copyright (C) 2007-$(VBOX_C_YEAR) Oracle and/or its affiliates.' \
+		 ' * Copyright (C) 2007-$(VRA_C_YEAR) CINASEEK and/or its affiliates.' \
 		 ' *' \
-		 ' * This file is part of VirtualBox base platform packages, as' \
+		 ' * This file is part of VirtualAgent base platform packages, as' \
 		 ' * available from https://www.virtualbox.org.' \
 		 ' *' \
 		 ' * This program is free software; you can redistribute it and/or' \
@@ -690,7 +690,7 @@ bs3kit-mangling-code-define.h: \
 		 ' * The contents of this file may alternatively be used under the terms' \
 		 ' * of the Common Development and Distribution License Version 1.0' \
 		 ' * (CDDL), a copy of it is provided in the "COPYING.CDDL" file included' \
-		 ' * in the VirtualBox distribution, in which case the provisions of the' \
+		 ' * in the VirtualAgent distribution, in which case the provisions of the' \
 		 ' * CDDL are applicable instead of those of the GPL.' \
 		 ' *' \
 		 ' * You may elect to license modified versions of this file under the' \
@@ -728,9 +728,9 @@ bs3kit-autostubs.kmk: \
 		 '#' \
 		 '' \
 		 '#' \
-		 '# Copyright (C) 2007-$(VBOX_C_YEAR) Oracle and/or its affiliates.' \
+		 '# Copyright (C) 2007-$(VRA_C_YEAR) CINASEEK and/or its affiliates.' \
 		 '#' \
-		 '# This file is part of VirtualBox base platform packages, as' \
+		 '# This file is part of VirtualAgent base platform packages, as' \
 		 '# available from https://www.virtualbox.org.' \
 		 '#' \
 		 '# This program is free software; you can redistribute it and/or' \
@@ -749,7 +749,7 @@ bs3kit-autostubs.kmk: \
 		 '# The contents of this file may alternatively be used under the terms' \
 		 '# of the Common Development and Distribution License Version 1.0' \
 		 '# (CDDL), a copy of it is provided in the "COPYING.CDDL" file included' \
-		 '# in the VirtualBox distribution, in which case the provisions of the' \
+		 '# in the VirtualAgent distribution, in which case the provisions of the' \
 		 '# CDDL are applicable instead of those of the GPL.' \
 		 '#' \
 		 '# You may elect to license modified versions of this file under the' \

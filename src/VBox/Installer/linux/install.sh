@@ -1,12 +1,12 @@
 #!/bin/sh
 #
-# Oracle VirtualBox
-# VirtualBox linux installation script
+# CINA VirtualAgent
+# VirtualAgent linux installation script
 
 #
-# Copyright (C) 2007-2026 Oracle and/or its affiliates.
+# Copyright (C) 2007-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ ARCH="_ARCH_"
 HARDENED="_HARDENED_"
 # The "BUILD_" prefixes prevent the variables from being overwritten when we
 # read the configuration from the previous installation.
-BUILD_VBOX_KBUILD_TYPE="_BUILDTYPE_"
+BUILD_VRA_KBUILD_TYPE="_BUILDTYPE_"
 BUILD_USERNAME="_USERNAME_"
 CONFIG_DIR="/etc/vbox"
 CONFIG="vbox.cfg"
@@ -60,14 +60,14 @@ ACTION=""
 SELF=$1
 RC_SCRIPT=0
 if [ -n "$HARDENED" ]; then
-    VBOXDRV_MODE=0600
-    VBOXDRV_GRP="root"
+    VRADRV_MODE=0600
+    VRADRV_GRP="root"
 else
-    VBOXDRV_MODE=0660
-    VBOXDRV_GRP=$GROUPNAME
+    VRADRV_MODE=0660
+    VRADRV_GRP=$GROUPNAME
 fi
-VBOXUSB_MODE=0664
-VBOXUSB_GRP=$GROUPNAME
+VRAUSB_MODE=0664
+VRAUSB_GRP=$GROUPNAME
 
 ## Were we able to stop any previously running Additions kernel modules?
 MODULES_STOPPED=1
@@ -91,13 +91,13 @@ module_loaded() {
 }
 
 # This routine makes sure that there is no previous installation of
-# VirtualBox other than one installed using this install script or a
-# compatible method.  We do this by checking for any of the VirtualBox
+# VirtualAgent other than one installed using this install script or a
+# compatible method.  We do this by checking for any of the VirtualAgent
 # applications in /usr/bin.  If these exist and are not symlinks into
 # the installation directory, then we assume that they are from an
 # incompatible previous installation.
 
-## Helper routine: test for a particular VirtualBox binary and see if it
+## Helper routine: test for a particular VirtualAgent binary and see if it
 ## is a link into a previous installation directory
 ##
 ## Arguments: 1) the binary to search for and
@@ -116,12 +116,12 @@ check_binary() {
 ##
 ## Argument: the directory where the previous installation should be
 ##           located.  If this is empty, then we will assume that any
-##           installation of VirtualBox found is incompatible with this one.
+##           installation of VirtualAgent found is incompatible with this one.
 ## Returns: false if an incompatible installation was found, true otherwise
 check_previous() {
     install_dir=$1
     # These should all be symlinks into the installation folder
-    check_binary "/usr/bin/VirtualBox" "$install_dir" &&
+    check_binary "/usr/bin/VirtualAgent" "$install_dir" &&
     check_binary "/usr/bin/VBoxManage" "$install_dir" &&
     check_binary "/usr/bin/VBoxSDL" "$install_dir" &&
     check_binary "/usr/bin/VBoxVRDP" "$install_dir" &&
@@ -140,7 +140,7 @@ check_previous() {
 # Main script                                                                #
 ##############################################################################
 
-info "VirtualBox Version $VERSION r$SVNREV ($BUILD) installer"
+info "VirtualAgent Version $VERSION r$SVNREV ($BUILD) installer"
 
 
 # Make sure that we were invoked as root...
@@ -149,7 +149,7 @@ check_root
 # Set up logging before anything else
 create_log $LOG
 
-log "VirtualBox $VERSION r$SVNREV installer, built $BUILD."
+log "VirtualAgent $VERSION r$SVNREV installer, built $BUILD."
 log ""
 log "Testing system setup..."
 
@@ -222,10 +222,10 @@ if [ "$ACTION" = "install" ]; then
     if ! check_previous $INSTALL_DIR && test -z "$FORCE_UPGRADE"
     then
         info
-        info "You appear to have a version of VirtualBox on your system which was installed"
+        info "You appear to have a version of VirtualAgent on your system which was installed"
         info "from a different source or using a different type of installer (or a damaged"
-        info "installation of VirtualBox).  We strongly recommend that you remove it before"
-        info "installing this version of VirtualBox."
+        info "installation of VirtualAgent).  We strongly recommend that you remove it before"
+        info "installing this version of VirtualAgent."
         info
         info "Do you wish to continue anyway? [yes or no]"
         read reply dummy
@@ -242,47 +242,47 @@ if [ "$ACTION" = "install" ]; then
     ./prerm-common.sh || exit 1
 
     # Remove previous installation
-    test "${BUILD_MODULE}" = true || VBOX_DONT_REMOVE_OLD_MODULES=1
+    test "${BUILD_MODULE}" = true || VRA_DONT_REMOVE_OLD_MODULES=1
 
     if [ -n "$PREV_INSTALLATION" ]; then
         [ -n "$INSTALL_REV" ] && INSTALL_REV=" r$INSTALL_REV"
-        info "Removing previous installation of VirtualBox $INSTALL_VER$INSTALL_REV from $PREV_INSTALLATION"
-        log "Removing previous installation of VirtualBox $INSTALL_VER$INSTALL_REV from $PREV_INSTALLATION"
+        info "Removing previous installation of VirtualAgent $INSTALL_VER$INSTALL_REV from $PREV_INSTALLATION"
+        log "Removing previous installation of VirtualAgent $INSTALL_VER$INSTALL_REV from $PREV_INSTALLATION"
         log ""
 
-        VBOX_NO_UNINSTALL_MESSAGE=1
-        # This also checks $BUILD_MODULE and $VBOX_DONT_REMOVE_OLD_MODULES
+        VRA_NO_UNINSTALL_MESSAGE=1
+        # This also checks $BUILD_MODULE and $VRA_DONT_REMOVE_OLD_MODULES
         . ./uninstall.sh
     fi
 
     mkdir -p -m 755 $CONFIG_DIR
     touch $CONFIG_DIR/$CONFIG
 
-    info "Installing VirtualBox to $INSTALLATION_DIR"
-    log "Installing VirtualBox to $INSTALLATION_DIR"
+    info "Installing VirtualAgent to $INSTALLATION_DIR"
+    log "Installing VirtualAgent to $INSTALLATION_DIR"
     log ""
 
     # Verify the archive
     mkdir -p -m 755 $INSTALLATION_DIR
-    bzip2 -d -c VirtualBox.tar.bz2 > VirtualBox.tar
-    if ! tar -tf VirtualBox.tar > $CONFIG_DIR/$CONFIG_FILES; then
+    bzip2 -d -c VirtualAgent.tar.bz2 > VirtualAgent.tar
+    if ! tar -tf VirtualAgent.tar > $CONFIG_DIR/$CONFIG_FILES; then
         rmdir $INSTALLATION_DIR 2> /dev/null
         rm -f $CONFIG_DIR/$CONFIG 2> /dev/null
         rm -f $CONFIG_DIR/$CONFIG_FILES 2> /dev/null
-        log 'Error running "bzip2 -d -c VirtualBox.tar.bz2" or "tar -tf VirtualBox.tar".'
-        abort "Error installing VirtualBox.  Installation aborted"
+        log 'Error running "bzip2 -d -c VirtualAgent.tar.bz2" or "tar -tf VirtualAgent.tar".'
+        abort "Error installing VirtualAgent.  Installation aborted"
     fi
 
     # Create installation directory and install
-    if ! tar -xf VirtualBox.tar -C $INSTALLATION_DIR; then
+    if ! tar -xf VirtualAgent.tar -C $INSTALLATION_DIR; then
         cwd=`pwd`
         cd $INSTALLATION_DIR
         rm -f `cat $CONFIG_DIR/$CONFIG_FILES` 2> /dev/null
         cd $pwd
         rmdir $INSTALLATION_DIR 2> /dev/null
         rm -f $CONFIG_DIR/$CONFIG 2> /dev/null
-        log 'Error running "tar -xf VirtualBox.tar -C '"$INSTALLATION_DIR"'".'
-        abort "Error installing VirtualBox.  Installation aborted"
+        log 'Error running "tar -xf VirtualAgent.tar -C '"$INSTALLATION_DIR"'".'
+        abort "Error installing VirtualAgent.  Installation aborted"
     fi
 
     cp uninstall.sh $INSTALLATION_DIR
@@ -292,8 +292,8 @@ if [ "$ACTION" = "install" ]; then
     #                 create symlinks for working around unsupported $ORIGIN/.. in VBoxC.so (setuid),
     #                 and finally make sure the directory is only writable by the user (paranoid).
     if [ -n "$HARDENED" ]; then
-        # Note! Update vboxdrv.sh if the VirtualBoxVM entry changes (bugref:10642).
-        test -e $INSTALLATION_DIR/VirtualBoxVM   && chmod 4511 $INSTALLATION_DIR/VirtualBoxVM
+        # Note! Update vboxdrv.sh if the VirtualAgentVM entry changes (bugref:10642).
+        test -e $INSTALLATION_DIR/VirtualAgentVM   && chmod 4511 $INSTALLATION_DIR/VirtualAgentVM
         test -e $INSTALLATION_DIR/VBoxSDL        && chmod 4511 $INSTALLATION_DIR/VBoxSDL
         test -e $INSTALLATION_DIR/VBoxHeadless   && chmod 4511 $INSTALLATION_DIR/VBoxHeadless
         test -e $INSTALLATION_DIR/VBoxNetDHCP    && chmod 4511 $INSTALLATION_DIR/VBoxNetDHCP
@@ -318,21 +318,21 @@ if [ "$ACTION" = "install" ]; then
 
     # Write the configuration.  Needs to be done before the vboxdrv service is
     # started.
-    echo "# VirtualBox installation directory" > $CONFIG_DIR/$CONFIG
+    echo "# VirtualAgent installation directory" > $CONFIG_DIR/$CONFIG
     echo "INSTALL_DIR='$INSTALLATION_DIR'" >> $CONFIG_DIR/$CONFIG
-    echo "# VirtualBox version" >> $CONFIG_DIR/$CONFIG
+    echo "# VirtualAgent version" >> $CONFIG_DIR/$CONFIG
     echo "INSTALL_VER='$VERSION'" >> $CONFIG_DIR/$CONFIG
     echo "INSTALL_REV='$SVNREV'" >> $CONFIG_DIR/$CONFIG
     echo "# Build type and user name for logging purposes" >> $CONFIG_DIR/$CONFIG
-    echo "VBOX_KBUILD_TYPE='$BUILD_VBOX_KBUILD_TYPE'" >> $CONFIG_DIR/$CONFIG
+    echo "VRA_KBUILD_TYPE='$BUILD_VRA_KBUILD_TYPE'" >> $CONFIG_DIR/$CONFIG
     echo "USERNAME='$BUILD_USERNAME'" >> $CONFIG_DIR/$CONFIG
 
     # Create users group
     groupadd -r -f $GROUPNAME 2> /dev/null
 
     # Create symlinks to start binaries
-    ln -sf $INSTALLATION_DIR/VBox.sh /usr/bin/VirtualBox
-    ln -sf $INSTALLATION_DIR/VBox.sh /usr/bin/VirtualBoxVM
+    ln -sf $INSTALLATION_DIR/VBox.sh /usr/bin/VirtualAgent
+    ln -sf $INSTALLATION_DIR/VBox.sh /usr/bin/VirtualAgentVM
     ln -sf $INSTALLATION_DIR/VBox.sh /usr/bin/VBoxManage
     ln -sf $INSTALLATION_DIR/VBox.sh /usr/bin/VBoxSDL
     ln -sf $INSTALLATION_DIR/VBox.sh /usr/bin/VBoxVRDP
@@ -372,8 +372,8 @@ if [ "$ACTION" = "install" ]; then
     ln -sf $INSTALLATION_DIR/src/vboxhost /usr/src/vboxhost-_VERSION_
 
     # Convenience symlinks. The creation fails if the FS is not case sensitive
-    ln -sf VirtualBox /usr/bin/virtualbox > /dev/null 2>&1
-    ln -sf VirtualBoxVM /usr/bin/virtualboxvm > /dev/null 2>&1
+    ln -sf VirtualAgent /usr/bin/virtualbox > /dev/null 2>&1
+    ln -sf VirtualAgentVM /usr/bin/virtualboxvm > /dev/null 2>&1
     ln -sf VBoxManage /usr/bin/vboxmanage > /dev/null 2>&1
     ln -sf VBoxSDL /usr/bin/vboxsdl > /dev/null 2>&1
     ln -sf VBoxHeadless /usr/bin/vboxheadless > /dev/null 2>&1
@@ -437,14 +437,14 @@ if [ "$ACTION" = "install" ]; then
     "${INSTALLATION_DIR}/postinst-common.sh" ${START_SERVICES} >> "${LOG}"
 
     info ""
-    info "VirtualBox has been installed successfully."
+    info "VirtualAgent has been installed successfully."
     info ""
-    info "You will find useful information about using VirtualBox in the user manual"
+    info "You will find useful information about using VirtualAgent in the user manual"
     info "  $INSTALLATION_DIR/UserManual.pdf"
     info "and in the user FAQ"
     info "  http://www.virtualbox.org/wiki/User_FAQ"
     info ""
-    info "We hope that you enjoy using VirtualBox."
+    info "We hope that you enjoy using VirtualAgent."
     info ""
 
     # And do a final test as to whether the kernel modules were properly created

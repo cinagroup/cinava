@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -37,76 +37,76 @@ include $(KBUILD_PATH)/subheader.kmk
 #
 
 # cURL/libcurl used by the IPRT http API.
-if   defined(VBOX_WITH_LIBCURL) \
-  && !defined(VBOX_ONLY_ADDITIONS) \
-  && !defined(VBOX_ONLY_EXTPACKS_USE_IMPLIBS) \
-  && !defined(VBOX_ONLY_SDK) \
-  && (!defined(VBOX_ONLY_VALIDATIONKIT) || defined(VBOX_WITH_VALIDATIONKIT_UNITTESTS_PACKING)) \
+if   defined(VRA_WITH_LIBCURL) \
+  && !defined(VRA_ONLY_ADDITIONS) \
+  && !defined(VRA_ONLY_EXTPACKS_USE_IMPLIBS) \
+  && !defined(VRA_ONLY_SDK) \
+  && (!defined(VRA_ONLY_VALIDATIONKIT) || defined(VRA_WITH_VALIDATIONKIT_UNITTESTS_PACKING)) \
   && "$(SDK_VBoxLibCurl_INCS)" == "$(PATH_ROOT)/src/libs/curl-8.18.0/include"
  include $(PATH_SUB_CURRENT)/curl-8.18.0/Makefile.kmk
 endif
 
 
 # dxvk for supporting DirectX over Vulkan on platforms other than Windows.
-if   defined(VBOX_WITH_DXVK) \
-  && !defined(VBOX_ONLY_BUILD) \
-  && "$(SDK_VBoxDxVk_INCS)" == "$(SDK_VBoxDxVk_VBOX_DEFAULT_INCS)" \
-  && "$(intersects $(KBUILD_TARGET_ARCH),$(VBOX_SUPPORTED_HOST_ARCHS))" != ""
+if   defined(VRA_WITH_DXVK) \
+  && !defined(VRA_ONLY_BUILD) \
+  && "$(SDK_VBoxDxVk_INCS)" == "$(SDK_VBoxDxVk_VRA_DEFAULT_INCS)" \
+  && "$(intersects $(KBUILD_TARGET_ARCH),$(VRA_SUPPORTED_HOST_ARCHS))" != ""
  include $(PATH_SUB_CURRENT)/dxvk-2.6.2/Makefile.kmk
 endif
 
 
 # DXMT for supporting DirectX over Vulkan on macOS.
-if   defined(VBOX_WITH_DXMT) \
-  && !defined(VBOX_ONLY_BUILD) \
-  && "$(SDK_VBoxDxMt_INCS)" == "$(SDK_VBoxDxMt_VBOX_DEFAULT_INCS)" \
-  && "$(intersects $(KBUILD_TARGET_ARCH),$(VBOX_SUPPORTED_HOST_ARCHS))" != ""
+if   defined(VRA_WITH_DXMT) \
+  && !defined(VRA_ONLY_BUILD) \
+  && "$(SDK_VBoxDxMt_INCS)" == "$(SDK_VBoxDxMt_VRA_DEFAULT_INCS)" \
+  && "$(intersects $(KBUILD_TARGET_ARCH),$(VRA_SUPPORTED_HOST_ARCHS))" != ""
  include $(PATH_SUB_CURRENT)/dxmt-0.60/Makefile.kmk
 endif
 
 
 # libjpeg for VRDP video redirection and ExtPack's DrvHostWebcam.
-if   (defined(VBOX_WITH_VRDP) || defined(VBOX_WITH_USB_VIDEO_IMPL)) \
-  && !defined(VBOX_ONLY_ADDITIONS) \
-  && !defined(VBOX_ONLY_SDK) \
-  && !defined(VBOX_ONLY_VALIDATIONKIT)
+if   (defined(VRA_WITH_VRDP) || defined(VRA_WITH_USB_VIDEO_IMPL)) \
+  && !defined(VRA_ONLY_ADDITIONS) \
+  && !defined(VRA_ONLY_SDK) \
+  && !defined(VRA_ONLY_VALIDATIONKIT)
  include $(PATH_SUB_CURRENT)/libjpeg-turbo-3.1.0/Makefile.kmk
 endif
 
 
 # liblzf is used by the IPRT compression code (saved state compression).
 if   "$(SDK_VBoxLzf_INCS)" == "$(PATH_ROOT)/src/libs/liblzf-3.6" \
-  && !defined(VBOX_ONLY_SDK)
+  && !defined(VRA_ONLY_SDK)
  include $(PATH_SUB_CURRENT)/liblzf-3.6/Makefile.kmk
 endif
 
 # libslirp for NAT
-if   !defined(VBOX_ONLY_BUILD) \
-  && "$(intersects $(KBUILD_TARGET_ARCH),$(VBOX_SUPPORTED_HOST_ARCHS))" != ""
+if   !defined(VRA_ONLY_BUILD) \
+  && "$(intersects $(KBUILD_TARGET_ARCH),$(VRA_SUPPORTED_HOST_ARCHS))" != ""
  include $(PATH_SUB_CURRENT)/libslirp-4.9.1/Makefile.kmk
 endif
 
 # libssh for cloud integration.
-if   defined(VBOX_WITH_LIBSSH) \
-  && !defined(VBOX_ONLY_BUILD) \
-  && "$(intersects $(KBUILD_TARGET_ARCH),$(VBOX_SUPPORTED_HOST_ARCHS))" != ""
+if   defined(VRA_WITH_LIBSSH) \
+  && !defined(VRA_ONLY_BUILD) \
+  && "$(intersects $(KBUILD_TARGET_ARCH),$(VRA_SUPPORTED_HOST_ARCHS))" != ""
  include $(PATH_SUB_CURRENT)/libssh-0.11.2/Makefile.kmk
 endif
 
 
 # libtpms for supporting the in process TPM emulation.
-if   defined(VBOX_WITH_LIBTPMS) \
-  && !defined(VBOX_ONLY_BUILD) \
-  && "$(intersects $(KBUILD_TARGET_ARCH),$(VBOX_SUPPORTED_HOST_ARCHS))" != "" \
-  && ("$(SDK_VBoxLibTpms_INCS)" == "$(SDK_VBoxLibTpms_VBOX_DEFAULT_INCS)")
+if   defined(VRA_WITH_LIBTPMS) \
+  && !defined(VRA_ONLY_BUILD) \
+  && "$(intersects $(KBUILD_TARGET_ARCH),$(VRA_SUPPORTED_HOST_ARCHS))" != "" \
+  && ("$(SDK_VBoxLibTpms_INCS)" == "$(SDK_VBoxLibTpms_VRA_DEFAULT_INCS)")
  include $(PATH_SUB_CURRENT)/libtpms-0.10.2/Makefile.kmk
 endif
 
 
 # libxml2 used by the IPRT xml C++ API.
-if   !defined(VBOX_ONLY_EXTPACKS_USE_IMPLIBS) \
-  && !defined(VBOX_ONLY_ADDITIONS) \
-  && !defined(VBOX_ONLY_SDK)
+if   !defined(VRA_ONLY_EXTPACKS_USE_IMPLIBS) \
+  && !defined(VRA_ONLY_ADDITIONS) \
+  && !defined(VRA_ONLY_SDK)
  ifeq ($(SDK_VBoxLibXml2_INCS),$(PATH_ROOT)/src/libs/libxml2-2.13.8/include)
   include $(PATH_SUB_CURRENT)/libxml2-2.13.8/Makefile.kmk
  endif
@@ -114,44 +114,44 @@ endif
 
 
 # OpenSSL.
-if   !defined(VBOX_ONLY_SDK) \
-  && (!defined(VBOX_ONLY_ADDITIONS) || !defined(VBOX_ONLY_ADDITIONS_WITHOUT_RTISOMAKER)) \
-  && (!defined(VBOX_ONLY_EXTPACKS) || defined(VBOX_NEED_EXTPACK_OPENSSL) || defined(VBOX_WITH_BLD_RTSIGNTOOL_SIGNING) || !defined(VBOX_ONLY_EXTPACKS_USE_IMPLIBS)) \
-  && ("$(SDK_VBoxOpenSslStatic_INCS)" == "$(SDK_VBoxOpenSslStatic_VBOX_DEFAULT_INCS)" || defined(VBOX_NEED_EXTPACK_OPENSSL))
+if   !defined(VRA_ONLY_SDK) \
+  && (!defined(VRA_ONLY_ADDITIONS) || !defined(VRA_ONLY_ADDITIONS_WITHOUT_RTISOMAKER)) \
+  && (!defined(VRA_ONLY_EXTPACKS) || defined(VRA_NEED_EXTPACK_OPENSSL) || defined(VRA_WITH_BLD_RTSIGNTOOL_SIGNING) || !defined(VRA_ONLY_EXTPACKS_USE_IMPLIBS)) \
+  && ("$(SDK_VBoxOpenSslStatic_INCS)" == "$(SDK_VBoxOpenSslStatic_VRA_DEFAULT_INCS)" || defined(VRA_NEED_EXTPACK_OPENSSL))
  include $(PATH_SUB_CURRENT)/openssl-3.4.4/Makefile.kmk
 endif
 
 
 # SoftFloat is used by the VMM for FPU emulation.
-if   (!defined(VBOX_ONLY_BUILD) && "$(intersects $(KBUILD_TARGET_ARCH),$(VBOX_SUPPORTED_HOST_ARCHS))" != "") \
-  || (   defined(VBOX_WITH_NOCRT_STATIC) \
+if   (!defined(VRA_ONLY_BUILD) && "$(intersects $(KBUILD_TARGET_ARCH),$(VRA_SUPPORTED_HOST_ARCHS))" != "") \
+  || (   defined(VRA_WITH_NOCRT_STATIC) \
       && "$(KBUILD_TARGET)" == "win" \
-      && (   defined(VBOX_ONLY_ADDITIONS) \
-  || (!defined(VBOX_ONLY_BUILD) && defined(VBOX_WITH_ADDITIONS))))
+      && (   defined(VRA_ONLY_ADDITIONS) \
+  || (!defined(VRA_ONLY_BUILD) && defined(VRA_WITH_ADDITIONS))))
  include $(PATH_SUB_CURRENT)/softfloat-3e/Makefile.kmk
 endif
 
 
 # zlib is used by the IPRT compression code, libpng and others.
-if   !defined(VBOX_ONLY_SDK) \
+if   !defined(VRA_ONLY_SDK) \
   && "$(SDK_VBoxZlib_INCS)" == "$(PATH_ROOT)/src/libs/zlib-1.3.2"
  include $(PATH_SUB_CURRENT)/zlib-1.3.2/Makefile.kmk
 endif
 
 
 # liblzma is used by the IPRT compression code and the iPXE ROM tool.
-if   defined(VBOX_WITH_LIBLZMA) \
-  && !defined(VBOX_ONLY_SDK) \
+if   defined(VRA_WITH_LIBLZMA) \
+  && !defined(VRA_ONLY_SDK) \
   && "$(SDK_VBoxLibLzma_INCS)" == "$(PATH_ROOT)/src/libs/liblzma-5.8.1/api"
  include $(PATH_SUB_CURRENT)/liblzma-5.8.1/Makefile.kmk
 endif
 
 
 # lwip is used by DevINIP and the DHCP server.
-if   (   defined(VBOX_WITH_INIP) \
-  || defined(VBOX_WITH_NAT_SERVICE)) \
-  && "$(intersects $(KBUILD_TARGET_ARCH),$(VBOX_SUPPORTED_HOST_ARCHS))" != "" \
-  && !defined(VBOX_ONLY_SDK)
+if   (   defined(VRA_WITH_INIP) \
+  || defined(VRA_WITH_NAT_SERVICE)) \
+  && "$(intersects $(KBUILD_TARGET_ARCH),$(VRA_SUPPORTED_HOST_ARCHS))" != "" \
+  && !defined(VRA_ONLY_SDK)
  include $(PATH_SUB_CURRENT)/lwip-2.2.1/Makefile.kmk
 endif
 
@@ -159,44 +159,44 @@ endif
 #
 # Main related things - XPCOM and XSLT.
 #
-if   defined(VBOX_WITH_MAIN) \
-  && !defined(VBOX_ONLY_ADDITIONS) \
-  && !defined(VBOX_ONLY_VALIDATIONKIT) \
-  && "$(intersects $(KBUILD_TARGET_ARCH),$(VBOX_SUPPORTED_HOST_ARCHS))" != ""
+if   defined(VRA_WITH_MAIN) \
+  && !defined(VRA_ONLY_ADDITIONS) \
+  && !defined(VRA_ONLY_VALIDATIONKIT) \
+  && "$(intersects $(KBUILD_TARGET_ARCH),$(VRA_SUPPORTED_HOST_ARCHS))" != ""
 
- if   !defined(VBOX_ONLY_DOCS) \
-   && !defined(VBOX_ONLY_EXTPACKS) \
-   && !defined(VBOX_ONLY_SDK)
+ if   !defined(VRA_ONLY_DOCS) \
+   && !defined(VRA_ONLY_EXTPACKS) \
+   && !defined(VRA_ONLY_SDK)
 
   # libogg, needed for building libvorbis.
-  if   defined(VBOX_WITH_LIBOGG) \
-    && ("$(SDK_VBoxLibOgg_INCS)" == "$(SDK_VBoxLibOgg_VBOX_DEFAULT_INCS)")
+  if   defined(VRA_WITH_LIBOGG) \
+    && ("$(SDK_VBoxLibOgg_INCS)" == "$(SDK_VBoxLibOgg_VRA_DEFAULT_INCS)")
    include $(PATH_SUB_CURRENT)/libogg-1.3.5/Makefile.kmk
   endif
 
   # libvorbis for supporting audio with video recording.
-  if   defined(VBOX_WITH_LIBVORBIS) \
-    && ("$(SDK_VBoxLibVorbis_INCS)" == "$(SDK_VBoxLibVorbis_VBOX_DEFAULT_INCS)")
+  if   defined(VRA_WITH_LIBVORBIS) \
+    && ("$(SDK_VBoxLibVorbis_INCS)" == "$(SDK_VBoxLibVorbis_VRA_DEFAULT_INCS)")
    include $(PATH_SUB_CURRENT)/libvorbis-1.3.7/Makefile.kmk
   endif
 
   # libpng for screenshots in main.
-  if   !defined(VBOX_ONLY_DOCS) \
+  if   !defined(VRA_ONLY_DOCS) \
     && "$(SDK_VBoxLibPng_INCS)" == "$(PATH_ROOT)/src/libs/libpng-1.6.55"
    include $(PATH_SUB_CURRENT)/libpng-1.6.55/Makefile.kmk
   endif
 
 
   # libvpx is used for video capture.
-  if   defined(VBOX_WITH_LIBVPX) \
-    && ("$(SDK_VBoxLibVpx_INCS)" == "$(SDK_VBoxLibVpx_VBOX_DEFAULT_INCS)")
+  if   defined(VRA_WITH_LIBVPX) \
+    && ("$(SDK_VBoxLibVpx_INCS)" == "$(SDK_VBoxLibVpx_VRA_DEFAULT_INCS)")
    include $(PATH_SUB_CURRENT)/libvpx-1.15.2/Makefile.kmk
   endif
 
- endif # !VBOX_ONLY_DOCS && !VBOX_ONLY_EXTPACKS && !VBOX_ONLY_SDK
+ endif # !VRA_ONLY_DOCS && !VRA_ONLY_EXTPACKS && !VRA_ONLY_SDK
 
  # XPCOM is used as a COM on non-Windows platforms.
- if defined(VBOX_WITH_XPCOM) && !defined(VBOX_ONLY_DOCS)
+ if defined(VRA_WITH_XPCOM) && !defined(VRA_ONLY_DOCS)
   include $(PATH_SUB_CURRENT)/xpcom18a4/Makefile.kmk
  endif
 

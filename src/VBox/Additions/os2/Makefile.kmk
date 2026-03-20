@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -29,14 +29,14 @@ SUB_DEPTH = ../../../..
 include $(KBUILD_PATH)/subheader.kmk
 
 # Make sure our Config.kmk is included.
-ifndef VBOX_ADDITIONS_OS2_CONFIG_KMK_INCLUDED
+ifndef VRA_ADDITIONS_OS2_CONFIG_KMK_INCLUDED
  include $(PATH_SUB_CURRENT)/Config.kmk
 endif
 
 #
 # The sub-makefiles.
 #
-ifndef VBOX_OSE
+ifndef VRA_OSE
  include $(PATH_SUB_CURRENT)/VBoxGradd/Makefile.kmk
  # include $(PATH_SUB_CURRENT)/VBoxGrext/Makefile.kmk
  include $(PATH_SUB_CURRENT)/VBoxMouse/Makefile.kmk
@@ -73,10 +73,10 @@ VBoxOs2AdditionsInstall_INCS             = \
 	$(PATH_TOOL_OPENWATCOM)/h/os2
 VBoxOs2AdditionsInstall_SOURCES          = \
 	VBoxOs2AdditionsInstall.cpp \
-	$(VBOX_PATH_RUNTIME_SRC)/common/path/RTPathStripFilename.cpp \
-	$(VBOX_PATH_RUNTIME_SRC)/common/path/RTPathEnsureTrailingSeparator.cpp
+	$(VRA_PATH_RUNTIME_SRC)/common/path/RTPathStripFilename.cpp \
+	$(VRA_PATH_RUNTIME_SRC)/common/path/RTPathEnsureTrailingSeparator.cpp
 if 1
- VBOX_PATH_RUNTIME_SRC ?= $(PATH_ROOT)/src/VBox/Runtime
+ VRA_PATH_RUNTIME_SRC ?= $(PATH_ROOT)/src/VBox/Runtime
  VBoxOs2AdditionsInstall_LDTOOL          = OPENWATCOM-WL
  VBoxOs2AdditionsInstall_CFLAGS         += -zl -s -zc -xd -xds
  VBoxOs2AdditionsInstall_CXXFLAGS       += -zl -s -zc -xd -xds
@@ -89,18 +89,18 @@ if 1
  VBoxOs2AdditionsInstall_DEFS           += IPRT_NO_CRT RT_WITH_NOCRT_ALIASES
  VBoxOs2AdditionsInstall_INCS           <= \
  	$(PATH_ROOT)/include/iprt/nocrt \
- 	$(VBOX_PATH_RUNTIME_SRC)/include
+ 	$(VRA_PATH_RUNTIME_SRC)/include
  VBoxOs2AdditionsInstall_SOURCES        += \
  	VBoxOs2AdditionsInstallA.asm \
- 	$(VBOX_PATH_RUNTIME_SRC)/common/string/strcpy.cpp \
- 	$(VBOX_PATH_RUNTIME_SRC)/common/string/strchr.cpp \
- 	$(VBOX_PATH_RUNTIME_SRC)/common/string/strlen.cpp \
- 	$(VBOX_PATH_RUNTIME_SRC)/common/string/strncmp.cpp \
- 	$(VBOX_PATH_RUNTIME_SRC)/common/string/memchr.cpp \
- 	$(VBOX_PATH_RUNTIME_SRC)/common/string/memcmp.cpp \
- 	$(VBOX_PATH_RUNTIME_SRC)/common/string/memcpy.cpp \
- 	$(VBOX_PATH_RUNTIME_SRC)/common/string/memrchr.cpp \
- 	$(VBOX_PATH_RUNTIME_SRC)/common/string/memset.cpp
+ 	$(VRA_PATH_RUNTIME_SRC)/common/string/strcpy.cpp \
+ 	$(VRA_PATH_RUNTIME_SRC)/common/string/strchr.cpp \
+ 	$(VRA_PATH_RUNTIME_SRC)/common/string/strlen.cpp \
+ 	$(VRA_PATH_RUNTIME_SRC)/common/string/strncmp.cpp \
+ 	$(VRA_PATH_RUNTIME_SRC)/common/string/memchr.cpp \
+ 	$(VRA_PATH_RUNTIME_SRC)/common/string/memcmp.cpp \
+ 	$(VRA_PATH_RUNTIME_SRC)/common/string/memcpy.cpp \
+ 	$(VRA_PATH_RUNTIME_SRC)/common/string/memrchr.cpp \
+ 	$(VRA_PATH_RUNTIME_SRC)/common/string/memset.cpp
  VBoxOs2AdditionsInstall_LIBS             = \
  	$(PATH_TOOL_OPENWATCOM)/lib386/os2/os2386.lib
 else

@@ -1,12 +1,12 @@
 # $Id: routines.sh 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
-# Oracle VirtualBox
-# VirtualBox installer shell routines
+# CINA VirtualAgent
+# VirtualAgent installer shell routines
 #
 
 #
-# Copyright (C) 2007-2026 Oracle and/or its affiliates.
+# Copyright (C) 2007-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -121,22 +121,22 @@ check_deps()
     done
 }
 
-## Abort if a copy of VirtualBox is already running
+## Abort if a copy of VirtualAgent is already running
 check_running()
 {
-    VBOXSVC_PID=`pidof VBoxSVC 2> /dev/null`
-    if [ -n "$VBOXSVC_PID" ]; then
+    VRASVC_PID=`pidof VBoxSVC 2> /dev/null`
+    if [ -n "$VRASVC_PID" ]; then
         # Ask VBoxSVC to terminate gracefully if it is not
         # busy with handling client requests.
-        kill -USR1 $VBOXSVC_PID
+        kill -USR1 $VRASVC_PID
         # Wait for VBoxSVC to terminate.
         for attempt in 1 2 3 4 5 6 7 8 9 10; do
             [ -n "$(pidof VBoxSVC 2> /dev/null)" ] && sleep 1
         done
         # Still running?
         if pidof VBoxSVC > /dev/null 2>&1; then
-            echo 1>&2 "A copy of VirtualBox is currently running.  Please close it and try again."
-            abort "Please note that it can take up to ten seconds for VirtualBox to finish running."
+            echo 1>&2 "A copy of VirtualAgent is currently running.  Please close it and try again."
+            abort "Please note that it can take up to ten seconds for VirtualAgent to finish running."
         fi
     fi
 }
@@ -413,7 +413,7 @@ terminate_proc() {
 # install_python_bindings(PYTHON_BIN PYTHON_VER)
 # failure: non fatal
 #
-## @todo r=andy Merge this code with darwin/VirtualBox/postflight!
+## @todo r=andy Merge this code with darwin/VirtualAgent/postflight!
 install_python_bindings()
 {
     PYTHON_BIN="$1"
@@ -449,10 +449,10 @@ install_python_bindings()
         fi
     fi
 
-    PYTHON_INSTALLER_PATH="$VBOX_INSTALL_PATH/sdk/installer/python"
+    PYTHON_INSTALLER_PATH="$VRA_INSTALL_PATH/sdk/installer/python"
 
     # Pass install path via environment
-    export VBOX_INSTALL_PATH
+    export VRA_INSTALL_PATH
 
     if [ -n "$PYTHON_PIP_BIN" ]; then
         # Note: We use '-v' to show verbose output of our setup.py script on error.
@@ -468,12 +468,12 @@ install_python_bindings()
     rm -rf "$PYTHON_INSTALLER_PATH/build"
 }
 
-## @todo r=andy Merge this code with darwin/VirtualBox/postflight!
+## @todo r=andy Merge this code with darwin/VirtualAgent/postflight!
 maybe_run_python_bindings_installer() {
-    VBOX_INSTALL_PATH="${1}"
+    VRA_INSTALL_PATH="${1}"
 
     # Loop over all usual suspect Python executable names and try installing
-    # the VirtualBox API bindings. Needs to prevent double installs which waste
+    # the VirtualAgent API bindings. Needs to prevent double installs which waste
     # quite a bit of time.
     PYTHON_VER_INSTALLED=""
     PYTHON_BINARIES="\

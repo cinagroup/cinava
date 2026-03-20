@@ -4,9 +4,9 @@
 #
 
 #
-# Copyright (C) 2009-2026 Oracle and/or its affiliates.
+# Copyright (C) 2009-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -33,8 +33,8 @@ tstCredentialProvider_TEMPLATE = VBoxGuestR3Exe
 tstCredentialProvider_SOURCES  = \
 	tstCredentialProvider.cpp
 tstCredentialProvider_LIBS     = \
-	$(PATH_SDK_$(VBOX_WINPSDK_GST_WLH)_LIB)/credui.lib \
-	$(PATH_SDK_$(VBOX_WINPSDK_GST_WLH)_LIB)/Secur32.Lib
+	$(PATH_SDK_$(VRA_WINPSDK_GST_WLH)_LIB)/credui.lib \
+	$(PATH_SDK_$(VRA_WINPSDK_GST_WLH)_LIB)/Secur32.Lib
 
 include $(FILE_KBUILD_SUB_FOOTER)
 

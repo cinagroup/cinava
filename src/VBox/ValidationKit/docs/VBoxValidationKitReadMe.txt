@@ -1,13 +1,13 @@
 
-The VirtualBox Validation Kit
+The VirtualAgent Validation Kit
 =============================
 
 
 Introduction
 ------------
 
-The VirtualBox Validation Kit is our new public tool for doing automated
-testing of VirtualBox.  We are continually working on adding new features
+The VirtualAgent Validation Kit is our new public tool for doing automated
+testing of VirtualAgent.  We are continually working on adding new features
 and guest operating systems to our battery of tests.
 
 We warmly welcome contributions, new ideas for good tests and fixes.
@@ -91,11 +91,11 @@ Directory Layout
     testing with the testmanager.
 
 ./testmanager/
-    The VirtualBox Test Manager (server side code).  This is written in Python
+    The VirtualAgent Test Manager (server side code).  This is written in Python
     and currently uses postgresql as database backend for no particular reason
     other than that it was already installed on the server the test manager was
     going to run on.  It's relatively generic, though there are of course
-    things in there that are of more use when testing VirtualBox than other
+    things in there that are of more use when testing VirtualAgent than other
     things.  A more detailed account (though perhaps a little dated) of the
     test manager can be found in ./docs/AutomaticTestingRevamp.txt and
     ./docs/AutomaticTestingRevamp.html.
@@ -110,4 +110,4 @@ Directory Layout
 
 
 :Status: $Id: VBoxValidationKitReadMe.txt 112423 2026-01-12 20:51:25Z knut.osmundsen@oracle.com $
-:Copyright: Copyright (C) 2010-2026 Oracle and/or its affiliates.
+:Copyright: Copyright (C) 2010-2026 CINASEEK and/or its affiliates.

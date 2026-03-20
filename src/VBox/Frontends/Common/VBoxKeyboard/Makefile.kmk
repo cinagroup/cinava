@@ -1,12 +1,12 @@
 # $Id: Makefile.kmk 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $
 ## @file
-# Makefile for the VirtualBox X11 keyboard library
+# Makefile for the VirtualAgent X11 keyboard library
 #
 
 #
-# Copyright (C) 2006-2026 Oracle and/or its affiliates.
+# Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
 #
-# This file is part of VirtualBox base platform packages, as
+# This file is part of VirtualAgent base platform packages, as
 # available from https://www.virtualbox.org.
 #
 # This program is free software; you can redistribute it and/or
@@ -42,7 +42,7 @@ VBoxKeyboard_TEMPLATE = VBoxR3Dll
 VBoxKeyboard_SOURCES  = \
 	keyboard.c
 VBoxKeyboard_LIBS     = X11
-VBoxKeyboard_LIBPATH  = $(VBOX_LIBPATH_X11)
+VBoxKeyboard_LIBPATH  = $(VRA_LIBPATH_X11)
 
 
 #
@@ -54,8 +54,8 @@ VBoxKeyboard_LIBPATH  = $(VBOX_LIBPATH_X11)
 # bin directory (probably belongs in /usr/shared/somewhere really,
 # but wtf, it's not like we're even trying to be FHS compliant).
 #
-VBOX_KEYBOARD_STAGE_DIR = $(PATH_TARGET)/VBoxKeyboard/install
-VBOX_KEYBOARD_DEST_DIR = $(VBOX_KEYBOARD_STAGE_DIR)/VBoxKeyboard/
+VRA_KEYBOARD_STAGE_DIR = $(PATH_TARGET)/VBoxKeyboard/install
+VRA_KEYBOARD_DEST_DIR = $(VRA_KEYBOARD_STAGE_DIR)/VBoxKeyboard/
 
 ## @todo kBuild need support for copying files into _1_OUTDIR.
 INSTALLS += VBoxKeyboard-Files
@@ -84,8 +84,8 @@ $$(VBoxKeyboard-Tarball_0_OUTDIR)/vboxkeyboard.tar.bz2: \
 		| $$(dir $$@)
 	$(call MSG_L1,Packing $@)
 	$(QUIET)$(RM) -f -- $@ $(patsubst %.bz2,%,$@)
-ifdef VBOX_GTAR
-	$(QUIET)$(VBOX_GTAR) --dereference --owner 0 --group 0 --ignore-failed-read \
+ifdef VRA_GTAR
+	$(QUIET)$(VRA_GTAR) --dereference --owner 0 --group 0 --ignore-failed-read \
 		-cjRf $@ \
  		-C $(PATH_STAGE)/$(VBoxKeyboard-Files_INST).. VBoxKeyboard
 else
