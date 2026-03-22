@@ -288,6 +288,7 @@ DECL_FORCE_INLINE(PCDISOPCODE)
 disInitializeState(PDISSTATE pDis, RTUINTPTR uInstrAddr, DISCPUMODE enmCpuMode, uint32_t fFilter,
                    PFNDISREADBYTES pfnReadBytes, void *pvUser)
 {
+    RT_NOREF(fFilter);
     RT_ZERO(*pDis);
 
 #ifdef VBOX_STRICT
@@ -348,8 +349,9 @@ DISDECL(int) DISInstrEx(RTUINTPTR uInstrAddr, DISCPUMODE enmCpuMode, uint32_t fF
                         PFNDISREADBYTES pfnReadBytes, void *pvUser,
                         PDISSTATE pDis, uint32_t *pcbInstr)
 {
-
+    RT_NOREF(pcbInstr);
     PCDISOPCODE paOneByteMap = disInitializeState(pDis, uInstrAddr, enmCpuMode, fFilter, pfnReadBytes, pvUser);
+    RT_NOREF(paOneByteMap);
     disPrefetchBytes(pDis);
 
     switch (enmCpuMode)
@@ -402,7 +404,9 @@ DISDECL(int) DISInstrWithPrefetchedBytes(RTUINTPTR uInstrAddr, DISCPUMODE enmCpu
                                          PFNDISREADBYTES pfnReadBytes, void *pvUser,
                                          PDISSTATE pDis, uint32_t *pcbInstr)
 {
+    RT_NOREF(pcbInstr);
     PCDISOPCODE paOneByteMap = disInitializeState(pDis, uInstrAddr, enmCpuMode, fFilter, pfnReadBytes, pvUser);
+    RT_NOREF(paOneByteMap);
 
     if (!cbPretched)
         disPrefetchBytes(pDis);

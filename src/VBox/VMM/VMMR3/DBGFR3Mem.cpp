@@ -355,7 +355,7 @@ VMMR3DECL(int) DBGFR3MemWrite(PUVM pUVM, VMCPUID idCpu, PCDBGFADDRESS pAddress, 
 }
 
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /**
  * Worker for DBGFR3SelQueryInfo that calls into SELM.
  */
@@ -443,7 +443,7 @@ VMMR3DECL(int) DBGFR3SelQueryInfo(PUVM pUVM, VMCPUID idCpu, RTSEL Sel, uint32_t 
     /* Clear the return data here on this thread. */
     memset(pSelInfo, 0, sizeof(*pSelInfo));
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /*
      * Dispatch the request to a worker running on the target CPU.
      */
@@ -503,7 +503,7 @@ static uint32_t dbgfR3PagingDumpModeToFlags(PGMMODE enmMode)
 {
     switch (enmMode)
     {
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         case PGMMODE_32_BIT:
             return DBGFPGDMP_FLAGS_PSE;
         case PGMMODE_PAE:
@@ -523,7 +523,7 @@ static uint32_t dbgfR3PagingDumpModeToFlags(PGMMODE enmMode)
         case PGMMODE_EPT:
             return DBGFPGDMP_FLAGS_EPT;
 
-# elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
        /** @todo arm64: dumping page tables. */
 # else
 #  error "port me"
@@ -596,7 +596,7 @@ static DECLCALLBACK(int) dbgfR3PagingDumpEx(PUVM pUVM, VMCPUID idCpu, uint32_t f
         }
         else
         {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             if (fFlags & DBGFPGDMP_FLAGS_CURRENT_CR3)
                 cr3 = CPUMGetGuestCR3(pVCpu);
             if (fFlags & DBGFPGDMP_FLAGS_CURRENT_MODE)
@@ -606,7 +606,7 @@ static DECLCALLBACK(int) dbgfR3PagingDumpEx(PUVM pUVM, VMCPUID idCpu, uint32_t f
                 AssertCompile(DBGFPGDMP_FLAGS_LME == MSR_K6_EFER_LME);  AssertCompile(DBGFPGDMP_FLAGS_NXE == MSR_K6_EFER_NXE);
                 fFlags |= CPUMGetGuestEFER(pVCpu) & (MSR_K6_EFER_LME | MSR_K6_EFER_NXE);
             }
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
             /** @todo arm64: port me   */
             AssertReleaseFailed();
             return VERR_NOT_IMPLEMENTED;

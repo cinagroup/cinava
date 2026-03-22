@@ -280,9 +280,9 @@ DECLCALLBACK(void) cpumR3CpuIdInfo(PVM pVM, PCDBGFINFOHLP pHlp, const char *pszA
     /*
      * Call the appropriate worker for the target.
      */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     CPUMCPUIDINFOSTATEX86   InfoState;
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     CPUMCPUIDINFOSTATEARMV8 InfoState;
 #else
 # error "port me"
@@ -304,13 +304,13 @@ DECLCALLBACK(void) cpumR3CpuIdInfo(PVM pVM, PCDBGFINFOHLP pHlp, const char *pszA
     InfoState.Cmn.pszLabel2     = NULL;
 #endif
     InfoState.pFeatures     = &pVM->cpum.s.GuestFeatures;
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /* x86 specifics: */
     InfoState.paLeaves      = pVM->cpum.s.GuestInfo.paCpuIdLeavesR3;
     InfoState.cLeaves       = pVM->cpum.s.GuestInfo.cCpuIdLeaves;
     InfoState.cLeaves2      = 0;
     InfoState.paLeaves2     = NULL;
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /* ARMv8 specifics: */
     InfoState.paIdRegs      = pVM->cpum.s.GuestInfo.paIdRegsR3;
     InfoState.cIdRegs       = pVM->cpum.s.GuestInfo.cIdRegs;
@@ -320,7 +320,7 @@ DECLCALLBACK(void) cpumR3CpuIdInfo(PVM pVM, PCDBGFINFOHLP pHlp, const char *pszA
 # error "port me"
 #endif
 
-#if defined(VBOX_VMM_TARGET_X86) && (defined(RT_ARCH_AMD64) || defined(RT_ARCH_X86))
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) && (defined(RT_ARCH_AMD64) || defined(RT_ARCH_X86))
     PCPUMCPUIDLEAF paFree = NULL;
     InfoState.paLeaves2 = pVM->cpum.s.paHostLeavesR3;
     InfoState.cLeaves2  = pVM->cpum.s.cHostLeaves;
@@ -335,7 +335,7 @@ DECLCALLBACK(void) cpumR3CpuIdInfo(PVM pVM, PCDBGFINFOHLP pHlp, const char *pszA
     CPUMR3CpuIdInfoX86(&InfoState);
     RTMemFree(paFree);
 
-#elif defined(VBOX_VMM_TARGET_ARMV8) && (defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32))
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) && (defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32))
     PSUPARMSYSREGVAL paFree = NULL;
     InfoState.paIdRegs2 = pVM->cpum.s.paHostIdRegsR3;
     InfoState.cIdRegs2  = pVM->cpum.s.cHostIdRegs;
@@ -350,10 +350,10 @@ DECLCALLBACK(void) cpumR3CpuIdInfo(PVM pVM, PCDBGFINFOHLP pHlp, const char *pszA
     CPUMR3CpuIdInfoArmV8(&InfoState);
     RTMemFree(paFree);
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     CPUMR3CpuIdInfoX86(&InfoState);
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     CPUMR3CpuIdInfoArmV8(&InfoState);
 
 #else

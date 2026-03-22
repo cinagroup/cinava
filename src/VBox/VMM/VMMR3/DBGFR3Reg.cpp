@@ -316,10 +316,10 @@ static int dbgfR3RegRegisterCommon(PUVM pUVM, PCDBGFREGDESC paRegisters, DBGFREG
     AssertMsgReturn(iInstance <= 9999, ("%d\n", iInstance), VERR_INVALID_NAME);
 
     /* The descriptors. */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     DBGFREG const  enmCpuFirst = DBGFREG_X86_FIRST;
     DBGFREG const  enmCpuLast  = DBGFREG_X86_LAST;
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     DBGFREG const  enmCpuFirst = DBGFREG_ARMV8_FIRST;
     DBGFREG const  enmCpuLast  = DBGFREG_ARMV8_LAST;
 #else
@@ -927,9 +927,9 @@ static DECLCALLBACK(int) dbgfR3RegCpuQueryWorkerOnCpu(PUVM pUVM, VMCPUID idCpu, 
         /*
          * Look up the register and get the register value.
          */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         DBGFREG const  enmCpuFirst = DBGFREG_X86_FIRST;
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         DBGFREG const  enmCpuFirst = DBGFREG_ARMV8_FIRST;
 #else
 # error "port me"
@@ -2878,7 +2878,7 @@ VMMR3_INT_DECL(size_t) DBGFR3RegFormatX86EFlags(char pszDst[160], uint32_t fEFla
         DBGFSPECIALFLAG_ENTRY("ac",  "na", X86_EFL_AF),
         DBGFSPECIALFLAG_ENTRY("po",  "pe", X86_EFL_PF),
         DBGFSPECIALFLAG_ENTRY("cy",  "nc", X86_EFL_CF),
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         DBGFSPECIALFLAG_ENTRY_SET7("inh-ss",  "", CPUMCTX_INHIBIT_SHADOW_SS),
         DBGFSPECIALFLAG_ENTRY_SET7("inh-sti", "", CPUMCTX_INHIBIT_SHADOW_STI),
         DBGFSPECIALFLAG_ENTRY_SET7("inh-nmi", "", CPUMCTX_INHIBIT_NMI),

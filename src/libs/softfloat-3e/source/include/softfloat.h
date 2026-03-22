@@ -99,15 +99,15 @@ extern THREAD_LOCAL uint_fast8_t softfloat_exceptionFlags;
 # define softfloat_exceptionFlags (pState->exceptionFlags)
 #endif
 enum {
-#ifndef VBOX
+#ifndef VRA
     softfloat_flag_inexact   =  1,
     softfloat_flag_underflow =  2,
     softfloat_flag_overflow  =  4,
     softfloat_flag_infinite  =  8,
     softfloat_flag_invalid   = 16
-#else /* VBox: Match X86_FSW_?E */
+#else /* VRA: Match X86_FSW_?E */
     softfloat_flag_invalid   = 1<<0 /**< X86_FSW_IE */,
-    softfloat_flag_denormal  = 1<<1 /**< X86_FSW_DE - only returned by some VBox specific functions */,
+    softfloat_flag_denormal  = 1<<1 /**< X86_FSW_DE - only returned by some VRA specific functions */,
     softfloat_flag_infinite  = 1<<2 /**< X86_FSW_ZE */,
     softfloat_flag_overflow  = 1<<3 /**< X86_FSW_OE */,
     softfloat_flag_underflow = 1<<4 /**< X86_FSW_UE */,

@@ -117,7 +117,8 @@
 #define LOG_GROUP   LOG_GROUP_IEM
 #define VMCPU_INCL_CPUM_GST_CTX
 #ifdef IN_RING0
-# define VBOX_VMM_TARGET_X86
+#define VBOX_VMM_TARGET_X86
+#define VRA_VMM_TARGET_X86
 #endif
 #include <VBox/vmm/iem.h>
 #include <VBox/vmm/cpum.h>
@@ -158,11 +159,11 @@
 
 #include "IEMInline.h"
 #include "IEMInlineExec.h"
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # include "target-x86/IEMInline-x86.h"
 # include "target-x86/IEMInlineDecode-x86.h"
 # include "target-x86/IEMInlineExec-x86.h"
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include "target-armv8/IEMInline-armv8.h"
 # include "target-armv8/IEMAllIntprA64Tables-armv8.h"
 # include "target-armv8/IEMInlineDecode-armv8.h"
@@ -195,7 +196,7 @@ DECLINLINE(void) iemInitDecoder(PVMCPUCC pVCpu, uint32_t fExecOpts)
     ICORE(pVCpu).fExec = fExec = iemCalcExecFlags(pVCpu) | fExecOpts;
 
     /* Decoder state: */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     ICORE(pVCpu).enmDefAddrMode     = fExec & IEM_F_MODE_X86_CPUMODE_MASK;  /** @todo check if this is correct... */
     ICORE(pVCpu).enmEffAddrMode     = fExec & IEM_F_MODE_X86_CPUMODE_MASK;
     if ((fExec & IEM_F_MODE_X86_CPUMODE_MASK) != IEMMODE_64BIT)
@@ -222,7 +223,7 @@ DECLINLINE(void) iemInitDecoder(PVMCPUCC pVCpu, uint32_t fExecOpts)
 #ifdef IEM_WITH_CODE_TLB_IN_CUR_CTX
     ICORE(pVCpu).pbInstrBuf         = NULL;
     ICORE(pVCpu).offInstrNextByte   = 0;
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     ICORE(pVCpu).offCurInstrStart   = 0;
 # endif
 # ifdef IEM_WITH_CODE_TLB_AND_OPCODE_BUF
@@ -230,7 +231,7 @@ DECLINLINE(void) iemInitDecoder(PVMCPUCC pVCpu, uint32_t fExecOpts)
 # endif
 # ifdef VBOX_STRICT
     ICORE(pVCpu).GCPhysInstrBuf     = NIL_RTGCPHYS;
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     ICORE(pVCpu).cbInstrBuf         = UINT16_MAX;
 # endif
     ICORE(pVCpu).cbInstrBufTotal    = UINT16_MAX;
@@ -268,7 +269,7 @@ DECLINLINE(void) iemReInitDecoder(PVMCPUCC pVCpu)
     AssertMsg((ICORE(pVCpu).fExec & ~IEM_F_USER_OPTS) == iemCalcExecFlags(pVCpu),
               ("fExec=%#x iemCalcExecModeFlags=%#x\n", ICORE(pVCpu).fExec, iemCalcExecFlags(pVCpu)));
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     IEMMODE const enmMode = IEM_GET_CPU_MODE(pVCpu);
     ICORE(pVCpu).enmDefAddrMode     = enmMode;  /** @todo check if this is correct... */
     ICORE(pVCpu).enmEffAddrMode     = enmMode;
@@ -296,19 +297,19 @@ DECLINLINE(void) iemReInitDecoder(PVMCPUCC pVCpu)
 #ifdef IEM_WITH_CODE_TLB_IN_CUR_CTX
     if (ICORE(pVCpu).pbInstrBuf)
     {
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         uint64_t off = (enmMode == IEMMODE_64BIT
                         ? pVCpu->cpum.GstCtx.rip
                         : pVCpu->cpum.GstCtx.eip + (uint32_t)pVCpu->cpum.GstCtx.cs.u64Base)
                      - ICORE(pVCpu).uInstrBufPc;
         if (off < ICORE(pVCpu).cbInstrBufTotal)
-# elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         uint64_t const off = pVCpu->cpum.GstCtx.Pc.u64 - ICORE(pVCpu).uInstrBufPc;
         if (off + sizeof(uint32_t) <= ICORE(pVCpu).cbInstrBufTotal)
 # endif
         {
             ICORE(pVCpu).offInstrNextByte = (uint32_t)off;
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             ICORE(pVCpu).offCurInstrStart = (uint16_t)off;
             if ((uint16_t)off + 15 <= ICORE(pVCpu).cbInstrBufTotal)
                 ICORE(pVCpu).cbInstrBuf = (uint16_t)off + 15;
@@ -320,7 +321,7 @@ DECLINLINE(void) iemReInitDecoder(PVMCPUCC pVCpu)
         {
             ICORE(pVCpu).pbInstrBuf       = NULL;
             ICORE(pVCpu).offInstrNextByte = 0;
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             ICORE(pVCpu).offCurInstrStart = 0;
             ICORE(pVCpu).cbInstrBuf       = 0;
 # endif
@@ -331,7 +332,7 @@ DECLINLINE(void) iemReInitDecoder(PVMCPUCC pVCpu)
     else
     {
         ICORE(pVCpu).offInstrNextByte = 0;
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         ICORE(pVCpu).offCurInstrStart = 0;
         ICORE(pVCpu).cbInstrBuf       = 0;
 # endif
@@ -372,7 +373,7 @@ DECLINLINE(VBOXSTRICTRC) iemInitDecoderAndPrefetchOpcodes(PVMCPUCC pVCpu, uint32
 {
     iemInitDecoder(pVCpu, fExecOpts);
 
-#if !defined(IEM_WITH_CODE_TLB_IN_CUR_CTX) && defined(VBOX_VMM_TARGET_X86)
+#if !defined(IEM_WITH_CODE_TLB_IN_CUR_CTX) && (defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86))
     return iemOpcodeFetchPrefetch(pVCpu);
 #else
     return VINF_SUCCESS;
@@ -397,7 +398,7 @@ static void iemLogCurInstr(PVMCPUCC pVCpu, const char *pszFunction) RT_NOEXCEPT
                            DBGF_DISAS_FLAGS_CURRENT_GUEST | DBGF_DISAS_FLAGS_DEFAULT_MODE,
                            szInstr, sizeof(szInstr), &cbInstr);
 
-#  ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         PCX86FXSTATE pFpuCtx = &pVCpu->cpum.GstCtx.XState.x87;
         Log2(("**** %s fExec=%x\n"
               " eax=%08x ebx=%08x ecx=%08x edx=%08x esi=%08x edi=%08x\n"
@@ -412,7 +413,7 @@ static void iemLogCurInstr(PVMCPUCC pVCpu, const char *pszFunction) RT_NOEXCEPT
               pVCpu->cpum.GstCtx.fs.Sel, pVCpu->cpum.GstCtx.gs.Sel, pVCpu->cpum.GstCtx.eflags.u,
               pFpuCtx->FSW, pFpuCtx->FCW, pFpuCtx->FTW, pFpuCtx->MXCSR, pFpuCtx->MXCSR_MASK,
               szInstr));
-#  elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         char szPState[160];
         DBGFR3RegFormatArmV8PState(szPState, pVCpu->cpum.GstCtx.fPState);
         if (pVCpu->iem.s.cLogFpuCountdown == 0)
@@ -526,7 +527,7 @@ static void iemLogCurInstr(PVMCPUCC pVCpu, const char *pszFunction) RT_NOEXCEPT
     }
 # endif
 
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     LogFlow(("%s: cs:rip=%04x:%08RX64 ss:rsp=%04x:%08RX64 EFL=%06x\n",
              pszFunction, pVCpu->cpum.GstCtx.cs.Sel, pVCpu->cpum.GstCtx.rip, pVCpu->cpum.GstCtx.ss.Sel, pVCpu->cpum.GstCtx.rsp,
              pVCpu->cpum.GstCtx.eflags.u));
@@ -535,7 +536,7 @@ static void iemLogCurInstr(PVMCPUCC pVCpu, const char *pszFunction) RT_NOEXCEPT
              (a_pszName), pVCpu->cpum.GstCtx.cs.Sel, pVCpu->cpum.GstCtx.rip, pVCpu->cpum.GstCtx.ss.Sel, pVCpu->cpum.GstCtx.rsp, \
              pVCpu->cpum.GstCtx.eflags.u, __VA_ARGS__))
 
-# elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     LogFlow(("%s: pc=%08RX64 lr=%08RX64 sp=%08RX64 psr=%012RX64 EL%u\n",
              pszFunction, pVCpu->cpum.GstCtx.Pc, pVCpu->cpum.GstCtx.aGRegs[ARMV8_A64_REG_LR],
              pVCpu->cpum.GstCtx.aSpReg[IEM_F_MODE_ARM_GET_EL(ICORE(pVCpu).fExec) > 0], pVCpu->cpum.GstCtx.fPState,
@@ -691,7 +692,7 @@ DECLINLINE(VBOXSTRICTRC) iemExecOneInner(PVMCPUCC pVCpu, const char *pszFunction
         rcStrict = iemHandleNestedInstructionBoundaryFFs(pVCpu, rcStrict);
 #endif
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /* Execute the next instruction as well if a cli, pop ss or
        mov ss, Gr has just completed successfully. */
     if RT_CONSTEXPR_IF(a_fExecuteInhibit)
@@ -799,7 +800,7 @@ VMM_INT_DECL(VBOXSTRICTRC) IEMExecOneWithPrefetchedByPC(PVMCPUCC pVCpu, uint64_t
         ICORE(pVCpu).uInstrBufPc      = OpcodeBytesPC;
         ICORE(pVCpu).pbInstrBuf       = (uint8_t const *)pvOpcodeBytes;
         ICORE(pVCpu).cbInstrBufTotal  = (uint16_t)RT_MIN(X86_PAGE_SIZE, cbOpcodeBytes);
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         ICORE(pVCpu).offCurInstrStart = 0;
         ICORE(pVCpu).offInstrNextByte = 0;
 # endif
@@ -845,7 +846,7 @@ VMM_INT_DECL(VBOXSTRICTRC) IEMExecOneBypassWithPrefetchedByPC(PVMCPUCC pVCpu, ui
         ICORE(pVCpu).uInstrBufPc      = OpcodeBytesPC;
         ICORE(pVCpu).pbInstrBuf       = (uint8_t const *)pvOpcodeBytes;
         ICORE(pVCpu).cbInstrBufTotal  = (uint16_t)RT_MIN(X86_PAGE_SIZE, cbOpcodeBytes);
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         ICORE(pVCpu).offCurInstrStart = 0;
         ICORE(pVCpu).offInstrNextByte = 0;
 # endif
@@ -903,7 +904,7 @@ VMM_INT_DECL(VBOXSTRICTRC) IEMExecOneIgnoreLock(PVMCPUCC pVCpu)
 VBOXSTRICTRC iemExecInjectPendingTrap(PVMCPUCC pVCpu)
 {
     Assert(TRPMHasTrap(pVCpu));
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 
     if (   !CPUMIsInInterruptShadow(&pVCpu->cpum.GstCtx)
         && !CPUMAreInterruptsInhibitedByNmi(&pVCpu->cpum.GstCtx))
@@ -1008,7 +1009,7 @@ VMM_INT_DECL(VBOXSTRICTRC) IEMExecLots(PVMCPUCC pVCpu, uint32_t cMaxInstructions
                  * Do the decoding and emulation.
                  */
                 rcStrict = iemExecDecodeAndInterpretTargetInstruction(pVCpu);
-#if defined(VBOX_STRICT) && defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_STRICT) && (defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86))
                 CPUMAssertGuestRFlagsCookie(pVM, pVCpu);
 #endif
                 if (RT_LIKELY(rcStrict == VINF_SUCCESS))
@@ -1311,7 +1312,7 @@ VMM_INT_DECL(VBOXSTRICTRC) IEMExecForExits(PVMCPUCC pVCpu, uint32_t fWillExit, u
 VMM_INT_DECL(VBOXSTRICTRC)
 IEMInjectTrap(PVMCPUCC pVCpu, uint8_t u8TrapNo, TRPMEVENT enmType, uint16_t uErrCode, RTGCPTR uCr2, uint8_t cbInstr)
 {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     iemInitDecoder(pVCpu, 0 /*fExecOpts*/); /** @todo wrong init function! */
 # ifdef DBGFTRACE_ENABLED
     RTTraceBufAddMsgF(pVCpu->CTX_SUFF(pVM)->CTX_SUFF(hTraceBuf), "IEMInjectTrap: %x %d %x %llx",

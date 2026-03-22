@@ -75,9 +75,9 @@ typedef struct DBGFUNWINDCTX
     DBGFUNWINDCTX(PUVM pUVM, VMCPUID idCpu, PCCPUMCTX pInitialCtx, RTDBGAS hAs)
     {
         m_State.u32Magic     = RTDBGUNWINDSTATE_MAGIC;
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         m_State.enmArch      = RTLDRARCH_ARM64;
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         m_State.enmArch      = RTLDRARCH_AMD64;
 #else
 # error "port me"
@@ -87,7 +87,7 @@ typedef struct DBGFUNWINDCTX
         RT_ZERO(m_State.u);
         if (pInitialCtx)
         {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
             AssertCompile(RT_ELEMENTS(m_State.u.armv8.auGprs) == RT_ELEMENTS(pInitialCtx->aGRegs));
 
             m_State.uPc            = pInitialCtx->Pc.u64;
@@ -97,7 +97,7 @@ typedef struct DBGFUNWINDCTX
             for (uint32_t i = 0; i < RT_ELEMENTS(m_State.u.armv8.auGprs); i++)
                 m_State.u.armv8.auGprs[i] = pInitialCtx->aGRegs[i].x;
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             m_State.u.x86.auRegs[X86_GREG_xAX] = pInitialCtx->rax;
             m_State.u.x86.auRegs[X86_GREG_xCX] = pInitialCtx->rcx;
             m_State.u.x86.auRegs[X86_GREG_xDX] = pInitialCtx->rdx;
@@ -176,9 +176,9 @@ DBGFUNWINDCTX::~DBGFUNWINDCTX()
  */
 static DECLCALLBACK(int) dbgfR3StackReadCallback(PRTDBGUNWINDSTATE pThis, RTUINTPTR uSp, size_t cbToRead, void *pvDst)
 {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     Assert(pThis->enmArch == RTLDRARCH_ARM64);
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     Assert(   pThis->enmArch == RTLDRARCH_AMD64
            || pThis->enmArch == RTLDRARCH_X86_32);
 #else
@@ -192,7 +192,7 @@ static DECLCALLBACK(int) dbgfR3StackReadCallback(PRTDBGUNWINDSTATE pThis, RTUINT
         DBGFR3AddrFromHostR0(&SrcAddr, uSp);
     else
     {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         if (   pThis->enmArch == RTLDRARCH_X86_32
             || pThis->enmArch == RTLDRARCH_X86_16)
         {
@@ -225,7 +225,7 @@ static DECLCALLBACK(int) dbgfR3StackReadCallback(PRTDBGUNWINDSTATE pThis, RTUINT
  */
 static bool dbgfR3UnwindCtxSetPcAndSp(PDBGFUNWINDCTX pUnwindCtx, PCDBGFADDRESS pAddrPC, PCDBGFADDRESS pAddrStack)
 {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     Assert(pUnwindCtx->m_State.enmArch == RTLDRARCH_ARM64);
 
     Assert(!DBGFADDRESS_IS_FAR(pAddrPC));
@@ -233,7 +233,7 @@ static bool dbgfR3UnwindCtxSetPcAndSp(PDBGFUNWINDCTX pUnwindCtx, PCDBGFADDRESS p
     Assert(!DBGFADDRESS_IS_FAR(pAddrStack));
     pUnwindCtx->m_State.u.armv8.uSpEl1 = pAddrStack->FlatPtr; /** @todo EL0 stack pointer. */
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     Assert(   pUnwindCtx->m_State.enmArch == RTLDRARCH_AMD64
            || pUnwindCtx->m_State.enmArch == RTLDRARCH_X86_32);
 
@@ -330,7 +330,7 @@ DECLINLINE(int) dbgfR3StackRead(PUVM pUVM, VMCPUID idCpu, void *pvBuf, PCDBGFADD
     return rc;
 }
 
-#if !defined(VBOX_VMM_TARGET_ARMV8) /** @todo Unused on ARMv8 for now. */
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8) /** @todo Unused on ARMv8 for now. */
 /**
  * Collects sure registers on frame exit.
  *
@@ -344,7 +344,7 @@ static int dbgfR3StackWalkCollectRegisterChanges(PUVM pUVM, PDBGFSTACKFRAME pFra
     pFrame->cSureRegs  = 0;
     pFrame->paSureRegs = NULL;
 
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     if (pState->enmArch == RTLDRARCH_ARM64)
     {
         if (pState->u.armv8.Loaded.fAll)
@@ -567,12 +567,12 @@ DECL_NO_INLINE(static, int) dbgfR3StackWalk(PDBGFUNWINDCTX pUnwindCtx, PDBGFSTAC
     /*
      * Figure the return address size and use the old PC to guess stack item size.
      */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     unsigned const cbRetAddr   = 8;
     unsigned const cbStackItem = 8; /** @todo AARCH32. */
     PVMCPUCC const pVCpu = pUnwindCtx->m_pUVM->pVM->apCpusR3[pUnwindCtx->m_idCpu];
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** @todo this is bogus... */
     unsigned cbRetAddr = RTDbgReturnTypeSize(pFrame->enmReturnType);
     unsigned cbStackItem;
@@ -642,10 +642,10 @@ DECL_NO_INLINE(static, int) dbgfR3StackWalk(PDBGFUNWINDCTX pUnwindCtx, PDBGFSTAC
     pFrame->AddrReturnFrame = pFrame->AddrFrame;
     if (pFrame->fFlags & DBGFSTACKFRAME_FLAGS_USED_UNWIND_INFO)
     {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         AssertFailed(); /** @todo */
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         if (   pFrame->enmReturnType == RTDBGRETURNTYPE_IRET32_PRIV
             || pFrame->enmReturnType == RTDBGRETURNTYPE_IRET64)
             DBGFR3AddrFromSelOff(pUnwindCtx->m_pUVM, pUnwindCtx->m_idCpu, &pFrame->AddrReturnFrame,
@@ -665,19 +665,19 @@ DECL_NO_INLINE(static, int) dbgfR3StackWalk(PDBGFUNWINDCTX pUnwindCtx, PDBGFSTAC
     {
         switch (cbStackItem)
         {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
             case 8:     pFrame->AddrReturnFrame.off = CPUMGetGCPtrPacStripped(pVCpu, *uBp.pu64); break;
 #else
             case 8:     pFrame->AddrReturnFrame.off = *uBp.pu64; break;
 #endif
             case 4:     pFrame->AddrReturnFrame.off = *uBp.pu32; break;
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             case 2:     pFrame->AddrReturnFrame.off = *uBp.pu16; break;
 #endif
             default:    AssertMsgFailedReturn(("cbStackItem=%d\n", cbStackItem), VERR_DBGF_STACK_IPE_1);
         }
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         /* Watcom tries to keep the frame pointer odd for far returns. */
         if (   cbStackItem <= 4
             && !(pFrame->fFlags & DBGFSTACKFRAME_FLAGS_USED_UNWIND_INFO))
@@ -733,10 +733,10 @@ DECL_NO_INLINE(static, int) dbgfR3StackWalk(PDBGFUNWINDCTX pUnwindCtx, PDBGFSTAC
     pFrame->AddrReturnStack = pFrame->AddrReturnFrame;
     if (pFrame->fFlags & DBGFSTACKFRAME_FLAGS_USED_UNWIND_INFO)
     {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         AssertFailed();
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         if (   pFrame->enmReturnType == RTDBGRETURNTYPE_IRET32_PRIV
             || pFrame->enmReturnType == RTDBGRETURNTYPE_IRET64)
             DBGFR3AddrFromSelOff(pUnwindCtx->m_pUVM, pUnwindCtx->m_idCpu, &pFrame->AddrReturnStack,
@@ -764,10 +764,10 @@ DECL_NO_INLINE(static, int) dbgfR3StackWalk(PDBGFUNWINDCTX pUnwindCtx, PDBGFSTAC
     pFrame->AddrReturnPC = pFrame->AddrPC;
     if (pFrame->fFlags & DBGFSTACKFRAME_FLAGS_USED_UNWIND_INFO)
     {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         AssertFailed();
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         if (RTDbgReturnTypeIsNear(pFrame->enmReturnType))
         {
             pFrame->AddrReturnPC.off      = pUnwindCtx->m_State.uPc;
@@ -780,7 +780,7 @@ DECL_NO_INLINE(static, int) dbgfR3StackWalk(PDBGFUNWINDCTX pUnwindCtx, PDBGFSTAC
     }
     else
     {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         switch (pFrame->enmReturnType)
         {
             case RTDBGRETURNTYPE_NEAR64:
@@ -797,7 +797,7 @@ DECL_NO_INLINE(static, int) dbgfR3StackWalk(PDBGFUNWINDCTX pUnwindCtx, PDBGFSTAC
                 return VERR_INVALID_PARAMETER;
         }
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         int rc2;
         switch (pFrame->enmReturnType)
         {
@@ -889,7 +889,7 @@ DECL_NO_INLINE(static, int) dbgfR3StackWalk(PDBGFUNWINDCTX pUnwindCtx, PDBGFSTAC
     {
         case 4: pFrame->fFlags |= DBGFSTACKFRAME_FLAGS_32BIT; break;
         case 8: pFrame->fFlags |= DBGFSTACKFRAME_FLAGS_64BIT; break;
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         case 2: pFrame->fFlags |= DBGFSTACKFRAME_FLAGS_16BIT; break;
 #endif
         default:    AssertMsgFailedReturn(("cbStackItem=%d\n", cbStackItem), VERR_DBGF_STACK_IPE_2);
@@ -906,7 +906,7 @@ DECL_NO_INLINE(static, int) dbgfR3StackWalk(PDBGFUNWINDCTX pUnwindCtx, PDBGFSTAC
      */
     if (pFrame->fFlags & DBGFSTACKFRAME_FLAGS_USED_UNWIND_INFO)
     {
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         rc = dbgfR3StackWalkCollectRegisterChanges(pUnwindCtx->m_pUVM, pFrame, &pUnwindCtx->m_State);
         if (RT_FAILURE(rc))
             return rc;
@@ -937,20 +937,20 @@ DECL_NO_INLINE(static, int) dbgfR3StackWalk(PDBGFUNWINDCTX pUnwindCtx, PDBGFSTAC
         if (!(pFrame->fFlags & DBGFSTACKFRAME_FLAGS_USED_UNWIND_INFO))
         {
             dbgfR3UnwindCtxSetPcAndSp(pUnwindCtx, &pFrame->AddrReturnPC, &pFrame->AddrReturnStack);
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
             pUnwindCtx->m_State.u.armv8.auGprs[ARMV8_A64_REG_BP] = pFrame->AddrReturnFrame.off;
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             pUnwindCtx->m_State.u.x86.auRegs[X86_GREG_xBP] = pFrame->AddrReturnFrame.off;
 #endif
         }
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         if (pUnwindCtx->m_State.enmArch == RTLDRARCH_ARM64)
             pUnwindCtx->m_State.u.armv8.Loaded.fAll = 0;
         else
             AssertFailed();
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         /** @todo Reevaluate CS if the previous frame return type isn't near. */
         if (   pUnwindCtx->m_State.enmArch == RTLDRARCH_AMD64
             || pUnwindCtx->m_State.enmArch == RTLDRARCH_X86_32
@@ -962,18 +962,18 @@ DECL_NO_INLINE(static, int) dbgfR3StackWalk(PDBGFUNWINDCTX pUnwindCtx, PDBGFSTAC
 
         if (dbgfR3UnwindCtxDoOneFrame(pUnwindCtx))
         {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
             Assert(!pUnwindCtx->m_fIsHostRing0);
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             if (pUnwindCtx->m_fIsHostRing0)
                 DBGFR3AddrFromHostR0(&pFrame->AddrReturnFrame, pUnwindCtx->m_State.u.x86.FrameAddr.off);
             else
 #endif
             {
                 DBGFADDRESS AddrReturnFrame = pFrame->AddrReturnFrame;
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
                 DBGFR3AddrFromFlat(pUnwindCtx->m_pUVM, &AddrReturnFrame, pUnwindCtx->m_State.u.armv8.FrameAddr);
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
                 rc = DBGFR3AddrFromSelOff(pUnwindCtx->m_pUVM, pUnwindCtx->m_idCpu, &AddrReturnFrame,
                                           pUnwindCtx->m_State.u.x86.FrameAddr.sel, pUnwindCtx->m_State.u.x86.FrameAddr.off);
                 if (RT_SUCCESS(rc))
@@ -1017,10 +1017,10 @@ static DECLCALLBACK(int) dbgfR3StackWalkCtxFull(PUVM pUVM, VMCPUID idCpu, PCCPUM
     int rc = VINF_SUCCESS;
     if (pAddrPC)
         pCur->AddrPC = *pAddrPC;
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     else
         DBGFR3AddrFromFlat(pUVM, &pCur->AddrPC, pCtx->Pc.u64);
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     else if (enmCodeType != DBGFCODETYPE_GUEST)
         DBGFR3AddrFromFlat(pUVM, &pCur->AddrPC, pCtx->rip);
     else
@@ -1044,14 +1044,14 @@ static DECLCALLBACK(int) dbgfR3StackWalkCtxFull(PUVM pUVM, VMCPUID idCpu, PCCPUM
             PVMCPU const   pVCpu      = pUVM->pVM->apCpusR3[idCpu];
             CPUMMODE const enmCpuMode = CPUMGetGuestMode(pVCpu);
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
             /** @todo */
             Assert(enmCpuMode == CPUMMODE_ARMV8_AARCH64); RT_NOREF(enmCpuMode);
             fAddrMask = UINT64_MAX;
             if (enmReturnType == RTDBGRETURNTYPE_INVALID)
                 pCur->enmReturnType = RTDBGRETURNTYPE_NEAR64;
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             if (enmCpuMode == CPUMMODE_REAL)
             {
                 fAddrMask = UINT16_MAX;
@@ -1074,7 +1074,7 @@ static DECLCALLBACK(int) dbgfR3StackWalkCtxFull(PUVM pUVM, VMCPUID idCpu, PCCPUM
 #endif
         }
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         if (enmReturnType == RTDBGRETURNTYPE_INVALID)
             switch (pCur->AddrPC.fFlags & DBGFADDRESS_FLAGS_TYPE_MASK)
             {
@@ -1091,10 +1091,10 @@ static DECLCALLBACK(int) dbgfR3StackWalkCtxFull(PUVM pUVM, VMCPUID idCpu, PCCPUM
 
         if (pAddrStack)
             pCur->AddrStack = *pAddrStack;
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         else
             DBGFR3AddrFromFlat(pUVM, &pCur->AddrStack, pCtx->aSpReg[1].u64 & fAddrMask); /** @todo EL0 stack. */
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         else if (enmCodeType != DBGFCODETYPE_GUEST)
             DBGFR3AddrFromFlat(pUVM, &pCur->AddrStack, pCtx->rsp & fAddrMask);
         else
@@ -1104,10 +1104,10 @@ static DECLCALLBACK(int) dbgfR3StackWalkCtxFull(PUVM pUVM, VMCPUID idCpu, PCCPUM
         Assert(!(pCur->fFlags & DBGFSTACKFRAME_FLAGS_USED_UNWIND_INFO));
         if (pAddrFrame)
             pCur->AddrFrame = *pAddrFrame;
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         else
             DBGFR3AddrFromFlat(pUVM, &pCur->AddrFrame, pCtx->aGRegs[ARMV8_A64_REG_BP].x & fAddrMask);
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         else if (enmCodeType != DBGFCODETYPE_GUEST)
             DBGFR3AddrFromFlat(pUVM, &pCur->AddrFrame, pCtx->rbp & fAddrMask);
         else if (RT_SUCCESS(rc))
@@ -1123,9 +1123,9 @@ static DECLCALLBACK(int) dbgfR3StackWalkCtxFull(PUVM pUVM, VMCPUID idCpu, PCCPUM
         {
             pCur->enmReturnType = UnwindCtx.m_State.enmRetType;
             pCur->fFlags |= DBGFSTACKFRAME_FLAGS_USED_UNWIND_INFO;
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
             DBGFR3AddrFromFlat(pUVM, &pCur->AddrFrame, UnwindCtx.m_State.u.armv8.FrameAddr);
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             if (!UnwindCtx.m_fIsHostRing0)
                 rc = DBGFR3AddrFromSelOff(UnwindCtx.m_pUVM, UnwindCtx.m_idCpu, &pCur->AddrFrame,
                                           UnwindCtx.m_State.u.x86.FrameAddr.sel, UnwindCtx.m_State.u.x86.FrameAddr.off);

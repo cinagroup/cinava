@@ -35,7 +35,8 @@
 #define VMM_INCLUDED_SRC_include_IEMMc_h /* block IEMMc.h inclusion. */
 #define IEMNATIVE_INCL_TABLE_FUNCTION_PROTOTYPES
 #ifdef IN_RING0
-# define VBOX_VMM_TARGET_X86
+#define VBOX_VMM_TARGET_X86
+#define VRA_VMM_TARGET_X86
 #endif
 #include <VBox/vmm/iem.h>
 #include <VBox/vmm/cpum.h>

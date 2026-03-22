@@ -75,7 +75,7 @@
 /**
  * Optimization for PAE page tables that are modified often
  */
-#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VBOX_WITH_ONLY_PGM_NEM_MODE)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8) && !defined(VBOX_WITH_ONLY_PGM_NEM_MODE)
 # define PGMPOOL_WITH_OPTIMIZED_DIRTY_PT
 #endif
 
@@ -235,7 +235,7 @@ AssertCompile(PGM_MAX_PAGES_PER_ROM_RANGE <= PGM_MAX_PAGES_PER_RAM_RANGE);
 #define PGM_PTFLAGS_TRACK_DIRTY         RT_BIT_64(9)
 /** @} */
 
-#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
 /** @name Defines used to indicate the shadow and guest paging in the templates.
  * @{ */
 # define PGM_TYPE_REAL                  1
@@ -297,7 +297,7 @@ AssertCompile(PGM_MAX_PAGES_PER_ROM_RANGE <= PGM_MAX_PAGES_PER_RAM_RANGE);
        || (uType) == PGM_TYPE_NESTED_AMD64 \
        || (uType) == PGM_TYPE_EPT)
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 /** @name Defines used to indicate the guest paging in the templates.
  * @{ */
 /** MMU disabled. */
@@ -402,7 +402,7 @@ AssertCompile(PGM_MAX_PAGES_PER_ROM_RANGE <= PGM_MAX_PAGES_PER_RAM_RANGE);
  * @param   pVM         The cross context VM structure.
  * @param   GCVirt      The virtual address of the page to invalidate.
  */
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define PGM_INVL_PG_ALL_VCPU(pVM, GCVirt)      do { } while(0)
 #else
 # define PGM_INVL_PG_ALL_VCPU(pVM, GCVirt)      HMInvalidatePageOnAllVCpus(pVM, (RTGCPTR)(GCVirt))
@@ -414,7 +414,7 @@ AssertCompile(PGM_MAX_PAGES_PER_ROM_RANGE <= PGM_MAX_PAGES_PER_RAM_RANGE);
  * @param   pVCpu       The cross context virtual CPU structure.
  * @param   GCVirt      The virtual address within the page directory to invalidate.
  */
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define PGM_INVL_BIG_PG(pVCpu, GCVirt)         do { } while(0)
 #else
 # define PGM_INVL_BIG_PG(pVCpu, GCVirt)         HMFlushTlb(pVCpu)
@@ -425,7 +425,7 @@ AssertCompile(PGM_MAX_PAGES_PER_ROM_RANGE <= PGM_MAX_PAGES_PER_RAM_RANGE);
  *
  * @param   pVCpu       The cross context virtual CPU structure.
  */
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define PGM_INVL_VCPU_TLBS(pVCpu)             do { } while(0)
 #else
 # define PGM_INVL_VCPU_TLBS(pVCpu)             HMFlushTlb(pVCpu)
@@ -436,7 +436,7 @@ AssertCompile(PGM_MAX_PAGES_PER_ROM_RANGE <= PGM_MAX_PAGES_PER_RAM_RANGE);
  *
  * @param   pVM         The cross context VM structure.
  */
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define PGM_INVL_ALL_VCPU_TLBS(pVM)            do { } while(0)
 #else
 # define PGM_INVL_ALL_VCPU_TLBS(pVM)            HMFlushTlbOnAllVCpus(pVM)
@@ -2492,9 +2492,9 @@ DECLINLINE(void *) pgmPoolMapPageStrict(PPGMPOOLPAGE a_pPage, const char *pszCal
 
 /** @name A20 gate macros
  * @{ */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define PGM_WITH_A20
-#elif !defined(VBOX_VMM_TARGET_ARMV8) && !defined(IN_TSTVMSTRUCT)
+#elif !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8) && !defined(IN_TSTVMSTRUCT)
 # error "Misconfig"
 #endif
 #ifdef PGM_WITH_A20
@@ -2821,22 +2821,22 @@ typedef struct PGMMODEDATAGST
     DECLCALLBACKMEMBER(int, pfnGetPage,(PVMCPUCC pVCpu, RTGCPTR GCPtr, PPGMPTWALK pWalk));
     DECLCALLBACKMEMBER(int, pfnQueryPageFast,(PVMCPUCC pVCpu, RTGCPTR GCPtr, uint32_t fFlags, PPGMPTWALKFAST pWalk));
     DECLCALLBACKMEMBER(int, pfnModifyPage,(PVMCPUCC pVCpu, RTGCPTR GCPtr, size_t cbPages, uint64_t fFlags, uint64_t fMask));
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     DECLCALLBACKMEMBER(int, pfnEnter,(PVMCPUCC pVCpu, RTGCPHYS GCPhysCR3));
 #else
     DECLCALLBACKMEMBER(int, pfnWalk,(PVMCPUCC pVCpu, RTGCPTR GCPtr, PPGMPTWALK pWalk, PPGMPTWALKGST pGstWalk));
     DECLCALLBACKMEMBER(int, pfnEnter,(PVMCPUCC pVCpu));
 #endif
     DECLCALLBACKMEMBER(int, pfnExit,(PVMCPUCC pVCpu));
-#if defined(VBOX_VMM_TARGET_X86) && defined(IN_RING3)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) && defined(IN_RING3)
     DECLCALLBACKMEMBER(int, pfnRelocate,(PVMCPUCC pVCpu, RTGCPTR offDelta)); /**< Only in ring-3. */
 #endif
 } PGMMODEDATAGST;
 
-#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
 /** The length of g_aPgmGuestModeData. */
 # define PGM_GUEST_MODE_DATA_ARRAY_SIZE      (PGM_TYPE_AMD64 + 1)
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define PGM_GUEST_MODE_DATA_ARRAY_SIZE      (512 + 2) /** @todo Find a better way to express that. */
 #else
 # error "Port me"
@@ -2845,7 +2845,7 @@ typedef struct PGMMODEDATAGST
 extern PGMMODEDATAGST const g_aPgmGuestModeData[PGM_GUEST_MODE_DATA_ARRAY_SIZE];
 
 
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /**
  * Function pointers for shadow paging.
  */
@@ -3551,7 +3551,7 @@ typedef struct PGMCPUSTATS
  */
 typedef struct PGMCPU
 {
-#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
     /** A20 gate mask.
      * Our current approach to A20 emulation is to let REM do it and don't bother
      * anywhere else. The interesting Guests will be operating with it enabled anyway.
@@ -3730,7 +3730,7 @@ typedef struct PGMCPU
 
     /** Counts the number of times the netware WP0+RO+US hack has been applied. */
     uint64_t                        cNetwareWp0Hacks;
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** What needs syncing (PGM_SYNC_*).
      * This is used to queue operations for PGMSyncCR3, PGMInvalidatePage,
      * PGMFlushTLB, and PGMR3Load. */

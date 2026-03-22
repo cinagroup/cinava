@@ -47,10 +47,10 @@
 #include <VBox/vmm/pdmblkcache.h>
 #include <VBox/vmm/pdmcommon.h>
 #include <VBox/vmm/pdmtask.h>
-#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_AGNOSTIC)
 # include <VBox/vmm/pdmapic.h>
 #endif
-#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_AGNOSTIC)
 # include <VBox/vmm/pdmgic.h>
 #endif
 #include <VBox/sup.h>
@@ -808,7 +808,7 @@ typedef struct PDMICR3
     PPDMDEVINSR3                       pDevInsR3;
     union
     {
-#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_AGNOSTIC)
         struct
         {
             /** The type of APIC backend. */
@@ -818,7 +818,7 @@ typedef struct PDMICR3
             PDMAPICBACKENDR3           ApicBackend;
         } x86;
 #endif
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_AGNOSTIC)
         struct
         {
             /** The type of GIC backend. */
@@ -842,7 +842,7 @@ typedef struct PDMICR0
     PPDMDEVINSR0                       pDevInsR0;
     union
     {
-#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_AGNOSTIC)
         struct
         {
             /** The APIC backend. */
@@ -866,7 +866,7 @@ typedef struct PDMICRC
     RTRCPTR                            avPadding;
     union
     {
-#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_AGNOSTIC)
         struct
         {
             /** The APIC backend. */
@@ -1816,7 +1816,7 @@ extern const PDMPCIRAWHLPR3 g_pdmR3DevPciRawHlp;
 # define PDMDRV_ASSERT_DRVINS(pDrvIns)   do { } while (0)
 #endif
 
-#ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
 /** @def PDM_TO_APICBACKEND
  * Gets the APIC backend given the VM cross-context structure.
  */

@@ -31,8 +31,9 @@
 *********************************************************************************************************************************/
 #define LOG_GROUP LOG_GROUP_PGM_POOL
 #define VBOX_WITHOUT_PAGING_BIT_FIELDS /* 64-bit bitfields are just asking for trouble. See @bugref{9841} and others. */
-#ifndef VBOX_VMM_TARGET_X86
-# define VBOX_VMM_TARGET_X86
+#if !defined(VBOX_VMM_TARGET_X86) && !defined(VRA_VMM_TARGET_X86)
+#define VBOX_VMM_TARGET_X86
+#define VRA_VMM_TARGET_X86
 #endif
 #include <VBox/vmm/pgm.h>
 #include <VBox/vmm/mm.h>
@@ -2145,7 +2146,7 @@ DECLINLINE(void) pgmPoolHashRemove(PPGMPOOL pPool, PPGMPOOLPAGE pPage)
  */
 static int pgmPoolCacheFreeOne(PPGMPOOL pPool, uint16_t iUser)
 {
-#ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
     const PVMCC pVM = pPool->CTX_SUFF(pVM);
 #endif
     Assert(pPool->iAgeHead != pPool->iAgeTail); /* We shouldn't be here if there < 2 cached entries! */
@@ -5251,7 +5252,7 @@ int pgmPoolFlushPage(PPGMPOOL pPool, PPGMPOOLPAGE pPage, bool fFlush)
      */
     if (pgmPoolIsPageLocked(pPage))
     {
-#if !defined(VBOX_VMM_TARGET_ARMV8)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
         AssertMsg(   pPage->enmKind == PGMPOOLKIND_64BIT_PML4
                   || pPage->enmKind == PGMPOOLKIND_PAE_PDPT
                   || pPage->enmKind == PGMPOOLKIND_PAE_PDPT_FOR_32BIT

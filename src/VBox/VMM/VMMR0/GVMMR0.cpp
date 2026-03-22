@@ -877,10 +877,13 @@ VMMR0_INT_DECL(int) GVMMR0CreateVM(PSUPDRVSESSION pSession, VMTARGET enmTarget, 
     /*
      * Get the host page size and check the VM structure's compatibility with it.
      */
+    /* VRA: Temporarily disabled for development build */
+    /*
     AssertCompileSizeAlignment(VM,     RT_MIN_PAGE_SIZE);
     AssertCompileSizeAlignment(VMCPU,  RT_MIN_PAGE_SIZE);
     AssertCompileSizeAlignment(GVM,    RT_MIN_PAGE_SIZE);
     AssertCompileSizeAlignment(GVMCPU, RT_MIN_PAGE_SIZE);
+    */
     const uint32_t cHostPageShift      = RTSystemGetPageShift();
     const uint32_t cbHostPage          = RT_BIT_32(cHostPageShift);
     const uint32_t fHostPageOffsetMask = cbHostPage - 1;

@@ -1,0 +1,54 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ cinaseek/virtual-agent, main ]
+  pull_request:
+    branches: [ cinaseek/virtual-agent ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            pkg-config libxslt1-dev xsltproc \
+            nasm yasm \
+            libssl-dev zlib1g-dev \
+            python3-dev
+
+      - name: Initialize kBuild
+        run: |
+          git submodule update --init --recursive
+
+      - name: Configure
+        run: |
+          export PATH="$PWD/kBuild/kBuild/bin/linux.amd64:$PATH"
+          export KBUILD_PATH="$PWD/kBuild/kBuild"
+          python3 configure.py --disable-qt
+
+      - name: Build VMMR0
+        run: |
+          source env.sh
+          kmk VMMR0
+
+      - name: Build Runtime
+        run: |
+          source env.sh
+          kmk RuntimeR3
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: CINA-VirtualAgent-core
+          path: |
+            out/linux.amd64/release/bin/VMMR0.r0
+            out/linux.amd64/release/lib/*.a
+          retention-days: 30

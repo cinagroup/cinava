@@ -32,7 +32,8 @@
 #define LOG_GROUP   LOG_GROUP_IEM
 #define VMCPU_INCL_CPUM_GST_CTX
 #ifdef IN_RING0
-# define VBOX_VMM_TARGET_ARMV8
+#define VBOX_VMM_TARGET_ARMV8
+#define VRA_VMM_TARGET_ARMV8
 #endif
 #include <VBox/vmm/iem.h>
 #include <VBox/vmm/cpum.h>

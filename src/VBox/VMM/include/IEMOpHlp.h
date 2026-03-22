@@ -143,7 +143,7 @@
 /*
  * Include the target specific header.
  */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # include "VMMAll/target-x86/IEMOpHlp-x86.h"
 #endif
 

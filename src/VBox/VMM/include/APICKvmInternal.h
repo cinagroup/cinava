@@ -82,6 +82,9 @@ typedef struct KVMAPIC
 {
     /** The ring-3 device instance. */
     PPDMDEVINSR3                pDevInsR3;
+    /** The APIC device instance data. */
+    R0PTRTYPE(PAPICDEV)         pApicDevR0;
+    R3PTRTYPE(PAPICDEV)         pApicDevR3;
     /** The VM file descriptor. */
     int                         iFdVm;
     /** The MSI routes required for KVM properly handling IO-APIC pin based interrupts.

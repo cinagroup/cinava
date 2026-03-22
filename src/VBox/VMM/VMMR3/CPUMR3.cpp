@@ -279,7 +279,7 @@ VMMR3DECL(int) CPUMR3Init(PVM pVM)
     AssertCompileMemberAlignment(VM, cpum.s, 32);
     AssertCompile(sizeof(pVM->cpum.s) <= sizeof(pVM->cpum.padding));
     AssertCompileSizeAlignment(CPUMCTX, 64);
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     AssertCompileSizeAlignment(CPUMCTXMSRS, 64);
 #endif
 #ifdef RT_ARCH_AMD64
@@ -288,9 +288,9 @@ VMMR3DECL(int) CPUMR3Init(PVM pVM)
     AssertCompileMemberAlignment(VM, cpum, 64);
     AssertCompileMemberAlignment(VMCPU, cpum.s, 64);
 #ifdef VBOX_STRICT
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     rc = cpumR3MsrStrictInitChecks();
-# elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     rc = cpumR3SysRegStrictInitChecks();
 # endif
     AssertRCReturn(rc, rc);
@@ -356,7 +356,7 @@ VMMR3DECL(int) CPUMR3Init(PVM pVM)
 #endif
 
 
-#if defined(VBOX_VMM_TARGET_X86) || defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64)
     /*
      * Figure out which XSAVE/XRSTOR features are available on the host.
      */
@@ -375,7 +375,7 @@ VMMR3DECL(int) CPUMR3Init(PVM pVM)
     /** @todo r=aeichner Keep AVX/AVX2 disabled for now, too many missing instruction emulations. */
     fXStateHostMask = XSAVE_C_X87 | XSAVE_C_SSE /*| XSAVE_C_YMM | XSAVE_C_OPMASK | XSAVE_C_ZMM_HI256 | XSAVE_C_ZMM_16HI*/;
 # endif
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     pVM->cpum.s.fXStateHostMask = fXStateHostMask;
 # endif
     LogRel(("CPUM: fXStateHostMask=%#llx; host XCR0=%#llx\n", fXStateHostMask, fXcr0Host));
@@ -394,7 +394,7 @@ VMMR3DECL(int) CPUMR3Init(PVM pVM)
 # if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64)
         pVCpu->cpum.s.Host.fXStateMask       = fXStateHostMask;
 # endif
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         pVCpu->cpum.s.hNestedVmxPreemptTimer = NIL_TMTIMERHANDLE;
 # endif
     }
@@ -411,7 +411,7 @@ VMMR3DECL(int) CPUMR3Init(PVM pVM)
     /*
      * Do target specific initialization.
      */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64)
     rc = cpumR3InitTargetX86(pVM, &HostMsrs);
 # else
@@ -603,7 +603,7 @@ static DECLCALLBACK(void) cpumR3InfoAll(PVM pVM, PCDBGFINFOHLP pHlp, const char 
 {
     cpumR3InfoGuest(pVM, pHlp, pszArgs);
     cpumR3InfoGuestInstr(pVM, pHlp, pszArgs);
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     cpumR3InfoGuestHwvirt(pVM, pHlp, pszArgs);
     cpumR3InfoHyper(pVM, pHlp, pszArgs);
 #endif

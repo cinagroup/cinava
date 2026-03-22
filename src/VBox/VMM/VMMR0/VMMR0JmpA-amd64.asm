@@ -241,11 +241,7 @@ SEH64_END_PROLOGUE
     int3
 .the_stack_is_aligned:
 %endif
-%ifdef VBOX_WITH_VBOXR0_AS_DLL
     call    NAME(RT_NOCRT(longjmp)) wrt ..plt
-%else
-    call    NAME(RT_NOCRT(longjmp))
-%endif
 
 .unexpected_return_loop:
     int3
@@ -279,3 +275,6 @@ SEH64_END_PROLOGUE
     ret
 ENDPROC vmmR0CallRing3LongJmp
 
+
+; Tell linker that this file doesn't need an executable stack
+section .note.GNU-stack noalloc noexec nowrite progbits

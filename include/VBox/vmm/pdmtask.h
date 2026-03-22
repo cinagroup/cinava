@@ -120,7 +120,7 @@ typedef FNPDMTASKINT *PFNPDMTASKINT;
 #define PDMTASK_F_VALID_MASK    UINT32_C(0x00000003)
 /** @} */
 
-#ifdef VBOX_IN_VMM
+#ifdef VRA_IN_VMM
 /**
  * Task owner type.
  */
@@ -152,7 +152,7 @@ VMMR3_INT_DECL(int) PDMR3TaskDestroyInternal(PVM pVM, PDMTASKHANDLE hTask);
 
 VMM_INT_DECL(int)   PDMTaskTrigger(PVMCC pVM, PDMTASKTYPE enmType, RTR3PTR pvOwner, PDMTASKHANDLE hTask);
 VMM_INT_DECL(int)   PDMTaskTriggerInternal(PVMCC pVM, PDMTASKHANDLE hTask);
-#endif /* VBOX_IN_VMM */
+#endif /* VRA_IN_VMM */
 
 /** @} */
 

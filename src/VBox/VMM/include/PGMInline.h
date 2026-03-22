@@ -470,7 +470,7 @@ DECLINLINE(void) pgmPhysPageWriteMonitor(PVMCC pVM, PPGMPAGE pPage, RTGCPHYS GCP
 #endif
 }
 
-#ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
 
 /**
  * Checks if the no-execute (NX) feature is active (EFER.NXE=1).

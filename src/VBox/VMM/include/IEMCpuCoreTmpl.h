@@ -45,7 +45,7 @@ typedef struct IEMCPUCORE
 #ifdef IEMCPUCORE_WITH_CODE_TLB
     /** The offset of the next instruction byte. */
     uint32_t                offInstrNextByte;                                                               /* 0x08 */
-# if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
     /** X86: The number of bytes available at pbInstrBuf for the current
      * instruction. This takes the max opcode length into account so that doesn't
      * need to be checked separately. */
@@ -76,7 +76,7 @@ typedef struct IEMCPUCORE
     uint64_t                uInstrBufPc;                                                                    /* 0x18 */
     /** The guest physical address corresponding to pbInstrBuf. */
     RTGCPHYS                GCPhysInstrBuf;                                                                 /* 0x20 */
-# if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
     /** X86: The number of bytes available at pbInstrBuf in total (for IEMExecLots).
      * This takes the CS segment limit into account.
      * @note Set to zero when the code TLB is flushed to trigger TLB reload. */
@@ -86,7 +86,7 @@ typedef struct IEMCPUCORE
     int16_t                 offCurInstrStart;                                                          /* x86: 0x2a */
 # endif
 
-# if (!defined(IEM_WITH_OPAQUE_DECODER_STATE) && defined(VBOX_VMM_TARGET_X86)) || defined(DOXYGEN_RUNNING)
+# if (!defined(IEM_WITH_OPAQUE_DECODER_STATE) && (defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86))) || defined(DOXYGEN_RUNNING)
     /** X86: The prefix mask (IEM_OP_PRF_XXX). */
     uint32_t                fPrefixes;                                                                 /* x86: 0x2c */
     /** X86: The extra REX ModR/M register field bit (REX.R << 3). */
@@ -110,7 +110,7 @@ typedef struct IEMCPUCORE
     uint8_t                 bUnused;                                                                   /* x86: 0x35 */
 #  endif
 # else  /* IEM_WITH_OPAQUE_DECODER_STATE || !X86 */
-#  ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uint8_t                 abOpaqueDecoderPart1[0x36 - 0x2c];
 #  endif
 # endif /* IEM_WITH_OPAQUE_DECODER_STATE || !X86 */
@@ -122,7 +122,7 @@ typedef struct IEMCPUCORE
     /** The current offset into abOpcode. */
     uint8_t                 offOpcode;                                                                      /*       0x09 */
 
-#   ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** X86: The offset of the ModR/M byte relative to the start of the
      *  instruction. */
     uint8_t                 offModRm;                                                                  /* x86:       0x0a */
@@ -141,7 +141,7 @@ typedef struct IEMCPUCORE
     uint8_t                 uRexIndex;                                                                 /* x86:       0x12 */
 #   endif
 # else  /* IEM_WITH_OPAQUE_DECODER_STATE */
-#   ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uint8_t                 abOpaqueDecoderPart1[0x13 - 0x08];
 #   else
     uint8_t                 abOpaqueDecoderPart1[2];
@@ -149,9 +149,9 @@ typedef struct IEMCPUCORE
 # endif /* IEM_WITH_OPAQUE_DECODER_STATE */
 #endif /* !IEMCPUCORE_WITH_CODE_TLB */
 
-#if  (!defined(IEM_WITH_OPAQUE_DECODER_STATE) && (defined(VBOX_VMM_TARGET_X86) || !defined(IEMCPUCORE_WITH_CODE_TLB))) \
-  || defined(DOXGYEN_RUNNING)
-# ifdef VBOX_VMM_TARGET_X86
+#if  (!defined(IEM_WITH_OPAQUE_DECODER_STATE) && ((defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)) || !defined(IEMCPUCORE_WITH_CODE_TLB))) \
+  || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** X86: The effective operand mode. */
     IEMMODE                 enmEffOpSize;                                                              /* x86: 0x36, 0x13 */
     /** X86: The default addressing mode. */
@@ -187,7 +187,7 @@ typedef struct IEMCPUCORE
 # endif /* !VBOX_VMM_TARGET_X86 */
 
     /** The opcode bytes. */
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uint8_t                 abOpcode[15];                                                              /* x86: 0x40, 0x20 */
 # else
     union
@@ -197,28 +197,28 @@ typedef struct IEMCPUCORE
         uint32_t            au32Opcode[ 7];
     };
 # endif
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** X86: Explicit alignment padding. */
 #  ifdef IEMCPUCORE_WITH_CODE_TLB
     //uint8_t                 abAlignment2c[0x4f - 0x4f];                                              /* x86: 0x4f */
 #  else
     uint8_t                 abAlignment2c[0x4f - 0x2f];                                                /* x86:       0x2f */
 #  endif
-# elif !defined(VBOX_VMM_TARGET_ARMV8)
+#elif !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
     uint8_t                 abAlignment2c[0x4f - 0x28];                                         /* !x86: !arm:       0x28 */
 # endif
 
 #else  /* IEM_WITH_OPAQUE_DECODER_STATE || (!x86 && TLB) */
 # ifdef IEMCPUCORE_WITH_CODE_TLB
-#  ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uint8_t                 abOpaqueDecoderPart2[0x4f - 0x36];
-#  elif !defined(VBOX_VMM_TARGET_ARMV8)
+#elif !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
     uint8_t                 abOpaqueDecoderPart2[0x4f - 0x28];
 #  endif
 # else
-#  ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uint8_t                 abOpaqueDecoderPart2[0x4f - 0x13];
-#  elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     uint8_t                 abOpaqueDecoderPart2[0x28 - 0x0a];
 #  else
     uint8_t                 abOpaqueDecoderPart2[0x4f - 0x09];
@@ -227,7 +227,7 @@ typedef struct IEMCPUCORE
 #endif /* IEM_WITH_OPAQUE_DECODER_STATE */
     /** @} */
 
-#  ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     RTGCPTR                 GCPtrEffT0SzAndMask;                                                       /* arm: 0x28 */
     RTGCPTR                 GCPtrEffT1SzOrMask;                                                        /* arm: 0x30 */
     uint8_t                 abPadding3[0x4f - 0x38];                                                   /* arm: 0x38 */

@@ -41,7 +41,9 @@
 
 /* objbase.h includes windows.h via rpc.h, so get ahead of it and include
    it here via our cleanup wrapper. */
+#ifdef RT_OS_WINDOWS
 #include <iprt/win/windows.h>
+#endif
 
 #ifdef _MSC_VER
 # pragma warning(push)

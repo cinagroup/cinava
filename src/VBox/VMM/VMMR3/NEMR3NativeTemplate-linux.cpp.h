@@ -503,7 +503,7 @@ static int nemR3LnxInitCheckCapabilities(PVM pVM, PRTERRINFO pErrInfo)
 #define CAP_ENTRY_ML(a_Number)           { "KVM_CAP_" #a_Number, a_Number, UINT32_C(0x00ffffff), 0, 1, 0 }
 
         CAP_ENTRY__L(KVM_CAP_IRQCHIP),                       /* 0 */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         CAP_ENTRY_ML(KVM_CAP_HLT),
 #else
         CAP_ENTRY__L(KVM_CAP_HLT),
@@ -557,7 +557,7 @@ static int nemR3LnxInitCheckCapabilities(PVM pVM, PRTERRINFO pErrInfo)
 #ifdef __KVM_HAVE_XEN_HVM
         CAP_ENTRY__L(KVM_CAP_XEN_HVM),
 #endif
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         CAP_ENTRY_ML(KVM_CAP_ADJUST_CLOCK),
 #else
         CAP_ENTRY__L(KVM_CAP_ADJUST_CLOCK),
@@ -579,7 +579,7 @@ static int nemR3LnxInitCheckCapabilities(PVM pVM, PRTERRINFO pErrInfo)
 #ifdef __KVM_HAVE_DEBUGREGS
         CAP_ENTRY__L(KVM_CAP_DEBUGREGS),                     /* 50 */
 #endif
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         CAP_ENTRY__S(KVM_CAP_X86_ROBUST_SINGLESTEP, fRobustSingleStep),
 #else
         CAP_ENTRY__L(KVM_CAP_X86_ROBUST_SINGLESTEP),
@@ -627,7 +627,7 @@ static int nemR3LnxInitCheckCapabilities(PVM pVM, PRTERRINFO pErrInfo)
         CAP_ENTRY__L(KVM_CAP_PPC_HTAB_FD),
         CAP_ENTRY__L(KVM_CAP_S390_CSS_SUPPORT),
         CAP_ENTRY__L(KVM_CAP_PPC_EPR),
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         CAP_ENTRY_ML(KVM_CAP_ARM_PSCI),
         CAP_ENTRY_ML(KVM_CAP_ARM_SET_DEVICE_ADDR),
         CAP_ENTRY_ML(KVM_CAP_DEVICE_CTRL),
@@ -648,7 +648,7 @@ static int nemR3LnxInitCheckCapabilities(PVM pVM, PRTERRINFO pErrInfo)
         CAP_ENTRY__L(KVM_CAP_S390_IRQCHIP),
         CAP_ENTRY__L(KVM_CAP_IOEVENTFD_NO_LENGTH),           /* 100 */
         CAP_ENTRY__L(KVM_CAP_VM_ATTRIBUTES),
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         CAP_ENTRY_ML(KVM_CAP_ARM_PSCI_0_2),
 #else
         CAP_ENTRY__L(KVM_CAP_ARM_PSCI_0_2),
@@ -671,7 +671,7 @@ static int nemR3LnxInitCheckCapabilities(PVM pVM, PRTERRINFO pErrInfo)
         CAP_ENTRY__L(KVM_CAP_MULTI_ADDRESS_SPACE),
         CAP_ENTRY__L(KVM_CAP_GUEST_DEBUG_HW_BPS),
         CAP_ENTRY__L(KVM_CAP_GUEST_DEBUG_HW_WPS),            /* 120 */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         CAP_ENTRY__S(KVM_CAP_SPLIT_IRQCHIP, fKvmApic),
 #else
         CAP_ENTRY__L(KVM_CAP_SPLIT_IRQCHIP),
@@ -719,7 +719,7 @@ static int nemR3LnxInitCheckCapabilities(PVM pVM, PRTERRINFO pErrInfo)
         CAP_ENTRY__L(KVM_CAP_COALESCED_PIO),
         CAP_ENTRY__L(KVM_CAP_HYPERV_ENLIGHTENED_VMCS),
         CAP_ENTRY__L(KVM_CAP_EXCEPTION_PAYLOAD),
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         CAP_ENTRY_MS(KVM_CAP_ARM_VM_IPA_SIZE, cIpaBits),
 #else
         CAP_ENTRY__L(KVM_CAP_ARM_VM_IPA_SIZE),
@@ -746,7 +746,7 @@ static int nemR3LnxInitCheckCapabilities(PVM pVM, PRTERRINFO pErrInfo)
         CAP_ENTRY__L(KVM_CAP_SMALLER_MAXPHYADDR),
         CAP_ENTRY__L(KVM_CAP_S390_DIAG318),
         CAP_ENTRY__L(KVM_CAP_STEAL_TIME),
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         CAP_ENTRY_ML(KVM_CAP_X86_USER_SPACE_MSR),            /* (since 5.10) */
         CAP_ENTRY_ML(KVM_CAP_X86_MSR_FILTER),
 #else
@@ -972,7 +972,7 @@ DECLHIDDEN(int) nemR3NativeInit(PVM pVM, bool fFallback, bool fForced)
              * Create an empty VM since it is recommended we check capabilities on
              * the VM rather than the system descriptor.
              */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
             int fdVm = ioctl(fdKvm, KVM_CREATE_VM, pVM->nem.s.cIpaBits);
 #else
             int fdVm = ioctl(fdKvm, KVM_CREATE_VM, 0UL /* Type must be zero on x86 */);
@@ -1100,7 +1100,7 @@ DECLHIDDEN(int) nemR3NativeTerm(PVM pVM)
             munmap(pVCpu->nem.s.pRun, pVM->nem.s.cbVCpuMmap);
             pVCpu->nem.s.pRun = NULL;
         }
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         if (pVCpu->nem.s.pNestedState)
             RTMemFree(pVCpu->nem.s.pNestedState);
 #endif

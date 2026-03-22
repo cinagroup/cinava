@@ -32,7 +32,8 @@
 #define LOG_GROUP   LOG_GROUP_IEM
 #define VMCPU_INCL_CPUM_GST_CTX
 #ifdef IN_RING0
-# define VBOX_VMM_TARGET_X86
+#define VBOX_VMM_TARGET_X86
+#define VRA_VMM_TARGET_X86
 #endif
 #include <VBox/vmm/iem.h>
 #include <VBox/vmm/cpum.h>
@@ -46,9 +47,9 @@
 #include <iprt/x86.h>
 
 #include "IEMInline.h"
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # include "target-x86/IEMAllTlbInline-x86.h"
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include "target-armv8/IEMAllTlbInline-armv8.h"
 #endif
 
@@ -78,7 +79,7 @@ DECL_FORCE_INLINE(void) iemTlbInvalidateOne(IEMTLB *pTlb)
             pTlb->aEntries[i * 2].uTag = 0;
     }
 
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     pTlb->cTlbNonGlobalLargePageCurLoads    = 0;
     pTlb->NonGlobalLargePageRange.uLastTag  = 0;
     pTlb->NonGlobalLargePageRange.uFirstTag = UINT64_MAX;
@@ -88,7 +89,7 @@ DECL_FORCE_INLINE(void) iemTlbInvalidateOne(IEMTLB *pTlb)
     pTlb->LargePageRange.uFirstTag = UINT64_MAX;
 # endif
 
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     if (a_fGlobal)
     {
         pTlb->uTlbRevisionGlobal += IEMTLB_REVISION_INCR;
@@ -124,7 +125,7 @@ DECL_FORCE_INLINE(void) iemTlbInvalidateAll(PVMCPUCC pVCpu)
 # ifdef IEM_WITH_CODE_TLB_IN_CUR_CTX
     ICORE_R3(pVCpu).cbInstrBufTotal = 0;
     iemTlbInvalidateOne<a_fGlobal>(&ITLBS_R3(pVCpu).Code);
-#  ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     if (a_fGlobal)
         IEMTLBTRACE_FLUSH_GLOBAL(pVCpu, ITLBS_R3(pVCpu).Code.uTlbRevision, ITLBS_R3(pVCpu).Code.uTlbRevisionGlobal, false);
     else
@@ -134,7 +135,7 @@ DECL_FORCE_INLINE(void) iemTlbInvalidateAll(PVMCPUCC pVCpu)
 
 # ifdef IEM_WITH_DATA_TLB_IN_CUR_CTX
     iemTlbInvalidateOne<a_fGlobal>(&ITLBS_R3(pVCpu).Data);
-#  ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     if (a_fGlobal)
         IEMTLBTRACE_FLUSH_GLOBAL(pVCpu, ITLBS_R3(pVCpu).Data.uTlbRevision, ITLBS_R3(pVCpu).Data.uTlbRevisionGlobal, true);
     else
@@ -217,7 +218,7 @@ VMM_INT_DECL(void) IEMTlbInvalidatePage(PVMCPUCC pVCpu, RTGCPTR GCPtr)
 void iemTlbInvalidateAllPhysicalSlow(PVMCPUCC pVCpu) RT_NOEXCEPT
 {
     Log10(("iemTlbInvalidateAllPhysicalSlow\n"));
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     uint64_t const uTlbPhysRevAndStuff0 = (ITLBS_R3(pVCpu).Code.uTlbPhysRevAndStuff0 & IEMTLB_STUFF_BITS)
                                         | (IEMTLB_PHYS_REV_INCR * 2);
     uint64_t const uTlbPhysRevAndStuff1 = (ITLBS_R3(pVCpu).Code.uTlbPhysRevAndStuff1 & IEMTLB_STUFF_BITS)
@@ -277,7 +278,7 @@ VMM_INT_DECL(void) IEMTlbInvalidateAllPhysical(PVMCPUCC pVCpu)
 # ifdef IEM_WITH_CODE_TLB
     ICORE_R3(pVCpu).cbInstrBufTotal = 0;
 # endif
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     uint64_t const uTlbPhysRev1 = ITLBS_R3(pVCpu).Code.uTlbPhysRevAndStuff1 + IEMTLB_PHYS_REV_INCR;
     uint64_t const uTlbPhysRev  = ITLBS_R3(pVCpu).Code.uTlbPhysRevAndStuff0 + IEMTLB_PHYS_REV_INCR;
 # else
@@ -285,7 +286,7 @@ VMM_INT_DECL(void) IEMTlbInvalidateAllPhysical(PVMCPUCC pVCpu)
 # endif
     if (RT_LIKELY(uTlbPhysRev > IEMTLB_PHYS_REV_INCR * 2))
     {
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         ITLBS_R3(pVCpu).Code.uTlbPhysRevAndStuff0 = uTlbPhysRev;
         ITLBS_R3(pVCpu).Code.uTlbPhysRevAndStuff1 = uTlbPhysRev1;
         ITLBS_R3(pVCpu).Data.uTlbPhysRevAndStuff0 = uTlbPhysRev;
@@ -336,7 +337,7 @@ VMM_INT_DECL(void) IEMTlbInvalidateAllPhysicalAllCpus(PVMCC pVM, VMCPUID idCpuCa
          * The TLBs have the same physical revision at all time (except when its
          * increased), so use the (first) one from Tlbs.Code and increase it.
          */
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         uint64_t const uTlbPhysRevPrev = ASMAtomicUoReadU64(&ITLBS_R3(pVCpu).Code.uTlbPhysRevAndStuff0) & IEMTLBE_F_PHYS_REV;
 # else
         uint64_t const uTlbPhysRevPrev = ASMAtomicUoReadU64(&ITLBS_R3(pVCpu).Code.uTlbPhysRev);
@@ -359,7 +360,7 @@ VMM_INT_DECL(void) IEMTlbInvalidateAllPhysicalAllCpus(PVMCC pVM, VMCPUID idCpuCa
          * physical revision, though it has to deal with other vCPUs changing
          * the ASID, VMID, and stuff while we're here...
          */
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         uint64_t *apuTlbPhysRevAndStuff0[4] =
         {
             &ITLBS_R3(pVCpu).Code.uTlbPhysRevAndStuff0,

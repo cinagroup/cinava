@@ -658,12 +658,12 @@ typedef PGMRELOCHANDLERARGS const *PCPGMRELOCHANDLERARGS;
 /*********************************************************************************************************************************
 *   Internal Functions                                                                                                           *
 *********************************************************************************************************************************/
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 static int                pgmR3InitPaging(PVM pVM);
 #endif
 static int                pgmR3InitStats(PVM pVM);
 static DECLCALLBACK(void) pgmR3PhysInfo(PVM pVM, PCDBGFINFOHLP pHlp, const char *pszArgs);
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 static DECLCALLBACK(void) pgmR3InfoMode(PVM pVM, PCDBGFINFOHLP pHlp, const char *pszArgs);
 static DECLCALLBACK(void) pgmR3InfoCr3(PVM pVM, PCDBGFINFOHLP pHlp, const char *pszArgs);
 #endif
@@ -713,7 +713,7 @@ static const DBGCCMD    g_aCmds[] =
     { "pgmerror",      0, 1,        &g_aPgmErrorArgs[0],      1,         0,      pgmR3CmdError,      "",                     "Enables inject runtime of errors into parts of PGM." },
     { "pgmerroroff",   0, 1,        &g_aPgmErrorArgs[0],      1,         0,      pgmR3CmdError,      "",                     "Disables inject runtime errors into parts of PGM." },
 #  ifdef VBOX_STRICT
-#   ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     { "pgmassertcr3",  0, 0,        NULL,                     0,         0,      pgmR3CmdAssertCR3,  "",                     "Check the shadow CR3 mapping." },
 #   endif
 #   ifdef VBOX_WITH_PAGE_SHARING
@@ -840,7 +840,7 @@ VMMR3DECL(int) PGMR3Init(PVM pVM)
         PVMCPU pVCpu = pVM->apCpusR3[idCpu];
         PPGMCPU pPGM = &pVCpu->pgm.s;
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         pPGM->enmShadowMode     = PGMMODE_INVALID;
         pPGM->enmGuestMode      = PGMMODE_INVALID;
         pPGM->enmGuestSlatMode  = PGMSLAT_INVALID;
@@ -873,7 +873,7 @@ VMMR3DECL(int) PGMR3Init(PVM pVM)
         pPGM->fA20Enabled      = true;
         pPGM->GCPhysA20Mask    = ~((RTGCPHYS)!pPGM->fA20Enabled << 20);
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         /* Poison the cached register values to force an initial change. */
         for (uint8_t idxEl = 0; idxEl < RT_ELEMENTS(pPGM->au64RegSctlrEl); idxEl++)
         {
@@ -886,7 +886,7 @@ VMMR3DECL(int) PGMR3Init(PVM pVM)
 #endif
     }
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     pVM->pgm.s.enmHostMode      = SUPPAGINGMODE_INVALID;
     pVM->pgm.s.GCPhys4MBPSEMask = RT_BIT_64(32) - 1; /* default; checked later */
 #endif
@@ -1059,7 +1059,7 @@ VMMR3DECL(int) PGMR3Init(PVM pVM)
                                               pgmPhysMmio2WriteHandler, "MMIO2 dirty page tracing",
                                               &pVM->pgm.s.hMmio2DirtyPhysHandlerType);
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /*
      * Init the paging.
      */
@@ -1085,7 +1085,7 @@ VMMR3DECL(int) PGMR3Init(PVM pVM)
         }
     }
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     for (VMCPUID i = 0; i < pVM->cCpus; i++)
     {
         PVMCPU pVCpu = pVM->apCpusR3[i];
@@ -1112,7 +1112,7 @@ VMMR3DECL(int) PGMR3Init(PVM pVM)
         /*
          * Info & statistics
          */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         DBGFR3InfoRegisterInternalEx(pVM, "mode",
                                      "Shows the current paging mode. "
                                      "Recognizes 'all', 'guest', 'shadow' and 'host' as arguments, defaulting to 'all' if nothing is given.",
@@ -1175,7 +1175,7 @@ VMMR3DECL(int) PGMR3Init(PVM pVM)
 }
 
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /**
  * Init paging.
  *
@@ -1500,7 +1500,7 @@ static int pgmR3InitStats(PVM pVM)
     rc = STAMR3RegisterF(pVM, a, STAMTYPE_PROFILE, STAMVISIBILITY_ALWAYS, STAMUNIT_TICKS_PER_CALL, c, b, idCpu); \
     AssertRC(rc);
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         PGM_REG_COUNTER(&pPgmCpu->cGuestModeChanges, "/PGM/CPU%u/cGuestModeChanges",  "Number of guest mode changes.");
         PGM_REG_COUNTER(&pPgmCpu->cA20Changes, "/PGM/CPU%u/cA20Changes",  "Number of A20 gate changes.");
 #endif
@@ -1514,7 +1514,7 @@ static int pgmR3InitStats(PVM pVM)
         PGM_REG_COUNTER(&pPgmCpu->StatR3PageMapTlbMisses,               "/PGM/CPU%u/R3/Page/MapTlbMisses",          "Lockless page map TLB failed, falling back on locked lookup.");
 
 #ifdef VBOX_WITH_STATISTICS
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         PGMCPUSTATS *pCpuStats = &pVM->apCpusR3[idCpu]->pgm.s.Stats;
 
 #  if 0 /* rarely useful; leave for debugging. */
@@ -1734,7 +1734,7 @@ static int pgmR3InitStats(PVM pVM)
  */
 VMMR3DECL(int) PGMR3InitFinalize(PVM pVM)
 {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /*
      * Determine the max physical address width (MAXPHYADDR) and apply it to
      * all the mask members and stuff.
@@ -1863,7 +1863,7 @@ VMMR3DECL(int) PGMR3InitFinalize(PVM pVM)
 #endif
 
     //pgmLogState(pVM);
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     LogRel(("PGM: PGMR3InitFinalize: 4 MB PSE mask %RGp -> %Rrc\n", pVM->pgm.s.GCPhys4MBPSEMask, rc));
 #else
     LogRel(("PGM: PGMR3InitFinalize: -> %Rrc\n", rc));
@@ -1909,7 +1909,7 @@ VMMR3_INT_DECL(int) PGMR3InitCompleted(PVM pVM, VMINITCOMPLETED enmWhat)
  */
 VMMR3DECL(void) PGMR3Relocate(PVM pVM, RTGCINTPTR offDelta)
 {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     LogFlow(("PGMR3Relocate: offDelta=%RGv\n", offDelta));
 
     /*
@@ -1957,7 +1957,7 @@ VMMR3DECL(void) PGMR3Relocate(PVM pVM, RTGCINTPTR offDelta)
  */
 VMMR3DECL(void) PGMR3ResetCpu(PVM pVM, PVMCPU pVCpu)
 {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uintptr_t const idxGst = pVCpu->pgm.s.idxGuestModeData;
     if (   idxGst < RT_ELEMENTS(g_aPgmGuestModeData)
         && g_aPgmGuestModeData[idxGst].pfnExit)
@@ -1990,7 +1990,7 @@ VMMR3DECL(void) PGMR3ResetCpu(PVM pVM, PVMCPU pVCpu)
     VMCPU_FF_CLEAR(pVCpu, VMCPU_FF_PGM_SYNC_CR3);
     VMCPU_FF_CLEAR(pVCpu, VMCPU_FF_PGM_SYNC_CR3_NON_GLOBAL);
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     RT_NOREF(pVM);
 
     for (uint8_t i = 0; i < RT_ELEMENTS(pVCpu->pgm.s.aidxGuestModeDataTtbr0); i++)
@@ -2055,7 +2055,7 @@ VMMR3_INT_DECL(void) PGMR3Reset(PVM pVM)
     {
         PVMCPU          pVCpu  = pVM->apCpusR3[i];
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         uintptr_t const idxGst = pVCpu->pgm.s.idxGuestModeData;
         if (   idxGst < RT_ELEMENTS(g_aPgmGuestModeData)
             && g_aPgmGuestModeData[idxGst].pfnExit)
@@ -2066,7 +2066,7 @@ VMMR3_INT_DECL(void) PGMR3Reset(PVM pVM)
         pVCpu->pgm.s.GCPhysCR3 = NIL_RTGCPHYS;
         pVCpu->pgm.s.GCPhysNstGstCR3 = NIL_RTGCPHYS;
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         for (uint8_t iEl = 0; iEl < RT_ELEMENTS(pVCpu->pgm.s.aidxGuestModeDataTtbr0); iEl++)
         {
             uintptr_t const idxGst = pVCpu->pgm.s.aidxGuestModeDataTtbr0[iEl];
@@ -2106,13 +2106,13 @@ VMMR3_INT_DECL(void) PGMR3Reset(PVM pVM)
     {
         PVMCPU  pVCpu = pVM->apCpusR3[i];
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         int rc = PGMHCChangeMode(pVM, pVCpu, PGMMODE_REAL, false /* fForce */);
         AssertReleaseRC(rc);
 
         STAM_REL_COUNTER_RESET(&pVCpu->pgm.s.cA20Changes);
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         /* This ASSUMES that SCTLR_EL1 and TCR_EL1 are reset to 0 in CPUM. */
         int rc = PGMChangeMode(pVCpu, 1 /*bEl*/, 0 /* u64RegSctlr*/, 0 /* u64RegTcr*/);
         AssertReleaseRC(rc);
@@ -2137,7 +2137,7 @@ VMMR3_INT_DECL(void) PGMR3Reset(PVM pVM)
     pgmR3PoolReset(pVM);
 #endif
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /*
      * Re-init various other members and clear the FFs that PGM owns.
      */
@@ -2237,7 +2237,7 @@ VMMR3DECL(int) PGMR3Term(PVM pVM)
 }
 
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /**
  * Show paging mode.
  *
@@ -2432,7 +2432,7 @@ static DECLCALLBACK(void) pgmR3PhysInfo(PVM pVM, PCDBGFINFOHLP pHlp, const char 
     }
 }
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 
 /**
  * Dump the page directory to the log.

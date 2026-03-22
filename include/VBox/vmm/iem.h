@@ -43,7 +43,7 @@
 #include <VBox/vmm/trpm.h>
 #include <iprt/assert.h>
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include <VBox/vmm/iem-armv8.h>
 #else
 # include <VBox/vmm/iem-x86-amd64.h>

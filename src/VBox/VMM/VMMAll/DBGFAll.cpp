@@ -31,6 +31,10 @@
 *********************************************************************************************************************************/
 #define LOG_GROUP LOG_GROUP_DBGF
 #define VMCPU_INCL_CPUM_GST_CTX
+#ifdef IN_RING0
+#define VBOX_VMM_TARGET_X86
+#define VRA_VMM_TARGET_X86
+#endif
 #include <VBox/vmm/dbgf.h>
 #include "DBGFInternal.h"
 #include <VBox/vmm/cpum.h>
@@ -51,7 +55,7 @@ AssertCompileMembersSameSizeAndOffset(VM, dbgf.s.cHardIntBreakpoints,   VM, dbgf
 AssertCompileMembersSameSizeAndOffset(VM, dbgf.s.cSoftIntBreakpoints,   VM, dbgf.ro.cSoftIntBreakpoints);
 AssertCompileMembersSameSizeAndOffset(VM, dbgf.s.cSelectedEvents,       VM, dbgf.ro.cSelectedEvents);
 
-#if !defined(VBOX_VMM_TARGET_ARMV8)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
 
 
 /**
@@ -189,7 +193,7 @@ VMM_INT_DECL(bool) DBGFBpIsInt3Armed(PVM pVM)
  */
 VMM_INT_DECL(VBOXSTRICTRC)  DBGFBpCheckInstruction(PVMCC pVM, PVMCPUCC pVCpu, RTGCPTR GCPtrPC, bool fCheckGuest)
 {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     CPUM_ASSERT_NOT_EXTRN(pVCpu, CPUMCTX_EXTRN_DR7);
 #endif
 
@@ -213,7 +217,7 @@ VMM_INT_DECL(VBOXSTRICTRC)  DBGFBpCheckInstruction(PVMCC pVM, PVMCPUCC pVCpu, RT
                 pVCpu->dbgf.s.hBpActive = pVM->dbgf.s.aHwBreakpoints[iBp].hBp;
                 pVCpu->dbgf.s.fSingleSteppingRaw = false;
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
                 LogFlow(("DBGFBpCheckInstruction: hit hw breakpoint %u at %04x:%RGv (%RGv)\n",
                          iBp, pVCpu->cpum.GstCtx.cs.Sel, pVCpu->cpum.GstCtx.rip, GCPtrPC));
 #else
@@ -228,7 +232,7 @@ VMM_INT_DECL(VBOXSTRICTRC)  DBGFBpCheckInstruction(PVMCC pVM, PVMCPUCC pVCpu, RT
      */
     if (fCheckGuest)
     {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         uint32_t const fDr7 = (uint32_t)pVCpu->cpum.GstCtx.dr[7];
         if (X86_DR7_ANY_EO_ENABLED(fDr7) && !pVCpu->cpum.GstCtx.eflags.Bits.u1RF)
         {
@@ -290,7 +294,7 @@ VMM_INT_DECL(VBOXSTRICTRC)  DBGFBpCheckInstruction(PVMCC pVM, PVMCPUCC pVCpu, RT
 template<bool const a_fRead>
 DECL_FORCE_INLINE(uint32_t) dbgfBpCheckData(PVMCC pVM, PVMCPUCC pVCpu, RTGCPTR GCPtrAccess, uint32_t cbAccess, bool fSysAccess)
 {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     AssertCompile((X86_DR7_RW_RW & 1) && (X86_DR7_RW_WO & 1));
     CPUM_ASSERT_NOT_EXTRN(pVCpu, CPUMCTX_EXTRN_DR7);
 #endif
@@ -317,7 +321,7 @@ DECL_FORCE_INLINE(uint32_t) dbgfBpCheckData(PVMCC pVM, PVMCPUCC pVCpu, RTGCPTR G
             else
             {
                 /* The page is of interest. */
-#ifdef VBOX_VMM_TARGET_X86  /** @todo ARMv8: port me */
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)  /** @todo ARMv8: port me */
                 AssertCompile(!((CPUMCTX_DBG_HIT_DRX_MASK | CPUMCTX_DBG_DBGF_MASK) & UINT32_C(1)));
 #endif
                 fRet |= UINT32_C(1);
@@ -330,7 +334,7 @@ DECL_FORCE_INLINE(uint32_t) dbgfBpCheckData(PVMCC pVM, PVMCPUCC pVCpu, RTGCPTR G
                     pVCpu->dbgf.s.fSingleSteppingRaw = false;
                     LogFlow(("DBGFBpCheckData%s: hit hw breakpoint %u when accessing %RGv LB %#x\n",
                              a_fRead ? "Read" : "Write", iBp, GCPtrAccess, cbAccess));
-#ifdef VBOX_VMM_TARGET_X86  /** @todo ARMv8: port me */
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)  /** @todo ARMv8: port me */
                     fRet |= CPUMCTX_DBG_DBGF_BP;
 #endif
                 }
@@ -340,7 +344,7 @@ DECL_FORCE_INLINE(uint32_t) dbgfBpCheckData(PVMCC pVM, PVMCPUCC pVCpu, RTGCPTR G
     /*
      * Check the guest.
      */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uint32_t const fDr7 = (uint32_t)pVCpu->cpum.GstCtx.dr[7];
     if (    (a_fRead ? X86_DR7_ANY_RW_ENABLED(fDr7) : X86_DR7_ANY_W_ENABLED(fDr7))
         && !pVCpu->cpum.GstCtx.eflags.Bits.u1RF)
@@ -436,7 +440,7 @@ VMM_INT_DECL(uint32_t) DBGFBpCheckDataWrite(PVMCC pVM, PVMCPUCC pVCpu, RTGCPTR G
     return dbgfBpCheckData<false /*a_fRead*/>(pVM, pVCpu, GCPtrAccess, cbAccess, fSysAccess);
 }
 
-#if !defined(VBOX_VMM_TARGET_ARMV8)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
 
 /**
  * Checks I/O access for guest or hypervisor hardware breakpoints.
@@ -695,7 +699,7 @@ VMM_INT_DECL(VBOXSTRICTRC) DBGFEventGenericWithArgs(PVM pVM, PVMCPU pVCpu, DBGFE
         /*
          * Any events on the stack. Should the incoming event be ignored?
          */
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         uint64_t const rip = CPUMGetGuestFlatPC(pVCpu); /* rip is a misnomer but saves us #ifdef's later on. */
 #else
         uint64_t const rip = CPUMGetGuestRIP(pVCpu);

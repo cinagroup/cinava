@@ -95,9 +95,9 @@ VBOXSTRICTRC emR3NemSingleInstruction(PVM pVM, PVMCPU pVCpu, uint32_t fFlags)
     if (!NEMR3CanExecuteGuest(pVM, pVCpu))
         return VINF_EM_RESCHEDULE;
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     uint64_t const uOldPc  = pVCpu->cpum.GstCtx.Pc.u64;
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uint64_t const uOldRip = pVCpu->cpum.GstCtx.rip;
 #else
 # error "port me"
@@ -147,7 +147,7 @@ VBOXSTRICTRC emR3NemSingleInstruction(PVM pVM, PVMCPU pVCpu, uint32_t fFlags)
         /*
          * Done?
          */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         CPUM_ASSERT_NOT_EXTRN(pVCpu, CPUMCTX_EXTRN_PC);
         if (   (rcStrict != VINF_SUCCESS && rcStrict != VINF_EM_DBG_STEPPED)
             || !(fFlags & EM_ONE_INS_FLAGS_RIP_CHANGE)
@@ -161,7 +161,7 @@ VBOXSTRICTRC emR3NemSingleInstruction(PVM pVM, PVMCPU pVCpu, uint32_t fFlags)
             return rcStrict;
         }
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         CPUM_ASSERT_NOT_EXTRN(pVCpu, CPUMCTX_EXTRN_RIP);
         if (   (rcStrict != VINF_SUCCESS && rcStrict != VINF_EM_DBG_STEPPED)
             || !(fFlags & EM_ONE_INS_FLAGS_RIP_CHANGE)
@@ -205,7 +205,7 @@ static int emR3NemExecuteInstructionWorker(PVM pVM, PVMCPU pVCpu, int rcRC)
     /*
      * Log it.
      */
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     Log(("EMINS: %RGv SP_EL0=%RGv SP_EL1=%RGv\n", (RTGCPTR)pVCpu->cpum.GstCtx.Pc.u64,
          (RTGCPTR)pVCpu->cpum.GstCtx.aSpReg[0].u64, (RTGCPTR)pVCpu->cpum.GstCtx.aSpReg[1].u64));
     if (pszPrefix)
@@ -213,7 +213,7 @@ static int emR3NemExecuteInstructionWorker(PVM pVM, PVMCPU pVCpu, int rcRC)
         DBGFR3_INFO_LOG(pVM, pVCpu, "cpumguest", pszPrefix);
         DBGFR3_DISAS_INSTR_CUR_LOG(pVCpu, pszPrefix);
     }
-# elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     Log(("EMINS: %04x:%RGv RSP=%RGv\n", pVCpu->cpum.GstCtx.cs.Sel, (RTGCPTR)pVCpu->cpum.GstCtx.rip, (RTGCPTR)pVCpu->cpum.GstCtx.rsp));
     if (pszPrefix)
     {
@@ -380,9 +380,9 @@ VBOXSTRICTRC emR3NemExecute(PVM pVM, PVMCPU pVCpu, bool *pfFFDone)
 {
     VBOXSTRICTRC rcStrict = VERR_IPE_UNINITIALIZED_STATUS;
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     LogFlow(("emR3NemExecute%d: (pc=%RGv)\n", pVCpu->idCpu, (RTGCPTR)pVCpu->cpum.GstCtx.Pc.u64));
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     LogFlow(("emR3NemExecute%d: (cs:eip=%04x:%RGv)\n", pVCpu->idCpu, pVCpu->cpum.GstCtx.cs.Sel, (RTGCPTR)pVCpu->cpum.GstCtx.rip));
 #else
 # error "port me"
@@ -424,7 +424,7 @@ VBOXSTRICTRC emR3NemExecute(PVM pVM, PVMCPU pVCpu, bool *pfFFDone)
         /*
          * Log important stuff before entering GC.
          */
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         if (TRPMHasTrap(pVCpu))
             Log(("CPU%d: Pending hardware interrupt=0x%x cs:rip=%04X:%RGv\n", pVCpu->idCpu, TRPMGetTrapNo(pVCpu), pVCpu->cpum.GstCtx.cs.Sel, (RTGCPTR)pVCpu->cpum.GstCtx.rip));
 
@@ -451,7 +451,7 @@ VBOXSTRICTRC emR3NemExecute(PVM pVM, PVMCPU pVCpu, bool *pfFFDone)
                     Log(("NEMR%d-CPU%d: %04x:%08x ESP=%08X IF=%d IOPL=%d CR0=%x CR4=%x EFER=%x\n", cpl, pVCpu->idCpu, pVCpu->cpum.GstCtx.cs.Sel,          pVCpu->cpum.GstCtx.eip, pVCpu->cpum.GstCtx.esp, pVCpu->cpum.GstCtx.eflags.Bits.u1IF, pVCpu->cpum.GstCtx.eflags.Bits.u2IOPL, (uint32_t)pVCpu->cpum.GstCtx.cr0, (uint32_t)pVCpu->cpum.GstCtx.cr4, (uint32_t)pVCpu->cpum.GstCtx.msrEFER));
             }
         }
-# elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         if (!(pVCpu->cpum.GstCtx.fExtrn & CPUMCTX_EXTRN_PC))
         {
             /** @todo better logging */

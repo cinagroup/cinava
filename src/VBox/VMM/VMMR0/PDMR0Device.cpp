@@ -57,6 +57,9 @@
 #include "dtrace/VBoxVMM.h"
 #include "PDMInline.h"
 
+/* Forward declaration of APIC device from APICAll-x86.cpp */
+extern const PDMDEVREG g_DeviceAPIC;
+
 
 /*********************************************************************************************************************************
 *   Global Variables                                                                                                             *

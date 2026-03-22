@@ -33,10 +33,10 @@
 #define PDMPCIDEV_INCLUDE_PRIVATE  /* Hack to get pdmpcidevint.h included at the right point. */
 #include "PDMInternal.h"
 #include <VBox/vmm/pdm.h>
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include <VBox/vmm/pdmgic.h>
 # include <VBox/vmm/pmu.h>
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # include <VBox/vmm/pdmapic.h>
 #endif
 #include <VBox/vmm/cfgm.h>
@@ -702,7 +702,7 @@ static int pdmR3DevLoadModules(PVM pVM)
     /*
      * Register internal VMM devices.
      */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /* Register the internal VMM GIC device. */
     int rc = pdmR3DevReg_Register(&RegCB.Core, &g_DeviceGIC);
     AssertRCReturn(rc, rc);
@@ -718,7 +718,7 @@ static int pdmR3DevLoadModules(PVM pVM)
     AssertRCReturn(rc, rc);
 #endif
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /* Register the internal VMM APIC device. */
     int rc = pdmR3DevReg_Register(&RegCB.Core, &g_DeviceAPIC);
     AssertRCReturn(rc, rc);

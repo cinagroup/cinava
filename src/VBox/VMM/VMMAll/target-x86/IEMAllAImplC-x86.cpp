@@ -30,7 +30,8 @@
 *   Header Files                                                                                                                 *
 *********************************************************************************************************************************/
 #ifdef IN_RING0
-# define VBOX_VMM_TARGET_X86
+#define VBOX_VMM_TARGET_X86
+#define VRA_VMM_TARGET_X86
 #endif
 #include "IEMInternal.h"
 #include <VBox/vmm/vmcc.h>

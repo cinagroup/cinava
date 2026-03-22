@@ -35,7 +35,7 @@
 #include <VBox/vmm/mm.h>
 #include <VBox/vmm/vmcc.h>
 #include <VBox/err.h>
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include <VBox/vmm/pdmgic.h>
 #else
 # include <VBox/vmm/pdmapic.h>
@@ -49,7 +49,7 @@
 #include "dtrace/VBoxVMM.h"
 
 
-#if !defined(VBOX_VMM_TARGET_ARMV8)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
 /**
  * Gets the pending interrupt.
  *
@@ -147,7 +147,7 @@ VMMDECL(int) PDMIsaSetIrq(PVMCC pVM, uint8_t u8Irq, uint8_t u8Level, uint32_t uT
     }
     Log9(("PDMIsaSetIrq: irq=%#x lvl=%u tag=%#x\n", u8Irq, u8Level, uTagSrc));
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     int rc = VINF_SUCCESS;
     PDMGicSetSpi(pVM, u8Irq, u8Level == PDM_IRQ_LEVEL_HIGH ? true : false);
 #else
@@ -204,7 +204,7 @@ VMM_INT_DECL(int) PDMIoApicSetIrq(PVM pVM, PCIBDF uBusDevFn, uint8_t u8Irq, uint
 {
     Log9(("PDMIoApicSetIrq: irq=%#x lvl=%u tag=%#x src=%#x\n", u8Irq, u8Level, uTagSrc, uBusDevFn));
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     RT_NOREF(uBusDevFn, uTagSrc);
     PDMGicSetSpi(pVM, u8Irq, u8Level == PDM_IRQ_LEVEL_HIGH ? true : false);
     return VINF_SUCCESS;
@@ -274,7 +274,7 @@ VMM_INT_DECL(void) PDMIoApicBroadcastEoi(PVMCC pVM, uint8_t uVector)
 VMM_INT_DECL(void) PDMIoApicSendMsi(PVMCC pVM, PCIBDF uBusDevFn, PCMSIMSG pMsi, uint32_t uTagSrc)
 {
     Log9(("PDMIoApicSendMsi: addr=%#RX64 data=%#RX32 tag=%#x src=%#x\n", pMsi->Addr.u64, pMsi->Data.u32, uTagSrc, uBusDevFn));
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     NOREF(uBusDevFn);
     PCPDMGICBACKEND pGic = &pVM->pdm.s.Ic.u.armv8.GicBackend;
     if (pGic->pfnSendMsi)

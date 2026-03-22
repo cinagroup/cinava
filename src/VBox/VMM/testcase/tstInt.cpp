@@ -33,9 +33,11 @@
 *   Header Files                                                                                                                 *
 *********************************************************************************************************************************/
 #if defined(RT_ARCH_AMD64) || defined(RT_ARCH_X86)
-# define VBOX_VMM_TARGET_X86
+#define VBOX_VMM_TARGET_X86
+#define VRA_VMM_TARGET_X86
 #elif defined(RT_ARCH_ARM64)
-# define VBOX_VMM_TARGET_ARMV8
+#define VBOX_VMM_TARGET_ARMV8
+#define VRA_VMM_TARGET_ARMV8
 #else
 # error "port me"
 #endif

@@ -59,7 +59,7 @@ typedef uint64_t STAMCOUNTER;
  * (Don't forget to sync this with CPUMInternal.mac !)
  * @note Was part of saved state (6.1 and earlier).
  * @{ */
-#if defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) /** @todo temporary: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_AGNOSTIC)
 
 /** Indicates that we've saved the host FPU, SSE, whatever state and that it
  * needs to be restored. */
@@ -112,13 +112,13 @@ typedef uint64_t STAMCOUNTER;
 /** The current saved state version.
  *  @todo AMD64:When bumping to next version, add CPUMCTX::enmHwVirt and
  *        uMicrocodeRevision to the saved state. */
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # define CPUM_SAVED_STATE_VERSION               CPUM_SAVED_STATE_VERSION_HWVIRT_CFG
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define CPUM_SAVED_STATE_VERSION               CPUM_SAVED_STATE_VERSION_ARMV8_IDREGS2
 #endif
 
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /** The saved state version with nested hardware virtualization config. */
 # define CPUM_SAVED_STATE_VERSION_HWVIRT_CFG    24
 /** The saved state version with u32RestoreProcCtls2 for Nested Microsoft
@@ -163,7 +163,7 @@ typedef uint64_t STAMCOUNTER;
 # define CPUM_SAVED_STATE_VERSION_VER1_6        6
 #endif
 
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 /** Saving per-vCPU ID register overrides. */
 # define CPUM_SAVED_STATE_VERSION_ARMV8_IDREGS2 4
 /** More flexible ID registers saving. */
@@ -176,7 +176,7 @@ typedef uint64_t STAMCOUNTER;
 /** @} */
 
 
-#if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86)
+#if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /** @name AMD64: XSAVE limits.
  * @{ */
 /** Max size we accept for the XSAVE area.
@@ -192,7 +192,7 @@ typedef uint64_t STAMCOUNTER;
  */
 typedef struct CPUMINFO
 {
-#if defined(VBOX_VMM_TARGET_X86) /** @todo temporary: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_AGNOSTIC)
     /** The number of MSR ranges (CPUMMSRRANGE) in the array pointed to below. */
     uint32_t                    cMsrRanges;
     /** Mask applied to ECX before looking up the MSR for a RDMSR/WRMSR
@@ -234,7 +234,7 @@ typedef struct CPUMINFO
      *       allocation.  The insanity is mainly for more recent AMD CPUs. */
     CPUMMSRRANGE                aMsrRanges[8192];
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** Guest system registers used for identification (heap). */
     R3PTRTYPE(PSUPARMSYSREGVAL) paIdRegsR3;
     /** Number of registers in paIdRegsR3.   */
@@ -248,7 +248,45 @@ typedef struct CPUMINFO
     /** System register ranges. */
     CPUMSYSREGRANGE             aSysRegRanges[128];
 #else
-# error "port me"
+    /* Default to x86 for VRA if no specific target is defined */
+    /** The number of MSR ranges (CPUMMSRRANGE) in the array pointed to below. */
+    uint32_t                    cMsrRanges;
+    /** Mask applied to ECX before looking up the MSR for a RDMSR/WRMSR
+     * instruction.  Older hardware has been observed to ignore higher bits. */
+    uint32_t                    fMsrMask;
+
+    /** MXCSR mask. */
+    uint32_t                    fMxCsrMask;
+
+    /** The number of CPUID leaves (CPUMCPUIDLEAF) in the array pointed to below. */
+    uint32_t                    cCpuIdLeaves;
+    /** The index of the first extended CPUID leaf in the array.
+     *  Set to cCpuIdLeaves if none present. */
+    uint32_t                    iFirstExtCpuIdLeaf;
+    /** How to handle unknown CPUID leaves. */
+    CPUMUNKNOWNCPUID            enmUnknownCpuIdMethod;
+    /** For use with CPUMUNKNOWNCPUID_DEFAULTS (DB & VM),
+     * CPUMUNKNOWNCPUID_LAST_STD_LEAF (VM) and CPUMUNKNOWNCPUID_LAST_STD_LEAF_WITH_ECX (VM). */
+    CPUMCPUID                   DefCpuId;
+
+    /** Scalable bus frequency used for reporting other frequencies. */
+    uint64_t                    uScalableBusFreq;
+
+    /** The microcode revision.
+     * UINT32_MAX if the one from the CPU database entry is to be used.
+     * @see /CPUM/GuestMicrocodeRevision in CFGM. */
+    uint32_t                    uMicrocodeRevision;
+    uint32_t                    uPadding;
+
+    /** Pointer to the MSR ranges (for compatibility with old hyper heap code). */
+    R3PTRTYPE(PCPUMMSRRANGE)    paMsrRangesR3;
+    /** Pointer to the CPUID leaves (for compatibility with old hyper heap code). */
+    R3PTRTYPE(PCPUMCPUIDLEAF)   paCpuIdLeavesR3;
+
+    /** CPUID leaves. */
+    CPUMCPUIDLEAF               aCpuIdLeaves[256];
+    /** MSR ranges. */
+    CPUMMSRRANGE                aMsrRanges[8192];
 #endif
 } CPUMINFO;
 /** Pointer to a CPU info structure. */
@@ -373,7 +411,7 @@ typedef CPUMHOSTCTX *PCPUMHOSTCTX;
 #endif /* RT_ARCH_AMD64 */
 
 
-#if defined(VBOX_VMM_TARGET_X86) /** @todo temporary: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_AGNOSTIC)
 /**
  * The hypervisor context CPU state (just DRx left now).
  */
@@ -416,7 +454,7 @@ typedef struct CPUM
      * This is used to verify load order dependencies (PGM). */
     bool                    fPendingRestore;
 
-#if defined(VBOX_VMM_TARGET_X86) /** @todo temporary: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_AGNOSTIC)
     /** Whether MTRR reads report valid memory types for memory regions. */
     bool                    fMtrrRead;
     /** Whether the guest's writes to MTRRs are implemented. */
@@ -457,7 +495,7 @@ typedef struct CPUM
     STAMCOUNTER             cMsrReadsUnknown;
     /** @} */
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** The initial exception level (EL) to start the CPU after a reset,
      * should be either ARMV8_AARCH64_EL_1 or ARMV8_AARCH64_EL_2 for nested virtualization. */
     uint8_t                 bResetEl;
@@ -479,6 +517,31 @@ typedef struct CPUM
     STAMCOUNTER             cSysRegReadsRaiseExcp;
     STAMCOUNTER             cSysRegReadsUnknown;
     /** @} */
+#elif defined(VRA_VMM_TARGET_ARMV8)
+    /** The initial exception level (EL) to start the CPU after a reset,
+     * should be either ARMV8_AARCH64_EL_1 or ARMV8_AARCH64_EL_2 for nested virtualization. */
+    uint8_t                 bResetEl;
+    uint8_t                 abPadding0[5];
+
+    /** The reset value of the program counter. */
+    uint64_t                u64ResetPc;
+
+    /** Guest CPU info. */
+    CPUMINFO                GuestInfo;
+
+    /** @name System register statistics.
+     * @{ */
+    STAMCOUNTER             cSysRegWrites;
+    STAMCOUNTER             cSysRegWritesToIgnoredBits;
+    STAMCOUNTER             cSysRegWritesRaiseExcp;
+    STAMCOUNTER             cSysRegWritesUnknown;
+    STAMCOUNTER             cSysRegReads;
+    STAMCOUNTER             cSysRegReadsRaiseExcp;
+    STAMCOUNTER             cSysRegReadsUnknown;
+    /** @} */
+#else
+    /* Placeholder for VRA targets - GuestInfo is required */
+    CPUMINFO                GuestInfo;
 #endif
 
 #ifdef RT_ARCH_ARM64
@@ -515,7 +578,7 @@ typedef struct CPUMCPU
     /** Guest context.
      * Aligned on a 64-byte boundary. */
     CPUMCTX                 Guest;
-#if defined(VBOX_VMM_TARGET_X86) /** @todo temporary: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_AGNOSTIC)
     /** Guest context - misc MSRs
      * Aligned on a 64-byte boundary. */
     CPUMCTXMSRS             GuestMsrs;
@@ -538,7 +601,7 @@ typedef struct CPUMCPU
      * @todo Obsolete, but will probably be refactored so keep it for reference. */
     uint32_t                fChanged;
 
-#if defined(VBOX_VMM_TARGET_X86) /** @todo temporary: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_AGNOSTIC)
     /** Nested VMX: VMX-preemption timer. */
     TMTIMERHANDLE           hNestedVmxPreemptTimer;
     /** Whether the X86_CPUID_FEATURE_EDX_APIC and X86_CPUID_AMD_FEATURE_EDX_APIC
@@ -551,7 +614,7 @@ typedef struct CPUMCPU
      * Must be aligned on a 64-byte boundary. */
     CPUMHYPERCTX            Hyper;
 #endif
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** Overrides for CPUMINFO::paIdRegsR3 (on the heap, sorted by idReg).
      * Typically, only MPIDR_EL1 and maybe MIDR_EL1 is in this list.
      * @note This list must _not_ contain anything that isn't in the master list
@@ -572,7 +635,7 @@ typedef struct CPUMCPU
 # ifdef RT_ARCH_AMD64
 AssertCompileMemberAlignment(CPUMCPU, Host, 64);
 # endif
-# if defined(VBOX_VMM_TARGET_X86)
+# if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 AssertCompileAdjacentMembers(CPUMCPU, Guest, GuestMsrs); /* HACK ALERT! HMR0A.asm makes this ASSUMPTION in the SVM RUN code! */
 # endif
 #endif
@@ -582,11 +645,11 @@ typedef CPUMCPU *PCPUMCPU;
 #ifndef VBOX_FOR_DTRACE_LIB
 RT_C_DECLS_BEGIN
 
-# if defined(VBOX_VMM_TARGET_X86) /** @todo temporary: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
+# if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_AGNOSTIC)
 PCPUMCPUIDLEAF      cpumCpuIdGetLeaf(PVM pVM, uint32_t uLeaf);
 PCPUMCPUIDLEAF      cpumCpuIdGetLeafEx(PVM pVM, uint32_t uLeaf, uint32_t uSubLeaf, bool *pfExactSubLeafHit);
 # endif
-# if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86)
+# if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 PCPUMCPUIDLEAF      cpumCpuIdGetLeafInt(PCPUMCPUIDLEAF paLeaves, uint32_t cLeaves, uint32_t uLeaf, uint32_t uSubLeaf);
 PCPUMCPUIDLEAF      cpumCpuIdEnsureSpace(PVM pVM, PCPUMCPUIDLEAF *ppaLeaves, uint32_t cLeaves);
 #  ifdef VBOX_STRICT
@@ -596,8 +659,8 @@ void                cpumCpuIdExplodeFeaturesX86SetSummaryBits(CPUMFEATURESX86 *p
 DECLHIDDEN(void)    cpumCpuIdExplodeFeaturesX86Vmx(struct VMXMSRS const *pVmxMsrs, CPUMFEATURESX86 *pFeatures);
 DECLHIDDEN(void)    cpumCpuIdExplodeFeaturesX86VmxFromSupMsrs(PCSUPHWVIRTMSRS pMsrs, CPUMFEATURESX86 *pFeatures);
 void                cpumCpuIdExplodeArchCapabilities(CPUMFEATURESX86 *pFeatures, bool fHasArchCap, uint64_t fArchVal);
-# endif /* defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) */
-# if defined(RT_ARCH_ARM64) || defined(VBOX_VMM_TARGET_ARMV8)
+# endif /* defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) */
+# if defined(RT_ARCH_ARM64) || defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 DECLCALLBACK(int)   cpumCpuIdSysRegValSortCmp(void const *pvElement1, void const *pvElement2, void *pvUser);
 # endif
 
@@ -609,7 +672,7 @@ DECLCALLBACK(int)   cpumCpuIdSysRegValSortCmp(void const *pvElement1, void const
 /**
  * Called by CPUMR3Init to do target specific initializations.
  */
-#  if defined(VBOX_VMM_TARGET_X86)
+#  if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 DECLHIDDEN(int)     cpumR3InitTargetX86(PVM pVM, PCSUPHWVIRTMSRS pHostMsrs);
 #  else
 DECLHIDDEN(int)     cpumR3InitTarget(PVM pVM);
@@ -673,24 +736,24 @@ DECLHIDDEN(int)     cpumR3DbgInitTarget(PVM pVM);
 /** @} */
 
 
-#  if defined(VBOX_VMM_TARGET_X86)
+#  if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 DECLCALLBACK(void)  cpumR3InfoGuestHwvirt(PVM pVM, PCDBGFINFOHLP pHlp, const char *pszArgs);
 DECLCALLBACK(void)  cpumR3InfoHyper(PVM pVM, PCDBGFINFOHLP pHlp, const char *pszArgs);
 #  endif
-#  if defined(VBOX_VMM_TARGET_ARMV8)
+#  if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 DECLHIDDEN(int)     cpumR3SysRegStrictInitChecks(void);
 DECLHIDDEN(int)     cpumR3InitCpuId(PVM pVM);
-#  elif defined(VBOX_VMM_TARGET_X86)
+#  elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 int                 cpumR3InitCpuIdAndMsrs(PVM pVM, PCSUPHWVIRTMSRS pHostMsrs);
 DECLHIDDEN(void)    cpumR3InitVmxGuestFeaturesAndMsrs(PVM pVM, PCFGMNODE pCpumCfg, PCSUPHWVIRTMSRS pHostMsrs,
                                                       PVMXMSRS pGuestVmxMsrs);
 void                cpumR3CpuIdRing3InitDone(PVM pVM);
 #  endif
 void                cpumR3SaveCpuId(PVM pVM, PSSMHANDLE pSSM);
-#  ifdef VBOX_VMM_TARGET_X86
+#  if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 int                 cpumR3LoadCpuIdX86(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion, PCCPUMMSRS pGuestMsrs);
 int                 cpumR3LoadCpuIdPre32(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion);
-#  elif defined(VBOX_VMM_TARGET_ARMV8)
+#  elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 int                 cpumR3LoadCpuIdArmV8(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion);
 DECLCALLBACK(void)  cpumR3CpuFeatInfo(PVM pVM, PCDBGFINFOHLP pHlp, const char *pszArgs);
 #  endif
@@ -716,7 +779,7 @@ DECLHIDDEN(void)    cpumR3CpuIdInfoVerboseCompareListU64(PCPUMCPUIDINFOSTATE pTh
                                                          bool fColumnHeaders = false, const char *pszLeadIn = NULL);
 
 DECLHIDDEN(int)     cpumR3DbGetCpuInfo(PVM pVM, const char *pszName, PCPUMINFO pInfo);
-#  ifdef VBOX_VMM_TARGET_X86
+#  if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 int                 cpumR3MsrRangesInsert(PVM pVM, PCPUMMSRRANGE *ppaMsrRanges, uint32_t *pcMsrRanges, PCCPUMMSRRANGE pNewRange);
 DECLHIDDEN(int)     cpumR3MsrReconcileWithCpuId(PVM pVM, bool fForceFlushCmd, bool fForceSpecCtrl);
 int                 cpumR3MsrApplyFudge(PVM pVM);
@@ -724,17 +787,20 @@ int                 cpumR3MsrRegStats(PVM pVM);
 int                 cpumR3MsrStrictInitChecks(void);
 PCPUMMSRRANGE       cpumLookupMsrRange(PVM pVM, uint32_t idMsr);
 #  endif
+#  ifdef VRA_VMM_TARGET_X86
+/* VRA-specific MSR functions can be added here if needed */
+#  endif
 # endif /* IN_RING3 */
 
 # ifdef IN_RING0
-#  if defined(VBOX_VMM_TARGET_X86) /** @todo temporary: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#  if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_AGNOSTIC)
 DECLASM(int)        cpumR0SaveHostRestoreGuestFPUState(PCPUMCPU pCPUM);
 DECLASM(void)       cpumR0SaveGuestRestoreHostFPUState(PCPUMCPU pCPUM);
 #  endif
 # endif
 
 # if defined(IN_RC) || defined(IN_RING0)
-#  if defined(VBOX_VMM_TARGET_X86) /** @todo temporary: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#  if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_AGNOSTIC)
 DECLASM(int)        cpumRZSaveHostFPUState(PCPUMCPU pCPUM);
 DECLASM(void)       cpumRZSaveGuestFpuState(PCPUMCPU pCPUM, bool fLeaveFpuAccessible);
 DECLASM(void)       cpumRZSaveGuestSseRegisters(PCPUMCPU pCPUM);

@@ -1093,7 +1093,7 @@ VMMR3DECL(int) CFGMR3ConstructDefaultTree(PVM pVM)
     UPDATERC();
 
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** @todo This config doesn't work, it is just to satisfy the tstVMMUnitTest-1 testcase. */
     /*
      * CPUM.
@@ -1173,7 +1173,7 @@ VMMR3DECL(int) CFGMR3ConstructDefaultTree(PVM pVM)
     PCFGMNODE pLunL1 = NULL;
 #endif
 
-#ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
     /*
      * PC Arch.
      */

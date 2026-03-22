@@ -54,9 +54,9 @@ static DECLCALLBACK(int) dbgfR3CpuGetMode(PVM pVM, VMCPUID idCpu, CPUMMODE *penm
 {
     Assert(idCpu == VMMGetCpuId(pVM));
     PVMCPU pVCpu = VMMGetCpuById(pVM, idCpu);
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     CPUM_IMPORT_EXTRN_RET(pVCpu, CPUMCTX_EXTRN_PSTATE);
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     CPUM_IMPORT_EXTRN_RET(pVCpu, CPUMCTX_EXTRN_CR0 | CPUMCTX_EXTRN_EFER);
 #else
 # error "port me"
@@ -99,9 +99,9 @@ static DECLCALLBACK(int) dbgfR3CpuIn64BitCode(PVM pVM, VMCPUID idCpu, bool *pfIn
 {
     Assert(idCpu == VMMGetCpuId(pVM));
     PVMCPU pVCpu = VMMGetCpuById(pVM, idCpu);
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     CPUM_IMPORT_EXTRN_RET(pVCpu, CPUMCTX_EXTRN_PSTATE);
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     CPUM_IMPORT_EXTRN_RET(pVCpu, CPUMCTX_EXTRN_CR0 | CPUMCTX_EXTRN_EFER);
 #else
 # error "port me"
@@ -132,7 +132,7 @@ VMMR3DECL(bool) DBGFR3CpuIsIn64BitCode(PUVM pUVM, VMCPUID idCpu)
 }
 
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /**
  * Wrapper around CPUMIsGuestInV86Code.
  *
@@ -165,7 +165,7 @@ VMMR3DECL(bool) DBGFR3CpuIsInV86Code(PUVM pUVM, VMCPUID idCpu)
     VM_ASSERT_VALID_EXT_RETURN(pUVM->pVM, false);
     AssertReturn(idCpu < pUVM->pVM->cCpus, false);
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     bool fInV86Code;
     int rc = VMR3ReqPriorityCallWaitU(pUVM, idCpu, (PFNRT)dbgfR3CpuInV86Code, 3, pUVM->pVM, idCpu, &fInV86Code);
     if (RT_FAILURE(rc))

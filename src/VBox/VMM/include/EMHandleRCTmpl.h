@@ -111,7 +111,7 @@ int emR3NemHandleRC(PVM pVM, PVMCPU pVCpu, int rc)
             rc = emR3ExecuteIOInstruction(pVM, pVCpu);
             break;
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         /*
          * Execute pending I/O Port access.
          */
@@ -168,7 +168,7 @@ int emR3NemHandleRC(PVM pVM, PVMCPU pVCpu, int rc)
                 rc = emR3ExecuteInstruction(pVM, pVCpu, "EVENT: ");
             break;
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         case VINF_EM_EMULATE_SPLIT_LOCK:
             rc = VBOXSTRICTRC_TODO(emR3ExecuteSplitLockInstruction(pVM, pVCpu));
             break;

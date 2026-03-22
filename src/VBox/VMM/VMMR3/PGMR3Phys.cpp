@@ -6038,7 +6038,7 @@ static DECLCALLBACK(VBOXSTRICTRC) pgmR3PhysUnmapChunkRendezvous(PVM pVM, PVMCPU 
                 /** @todo We should not flush chunks which include cr3 mappings. */
                 for (VMCPUID idCpu = 0; idCpu < pVM->cCpus; idCpu++)
                 {
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
                     PPGMCPU pPGM = &pVM->apCpusR3[idCpu]->pgm.s;
 
                     pPGM->pGst32BitPdR3    = NULL;
@@ -6354,7 +6354,7 @@ VMMR3DECL(int) PGMR3PhysAllocateHandyPages(PVM pVM)
 *   Other Stuff                                                                                                                  *
 *********************************************************************************************************************************/
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /**
  * Sets the Address Gate 20 state.
  *

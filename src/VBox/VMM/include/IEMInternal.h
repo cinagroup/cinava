@@ -557,7 +557,7 @@ typedef IEMTLBENTRY const *PCIEMTLBENTRY;
 
 /** @name IEMTLBE_F_XXX - TLB entry flags (IEMTLBENTRY::fFlagsAndPhysRev)
  * @{  */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define IEMTLBE_F_PT_NO_EXEC       RT_BIT_64(0)  /**< Page tables: Not executable. */
 # define IEMTLBE_F_PT_NO_WRITE      RT_BIT_64(1)  /**< Page tables: Not writable. */
 # define IEMTLBE_F_PT_NO_USER       RT_BIT_64(2)  /**< Page tables: Not user accessible (supervisor only). */
@@ -571,7 +571,7 @@ typedef IEMTLBENTRY const *PCIEMTLBENTRY;
 # define IEMTLBE_F_PG_CODE_PAGE     RT_BIT_64(10) /**< Phys page:   Code page. */
 # define IEMTLBE_F_PHYS_REV         UINT64_C(0xfffffffffffff800) /**< Physical revision mask. @sa IEMTLB_PHYS_REV_INCR */
 #endif
-#if defined(VBOX_VMM_TARGET_ARMV8) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) || defined(DOXYGEN_RUNNING)
 /** Stage 1+2: No unprivileged read access. */
 # define IEMTLBE_F_EFF_P_NO_READ_BIT        0
 # define IEMTLBE_F_EFF_P_NO_READ            RT_BIT_64(IEMTLBE_F_EFF_P_NO_READ_BIT)
@@ -662,13 +662,13 @@ typedef IEMTLBENTRY const *PCIEMTLBENTRY;
                                      | PGMIEMGCPHYS2PTR_F_UNASSIGNED \
                                      | PGMIEMGCPHYS2PTR_F_CODE_PAGE \
                                      | IEMTLBE_F_PHYS_REV )
-#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_ARMV8)
 AssertCompile(PGMIEMGCPHYS2PTR_F_NO_WRITE     == IEMTLBE_F_PG_NO_WRITE);
 AssertCompile(PGMIEMGCPHYS2PTR_F_NO_READ      == IEMTLBE_F_PG_NO_READ);
 AssertCompile(PGMIEMGCPHYS2PTR_F_NO_MAPPINGR3 == IEMTLBE_F_NO_MAPPINGR3);
 AssertCompile(PGMIEMGCPHYS2PTR_F_UNASSIGNED   == IEMTLBE_F_PG_UNASSIGNED);
 AssertCompile(PGMIEMGCPHYS2PTR_F_CODE_PAGE    == IEMTLBE_F_PG_CODE_PAGE);
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 AssertCompile(PGM_WALKINFO_BIG_PAGE           == IEMTLBE_F_PT_LARGE_PAGE);
 # endif
 #endif
@@ -678,7 +678,7 @@ AssertCompile(PGM_WALKINFO_BIG_PAGE           == IEMTLBE_F_PT_LARGE_PAGE);
 /** The physical address mask. */
 #define IEMTLBE_GCPHYS_F_PHYS_MASK          UINT64_C(0x000ffffffffff000)
 AssertCompile(((RT_BIT_64(52) - 1) & ~(uint64_t)GUEST_MIN_PAGE_OFFSET_MASK) == IEMTLBE_GCPHYS_F_PHYS_MASK);
-#if defined(VBOX_VMM_TARGET_ARMV8) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) || defined(DOXYGEN_RUNNING)
 /** ARM: The translation level (TTL).
  * Required for abort codes and TLBI filtering (follows TLBI TTL[1:0] encoding). */
 # define IEMTLBE_GCPHYS_F_TTL_MASK          UINT64_C(0x0000000000000003)
@@ -720,7 +720,7 @@ AssertCompile(RT_BIT_32(IEMTLB_ENTRY_COUNT_AS_POWER_OF_TWO) == IEMTLB_ENTRY_COUN
 /** The TLB size factor.
  * This is two if we use the even/odd approach to non-global/global entries,
  * otherwise it'll be one. */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # define IEMTLB_ENTRY_COUNT_FACTOR              2
 #else
 # define IEMTLB_ENTRY_COUNT_FACTOR              1
@@ -749,16 +749,16 @@ AssertCompile(RT_BIT_32(IEMTLB_ENTRY_COUNT_AS_POWER_OF_TWO) == IEMTLB_ENTRY_COUN
  * the bitmap when flushing the TLB, but it should help reduce the workload when
  * the large pages aren't fully loaded into the TLB in their entirity...
  */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define IEMTLB_WITH_LARGE_PAGE_BITMAP
 #endif
 
-#if (IEMTLB_ENTRY_COUNT > 1 && defined(VBOX_VMM_TARGET_X86)) || defined(DOXYGEN_RUNNING)
+#if (IEMTLB_ENTRY_COUNT > 1 && (defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86))) || defined(DOXYGEN_RUNNING)
 /** Tests if the TLB entry is global (odd). */
 # define IEMTLBE_IS_GLOBAL(a_pTlbe)      (((uintptr_t)(a_pTlbe) / sizeof(IEMTLBENTRY)) & 1)
 #endif
 
-#if defined(VBOX_VMM_TARGET_ARMV8) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) || defined(DOXYGEN_RUNNING)
 /** The 'stuff' bits in uTlbPhysRevAndStuff0 and uTlbPhysRevAndStuff1.
  *
  * These are copies of translation regime, ASID and VMID as well as a
@@ -775,7 +775,7 @@ AssertCompile(RT_BIT_32(IEMTLB_ENTRY_COUNT_AS_POWER_OF_TWO) == IEMTLB_ENTRY_COUN
  */
 typedef struct IEMTLB
 {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** Same as uTlbPhysRevAndStuff1, but with the ASID for the 2nd translation root
      *  (i.e. negative addresses).
      * @note This is placed before uTlbRevision, so we can use a load pair on
@@ -810,7 +810,7 @@ typedef struct IEMTLB
      *       different ASID values there (soon).
      * @todo Why is this volatile again?
      */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     uint64_t            uTlbPhysRevAndStuff1;
 #else
     uint64_t volatile   uTlbPhysRev;
@@ -833,7 +833,7 @@ typedef struct IEMTLB
         /** The highest large page address tag (with offset mask part set), 0 if none. */
         uint64_t        uLastTag;
     }
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** Large page range for non-global pages. */
                         NonGlobalLargePageRange,
     /** Large page range for global pages. */
@@ -842,7 +842,7 @@ typedef struct IEMTLB
     /** Large page range. */
                         LargePageRange;
 #endif
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** Number of non-global entries for large pages loaded since last TLB flush. */
     uint32_t            cTlbNonGlobalLargePageCurLoads;
     /** Number of global entries for large pages loaded since last TLB flush. */
@@ -871,13 +871,13 @@ typedef struct IEMTLB
      *       for the data TLB this more like 'other misses', while for the code
      *       TLB is all misses. */
     uint64_t            cTlbCoreMisses;
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** Subset of cTlbCoreMisses that results in PTE.G=1 loads (odd entries). */
     uint64_t            cTlbCoreGlobalLoads;
 #endif
     /** Safe read/write TLB misses in iemMemMapJmp (so data only). */
     uint64_t            cTlbSafeMisses;
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** Subset of cTlbSafeMisses that results in PTE.G=1 loads (odd entries). */
     uint64_t            cTlbSafeGlobalLoads;
 #endif
@@ -923,7 +923,7 @@ typedef struct IEMTLB
     /** Subset of cTlbInvlPg that involved global large pages. */
     uint32_t            cTlbInvlPgLargeGlobal;
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uint32_t            au32Padding[13];
 #else
     uint32_t            au32Padding[13 + 8];
@@ -953,9 +953,9 @@ AssertCompile(IEMTLB_ENTRY_COUNT * IEMTLB_ENTRY_COUNT_FACTOR >= 64 /* bmLargePag
 
 /** IEMTLB::uTlbPhysRev increment.
  * @sa IEMTLBE_F_PHYS_REV */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define IEMTLB_PHYS_REV_INCR   RT_BIT_64(11)
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define IEMTLB_PHYS_REV_INCR   RT_BIT_64(54)
 #endif
 #ifdef IEMTLBE_F_PHYS_REV
@@ -972,7 +972,7 @@ AssertCompile(IEMTLBE_F_PHYS_REV == ~(IEMTLB_PHYS_REV_INCR - 1U));
  *                      we'll end up with mostly zeros).
  * @todo ARM: Support 52-bit and 56-bit address space size (FEAT_LVA,
  *       FEAT_LVA3) when we see hardware supporting such.  */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # if 0 /** @todo ARMv8: page size and TLB */
 # define IEMTLB_CALC_TAG_NO_REV(a_pVCpu, a_GCPtr)   ( (((a_GCPtr) << 16) >> (IEM_F_ARM_GET_TLB_PAGE_SHIFT(ICORE(pVCpu).fExec) + 16)) )
 # else
@@ -1345,13 +1345,13 @@ typedef IEMTLBTRACEENTRY const *PCIEMTLBTRACEENTRY;
  * ARM: PSTATE.nRW | PSTATE.T | PSTATE.EL.
  *      This doesn't quite overlap with SPSR_ELx when in AARCH32 mode,
  *      but that's life. */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define IEM_F_MODE_MASK                    UINT32_C(0x0000001f)
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define IEM_F_MODE_MASK                    UINT32_C(0x0000003c)
 #endif
 
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 /** X86 Mode: The IEMMODE part of the IEMTB_F_MODE_MASK value. */
 # define IEM_F_MODE_X86_CPUMODE_MASK        UINT32_C(0x00000003)
 /** X86 Mode: Bit used to indicating pre-386 CPU in 16-bit mode (for eliminating
@@ -1429,7 +1429,7 @@ typedef IEMTLBTRACEENTRY const *PCIEMTLBTRACEENTRY;
 
 #endif /* X86 || doxygen  */
 
-#if defined(VBOX_VMM_TARGET_ARMV8) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) || defined(DOXYGEN_RUNNING)
 /** ARM: The stack pointer index - not part of mode */
 # define IEM_F_ARM_SP_IDX                   UINT32_C(0x00000003)
 /** ARM: Get the SP register index. */
@@ -1520,14 +1520,14 @@ typedef IEMTLBTRACEENTRY const *PCIEMTLBTRACEENTRY;
 #define IEM_F_ARM_SOFTWARE_STEP             UINT32_C(0x00000800)
 
 /** Pending breakpoint mask (what iemCalcExecDbgFlags works out). */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define IEM_F_PENDING_BRK_MASK             (IEM_F_PENDING_BRK_INSTR | IEM_F_PENDING_BRK_DATA | IEM_F_PENDING_BRK_X86_IO)
 #else
 # define IEM_F_PENDING_BRK_MASK             (IEM_F_PENDING_BRK_INSTR | IEM_F_PENDING_BRK_DATA)
 #endif
 
 /** Caller configurable options. */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define IEM_F_USER_OPTS                    (IEM_F_BYPASS_HANDLERS | IEM_F_X86_DISREGARD_LOCK)
 #else
 # define IEM_F_USER_OPTS                    (IEM_F_BYPASS_HANDLERS)
@@ -1577,14 +1577,14 @@ typedef IEMTLBTRACEENTRY const *PCIEMTLBTRACEENTRY;
  *       Since most OSes will not share code between rings, this shouldn't
  *       have any real effect on TB/memory/recompiling load.
  */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define IEMTB_F_KEY_MASK               ((UINT32_MAX & ~(IEM_F_X86_CTX_MASK | IEMTB_F_TYPE_MASK)) | IEM_F_X86_CTX_SMM)
 #else
 # define IEMTB_F_KEY_MASK               (UINT32_MAX)
 #endif
 /** @} */
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 AssertCompile( (IEM_F_MODE_X86_16BIT              & IEM_F_MODE_X86_CPUMODE_MASK) == IEMMODE_16BIT);
 AssertCompile(!(IEM_F_MODE_X86_16BIT              & IEM_F_MODE_X86_FLAT_OR_PRE_386_MASK));
 AssertCompile(!(IEM_F_MODE_X86_16BIT              & IEM_F_MODE_X86_PROT_MASK));
@@ -1623,7 +1623,7 @@ AssertCompile(  IEM_F_MODE_X86_64BIT              & IEM_F_MODE_X86_PROT_MASK);
 AssertCompile(!(IEM_F_MODE_X86_64BIT              & IEM_F_MODE_X86_FLAT_OR_PRE_386_MASK));
 #endif /* VBOX_VMM_TARGET_X86 */
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 AssertCompile(IEM_F_MODE_ARM_EL_SHIFT == ARMV8_SPSR_EL2_AARCH64_EL_SHIFT);
 AssertCompile(IEM_F_MODE_ARM_EL_MASK  == ARMV8_SPSR_EL2_AARCH64_EL);
 AssertCompile(IEM_F_MODE_ARM_32BIT    == ARMV8_SPSR_EL2_AARCH64_M4);
@@ -2104,9 +2104,9 @@ typedef IEMTBCACHE *PIEMTBCACHE;
  * @arm     Except for the recently specified memcpy/move instructions,
  *          ARM instruction takes at most one memory operand.  We use 1 and add
  *          another entry for safety, ignoring the memcpy instructions for now. */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING) /* for now: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING) /* for now: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
 # define IEM_MAX_MEM_MAPPINGS       3
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define IEM_MAX_MEM_MAPPINGS       2
 #else
 # error "port me"
@@ -2118,9 +2118,9 @@ typedef IEMTBCACHE *PIEMTBCACHE;
  * @x86     fxsave/fxrstor takes a 512 byte operand. Whether we actually need a
  *          512 byte bounce buffer for it is questionable...
  * @arm     Currently we shouldn't need more than 64 bytes here (ld64b, ld4). */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING) /* for now: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING) /* for now: */ || defined(VBOX_VMM_TARGET_AGNOSTIC)
 # define IEM_BOUNCE_BUFFER_SIZE     512
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define IEM_BOUNCE_BUFFER_SIZE     64
 #else
 # error "port me"
@@ -2678,7 +2678,7 @@ typedef struct IEMCPU
 #ifdef IEM_WITH_CODE_TLB
 AssertCompileMemberOffset(IEMCPU, Core.GCPhysInstrBuf, 0x20);
 #endif
-#if !defined(IEM_WITH_OPAQUE_DECODER_STATE) && defined(VBOX_VMM_TARGET_X86)
+#if !defined(IEM_WITH_OPAQUE_DECODER_STATE) && (defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86))
 # ifdef IEM_WITH_CODE_TLB
 AssertCompileMemberOffset(IEMCPU, Core.enmEffOpSize, 0x36);
 AssertCompileMemberOffset(IEMCPU, Core.abOpcode, 0x40);
@@ -2686,7 +2686,7 @@ AssertCompileMemberOffset(IEMCPU, Core.abOpcode, 0x40);
 AssertCompileMemberOffset(IEMCPU, Core.enmEffOpSize, 0x13);
 AssertCompileMemberOffset(IEMCPU, Core.abOpcode, 0x20);
 # endif
-#elif defined(IEM_WITH_OPAQUE_DECODER_STATE) && defined(VBOX_VMM_TARGET_X86)
+#elif defined(IEM_WITH_OPAQUE_DECODER_STATE) && (defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86))
 # ifdef IEM_WITH_CODE_TLB
 AssertCompileMemberOffset(IEMCPU, Core.abOpaqueDecoderPart2, 0x36);
 # else
@@ -3032,7 +3032,7 @@ typedef struct IEM
 /** @name C instruction implementations for anything slightly complicated.
  * @{ */
 
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # define IEM_CIMPL_NEEDS_INSTR_LEN
 #endif
 #ifdef IEM_CIMPL_NEEDS_INSTR_LEN
@@ -3598,9 +3598,9 @@ DECLASM(DECL_NO_RETURN(void)) iemNativeTbLongJmp(void *pvFramePointer, int rc) R
 DECLHIDDEN(struct IEMNATIVEPERCHUNKCTX const *) iemExecMemGetTbChunkCtx(PVMCPU pVCpu, PCIEMTB pTb);
 DECLHIDDEN(int) iemNativeRecompileAttachExecMemChunkCtx(PVMCPU pVCpu, uint32_t idxChunk, struct IEMNATIVEPERCHUNKCTX const **ppCtx);
 
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 #  include "VMMAll/target-x86/IEMInternal-x86.h"
-# elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 #  include "VMMAll/target-armv8/IEMInternal-armv8.h"
 # endif
 

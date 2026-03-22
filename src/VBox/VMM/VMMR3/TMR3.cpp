@@ -831,7 +831,7 @@ VMM_INT_DECL(int) TMR3Init(PVM pVM)
     {
         PVMCPU pVCpu = pVM->apCpusR3[i];
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         pVCpu->cNsVTimerActivate   = UINT64_MAX;
 #endif
 
@@ -1328,7 +1328,7 @@ VMM_INT_DECL(void) TMR3Reset(PVM pVM)
         pVCpu->tm.s.offTSCRawSrc   = offTscRawSrc;
         pVCpu->tm.s.u64TSC         = 0;
         pVCpu->tm.s.u64TSCLastSeen = 0;
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         pVCpu->cNsVTimerActivate   = UINT64_MAX;
 #endif
     }

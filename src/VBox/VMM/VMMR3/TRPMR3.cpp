@@ -386,7 +386,7 @@ static DECLCALLBACK(int) trpmR3Load(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion,
  */
 VMMR3DECL(int) TRPMR3InjectEvent(PVM pVM, PVMCPU pVCpu, TRPMEVENT enmEvent, bool *pfInjected)
 {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     PCPUMCTX pCtx = CPUMQueryGuestCtxPtr(pVCpu);
     Assert(!CPUMIsInInterruptShadow(pCtx));
     Assert(pfInjected);

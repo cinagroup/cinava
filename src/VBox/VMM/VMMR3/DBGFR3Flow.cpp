@@ -220,7 +220,7 @@ static void dbgfR3FlowBranchTblDestroy(PDBGFFLOWBRANCHTBLINT pFlowBranchTbl);
  */
 DECL_FORCE_INLINE(bool) dbgfR3FlowDisOpcIsUncondJmp(uint16_t uOpc, PDBGFDISSTATE pDis)
 {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     if (   uOpc == OP_ARMV8_A64_BR
         || uOpc == OP_ARMV8_A64_BRAAZ
         || uOpc == OP_ARMV8_A64_BRABZ
@@ -236,7 +236,7 @@ DECL_FORCE_INLINE(bool) dbgfR3FlowDisOpcIsUncondJmp(uint16_t uOpc, PDBGFDISSTATE
 
     return false;
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     RT_NOREF_PV(pDis);
     return uOpc == OP_JMP;
 
@@ -255,7 +255,7 @@ DECL_FORCE_INLINE(bool) dbgfR3FlowDisOpcIsUncondJmp(uint16_t uOpc, PDBGFDISSTATE
  */
 DECL_FORCE_INLINE(bool) dbgfR3FlowDisOpcIsCall(uint16_t uOpc, uint32_t fOpType)
 {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     if (   uOpc == OP_ARMV8_A64_BL
         || uOpc == OP_ARMV8_A64_BLR
         || uOpc == OP_ARMV8_A64_BLRAA
@@ -270,7 +270,7 @@ DECL_FORCE_INLINE(bool) dbgfR3FlowDisOpcIsCall(uint16_t uOpc, uint32_t fOpType)
 
     return false;
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     RT_NOREF_PV(fOpType);
     return uOpc == OP_CALL;
 
@@ -288,7 +288,7 @@ DECL_FORCE_INLINE(bool) dbgfR3FlowDisOpcIsCall(uint16_t uOpc, uint32_t fOpType)
  */
 DECL_FORCE_INLINE(bool) dbgfR3FlowDisOpcIsExit(uint16_t uOpc)
 {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     return uOpc == OP_ARMV8_A64_RET
         || uOpc == OP_ARMV8_A64_RETAA
         || uOpc == OP_ARMV8_A64_RETAB
@@ -296,7 +296,7 @@ DECL_FORCE_INLINE(bool) dbgfR3FlowDisOpcIsExit(uint16_t uOpc)
         || uOpc == OP_ARMV8_A64_ERETAA
         || uOpc == OP_ARMV8_A64_ERETAB;
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     return uOpc == OP_RETN
         || uOpc == OP_RETF
         || uOpc == OP_IRET
@@ -776,10 +776,10 @@ static int dbgfR3FlowQueryDirectBranchTarget(PUVM pUVM, VMCPUID idCpu, PDISOPPAR
     Assert(!dbgfR3FlowBranchTargetIsIndirect(pDisParam));
 
     *pAddrJmpTarget = *pAddrInstr;
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /* Relative to the next instruction. */
     DBGFR3AddrAdd(pAddrJmpTarget, cbInstr);
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /* Relative to the start of the instruction. */
     RT_NOREF(cbInstr);
 #else
@@ -1335,7 +1335,7 @@ static int dbgfR3FlowBbProcess(PUVM pUVM, VMCPUID idCpu, PDBGFFLOWINT pThis, PDB
                         pFlowBb->enmEndType = DBGFFLOWBBENDTYPE_EXIT;
                     else if (dbgfR3FlowDisOpcIsUncondJmp(uOpc, &DisState))
                     {
-#ifndef VBOX_VMM_TARGET_ARMV8 /* This is not true for B/BC on ARMv8 which can be both... */
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8) /* This is not true for B/BC on ARMv8 which can be both... */
                         Assert(DisState.pCurInstr->fOpType & DISOPTYPE_UNCOND_CONTROLFLOW);
 #endif
 
@@ -1384,7 +1384,7 @@ static int dbgfR3FlowBbProcess(PUVM pUVM, VMCPUID idCpu, PDBGFFLOWINT pThis, PDB
                         Assert(DisState.pCurInstr->fOpType & DISOPTYPE_COND_CONTROLFLOW);
                         pFlowBb->enmEndType = DBGFFLOWBBENDTYPE_COND;
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
                         PDISOPPARAM pParam = uOpc == OP_ARMV8_A64_B || uOpc == OP_ARMV8_A64_BC
                                            ? &DisState.Param1
                                            : uOpc == OP_ARMV8_A64_CBZ || uOpc == OP_ARMV8_A64_CBNZ

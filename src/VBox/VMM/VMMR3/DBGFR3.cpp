@@ -1585,7 +1585,7 @@ VMMR3DECL(int) DBGFR3Resume(PUVM pUVM, VMCPUID idCpu)
  */
 static DBGFSTEPINSTRTYPE dbgfStepGetCurInstrType(PVM pVM, PVMCPU pVCpu)
 {
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /*
      * Read the instruction, this ASSUMES running in A64 mode.
      */
@@ -1619,7 +1619,7 @@ static DBGFSTEPINSTRTYPE dbgfStepGetCurInstrType(PVM pVM, PVMCPU pVCpu)
         return DBGFSTEPINSTRTYPE_OTHER;
     }
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /*
      * Read the instruction.
      */

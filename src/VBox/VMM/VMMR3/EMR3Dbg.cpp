@@ -131,7 +131,7 @@ VMM_INT_DECL(const char *) EMR3GetExitTypeName(EMEXITTYPE enmExitType, uint32_t 
         case EMEXITTYPE_MMIO_WRITE:         return "MMIO write";
 
         /* X86: */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         case EMEXITTYPE_X86_PIO_READ:       return "I/O port read";
         case EMEXITTYPE_X86_PIO_WRITE:      return "I/O port write";
         case EMEXITTYPE_X86_PIO_STR_READ:   return "I/O port string read";
@@ -161,7 +161,7 @@ VMM_INT_DECL(const char *) EMR3GetExitTypeName(EMEXITTYPE enmExitType, uint32_t 
 #endif
 
         /* ARM64: */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         case EMEXITTYPE_A64_MRS:
         case EMEXITTYPE_A64_MSR:
             /* ... S<op0>_<op1>_<Cn>_<Cm>_<op2> */
@@ -217,7 +217,7 @@ static const char *emR3HistoryGetExitName(uint16_t uFlagsAndType, uint32_t uInfo
             pszExitName = EMR3GetExitTypeName((EMEXITTYPE)(uFlagsAndType & EMEXIT_F_TYPE_MASK), uInfo, pszFallback, cbFallback);
             break;
 
-#if defined(VBOX_VMM_TARGET_X86) && defined(VBOX_WITH_HWVIRT)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) && defined(VBOX_WITH_HWVIRT)
         case EMEXIT_F_KIND_VMX:
             pszExitName = HMGetVmxExitName(uFlagsAndType & EMEXIT_F_TYPE_MASK);
             break;
@@ -235,7 +235,7 @@ static const char *emR3HistoryGetExitName(uint16_t uFlagsAndType, uint32_t uInfo
             pszExitName = IEMR3GetExitName(uFlagsAndType & EMEXIT_F_TYPE_MASK);
             break;
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         case EMEXIT_F_KIND_XCPT:
             switch (uFlagsAndType & EMEXIT_F_TYPE_MASK)
             {
@@ -399,11 +399,11 @@ static DECLCALLBACK(void) emR3InfoExitHistory(PVM pVM, PCDBGFINFOHLP pHlp, const
             uPrevTimestamp = pEntry->uTimestamp;
 
             char szPC[32];
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             if (!(pEntry->uFlagsAndType & (EMEXIT_F_CS_EIP | EMEXIT_F_UNFLATTENED_PC)))
 #endif
                 RTStrPrintf(szPC, sizeof(szPC), "%016RX64 ", pEntry->uFlatPC);
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             else if (pEntry->uFlagsAndType & EMEXIT_F_UNFLATTENED_PC)
                 RTStrPrintf(szPC, sizeof(szPC), "%016RX64*", pEntry->uFlatPC);
             else

@@ -35,7 +35,8 @@
 #define LOG_GROUP LOG_GROUP_IEM_RE_THREADED
 #define VMCPU_INCL_CPUM_GST_CTX
 #ifdef IN_RING0
-# define VBOX_VMM_TARGET_X86
+#define VBOX_VMM_TARGET_X86
+#define VRA_VMM_TARGET_X86
 #endif
 #include <VBox/vmm/iem.h>
 #include <VBox/vmm/cpum.h>
@@ -70,7 +71,7 @@
 #include <iprt/x86.h>
 
 #include "IEMInline.h"
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # include "target-x86/IEMInline-x86.h"
 #endif
 

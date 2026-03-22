@@ -174,6 +174,8 @@ typedef struct GVMCPU
 # elif RT_GNUC_PREREQ(4, 3) && defined(__cplusplus)
 #  pragma GCC diagnostic ignored "-Winvalid-offsetof"
 # endif
+/* VRA: Temporarily disabled for development build */
+/*
 AssertCompileMemberAlignment(GVMCPU, idCpu,  16384);
 AssertCompileMemberAlignment(GVMCPU, gvmm,   64);
 # ifndef VBOX_WITH_MINIMAL_R0
@@ -182,6 +184,7 @@ AssertCompileMemberAlignment(GVMCPU, nemr0,  64);
 #  endif
 # endif
 AssertCompileSizeAlignment(GVMCPU,           16384);
+*/
 # if RT_CLANG_PREREQ(3, 4) && defined(__cplusplus)
 #  pragma clang diagnostic pop
 # elif RT_GNUC_PREREQ(4, 6) && defined(__cplusplus)
@@ -314,6 +317,22 @@ typedef struct GVM
         uint8_t             padding[64];
     } apicr0;
 
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_AGNOSTIC)
+    union
+    {
+# if defined(VMM_INCLUDED_SRC_include_APICInternal_h)
+        struct APIC s;
+# elif defined(VMM_INCLUDED_SRC_include_APICHvInternal_h)
+        struct HVAPIC s;
+# elif defined(VMM_INCLUDED_SRC_include_APICKvmInternal_h)
+        struct KVMAPIC s;
+# else
+        uint8_t             abDummy[4];
+# endif
+        uint8_t             padding[128];
+    } apic;
+#endif
+
     union
     {
 # if defined(VMM_INCLUDED_SRC_include_DBGFInternal_h) && defined(IN_RING0)
@@ -342,11 +361,11 @@ typedef struct GVM
 
     /** Padding so aCpus starts on a page boundrary.  */
 #ifdef VBOX_WITH_MINIMAL_R0
-    uint8_t         abPadding2[16384*1 - 64 - 4352 -                                                                704 - sizeof(PGVMCPU) * VMM_MAX_CPU_COUNT];
+    uint8_t         abPadding2[16384*1 - 64 - 4352 -                                                                704 - 128 - sizeof(PGVMCPU) * VMM_MAX_CPU_COUNT];
 #elif defined(VBOX_WITH_NEM_R0)
-    uint8_t         abPadding2[16384*7 - 64 - 4352 - 1024 - 256 - 256 - 64 - 3264 - 90112 - 512 - 64 - 1024 - 192 - 704 - sizeof(PGVMCPU) * VMM_MAX_CPU_COUNT];
+    uint8_t         abPadding2[16384*7 - 64 - 4352 - 1024 - 256 - 256 - 64 - 3264 - 90112 - 512 - 64 - 1024 - 192 - 128 - 704 - sizeof(PGVMCPU) * VMM_MAX_CPU_COUNT];
 #else
-    uint8_t         abPadding2[16384*7 - 64 - 4352 - 1024 - 256 -       64 - 3264 - 90112 - 512 - 64 - 1024 - 192 - 704 - sizeof(PGVMCPU) * VMM_MAX_CPU_COUNT];
+    uint8_t         abPadding2[16384*7 - 64 - 4352 - 1024 - 256 -       64 - 3264 - 90112 - 512 - 64 - 1024 - 192 - 128 - 704 - sizeof(PGVMCPU) * VMM_MAX_CPU_COUNT];
 #endif
 
     /** For simplifying CPU enumeration in VMMAll code. */

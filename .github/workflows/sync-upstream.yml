@@ -1,33 +1,72 @@
-name: Sync Fork with Upstream
+name: Sync Upstream VirtualBox
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 每天 UTC 0 点（北京时间 8 点）
-  workflow_dispatch:      # 支持手动触发
+    # 每天 UTC 时间 2:00 同步
+    - cron: '0 2 * * *'
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout CINA VirtualAgent
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
       - name: Add upstream remote
-        run: git remote add upstream https://github.com/VirtualBox/virtualbox.git
-
-      - name: Fetch upstream
-        run: git fetch upstream
-
-      - name: Sync main branch
         run: |
-          git checkout main
-          git merge upstream/main --no-edit || true
-          git push origin main || true
+          git remote add upstream https://github.com/VirtualBox/virtualbox.git || true
+          git fetch upstream
+
+      - name: Check for upstream changes
+        id: check
+        run: |
+          UPSTREAM_COMMIT=$(git rev-parse upstream/trunk 2>/dev/null || echo "")
+          LOCAL_COMMIT=$(git rev-parse HEAD)
+          echo "upstream_commit=$UPSTREAM_COMMIT" >> $GITHUB_OUTPUT
+          echo "local_commit=$LOCAL_COMMIT" >> $GITHUB_OUTPUT
+          
+          if [ "$UPSTREAM_COMMIT" != "$LOCAL_COMMIT" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create sync branch
+        if: steps.check.outputs.has_changes == 'true'
+        run: |
+          git checkout -b sync/upstream-$(date +%Y%m%d)
+          git merge upstream/trunk --no-edit || true
+
+      - name: Apply CINA branding
+        if: steps.check.outputs.has_changes == 'true'
+        run: |
+          # 自动应用品牌重命名脚本
+          echo "Applying CINA branding changes..."
+          # 这里可以添加自动重命名脚本
+          git add -A || true
+          git commit -m "Apply CINA branding" || true
+
+      - name: Create Pull Request
+        if: steps.check.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: sync/upstream-$(date +%Y%m%d)
+          title: "Sync upstream VirtualBox changes"
+          body: |
+            This PR syncs changes from upstream VirtualBox repository.
+            
+            Upstream commit: ${{ steps.check.outputs.upstream_commit }}
+            
+            Please review and merge the changes.
+          labels: |
+            upstream-sync
+            automated pr
+
+      - name: No changes needed
+        if: steps.check.outputs.has_changes == 'false'
+        run: echo "No upstream changes detected"

@@ -279,9 +279,9 @@ typedef enum VMTARGET
 /** @def VMTARGET_DEFAULT
  * The default target according to the VBOX_VMM_TARGET_X86 /
  * VBOX_VMM_TARGET_ARMV8 defines. */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define VMTARGET_DEFAULT   VMTARGET_X86
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define VMTARGET_DEFAULT   VMTARGET_ARMV8
 #endif
 

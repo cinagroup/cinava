@@ -50,7 +50,7 @@ if 1
  	DisasmFormatYasm.cpp
 endif
 if 1
- DisasmR3_DEFS          += VRA_DIS_WITH_ARMV8
+ DisasmR3_DEFS          += VBOX_DIS_WITH_ARMV8
  DisasmR3_SOURCES       += \
  	DisasmCore-armv8.cpp \
  	DisasmTables-armv8-a64.cpp \

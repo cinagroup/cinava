@@ -51,7 +51,9 @@
 
    WDK_NTDDI_VERSION is not present in the W7 SDK, not sure when exactly it was added.
    NTDDI_WIN10_RS5 is W10 1809. NTDDI_WIN10_CO is Windows 11? */
+#ifdef RT_OS_WINDOWS
 #include <sdkddkver.h>
+#ifdef RT_OS_WINDOWS
 #ifdef _WIN32_WINNT_WIN10
 # ifndef _WIN32_WINNT_WIN10_TH2
 #  define _WIN32_WINNT_WIN10_TH2 _WIN32_WINNT_WIN10
@@ -109,5 +111,6 @@
 # pragma warning(disable:4200)
 #endif
 
+#endif /* RT_OS_WINDOWS */
 #endif /* !IPRT_INCLUDED_win_windows_h */
 

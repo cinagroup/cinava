@@ -103,7 +103,7 @@ VMMR3_INT_DECL(int) NEMR3InitConfig(PVM pVM)
                                   "|VmxPleWindow"
                                   "|VmxLbr"
 #endif
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
                                   "|VTimerInterrupt"
 #endif
 #if defined(RT_ARCH_AMD64) || defined(RT_ARCH_X86)
@@ -193,7 +193,7 @@ VMMR3_INT_DECL(int) NEMR3InitConfig(PVM pVM)
         VMCC_FOR_EACH_VMCPU_STMT(pVM, pVCpu->nem.s.fMdsClearOnSched = false);
 #endif /* VBOX_VMM_TARGET_X86 */
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** @cfgm{/NEM/VTimerInterrupt, uint32_t}
      * Specifies the interrupt identifier for the VTimer. */
     rc = CFGMR3QueryU32(pCfgNem, "VTimerInterrupt", &pVM->nem.s.u32GicPpiVTimer);

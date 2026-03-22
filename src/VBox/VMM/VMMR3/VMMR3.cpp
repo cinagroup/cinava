@@ -129,9 +129,9 @@
 #include <VBox/vmm/em.h>
 #include <VBox/sup.h>
 #include <VBox/vmm/dbgf.h>
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include <VBox/vmm/pdmgic.h>
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # include <VBox/vmm/pdmapic.h>
 #endif
 #include <VBox/vmm/ssm.h>
@@ -145,7 +145,7 @@
 #include <VBox/vmm/hm.h>
 #include <iprt/assert.h>
 #include <iprt/alloc.h>
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include <iprt/armv8.h>
 #endif
 #include <iprt/asm.h>
@@ -579,7 +579,7 @@ VMMR3_INT_DECL(int) VMMR3InitCompleted(PVM pVM, VMINITCOMPLETED enmWhat)
 
         case VMINITCOMPLETED_HM:
         {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             /*
              * Disable the periodic preemption timers if we can use the
              * VMX-preemption timer instead.
@@ -1213,7 +1213,7 @@ static DECLCALLBACK(void) vmmR3YieldEMT(PVM pVM, TMTIMERHANDLE hTimer, void *pvU
 #endif
 
 #ifdef VBOX_WITH_HWVIRT
-# ifndef VBOX_VMM_TARGET_X86
+#if !defined(VBOX_VMM_TARGET_X86) && !defined(VRA_VMM_TARGET_X86)
 #  error "config error"
 # endif
 /**
@@ -1259,7 +1259,7 @@ VMMR3_INT_DECL(int) VMMR3HmRunGC(PVM pVM, PVMCPU pVCpu)
 #endif /* VBOX_WITH_HWVIRT */
 
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 
 /**
  * VCPU worker for VMMR3CpuOn.
@@ -1312,7 +1312,7 @@ VMMR3_INT_DECL(void)    VMMR3CpuOn(PVM pVM, VMCPUID idCpu, RTGCPHYS GCPhysExecAd
     AssertRC(rc);
 }
 
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 
 /**
  * VCPU worker for VMMR3SendStartupIpi.
@@ -1454,7 +1454,7 @@ VMMR3_INT_DECL(void) VMMR3SendInitIpi(PVM pVM, VMCPUID idCpu)
 VMMR3DECL(int) VMMR3RegisterPatchMemory(PVM pVM, RTGCPTR pPatchMem, unsigned cbPatchMem)
 {
     VM_ASSERT_EMT(pVM);
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     if (HMIsEnabled(pVM))
         return HMR3EnablePatching(pVM, pPatchMem, cbPatchMem);
 #else
@@ -1474,7 +1474,7 @@ VMMR3DECL(int) VMMR3RegisterPatchMemory(PVM pVM, RTGCPTR pPatchMem, unsigned cbP
  */
 VMMR3DECL(int) VMMR3DeregisterPatchMemory(PVM pVM, RTGCPTR pPatchMem, unsigned cbPatchMem)
 {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     if (HMIsEnabled(pVM))
         return HMR3DisablePatching(pVM, pPatchMem, cbPatchMem);
 #else
@@ -2564,10 +2564,10 @@ static DECLCALLBACK(void) vmmR3InfoFF(PVM pVM, PCDBGFINFOHLP pHlp, const char *p
         /* show the flag mnemonics */
         c = 0;
         f = fLocalForcedActions;
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         PRINT_FLAG(VMCPU_FF_,INTERRUPT_IRQ);
         PRINT_FLAG(VMCPU_FF_,INTERRUPT_FIQ);
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         PRINT_FLAG(VMCPU_FF_,INTERRUPT_APIC);
         PRINT_FLAG(VMCPU_FF_,INTERRUPT_PIC);
 #else
@@ -2583,7 +2583,7 @@ static DECLCALLBACK(void) vmmR3InfoFF(PVM pVM, PCDBGFINFOHLP pHlp, const char *p
         PRINT_FLAG(VMCPU_FF_,DBGF);
         PRINT_FLAG(VMCPU_FF_,REQUEST);
         PRINT_FLAG(VMCPU_FF_,HM_UPDATE_CR3);
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         PRINT_FLAG(VMCPU_FF_,VTIMER_ACTIVATED);
 #endif
         PRINT_FLAG(VMCPU_FF_,PGM_SYNC_CR3);

@@ -1317,7 +1317,7 @@ static DECLCALLBACK(uint64_t) pdmR3DevHlp_CpuGetGuestScalableBusFrequency(PPDMDE
     LogFlow(("pdmR3DevHlp_CpuGetGuestScalableBusFrequency: caller='%s'/%d\n",
              pDevIns->pReg->szName, pDevIns->iInstance));
 
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     uint64_t u64Fsb = 0;
     AssertReleaseFailed();
     RT_NOREF(pDevIns);
@@ -2629,7 +2629,7 @@ static DECLCALLBACK(void) pdmR3DevHlp_ISASetIrq(PPDMDEVINS pDevIns, int iIrq, in
     /*
      * Validate input.
      */
-#ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
     Assert(iIrq < 16);
 #endif
     Assert((uint32_t)iLevel <= PDM_IRQ_LEVEL_FLIP_FLOP);
@@ -4796,7 +4796,7 @@ static DECLCALLBACK(bool) pdmR3DevHlp_A20IsEnabled(PPDMDEVINS pDevIns)
     PDMDEV_ASSERT_DEVINS(pDevIns);
     VM_ASSERT_EMT(pDevIns->Internal.s.pVMR3);
 
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     bool fRc = PGMPhysIsA20Enabled(VMMGetCpu(pDevIns->Internal.s.pVMR3));
 #else
     bool fRc = false; RT_NOREF(pDevIns);
@@ -4813,7 +4813,7 @@ static DECLCALLBACK(void) pdmR3DevHlp_A20Set(PPDMDEVINS pDevIns, bool fEnable)
     PDMDEV_ASSERT_DEVINS(pDevIns);
     VM_ASSERT_EMT(pDevIns->Internal.s.pVMR3);
     LogFlow(("pdmR3DevHlp_A20Set: caller='%s'/%d: fEnable=%d\n", pDevIns->pReg->szName, pDevIns->iInstance, fEnable));
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     AssertReleaseFailed();
     RT_NOREF(pDevIns, fEnable);
 #else
@@ -4833,7 +4833,7 @@ static DECLCALLBACK(void) pdmR3DevHlp_GetCpuId(PPDMDEVINS pDevIns, uint32_t iLea
              pDevIns->pReg->szName, pDevIns->iInstance, iLeaf, pEax, pEbx, pEcx, pEdx));
     AssertPtr(pEax); AssertPtr(pEbx); AssertPtr(pEcx); AssertPtr(pEdx);
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     RT_NOREF(pDevIns, iLeaf, pEax, pEbx, pEcx, pEdx);
     AssertReleaseFailed();
 #else
@@ -5037,7 +5037,7 @@ static DECLCALLBACK(void) pdmR3DevHlp_GCMTriggerPatch(PPDMDEVINS pDevIns, GCMGST
     LogFlow(("pdmR3DevHlp_GCMTriggerPatch: caller='%s'/%d: enmPatch=%#x\n",
              pDevIns->pReg->szName, pDevIns->iInstance, enmPatch));
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     GCMR3PatchGuest(pDevIns->Internal.s.pVMR3, enmPatch);
 #else
     RT_NOREF(pDevIns, enmPatch);

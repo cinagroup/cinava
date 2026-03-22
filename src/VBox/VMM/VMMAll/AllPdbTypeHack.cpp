@@ -29,11 +29,13 @@
 /*********************************************************************************************************************************
 *   Header Files                                                                                                                 *
 *********************************************************************************************************************************/
-#ifdef VBOX_VMM_TARGET_AGNOSTIC
+#if defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_AGNOSTIC)
 # ifdef RT_ARCH_AMD64
 #  define VBOX_VMM_TARGET_X86
+#  define VRA_VMM_TARGET_X86
 # elif defined(RT_ARCH_ARM64)
 #  define VBOX_VMM_TARGET_ARMV8
+#  define VRA_VMM_TARGET_ARMV8
 # else
 #  error "port me"
 # endif

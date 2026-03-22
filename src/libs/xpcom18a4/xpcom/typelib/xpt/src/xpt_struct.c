@@ -41,6 +41,7 @@
 #include "xpt_struct.h"
 #include <string.h>
 #include <stdio.h>
+#include <iprt/cdefs.h>
 
 /***************************************************************************/
 /* Forward declarations. */

@@ -880,11 +880,13 @@ DECL_FORCE_INLINE(bool) hmR0SvmSupportsVmcbCleanBits(PVMCPUCC pVCpu, bool fIsNes
  */
 DECLINLINE(bool) hmR0SvmSupportsDecodeAssists(PVMCPUCC pVCpu)
 {
-    PVMCC pVM = pVCpu->CTX_SUFF(pVM);
 #ifdef VBOX_WITH_NESTED_HWVIRT_SVM
+    PVMCC pVM = pVCpu->CTX_SUFF(pVM);
     if (CPUMIsGuestInSvmNestedHwVirtMode(&pVCpu->cpum.GstCtx))
         return (g_fHmSvmFeatures & X86_CPUID_SVM_FEATURE_EDX_DECODE_ASSISTS)
             &&  pVM->cpum.ro.GuestFeatures.fSvmDecodeAssists;
+#else
+    RT_NOREF_PV(pVCpu);
 #endif
     return RT_BOOL(g_fHmSvmFeatures & X86_CPUID_SVM_FEATURE_EDX_DECODE_ASSISTS);
 }
@@ -898,11 +900,13 @@ DECLINLINE(bool) hmR0SvmSupportsDecodeAssists(PVMCPUCC pVCpu)
  */
 DECLINLINE(bool) hmR0SvmSupportsNextRipSave(PVMCPUCC pVCpu)
 {
-    PVMCC pVM = pVCpu->CTX_SUFF(pVM);
 #ifdef VBOX_WITH_NESTED_HWVIRT_SVM
+    PVMCC pVM = pVCpu->CTX_SUFF(pVM);
     if (CPUMIsGuestInSvmNestedHwVirtMode(&pVCpu->cpum.GstCtx))
         return (g_fHmSvmFeatures & X86_CPUID_SVM_FEATURE_EDX_NRIP_SAVE)
             &&  pVM->cpum.ro.GuestFeatures.fSvmNextRipSave;
+#else
+    RT_NOREF_PV(pVCpu);
 #endif
     return RT_BOOL(g_fHmSvmFeatures & X86_CPUID_SVM_FEATURE_EDX_NRIP_SAVE);
 }
@@ -4290,7 +4294,7 @@ static void hmR0SvmPreRunGuestCommitted(PVMCPUCC pVCpu, PSVMTRANSIENT pSvmTransi
         pbMsrBitmap = (uint8_t *)pHostCpu->n.svm.pvNstGstMsrpm;
     }
 #else
-    uint8_t *pbMsrBitmap = (uint8_t *)pVCpu->hm.s.svm.pvMsrBitmap;
+    uint8_t *pbMsrBitmap = (uint8_t *)pVCpu->hmr0.s.svm.pvMsrBitmap;
 #endif
 
     ASMAtomicUoWriteBool(&pVCpu->hm.s.fCheckedTLBFlush, true);  /* Used for TLB flushing, set this across the world switch. */

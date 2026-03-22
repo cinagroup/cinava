@@ -330,7 +330,7 @@ static void dbgfR3GetCoreCpu(PVMCPU pVCpu, PDBGFCORECPU pDbgfCpu)
 {
     PCCPUMCTX const pCtx = CPUMQueryGuestCtxPtr(pVCpu);
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # define DBGFCOPYSEL(a_dbgfsel, a_cpumselreg) \
     do { \
         (a_dbgfsel).uBase  = (a_cpumselreg).u64Base; \
@@ -399,7 +399,7 @@ static void dbgfR3GetCoreCpu(PVMCPU pVCpu, PDBGFCORECPU pDbgfCpu)
 
 # undef DBGFCOPYSEL
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     RT_NOREF(pCtx, pDbgfCpu);
     AssertReleaseFailed();
 

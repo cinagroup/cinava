@@ -1800,10 +1800,10 @@ extern CPUHOSTFEATURES g_CpumHostFeatures;
 
 /** The target CPU feature structure.
  * @todo this should have a chameleon wrapper as well (ring-0).  */
-#ifndef VBOX_VMM_TARGET_ARMV8
-typedef CPUMFEATURESX86   CPUMFEATURES;
-#else
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 typedef CPUMFEATURESARMV8 CPUMFEATURES;
+#else
+typedef CPUMFEATURESX86   CPUMFEATURES;
 #endif
 /** Pointer to a CPU feature structure. */
 typedef CPUMFEATURES *PCPUMFEATURES;
@@ -2055,10 +2055,10 @@ typedef CPUMDBENTRYARM const *PCCPUMDBENTRYARM;
  * Include the target specific header.
  * This uses several of the above types, so it must be postponed till here.
  */
-#ifndef VBOX_VMM_TARGET_ARMV8
-# include <VBox/vmm/cpum-x86-amd64.h>
-#else
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include <VBox/vmm/cpum-armv8.h>
+#else
+# include <VBox/vmm/cpum-x86-amd64.h>
 #endif
 
 

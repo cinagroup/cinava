@@ -76,10 +76,10 @@ VMMR3_INT_DECL(bool) NEMR3NeedSpecialWaitMethod(PVM pVM);
 #ifdef RT_ARCH_AMD64
 VMMR3_INT_DECL(int)  NEMR3QueryHostHwvirtMsrs(PVM pVM, PSUPHWVIRTMSRS pMsrs);
 #endif
-#if defined(VBOX_VMM_TARGET_X86) && defined(RT_OS_WINDOWS)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) && defined(RT_OS_WINDOWS)
 VMMR3_INT_DECL(int) NEMR3WinGetPartitionHandle(PVM pVM, PRTHCUINTPTR pHCPtrHandle);
 #endif
-#if defined(VBOX_VMM_TARGET_X86) && defined(RT_OS_LINUX)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) && defined(RT_OS_LINUX)
 VMMR3_INT_DECL(int) NEMR3LinuxGetKvmVmFd(PVM pVM, int *piFdKvm);
 VMMR3_INT_DECL(int) NEMR3LinuxGetKvmVCpuFd(PVMCPU pVCpu, int *piFdKvmVcpu);
 #endif

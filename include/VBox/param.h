@@ -65,24 +65,24 @@
 
 /** @def GUEST_MAX_PAGE_SIZE
  * Maximum guest page size.   */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define GUEST_MAX_PAGE_SIZE        0x10000
-#elif defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define GUEST_MAX_PAGE_SIZE        0x1000
 #endif
 /** @def GUEST_MAX_PAGE_OFFSET_MASK
  * Maximum guest page size.
  * @note If one-complementing this, always put a typecast after the operator! */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define GUEST_MAX_PAGE_OFFSET_MASK 0xffff
-#elif defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define GUEST_MAX_PAGE_OFFSET_MASK 0xfff
 #endif
 /** @def GUEST_MAX_PAGE_SHIFT
  * Maximum guest page size.   */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define GUEST_MAX_PAGE_SHIFT       16
-#elif defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define GUEST_MAX_PAGE_SHIFT       12
 #endif
 
@@ -138,7 +138,7 @@
 #if (   HC_ARCH_BITS == 64          /* ASM-NOINC */ \
      && defined(RT_ARCH_AMD64)      /* ASM-NOINC */ \
      && (defined(RT_OS_FREEBSD) || defined(RT_OS_LINUX) || defined(RT_OS_SOLARIS) || defined(RT_OS_WINDOWS)) ) /* ASM-NOINC */ \
-     && (defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)) /* quick hack */ \
+     && (defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_AGNOSTIC)) /* quick hack */ \
  || defined(DOXYGEN_RUNNING)        /* ASM-NOINC */
 # define VBOX_WITH_PAGE_SHARING     /* ASM-NOINC */
 #endif                              /* ASM-NOINC */

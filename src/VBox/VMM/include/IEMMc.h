@@ -1246,7 +1246,7 @@
 /** @def IEM_MC_CALL_CIMPL_HLP_RET
  * Helper macro for check that all important IEM_CIMPL_F_XXX bits are set.
  */
-#if defined(VBOX_STRICT) && defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_STRICT) && (defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86))
 # define IEM_MC_CALL_CIMPL_HLP_RET(a_fFlags, a_CallExpr) \
     do { \
         uint8_t      const cbInstr     = IEM_GET_INSTR_LEN(pVCpu); /* may be flushed */ \
@@ -1647,9 +1647,9 @@
  * arm: EFL == NZCV.
  */
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # define IEM_MC_IF_FLAGS_EXPR   (pVCpu->cpum.GstCtx.eflags.u)
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define IEM_MC_IF_FLAGS_EXPR   (pVCpu->cpum.GstCtx.fPState)
 #endif
 
@@ -1736,9 +1736,9 @@
 /*
  * Include the target specific header.
  */
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # include "VMMAll/target-x86/IEMMc-x86.h"
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include "VMMAll/target-armv8/IEMMc-armv8.h"
 #else
 # error "port me"

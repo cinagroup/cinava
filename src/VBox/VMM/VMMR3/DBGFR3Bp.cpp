@@ -176,7 +176,7 @@
 #include <VBox/log.h>
 #include <iprt/assert.h>
 #include <iprt/mem.h>
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include <iprt/armv8.h>
 #endif
 
@@ -1785,7 +1785,7 @@ static DECLCALLBACK(VBOXSTRICTRC) dbgfR3BpRegRecalcOnCpu(PVM pVM, PVMCPU pVCpu, 
 {
     RT_NOREF(pvUser);
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /*
      * CPU 0 updates the enabled hardware breakpoint counts.
      */
@@ -1859,11 +1859,11 @@ static int dbgfR3BpArm(PUVM pUVM, DBGFBP hBp, PDBGFBPINT pBp)
             /*
              * Save original instruction and replace a breakpoint instruction.
              */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
             static const uint32_t s_BreakpointInstr = Armv8A64MkInstrBrk(0xc0de);
             rc = PGMPhysSimpleReadGCPhys(pVM, &pBp->Pub.u.Sw.Arch.armv8.u32Org, pBp->Pub.u.Sw.PhysAddr,
                                          sizeof(pBp->Pub.u.Sw.Arch.armv8.u32Org));
-#elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             static const uint8_t  s_BreakpointInstr = 0xcc;
             rc = PGMPhysSimpleReadGCPhys(pVM, &pBp->Pub.u.Sw.Arch.x86.bOrg, pBp->Pub.u.Sw.PhysAddr,
                                          sizeof(pBp->Pub.u.Sw.Arch.x86.bOrg));
@@ -1943,7 +1943,7 @@ static int dbgfR3BpDisarm(PUVM pUVM, DBGFBP hBp, PDBGFBPINT pBp)
              * Check that the current byte is the int3 instruction, and restore the original one.
              * We currently ignore invalid bytes.
              */
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
             uint32_t u32Current = 0;
             rc = PGMPhysSimpleReadGCPhys(pVM, &u32Current, pBp->Pub.u.Sw.PhysAddr, sizeof(u32Current));
             if (   RT_SUCCESS(rc)
@@ -2012,7 +2012,7 @@ static VBOXSTRICTRC dbgfR3BpHit(PVM pVM, PVMCPU pVCpu, DBGFBP hBp, PDBGFBPINT pB
                 rcStrict = pBpOwner->pfnBpHitR3(pVM, pVCpu->idCpu, pBp->pvUserR3, hBp, &pBp->Pub, DBGF_BP_F_HIT_EXEC_BEFORE);
             if (rcStrict == VINF_SUCCESS)
             {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
                 /** @todo Need to take more care with the reading there if the breakpoint is
                  *        on the edge of a page. */
                 uint8_t abInstr[DBGF_BP_INSN_MAX];
@@ -2023,11 +2023,11 @@ static VBOXSTRICTRC dbgfR3BpHit(PVM pVM, PVMCPU pVCpu, DBGFBP hBp, PDBGFBPINT pB
                 {
                     if (!VM_IS_EXEC_ENGINE_IEM(pVCpu->CTX_SUFF(pVM)))
                         IEMTlbInvalidateAll(pVCpu);
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
                     /* Replace the int3 with the original instruction byte. */
                     abInstr[0] = pBp->Pub.u.Sw.Arch.x86.bOrg;
                     rcStrict = IEMExecOneWithPrefetchedByPC(pVCpu, GCPtrInstr, &abInstr[0], sizeof(abInstr));
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
                     rcStrict = IEMExecOneWithPrefetchedByPC(pVCpu, CPUMGetGuestFlatPC(pVCpu),
                                                             &pBp->Pub.u.Sw.Arch.armv8.u32Org,
                                                             sizeof(pBp->Pub.u.Sw.Arch.armv8.u32Org));

@@ -67,8 +67,13 @@ extern const PDMAPICBACKEND g_ApicNemBackend;
 #define VMCPU_TO_X2APICPAGE(a_pVCpu)         ((PX2APICPAGE)(CTX_SUFF((a_pVCpu)->apic.s.pvApicPage)))
 #define VMCPU_TO_CX2APICPAGE(a_pVCpu)        ((PCX2APICPAGE)(CTX_SUFF((a_pVCpu)->apic.s.pvApicPage)))
 
-#define VMCPU_TO_APICCPU(a_pVCpu)            (&(a_pVCpu)->apic.s)
-#define VM_TO_APIC(a_pVM)                    (&(a_pVM)->apic.s)
+#ifdef IN_RING0
+# define VMCPU_TO_APICCPU(a_pVCpu)            (&(a_pVCpu)->apic.s)
+# define VM_TO_APIC(a_pVM)                    (&(a_pVM)->apic.s)
+#else
+# define VMCPU_TO_APICCPU(a_pVCpu)            (&(a_pVCpu)->apic.s)
+# define VM_TO_APIC(a_pVM)                    (&(a_pVM)->apic.s)
+#endif
 #define VM_TO_APICDEV(a_pVM)                 CTX_SUFF(VM_TO_APIC(a_pVM)->pApicDev)
 #ifdef IN_RING3
 # define VMCPU_TO_DEVINS(a_pVCpu)           ((a_pVCpu)->pVMR3->apic.s.pDevInsR3)
@@ -172,6 +177,9 @@ typedef struct APIC
 {
     /** The ring-3 device instance. */
     PPDMDEVINSR3                pDevInsR3;
+    /** The APIC device instance data. */
+    R0PTRTYPE(PAPICDEV)         pApicDevR0;
+    R3PTRTYPE(PAPICDEV)         pApicDevR3;
 
     /** @name The APIC pending-interrupt bitmap (PIB).
      * @{ */

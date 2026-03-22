@@ -53,6 +53,12 @@
 *   Internal Functions                                                                                                           *
 *********************************************************************************************************************************/
 static DECLCALLBACK(size_t) rtLogBackdoorOutput(void *pv, const char *pachChars, size_t cbChars);
+RTDECL(size_t) RTLogBackdoorPrintfV(const char *pszFormat, va_list args);
+
+
+/*********************************************************************************************************************************
+*   Global Variables                                                                                                             *
+*********************************************************************************************************************************/
 
 
 RTDECL(size_t) RTLogBackdoorPrintf(const char *pszFormat, ...)

@@ -48,7 +48,7 @@
 #if defined(RT_ARCH_ARM64)
 # include <iprt/system.h>
 #endif
-#if defined(RT_ARCH_ARM64) || defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(RT_ARCH_ARM64) || defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include <iprt/armv8.h>
 # include <iprt/sort.h>
 # if defined(RT_OS_LINUX)
@@ -63,7 +63,7 @@
 /*********************************************************************************************************************************
 *   Defined Constants And Macros                                                                                                 *
 *********************************************************************************************************************************/
-#if defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32) || defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32) || defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 typedef struct PARTNUMINFO
 {
     uint32_t        uPartNum;
@@ -78,7 +78,7 @@ typedef struct PARTNUMINFO
 /*********************************************************************************************************************************
 *   Global Variables                                                                                                             *
 *********************************************************************************************************************************/
-#if defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32) || defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32) || defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 /** ARM CPU info by part number. */
 static PARTNUMINFO const g_aPartNumDbArm[] =
 {
@@ -131,8 +131,8 @@ static PARTNUMINFO const g_aPartNumDbAmpere[] =
     { 0xfff,    kCpumMicroarch_Unknown,             "TODO",                 "TODO" },
 };
 
-#endif /*if defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32) || defined(VBOX_VMM_TARGET_ARMV8) */
-#if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86)
+#endif /*if defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32) || defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) */
+#if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 
 /**
  * The intel pentium family.
@@ -588,9 +588,9 @@ VMMDECL(CPUMMICROARCH) CPUMCpuIdDetermineX86MicroarchEx(CPUMCPUVENDOR enmVendor,
     return kCpumMicroarch_Unknown;
 }
 
-#endif /* if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) */
+#endif /* if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) */
 
-#if defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32) || defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32) || defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 /**
  * Gets the microarch, vendor, coretype and names from a MIDR value or CPU name.
  *
@@ -727,7 +727,7 @@ VMMR3DECL(int) CPUMCpuIdDetermineArmV8MicroarchEx(uint64_t idMain, const char *p
             pszCpuName && *pszCpuName ? " pszCpuName=" : "",  pszCpuName && *pszCpuName ? pszCpuName : ""));
     return VERR_UNSUPPORTED_CPU;
 }
-#endif /* if defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32) || defined(VBOX_VMM_TARGET_ARMV8) */
+#endif /* if defined(RT_ARCH_ARM64) || defined(RT_ARCH_ARM32) || defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) */
 
 
 /**
@@ -921,7 +921,7 @@ VMMDECL(const char *) CPUMMicroarchName(CPUMMICROARCH enmMicroarch)
     return NULL;
 }
 
-#if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86)
+#if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 
 /**
  * Gets a matching leaf in the CPUID leaf array.
@@ -987,7 +987,7 @@ PCPUMCPUIDLEAF cpumCpuIdEnsureSpace(PVM pVM, PCPUMCPUIDLEAF *ppaLeaves, uint32_t
      */
     else
     {
-# if defined(IN_VBOX_CPU_REPORT) || !defined(VBOX_VMM_TARGET_X86)
+# if defined(IN_VBOX_CPU_REPORT) || !defined(VBOX_VMM_TARGET_X86) && !defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         AssertReleaseFailed();
 # else
 #  ifdef IN_RING3
@@ -1035,7 +1035,7 @@ void cpumCpuIdAssertOrder(PCPUMCPUIDLEAF paLeaves, uint32_t cLeaves)
 }
 # endif
 
-#endif /* defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) */
+#endif /* defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) */
 
 #if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64)
 
@@ -1392,7 +1392,7 @@ VMMDECL(int) CPUMCpuIdCollectLeavesFromX86Host(PCPUMCPUIDLEAF *ppaLeaves, uint32
 
 #endif /* RT_ARCH_X86 || RT_ARCH_AMD64 */
 
-#if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86)
+#if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /**
  * Detect the CPU vendor give n the
  *
@@ -1433,7 +1433,7 @@ VMMDECL(CPUMCPUVENDOR) CPUMCpuIdDetectX86VendorEx(uint32_t uEAX, uint32_t uEBX, 
 
     return CPUMCPUVENDOR_UNKNOWN;
 }
-#endif /* defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) */
+#endif /* defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) */
 
 
 /**
@@ -1471,7 +1471,7 @@ VMMDECL(const char *) CPUMCpuVendorName(CPUMCPUVENDOR enmVendor)
     return "Invalid-cpu-vendor";
 }
 
-#if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86)
+#if defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 
 static PCCPUMCPUIDLEAF cpumCpuIdFindLeaf(PCCPUMCPUIDLEAF paLeaves, uint32_t cLeaves, uint32_t uLeaf)
 {
@@ -2001,7 +2001,7 @@ void cpumCpuIdExplodeArchCapabilities(CPUMFEATURESX86 *pFeatures, bool fHasArchC
 }
 
 
-# if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
 /**
  * Sets the guest IA32_ARCH_CAPABILITIES value and associated feature bits.
  */
@@ -2045,8 +2045,8 @@ VMM_INT_DECL(void) CPUMCpuIdApplyX86HostArchCapabilities(PVMCC pVM, bool fHasArc
     cpumCpuIdExplodeArchCapabilities(const_cast<CPUMFEATURESX86 *>(&pVM->cpum.s.HostFeatures.s), fHasArchCap, fHostArchVal);
     LogRel(("CPUM: Host IA32_ARCH_CAPABILITIES  = %#RX64\n", fHostArchVal));
 
-# if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
-#  ifdef VBOX_VMM_TARGET_AGNOSTIC
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_AGNOSTIC) || defined(VRA_VMM_TARGET_AGNOSTIC)
     /** @todo arm on x86: check VM target. */
 #  endif
     cpumCpuIdSetGuestArchCapabilities(pVM, fHasArchCap && pVM->cpum.s.GuestFeatures.fArchCap,
@@ -2055,9 +2055,9 @@ VMM_INT_DECL(void) CPUMCpuIdApplyX86HostArchCapabilities(PVMCC pVM, bool fHasArc
 }
 # endif /* defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) */
 
-#endif /* defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) */
+#endif /* defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64) || defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) */
 
-#if (defined(RT_ARCH_ARM64) || defined(VBOX_VMM_TARGET_ARMV8)) && defined(IN_RING3)
+#if (defined(RT_ARCH_ARM64) || defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)) && defined(IN_RING3)
 /** @callback_method_impl{FNRTSORTCMP} */
 DECLCALLBACK(int) cpumCpuIdSysRegValSortCmp(void const *pvElement1, void const *pvElement2, void *pvUser)
 {
@@ -2441,7 +2441,7 @@ VMMDECL(int) CPUMCpuIdCollectIdSysRegsFromArmV8Host(PSUPARMSYSREGVAL *ppaSysRegs
 }
 
 #endif /* RT_ARCH_ARM64 && IN_RING3 */
-#if defined(RT_ARCH_ARM64) || defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(RT_ARCH_ARM64) || defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 
 /**
  * Helper that looks up a system register value in an array.

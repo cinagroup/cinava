@@ -386,7 +386,7 @@ typedef uint64_t PGMPTATTRS;
 /** Pointer to a PGMPTATTRS type. */
 typedef PGMPTATTRS *PPGMPTATTRS;
 
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 /** @name PGM_PTATTRS_XXX - PGM page-table attributes, x86 edition.
  *
  * The following bits map 1:1 (shifted by PGM_PTATTRS_EPT_SHIFT) to the Intel EPT
@@ -573,7 +573,7 @@ AssertCompile(PGM_PTATTRS_EPT_X_USER_SHIFT     - PGM_PTATTRS_EPT_SHIFT == EPT_E_
 /** @}  */
 #endif /* VBOX_VMM_TARGET_X86 || DOXYGEN_RUNNING */
 
-#if defined(VBOX_VMM_TARGET_ARMV8) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) || defined(DOXYGEN_RUNNING)
 /** @name PGM_PTATTRS_XXX - PGM page-table attributes, ARMv8 edition.
  *
  * The translation tables on ARMv8 are complicated by compressed and index
@@ -837,7 +837,7 @@ typedef PGMPTWALKFAST const *PCPGMPTWALKFAST;
     } while (0)
 
 
-#ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
 /** Macro for checking if the guest is using paging.
  * @param enmMode   PGMMODE_*.
  * @remark  ASSUMES certain order of the PGMMODE_* values.
@@ -921,14 +921,14 @@ VMMDECL(int)        PGMGstGetPage(PVMCPUCC pVCpu, RTGCPTR GCPtr, PPGMPTWALK pWal
  * unless the effective access allows usermode access.
  * Assume supervisor (priveleged) access when not set. */
 #define PGMQPAGE_F_USER_MODE    RT_BIT_32(3)
-#if defined( VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 /** X86: Treat CR0.WP as zero when evalutating the access.
  * @note Same value as X86_CR0_WP.  */
 # define PGMQPAGE_F_CR0_WP0     RT_BIT_32(16)
 #endif
 /** @todo ARM: security, s2, GCS, ++ */
 /** The valid flag mask.   */
-#if defined( VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define PGMQPAGE_F_VALID_MASK  UINT32_C(0x0001000f)
 #else
 # define PGMQPAGE_F_VALID_MASK  UINT32_C(0x0000000f)
@@ -941,13 +941,13 @@ VMM_INT_DECL(int)   PGMGstMapPaePdpes(PVMCPUCC pVCpu, PCX86PDPE paPaePdpes);
 VMM_INT_DECL(int)   PGMGstMapPaePdpesAtCr3(PVMCPUCC pVCpu, uint64_t cr3);
 
 VMMDECL(int)        PGMInvalidatePage(PVMCPUCC pVCpu, RTGCPTR GCPtrPage);
-#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VRA_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_AGNOSTIC)
 VMM_INT_DECL(int)   PGMFlushTLB(PVMCPUCC pVCpu, uint64_t cr3, bool fGlobal);
 VMM_INT_DECL(int)   PGMSyncCR3(PVMCPUCC pVCpu, uint64_t cr0, uint64_t cr3, uint64_t cr4, bool fGlobal);
 VMM_INT_DECL(int)   PGMUpdateCR3(PVMCPUCC pVCpu, uint64_t cr3);
 VMM_INT_DECL(int)   PGMChangeMode(PVMCPUCC pVCpu, uint64_t cr0, uint64_t cr4, uint64_t efer, bool fForce);
 VMM_INT_DECL(int)   PGMHCChangeMode(PVMCC pVM, PVMCPUCC pVCpu, PGMMODE enmGuestMode, bool fForce);
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VRA_VMM_TARGET_ARMV8)
 VMM_INT_DECL(int)   PGMChangeMode(PVMCPUCC pVCpu, uint8_t bEl, uint64_t u64RegSctlr, uint64_t u64RegTcr);
 #endif
 VMMDECL(void)       PGMCr0WpEnabled(PVMCPUCC pVCpu);
@@ -1216,13 +1216,13 @@ VMM_INT_DECL(int)   PGMPhysIemGCPhys2PtrNoLock(PVMCC pVM, PVMCPUCC pVCpu, RTGCPH
  * Unassigned memory (IEMTLBE_F_PG_UNASSIGNED). */
 /** @def PGMIEMGCPHYS2PTR_F_CODE_PAGE
  * Write monitored IEM code page (IEMTLBE_F_PG_CODE_PAGE). */
-#if defined(VBOX_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(DOXYGEN_RUNNING)
 # define PGMIEMGCPHYS2PTR_F_NO_WRITE     RT_BIT_32(3)
 # define PGMIEMGCPHYS2PTR_F_NO_READ      RT_BIT_32(4)
 # define PGMIEMGCPHYS2PTR_F_NO_MAPPINGR3 RT_BIT_32(8)
 # define PGMIEMGCPHYS2PTR_F_UNASSIGNED   RT_BIT_32(9)
 # define PGMIEMGCPHYS2PTR_F_CODE_PAGE    RT_BIT_32(10)
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define PGMIEMGCPHYS2PTR_F_NO_READ      RT_BIT_32(15)
 # define PGMIEMGCPHYS2PTR_F_NO_WRITE     RT_BIT_32(16)
 # define PGMIEMGCPHYS2PTR_F_NO_MAPPINGR3 RT_BIT_32(17)
@@ -1525,7 +1525,7 @@ VMMR3_INT_DECL(int) PGMR3PhysMmio2ControlDirtyPageTracking(PVM pVM, PPDMDEVINS p
 VMMR3DECL(int)      PGMR3PhysRomRegister(PVM pVM, PPDMDEVINS pDevIns, RTGCPHYS GCPhys, RTGCPHYS cb,
                                          const void *pvBinary, uint32_t cbBinary, uint8_t fFlags, const char *pszDesc);
 VMMR3DECL(int)      PGMR3PhysRomProtect(PVM pVM, RTGCPHYS GCPhys, RTGCPHYS cb, PGMROMPROT enmProt);
-# if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
 VMMDECL(void)       PGMR3PhysSetA20(PVMCPU pVCpu, bool fEnable);
 # endif
 

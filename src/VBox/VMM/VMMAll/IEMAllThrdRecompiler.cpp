@@ -50,7 +50,8 @@
 #define IEM_WITH_CODE_TLB_AND_OPCODE_BUF  /* A bit hackish, but its all in IEMInline.h. */
 #define VMCPU_INCL_CPUM_GST_CTX
 #ifdef IN_RING0
-# define VBOX_VMM_TARGET_X86
+#define VBOX_VMM_TARGET_X86
+#define VRA_VMM_TARGET_X86
 #endif
 #include <VBox/vmm/iem.h>
 #include <VBox/vmm/cpum.h>
@@ -75,11 +76,11 @@
 
 #include "IEMInline.h"
 #include "IEMInlineExec.h"
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 # include "target-x86/IEMInline-x86.h"
 # include "target-x86/IEMInlineDecode-x86.h"
 # include "target-x86/IEMInlineExec-x86.h"
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include "target-armv8/IEMInlineExec-armv8.h"
 #endif
 #include "IEMOpHlp.h"

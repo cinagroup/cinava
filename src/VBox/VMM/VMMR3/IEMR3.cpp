@@ -54,7 +54,7 @@
 # include "IEMN8veRecompiler.h"
 # include "IEMThreadedFunctions.h"
 # include "IEMInline.h"
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 #  include "VMMAll/target-x86/IEMInline-x86.h"
 # endif
 #endif
@@ -77,7 +77,7 @@ static void iemR3RegisterDebuggerCommands(void);
 #endif
 
 
-#if !defined(VBOX_VMM_TARGET_ARMV8)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
 static const char *iemGetTargetCpuName(uint32_t enmTargetCpu)
 {
     switch (enmTargetCpu)
@@ -121,7 +121,7 @@ VMMR3_INT_DECL(int) IEMR3Init(PVM pVM)
     int rc;
     RT_NOREF(pIem, rc);
 
-#if defined(VBOX_VMM_TARGET_X86) && !defined(VBOX_WITHOUT_CPUID_HOST_CALL)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) && !defined(VBOX_WITHOUT_CPUID_HOST_CALL)
     /** @cfgm{/IEM/CpuIdHostCall, boolean, false}
      * Controls whether the custom VBox specific CPUID host call interface is
      * enabled or not. */
@@ -234,14 +234,14 @@ VMMR3_INT_DECL(int) IEMR3Init(PVM pVM)
         AssertCompile(sizeof(pVCpu->iem.s) <= sizeof(pVCpu->iem.padding)); /* (tstVMStruct can't do it's job w/o instruction stats) */
 
         ITLBS(pVCpu).Code.uTlbRevision       = ITLBS(pVCpu).Data.uTlbRevision       = uInitialTlbRevision;
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         ITLBS(pVCpu).Code.uTlbRevisionGlobal = ITLBS(pVCpu).Data.uTlbRevisionGlobal = uInitialTlbRevision;
         ITLBS(pVCpu).Code.uTlbPhysRev        = ITLBS(pVCpu).Data.uTlbPhysRev        = uInitialTlbPhysRev;
         ITLBS(pVCpu).Code.NonGlobalLargePageRange.uFirstTag = UINT64_MAX;
         ITLBS(pVCpu).Code.GlobalLargePageRange.uFirstTag    = UINT64_MAX;
         ITLBS(pVCpu).Data.NonGlobalLargePageRange.uFirstTag = UINT64_MAX;
         ITLBS(pVCpu).Data.GlobalLargePageRange.uFirstTag    = UINT64_MAX;
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         ITLBS(pVCpu).Code.uTlbPhysRevAndStuff0 = ITLBS(pVCpu).Data.uTlbPhysRevAndStuff0 = uInitialTlbPhysRev | IEMTLBE_F_NG;
         ITLBS(pVCpu).Code.uTlbPhysRevAndStuff1 = ITLBS(pVCpu).Data.uTlbPhysRevAndStuff1 = uInitialTlbPhysRev | IEMTLBE_F_NG;
         ITLBS(pVCpu).Code.LargePageRange.uFirstTag = UINT64_MAX;
@@ -250,7 +250,7 @@ VMMR3_INT_DECL(int) IEMR3Init(PVM pVM)
 # error "port me"
 #endif
 
-#ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
         IRECM(pVCpu).cTbsTillNextTimerPoll      = 128;
         IRECM(pVCpu).cTbsTillNextTimerPollPrev  = 128;
 #endif
@@ -261,7 +261,7 @@ VMMR3_INT_DECL(int) IEMR3Init(PVM pVM)
         if (idCpu == 0)
         {
             ICORE(pVCpu).enmCpuVendor                     = CPUMGetGuestCpuVendor(pVM);
-#if !defined(VBOX_VMM_TARGET_ARMV8)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
             ICORE(pVCpu).aidxTargetCpuEflFlavour[0]       =    ICORE(pVCpu).enmCpuVendor == CPUMCPUVENDOR_INTEL
                                                             || ICORE(pVCpu).enmCpuVendor == CPUMCPUVENDOR_VIA /*??*/
                                                           ? IEMTARGETCPU_EFL_BEHAVIOR_INTEL : IEMTARGETCPU_EFL_BEHAVIOR_AMD;
@@ -276,7 +276,7 @@ VMMR3_INT_DECL(int) IEMR3Init(PVM pVM)
             ICORE(pVCpu).aidxTargetCpuEflFlavour[1]   = ICORE(pVCpu).aidxTargetCpuEflFlavour[0];
 #endif
 
-#if !defined(VBOX_VMM_TARGET_ARMV8) && (IEM_CFG_TARGET_CPU == IEMTARGETCPU_DYNAMIC)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8) && (IEM_CFG_TARGET_CPU == IEMTARGETCPU_DYNAMIC)
             switch (pVM->cpum.ro.GuestFeatures.enmMicroarch)
             {
                 case kCpumMicroarch_Intel_8086:     ICORE(pVCpu).uTargetCpu = IEMTARGETCPU_8086; break;
@@ -355,7 +355,7 @@ VMMR3_INT_DECL(int) IEMR3Init(PVM pVM)
      */
     for (VMCPUID idCpu = 0; idCpu < pVM->cCpus; idCpu++)
     {
-#if !defined(VBOX_VMM_TARGET_ARMV8) && defined(VBOX_WITH_NESTED_HWVIRT_VMX) /* quick fix for stupid structure duplication non-sense */
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8) && defined(VBOX_WITH_NESTED_HWVIRT_VMX) /* quick fix for stupid structure duplication non-sense */
         PVMCPU pVCpu = pVM->apCpusR3[idCpu];
         char   szPat[128];
         RT_NOREF_PV(szPat); /* lazy bird */
@@ -1045,7 +1045,7 @@ VMMR3_INT_DECL(int) IEMR3Init(PVM pVM)
             STAMR3RegisterF(pVM, &pVCpu->iem.s.aStatInts[i], STAMTYPE_U32_RESET, STAMVISIBILITY_USED, STAMUNIT_OCCURENCES,
                             "", "/IEM/CPU%u/Interrupts/%02x", idCpu, i);
 
-# if !defined(VBOX_VMM_TARGET_ARMV8) && defined(VBOX_WITH_STATISTICS) && !defined(DOXYGEN_RUNNING)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8) && defined(VBOX_WITH_STATISTICS) && !defined(DOXYGEN_RUNNING)
         /* Instruction statistics: */
 #  define IEM_DO_INSTR_STAT(a_Name, a_szDesc) \
             STAMR3RegisterF(pVM, &pVCpu->iem.s.StatsRZ.a_Name, STAMTYPE_U32_RESET, STAMVISIBILITY_USED, \
@@ -1071,7 +1071,7 @@ VMMR3_INT_DECL(int) IEMR3Init(PVM pVM)
 #endif /* !defined(VBOX_VMM_TARGET_ARMV8) && defined(VBOX_WITH_NESTED_HWVIRT_VMX) - quick fix for stupid structure duplication non-sense */
     }
 
-#if !defined(VBOX_VMM_TARGET_ARMV8) && defined(VBOX_WITH_NESTED_HWVIRT_VMX)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8) && defined(VBOX_WITH_NESTED_HWVIRT_VMX)
     /*
      * Register the per-VM VMX APIC-access page handler type.
      */
@@ -1098,7 +1098,7 @@ VMMR3_INT_DECL(int) IEMR3Init(PVM pVM)
     iemR3RegisterDebuggerCommands();
 #endif
 
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /*
      * Load a test a test binary like tstArm64-1[.exe] if configured
      * and execute it instead of the firmware.
@@ -1323,7 +1323,7 @@ static void iemR3InfoTlbPrintHeader(PVMCPU pVCpu, PCDBGFINFOHLP pHlp, IEMTLB con
 static void iemR3InfoTlbPrintSlot(PVMCPU pVCpu, PCDBGFINFOHLP pHlp, IEMTLB const *pTlb, IEMTLBENTRY const *pTlbe,
                                   uint32_t uSlot, uint32_t fFlags)
 {
-#ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
     uint64_t const uTlbRevision = !(uSlot & 1) ? pTlb->uTlbRevision : pTlb->uTlbRevisionGlobal;
 #else
     uint64_t const uTlbRevision = pTlb->uTlbRevision;
@@ -1335,11 +1335,11 @@ static void iemR3InfoTlbPrintSlot(PVMCPU pVCpu, PCDBGFINFOHLP pHlp, IEMTLB const
     RTGCPTR const  GCPtr = (RTGCINTPTR)((pTlbe->uTag & ~IEMTLB_REVISION_MASK) << (64 - IEMTLB_TAG_ADDR_WIDTH))
                          >>                                                      (64 - IEMTLB_TAG_ADDR_WIDTH - GUEST_PAGE_SHIFT);
     const char    *pszValid = "";
-#ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
     char           szTmp[128];
     if (fFlags & IEMR3INFOTLB_F_CHECK)
     {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         uint32_t const fInvSlotG = (uint32_t)!(uSlot & 1) << X86_PTE_BIT_G;
 #endif
         PGMPTWALKFAST  WalkFast;
@@ -1349,7 +1349,7 @@ static void iemR3InfoTlbPrintSlot(PVMCPU pVCpu, PCDBGFINFOHLP pHlp, IEMTLB const
             switch (rc)
             {
                 case VERR_PAGE_TABLE_NOT_PRESENT:
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
                     switch ((WalkFast.fFailed & PGM_WALKFAIL_LEVEL_MASK) >> PGM_WALKFAIL_LEVEL_SHIFT)
                     {
                         case 1:  pszValid = " stale(page-not-present)"; break;
@@ -1367,7 +1367,7 @@ static void iemR3InfoTlbPrintSlot(PVMCPU pVCpu, PCDBGFINFOHLP pHlp, IEMTLB const
             }
         else if (WalkFast.GCPhys != pTlbe->GCPhys)
             RTStrPrintf(szTmp, sizeof(szTmp), " stale(GCPhys=%RGp)", WalkFast.GCPhys);
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
         else if (   (~WalkFast.fEffective       & (X86_PTE_RW | X86_PTE_US | X86_PTE_G | X86_PTE_A | X86_PTE_D))
                  == (  (pTlbe->fFlagsAndPhysRev & (  IEMTLBE_F_PT_NO_WRITE | IEMTLBE_F_PT_NO_USER
                                                    | IEMTLBE_F_PT_NO_DIRTY | IEMTLBE_F_PT_NO_ACCESSED))
@@ -1405,7 +1405,7 @@ static void iemR3InfoTlbPrintSlot(PVMCPU pVCpu, PCDBGFINFOHLP pHlp, IEMTLB const
                         : WalkFast.fEffective & X86_PTE_D  ? " dirty-now"    : " dirty-no-more",
                         (~WalkFast.fEffective & X86_PTE_A)  == (pTlbe->fFlagsAndPhysRev & IEMTLBE_F_PT_NO_ACCESSED) ? ""
                         : WalkFast.fEffective & X86_PTE_A  ? " accessed-now" : " accessed-no-more");
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
         else
             RTStrPrintf(szTmp, sizeof(szTmp), " stale(todo)");
 #else
@@ -1416,7 +1416,7 @@ static void iemR3InfoTlbPrintSlot(PVMCPU pVCpu, PCDBGFINFOHLP pHlp, IEMTLB const
     RT_NOREF(pVCpu);
 #endif
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     pHlp->pfnPrintf(pHlp, IEMTLB_SLOT_FMT ": %s %#018RX64 -> %RGp / %p / %#05x %s%s%s%s%s%s%s/%s%s%s%s/%s %s%s\n",
                     uSlot,
                     (pTlbe->uTag & IEMTLB_REVISION_MASK) == uTlbRevision ? "valid  "
@@ -1444,7 +1444,7 @@ static void iemR3InfoTlbPrintSlot(PVMCPU pVCpu, PCDBGFINFOHLP pHlp, IEMTLB const
                     (pTlbe->fFlagsAndPhysRev & IEMTLBE_F_PHYS_REV) == pTlb->uTlbPhysRev ? "phys-valid"
                     : (pTlbe->fFlagsAndPhysRev & IEMTLBE_F_PHYS_REV) == 0 ? "phys-empty" : "phys-expired",
                     pszValid);
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     static const char * const s_apszRegimes[16] =
     {
         "NsEL10",

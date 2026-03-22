@@ -83,6 +83,9 @@ typedef struct HVAPIC
 {
     /** The ring-3 device instance. */
     PPDMDEVINSR3                pDevInsR3;
+    /** The APIC device instance data. */
+    R0PTRTYPE(PAPICDEV)         pApicDevR0;
+    R3PTRTYPE(PAPICDEV)         pApicDevR3;
     /** The partition handle. */
 # ifdef _WINHVAPIDEFS_H_
     WHV_PARTITION_HANDLE        hPartition;

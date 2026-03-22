@@ -57,7 +57,7 @@ PR_BEGIN_EXTERN_C
 ** thread safe (and are not declared here - look in stdlib.h).
 */
 
-#ifdef VBOX
+#ifdef VRA
 DECL_FORCE_INLINE(void *) PR_Malloc(PRUint32 size)
 {
     return RTMemAlloc(RT_MAX(size, 1));
@@ -78,7 +78,7 @@ DECL_FORCE_INLINE(void) PR_Free(void *ptr)
     RTMemFree(ptr);
 }
 #else
-# error "Not supported"
+# error "VRA not defined - NSPR memory functions not configured"
 #endif
 
 /*

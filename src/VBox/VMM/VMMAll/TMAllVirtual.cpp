@@ -94,7 +94,7 @@ static DECLCALLBACK(uint64_t) tmR3VirtualNanoTSDriverless(PRTTIMENANOTSDATA pDat
 DECLCALLBACK(DECLEXPORT(uint64_t)) tmVirtualNanoTSRediscover(PRTTIMENANOTSDATA pData, PRTITMENANOTSEXTRA pExtra)
 {
     PVMCC                 pVM = RT_FROM_CPP_MEMBER(pData, VMCC, VMCC_CTX(tm).s.VirtualGetRawData);
-    PFNTIMENANOTSINTERNAL pfnWorker;
+    PFNTIMENANOTSINTERNAL pfnWorker = NULL;
 
     /*
      * We require a valid GIP for the selection below.

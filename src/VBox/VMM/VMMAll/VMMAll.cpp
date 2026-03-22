@@ -273,7 +273,7 @@ VMMDECL(PVMCPUCC) VMMGetCpuById(PVMCC pVM, RTCPUID idCpu)
  */
 VMM_INT_DECL(uint32_t) VMMGetSvnRev(void)
 {
-    return VBOX_SVN_REV;
+    return VRA_SVN_REV;
 }
 
 

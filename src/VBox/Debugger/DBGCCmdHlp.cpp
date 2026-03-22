@@ -1367,7 +1367,7 @@ static DECLCALLBACK(int) dbgcHlpRegPrintf(PDBGCCMDHLP pCmdHlp, VMCPUID idCpu, in
     if (f64BitMode < 0)
         f64BitMode = DBGFR3CpuIsIn64BitCode(pDbgc->pUVM, idCpu);
 
-#ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
     if (fTerse)
     {
         if (f64BitMode)
@@ -1496,7 +1496,7 @@ static DECLCALLBACK(int) dbgcHlpRegPrintf(PDBGCCMDHLP pCmdHlp, VMCPUID idCpu, in
     /*
      * Disassemble one instruction at cs:[r|e]ip.
      */
-#ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
     if (!f64BitMode && strstr(pszRegs, " vm ")) /* a bit ugly... */
         return pCmdHlp->pfnExec(pCmdHlp, "uv86 %s", szDisAndRegs + 2);
 #endif

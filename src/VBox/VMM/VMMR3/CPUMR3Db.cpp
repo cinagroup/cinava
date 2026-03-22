@@ -36,7 +36,7 @@
 #include <VBox/vmm/mm.h>
 
 #include <VBox/err.h>
-#if defined(VBOX_VMM_TARGET_ARMV8) || defined(RT_ARCH_ARM64)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) || defined(RT_ARCH_ARM64)
 # include <iprt/armv8.h>
 #endif
 #if !defined(RT_ARCH_ARM64)
@@ -45,7 +45,7 @@
 #include <iprt/mem.h>
 #include <iprt/ctype.h>
 #include <iprt/string.h>
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include <iprt/sort.h>
 #endif
 
@@ -53,7 +53,7 @@
 /*********************************************************************************************************************************
 *   Internal Functions                                                                                                           *
 *********************************************************************************************************************************/
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 static int cpumDbPopulateInfoFromEntry(PCPUMINFO pInfo, PCCPUMDBENTRY pEntryCore, bool fHost);
 #endif
 
@@ -82,7 +82,7 @@ static int cpumDbPopulateInfoFromEntry(PCPUMINFO pInfo, PCCPUMDBENTRY pEntryCore
 /*
  * Include the X86 profiles.
  */
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 
 # include "target-x86/CPUMR3Msr-x86.h" /* MSR macros needed by the profiles. */
 
@@ -127,7 +127,7 @@ static int cpumDbPopulateInfoFromEntry(PCPUMINFO pInfo, PCCPUMDBENTRY pEntryCore
  * Note! We include these when on ARM64 hosts regardless of the VMM target, so
  *       we can get more info about the host CPU.
  */
-#if defined(VBOX_VMM_TARGET_ARMV8) || defined(RT_ARCH_ARM64)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) || defined(RT_ARCH_ARM64)
 
 # include "cpus/ARM_Apple_M1.h"
 # include "cpus/ARM_Apple_M2_Max.h"
@@ -153,7 +153,7 @@ static int cpumDbPopulateInfoFromEntry(PCPUMINFO pInfo, PCCPUMDBENTRY pEntryCore
  */
 static CPUMDBENTRY const * const g_apCpumDbEntries[] =
 {
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /*
      * X86 profiles:
      */
@@ -249,7 +249,7 @@ static CPUMDBENTRY const * const g_apCpumDbEntries[] =
 # endif
 #endif /* VBOX_VMM_TARGET_X86 */
 
-#if defined(VBOX_VMM_TARGET_ARMV8) || defined(RT_ARCH_ARM64)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) || defined(RT_ARCH_ARM64)
     /*
      * ARM profiles:
      */
@@ -763,7 +763,7 @@ VMMR3DECL(PCCPUMDBENTRYARM) CPUMR3DbGetBestEntryByArm64MainId(uint64_t idMain, u
 
 
 
-#if defined(VBOX_VMM_TARGET_X86) && (defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64))
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) && (defined(RT_ARCH_X86) || defined(RT_ARCH_AMD64))
 
 /**
  * Do we consider @a enmConsider a better match for @a enmTarget than
@@ -993,7 +993,7 @@ static int cpumR3DbCreateHostEntry(PVM pVM, PCPUMINFO pInfo)
 
 #endif /* VBOX_VMM_TARGET_X86 && (RT_ARCH_AMD64 || RT_ARCH_X86) */
 
-#if defined(VBOX_VMM_TARGET_ARMV8) && defined(RT_ARCH_ARM64)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8) && defined(RT_ARCH_ARM64)
 /**
  * ARMv8 version of helper that picks a DB entry for the host and merges it with
  * available info in the @a pInfo structure.
@@ -1030,7 +1030,7 @@ static int cpumR3DbCreateHostEntry(PVM pVM, PCPUMINFO pInfo)
 #endif /* VBOX_VMM_TARGET_ARMV8 && RT_ARCH_ARM64 */
 
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /**
  * X86 version of helper that populates the CPUMINFO structure from DB entry.
  */
@@ -1098,7 +1098,7 @@ static int cpumDbPopulateInfoFromEntry(PCPUMINFO pInfo, PCCPUMDBENTRY pEntryCore
     return VINF_SUCCESS;
 }
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 /**
  * ARMv8 version of helper that populates the CPUMINFO structure from DB entry.
  */
@@ -1147,9 +1147,9 @@ static int cpumDbPopulateInfoFromEntry(PCPUMINFO pInfo, PCCPUMDBENTRY pEntryCore
 
 DECLHIDDEN(int) cpumR3DbGetCpuInfo(PVM pVM, const char *pszName, PCPUMINFO pInfo)
 {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     CPUMDBENTRYTYPE const enmEntryType = CPUMDBENTRYTYPE_X86;
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     CPUMDBENTRYTYPE const enmEntryType = CPUMDBENTRYTYPE_ARM;
 #else
 # error "port me"
@@ -1181,7 +1181,7 @@ DECLHIDDEN(int) cpumR3DbGetCpuInfo(PVM pVM, const char *pszName, PCPUMINFO pInfo
             if (!strcmp(pszName, g_apCpumDbEntries[i]->pszName))
                 return cpumDbPopulateInfoFromEntry(pInfo, g_apCpumDbEntries[i], false /*fHost*/);
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
             PCCPUMDBENTRYARM pEntryArm = (PCCPUMDBENTRYARM)g_apCpumDbEntries[i];
             for (unsigned idxVar = 0; idxVar < pEntryArm->cVariants; idxVar++)
                 if (!strcmp(pszName, pEntryArm->aVariants[idxVar].pszName))

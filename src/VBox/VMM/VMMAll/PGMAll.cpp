@@ -32,7 +32,8 @@
 #define LOG_GROUP LOG_GROUP_PGM
 #define VBOX_WITHOUT_PAGING_BIT_FIELDS /* 64-bit bitfields are just asking for trouble. See @bugref{9841} and others. */
 #ifdef IN_RING0
-# define VBOX_VMM_TARGET_X86
+#define VBOX_VMM_TARGET_X86
+#define VRA_VMM_TARGET_X86
 #endif
 #include <VBox/vmm/pgm.h>
 #include <VBox/vmm/cpum.h>
@@ -58,7 +59,7 @@
 #include <VBox/param.h>
 #include <VBox/err.h>
 
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include <iprt/armv8.h>
 #endif
 
@@ -66,7 +67,7 @@
 /*********************************************************************************************************************************
 *   Internal Functions                                                                                                           *
 *********************************************************************************************************************************/
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 DECLINLINE(int) pgmShwGetLongModePDPtr(PVMCPUCC pVCpu, RTGCPTR64 GCPtr, PX86PML4E *ppPml4e, PX86PDPT *ppPdpt, PX86PDPAE *ppPD);
 # ifndef VBOX_WITH_ONLY_PGM_NEM_MODE
 DECLINLINE(int) pgmShwGetPaePoolPagePD(PVMCPUCC pVCpu, RTGCPTR GCPtr, PPGMPOOLPAGE *ppShwPde);
@@ -87,7 +88,7 @@ static bool pgmHandlePageZeroingCode(PVMCPUCC pVCpu, PCPUMCTX pCtx);
 #endif /* VBOX_VMM_TARGET_X86 */
 
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 
 # define PGM_SHW_TYPE PGM_TYPE_NONE
 
@@ -761,14 +762,14 @@ static uint64_t const g_auCr3MaskForMode[PGMMODE_MAX] =
 AssertCompile(PGMMODE_NONE == 32);
 
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # include "PGMAllGst-armv8.cpp.h"
 #else
 # error "port me"
 #endif
 
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 
 /**
  * Gets the physical address mask for CR3 in the given paging mode.
@@ -1801,12 +1802,12 @@ VMMDECL(int) PGMGstGetPage(PVMCPUCC pVCpu, RTGCPTR GCPtr, PPGMPTWALK pWalk)
     VMCPU_ASSERT_EMT(pVCpu);
     Assert(pWalk);
 
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uintptr_t idx = pVCpu->pgm.s.idxGuestModeData;
     AssertReturn(idx < RT_ELEMENTS(g_aPgmGuestModeData), VERR_PGM_MODE_IPE);
     AssertReturn(g_aPgmGuestModeData[idx].pfnGetPage, VERR_PGM_MODE_IPE);
     return g_aPgmGuestModeData[idx].pfnGetPage(pVCpu, GCPtr, pWalk);
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** @todo Incorporate EL (for nested virt and EL3 later on). */
     uintptr_t idx =   (GCPtr & RT_BIT_64(55))
                     ? pVCpu->pgm.s.aidxGuestModeDataTtbr1[1]
@@ -1838,12 +1839,12 @@ VMM_INT_DECL(int) PGMGstQueryPageFast(PVMCPUCC pVCpu, RTGCPTR GCPtr, uint32_t fF
     Assert(!(fFlags & ~(PGMQPAGE_F_VALID_MASK)));
     Assert(!(fFlags & PGMQPAGE_F_EXECUTE) || !(fFlags & PGMQPAGE_F_WRITE));
 
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uintptr_t idx = pVCpu->pgm.s.idxGuestModeData;
     AssertReturn(idx < RT_ELEMENTS(g_aPgmGuestModeData), VERR_PGM_MODE_IPE);
     AssertReturn(g_aPgmGuestModeData[idx].pfnGetPage, VERR_PGM_MODE_IPE);
     return g_aPgmGuestModeData[idx].pfnQueryPageFast(pVCpu, GCPtr, fFlags, pWalk);
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** @todo Incorporate EL (for nested virt and EL3 later on). */
     uintptr_t idx =   (GCPtr & RT_BIT_64(55))
                     ? pVCpu->pgm.s.aidxGuestModeDataTtbr1[1]
@@ -1878,7 +1879,7 @@ VMM_INT_DECL(int) PGMGstQueryPageFast(PVMCPUCC pVCpu, RTGCPTR GCPtr, uint32_t fF
 int pgmGstPtWalk(PVMCPUCC pVCpu, RTGCPTR GCPtr, PPGMPTWALK pWalk, PPGMPTWALKGST pGstWalk)
 {
     VMCPU_ASSERT_EMT(pVCpu);
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     switch (pVCpu->pgm.s.enmGuestMode)
     {
         case PGMMODE_32_BIT:
@@ -1910,7 +1911,7 @@ int pgmGstPtWalk(PVMCPUCC pVCpu, RTGCPTR GCPtr, PPGMPTWALK pWalk, PPGMPTWALKGST 
             return VERR_PGM_NOT_USED_IN_MODE;
     }
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** @todo Incorporate EL (for nested virt and EL3 later on). */
     uintptr_t idx =   (GCPtr & RT_BIT_64(55))
                     ? pVCpu->pgm.s.aidxGuestModeDataTtbr1[1]
@@ -1946,7 +1947,7 @@ int pgmGstPtWalk(PVMCPUCC pVCpu, RTGCPTR GCPtr, PPGMPTWALK pWalk, PPGMPTWALKGST 
  */
 int pgmGstPtWalkNext(PVMCPUCC pVCpu, RTGCPTR GCPtr, PPGMPTWALK pWalk, PPGMPTWALKGST pGstWalk)
 {
-#ifdef VBOX_VMM_TARGET_X86 /** @todo optimize for ARMv8 */
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) /** @todo optimize for ARMv8 */
     /*
      * We can only handle successfully walks.
      * We also limit ourselves to the next page.
@@ -2047,7 +2048,7 @@ int pgmGstPtWalkNext(PVMCPUCC pVCpu, RTGCPTR GCPtr, PPGMPTWALK pWalk, PPGMPTWALK
 }
 
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /**
  * Modify page flags for a range of pages in the guest's tables
  *
@@ -2094,7 +2095,7 @@ VMMDECL(int)  PGMGstModifyPage(PVMCPUCC pVCpu, RTGCPTR GCPtr, size_t cb, uint64_
 }
 #endif /* VBOX_VMM_TARGET_X86 */
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 
 /**
  * Checks whether the given PAE PDPEs are potentially valid for the guest.
@@ -3314,7 +3315,7 @@ static PGMMODE pgmCalcShadowMode(PVMCC pVM, PGMMODE enmGuestMode, SUPPAGINGMODE 
     return enmShadowMode;
 }
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 
 VMM_INT_DECL(int) PGMChangeMode(PVMCPUCC pVCpu, uint8_t bEl, uint64_t u64RegSctlr, uint64_t u64RegTcr)
 {
@@ -3416,7 +3417,7 @@ VMM_INT_DECL(int) PGMChangeMode(PVMCPUCC pVCpu, uint8_t bEl, uint64_t u64RegSctl
  */
 VMM_INT_DECL(int) PGMHCChangeMode(PVMCC pVM, PVMCPUCC pVCpu, PGMMODE enmGuestMode, bool fForce)
 {
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     Log(("PGMHCChangeMode: Guest mode: %s -> %s\n", PGMGetModeName(pVCpu->pgm.s.enmGuestMode), PGMGetModeName(enmGuestMode)));
     STAM_REL_COUNTER_INC(&pVCpu->pgm.s.cGuestModeChanges);
 
@@ -3628,7 +3629,7 @@ VMM_INT_DECL(int) PGMHCChangeMode(PVMCC pVM, PVMCPUCC pVCpu, PGMMODE enmGuestMod
     HMHCChangedPagingMode(pVM, pVCpu, pVCpu->pgm.s.enmShadowMode, pVCpu->pgm.s.enmGuestMode);
     return rc;
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     Log(("PGMHCChangeMode: Guest mode: %s -> %s\n", PGMGetModeName(pVCpu->pgm.s.aenmGuestMode[1]), PGMGetModeName(enmGuestMode)));
     STAM_REL_COUNTER_INC(&pVCpu->pgm.s.cGuestModeChanges);
 
@@ -3686,10 +3687,10 @@ VMMDECL(const char *) PGMGetModeName(PGMMODE enmMode)
  */
 VMMDECL(PGMMODE) PGMGetGuestMode(PVMCPU pVCpu)
 {
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     return pVCpu->pgm.s.enmGuestMode;
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     PGMMODE enmMode = pVCpu->pgm.s.aenmGuestMode[1]; /** @todo Add parameter to select exception level. */
     /* HACK ALERT! Use EL1 mode if EL2 is NONE. */ /** @todo check if EL2 is enabled or not. */
     if (enmMode == PGMMODE_NONE && pVCpu->pgm.s.aenmGuestMode[0] != PGMMODE_NONE)
@@ -3710,7 +3711,7 @@ VMMDECL(PGMMODE) PGMGetGuestMode(PVMCPU pVCpu)
  */
 VMMDECL(PGMMODE) PGMGetShadowMode(PVMCPU pVCpu)
 {
-#if !defined(VBOX_WITH_ONLY_PGM_NEM_MODE) && defined(VBOX_VMM_TARGET_X86)
+#if !defined(VBOX_WITH_ONLY_PGM_NEM_MODE) && (defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86))
     return pVCpu->pgm.s.enmShadowMode;
 #else
     RT_NOREF(pVCpu);
@@ -3718,7 +3719,7 @@ VMMDECL(PGMMODE) PGMGetShadowMode(PVMCPU pVCpu)
 #endif
 }
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 
 /**
  * Gets the current host paging mode.
@@ -4092,7 +4093,7 @@ VMMDECL(void) PGMDeregisterStringFormatTypes(void)
 }
 
 #ifdef PGM_WITH_PAGE_ZEROING_DETECTION
-# ifndef VBOX_VMM_TARGET_X86
+#if !defined(VBOX_VMM_TARGET_X86) && !defined(VRA_VMM_TARGET_X86)
 #  error "misconfig: PGM_WITH_PAGE_ZEROING_DETECTION not implemented for ARM guests"
 # endif
 

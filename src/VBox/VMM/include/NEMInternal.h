@@ -41,7 +41,7 @@
 # include <iprt/nt/hyperv.h>
 # include <iprt/critsect.h>
 #elif defined(RT_OS_DARWIN) && defined(VBOX_WITH_NATIVE_NEM)
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 #  include <Hypervisor/Hypervisor.h>
 # else
 #  include "VMXInternal.h"
@@ -111,7 +111,7 @@ typedef struct NEMWINIOCTL
 
 
 #if defined(RT_OS_DARWIN) && defined(VBOX_WITH_NATIVE_NEM)
-# ifndef VBOX_VMM_TARGET_ARMV8
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
 /** vCPU ID declaration to avoid dragging in HV headers here. */
 typedef unsigned hv_vcpuid_t;
 /** The HV VM memory space ID (ASID). */
@@ -128,7 +128,7 @@ typedef unsigned hv_vm_space_t;
 /** @} */
 
 /** The CPUMCTX_EXTRN_XXX mask for IEM. */
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 #  define NEM_DARWIN_CPUMCTX_EXTRN_MASK_FOR_IEM     (  IEM_CPUMCTX_EXTRN_MUST_MASK )
 # else
 #  define NEM_DARWIN_CPUMCTX_EXTRN_MASK_FOR_IEM     (  IEM_CPUMCTX_EXTRN_MUST_MASK \
@@ -139,7 +139,7 @@ typedef unsigned hv_vm_space_t;
 # define NEM_DARWIN_CPUMCTX_EXTRN_MASK_FOR_IEM_XCPT (IEM_CPUMCTX_EXTRN_XCPT_MASK | NEM_DARWIN_CPUMCTX_EXTRN_MASK_FOR_IEM)
 
 
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 /**
  * MMIO2 tracking region.
  */
@@ -211,7 +211,7 @@ typedef struct NEM
      *  us to use the debug execution loop. */
     bool                        fUseDebugLoop;
 
-#ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** The PPI interrupt number of the vTimer. */
     uint32_t                    u32GicPpiVTimer;
 #endif
@@ -246,14 +246,14 @@ typedef struct NEM
 #elif defined(RT_OS_WINDOWS)
     /** Set if we've created the EMTs. */
     bool                        fCreatedEmts : 1;
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     bool                        fHypercallExit : 1;
     bool                        fGpaAccessFaultExit : 1;
     /** Flag whether Hyper-V supports PAC. */
     bool                        fPacSupported : 1;
     /** Cache line flush size as a power of two. */
     uint8_t                     cPhysicalAddressWidth;
-# elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** WHvRunVpExitReasonX64Cpuid is supported. */
     bool                        fExtendedMsrExit : 1;
     /** WHvRunVpExitReasonX64MsrAccess is supported. */
@@ -326,7 +326,7 @@ typedef struct NEM
         uint64_t                cPagesInUse;
     } R0Stats;
 
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** Re-distributor memory region for all vCPUs. */
     RTGCPHYS                    GCPhysMmioBaseReDist;
     /** Number of breakpoints supported (for syncing registers). */
@@ -344,7 +344,7 @@ typedef struct NEM
     bool                        fEl2Enabled  : 1;
     /** Set if we are running at least on macOS Sequioa 15.0. */
     bool                        fMacOsSequia : 1;
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** @name vTimer related state.
      * @{ */
     /** The counter frequency in Hz as obtained from CNTFRQ_EL0. */
@@ -360,7 +360,7 @@ typedef struct NEM
     /** The vCPU config. */
     hv_vcpu_config_t            hVCpuCfg;
 
-# elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** Set if hv_vm_space_create() was called successfully. */
     bool                        fCreatedAsid : 1;
     /** Set if Last Branch Record (LBR) is enabled. */
@@ -464,14 +464,14 @@ typedef struct NEMCPU
     R3PTRTYPE(struct kvm_run *) pRun;
     /** The nested virt state as fetched from KVM. */
     R3PTRTYPE(struct kvm_nested_state *) pNestedState;
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** The IRQ device levels from device_irq_level. */
     uint64_t                    fIrqDeviceLvls;
     /** Status of the IRQ line when last seen. */
     bool                        fIrqLastSeen;
     /** Status of the FIQ line when last seen. */
     bool                        fFiqLastSeen;
-# elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** The MSR_IA32_APICBASE value known to KVM. */
     uint64_t                    uKvmApicBase;
     /** The number of variable MTRRs KVM supports, returned from MSR_IA32_MTRR_CAP. */
@@ -528,7 +528,7 @@ typedef struct NEMCPU
 
 
 #elif defined(RT_OS_WINDOWS)
-# ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** The current state of the interrupt windows (NEM_WIN_INTW_F_XXX). */
     uint8_t                     fCurrentInterruptWindows;
     /** The desired state of the interrupt windows (NEM_WIN_INTW_F_XXX). */
@@ -552,7 +552,7 @@ typedef struct NEMCPU
     RTR3PTR                     pvMsgSlotMapping;
     /** The windows thread handle. */
     RTR3PTR                     hNativeThreadHandle;
-# elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** Flag whether syncing the CNTV_CTL_EL0/CNTV_CVAL_EL0 registers to Hyper-V is required. */
     bool                        fSyncCntvRegs;
 # endif
@@ -560,7 +560,7 @@ typedef struct NEMCPU
     /** @name Statistics
      * @{ */
     STAMCOUNTER                 StatExitMemUnmapped;
-# if !defined(VBOX_VMM_TARGET_ARMV8)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
     STAMCOUNTER                 StatExitPortIo;
     STAMCOUNTER                 StatExitHalt;
     STAMCOUNTER                 StatExitInterruptWindow;
@@ -577,7 +577,7 @@ typedef struct NEMCPU
     STAMCOUNTER                 StatExitApicSipiInitTrap;
     STAMCOUNTER                 StatExitCanceled;
 # endif
-# if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     STAMCOUNTER                 StatExitMemUnmappedToIem;
     STAMCOUNTER                 StatExitMemIntercept;
     STAMCOUNTER                 StatExitMemInterceptToIem;
@@ -585,7 +585,7 @@ typedef struct NEMCPU
     STAMCOUNTER                 StatExitCanceled;
 # endif
     STAMCOUNTER                 StatExitUnrecoverable;
-# if !defined(VBOX_VMM_TARGET_ARMV8)
+#if !defined(VBOX_VMM_TARGET_ARMV8) && !defined(VRA_VMM_TARGET_ARMV8)
     STAMCOUNTER                 StatGetMsgTimeout;
     STAMCOUNTER                 StatStopCpuSuccess;
     STAMCOUNTER                 StatStopCpuPending;
@@ -605,7 +605,7 @@ typedef struct NEMCPU
     /** @} */
 
 #elif defined(RT_OS_DARWIN) && defined(VBOX_WITH_NATIVE_NEM)
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     /** The vCPU handle associated with the EMT executing this vCPU. */
     hv_vcpu_t                   hVCpu;
     /** Pointer to the exit information structure. */
@@ -617,7 +617,7 @@ typedef struct NEMCPU
     /** Flag whether to update the vTimer offset. */
     bool                        fVTimerOffUpdate;
 
-# elif defined(VBOX_VMM_TARGET_X86)
+#elif defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     /** The vCPU handle associated with the EMT executing this vCPU. */
     hv_vcpuid_t                 hVCpuId;
 
@@ -701,7 +701,7 @@ typedef struct NEMCPU
     STAMCOUNTER                 StatImportOnReturn;
     STAMCOUNTER                 StatImportOnReturnSkipped;
     STAMCOUNTER                 StatQueryCpuTick;
-# ifdef VBOX_VMM_TARGET_ARMV8
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     STAMCOUNTER                 StatExitCanceled;
     STAMCOUNTER                 StatExitVTimerActivated;
     STAMCOUNTER                 StatExitExcp;

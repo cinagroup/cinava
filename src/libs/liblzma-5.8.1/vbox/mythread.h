@@ -33,10 +33,10 @@
 
 #include "sysdefs.h"
 
-#if defined(VBOX)
+#if defined(VRA)
 # define MYTHREAD_ENABLED 1
 #else
-# error "VBOX is not defined!"
+# error "VRA is not defined!"
 #endif
 
 

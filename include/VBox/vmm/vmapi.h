@@ -478,7 +478,7 @@ VMMR3DECL(int)              VMR3NotifyCpuDeviceReady(PVM pVM, VMCPUID idCpu);
  * @{ */
 /** Flag whether to ignore interrupts. */
 #define VMWAITHALTED_F_IGNORE_IRQS  RT_BIT_32(0)
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 /** Flag whether to ignore fast interrupts. */
 # define VMWAITHALTED_F_IGNORE_FIQS RT_BIT_32(1)
 #endif

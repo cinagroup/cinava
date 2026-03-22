@@ -70,7 +70,7 @@ static DECLCALLBACK(void) vboxHeaderFooter(PRTLOGGER pReleaseLogger, RTLOGPHASE 
                    "EXPERIMENTAL build " VBOX_BLEEDING_EDGE "\n"
 #endif
                    "Log opened %s\n",
-                   g_pszLogEntity, VBOX_VERSION_STRING, RTBldCfgRevision(),
+                   g_pszLogEntity, VRA_VERSION_STRING, RTBldCfgRevision(),
                    RTBldCfgTargetDotArch(), __DATE__, __TIME__, szTmp);
 
             pfnLog(pReleaseLogger, "Build Type: %s\n", KBUILD_TYPE);
@@ -142,7 +142,7 @@ static DECLCALLBACK(void) vboxHeaderFooter(PRTLOGGER pReleaseLogger, RTLOGPHASE 
                    "\n",
                    pszExecName ? pszExecName : "unknown",
                    RTProcSelf(),
-                   VBOX_PACKAGE_STRING);
+                   VRA_PACKAGE_STRING);
 
 #ifdef RT_OS_WINDOWS
             static struct

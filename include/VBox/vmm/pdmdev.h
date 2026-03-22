@@ -740,14 +740,14 @@ typedef PCPDMDEVREGRC                           PCPDMDEVREG;
 # error "Not IN_RING3, IN_RING0 or IN_RC"
 #endif
 
-#if defined(VBOX_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86) || defined(VBOX_VMM_TARGET_AGNOSTIC)
 /** The PDM APIC device registration structure. */
 extern const PDMDEVREG g_DeviceAPIC;
 # if defined(RT_OS_WINDOWS) || defined(RT_OS_LINUX)
 /** The PDM APIC device registration structure for the Hyper-V/KVM NEM. */
 extern const PDMDEVREG g_DeviceAPICNem;
 # endif
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 /** The PDM GIC device registration structure. */
 extern const PDMDEVREG g_DeviceGIC;
 /** The PDM GIC NEM device registration structure. */

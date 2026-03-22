@@ -25,6 +25,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
+#ifndef VRA_WITH_NATIVE_NEM
 
 /*********************************************************************************************************************************
 *   Header Files                                                                                                                 *
@@ -266,3 +267,5 @@ VMM_INT_DECL(int) NEMImportStateOnDemand(PVMCPUCC pVCpu, uint64_t fWhat)
     RT_NOREF(pVCpu, fWhat);
     return VERR_NOT_IMPLEMENTED;
 }
+
+#endif /* !VRA_WITH_NATIVE_NEM */

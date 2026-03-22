@@ -139,7 +139,7 @@ typedef DECLCALLBACKTYPE(bool, FNPDMQUEUEEXT,(void *pvUser, PPDMQUEUEITEMCORE pI
 /** Pointer to a FNPDMQUEUEEXT(). */
 typedef FNPDMQUEUEEXT *PFNPDMQUEUEEXT;
 
-#ifdef VBOX_IN_VMM
+#ifdef VRA_IN_VMM
 VMMR3_INT_DECL(int)  PDMR3QueueCreateDevice(PVM pVM, PPDMDEVINS pDevIns, size_t cbItem, uint32_t cItems,
                                             uint32_t cMilliesInterval, PFNPDMQUEUEDEV pfnCallback,
                                             bool fRZEnabled, const char *pszName, PDMQUEUEHANDLE *phQueue);
@@ -155,7 +155,7 @@ VMMR3DECL(int)       PDMR3QueueDestroy(PVM pVM, PDMQUEUEHANDLE hQueue, void *pvO
 VMMR3_INT_DECL(int)  PDMR3QueueDestroyDevice(PVM pVM, PPDMDEVINS pDevIns);
 VMMR3_INT_DECL(int)  PDMR3QueueDestroyDriver(PVM pVM, PPDMDRVINS pDrvIns);
 VMMR3DECL(void)      PDMR3QueueFlushAll(PVM pVM);
-#endif /* VBOX_IN_VMM */
+#endif /* VRA_IN_VMM */
 
 VMMDECL(PPDMQUEUEITEMCORE)  PDMQueueAlloc(PVMCC pVM, PDMQUEUEHANDLE hQueue, void *pvOwner);
 VMMDECL(int)                PDMQueueInsert(PVMCC pVM, PDMQUEUEHANDLE hQueue, void *pvOwner, PPDMQUEUEITEMCORE pInsert);

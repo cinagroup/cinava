@@ -60,9 +60,9 @@ DECLINLINE(void)            iemInitExecTargetStrict(PVMCPUCC pVCpu) RT_NOEXCEPT;
 RT_NO_WARN_UNUSED_INLINE_PROTOTYPE_END
 
 
-//#ifdef VBOX_VMM_TARGET_X86
+//#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 //# include "VMMAll/target-x86/IEMInlineExec-x86.h"
-//#elif defined(VBOX_VMM_TARGET_ARMV8)
+//#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 //# include "VMMAll/target-armv8/IEMInlineExec-armv8.h"
 //#endif
 
@@ -111,7 +111,7 @@ DECLINLINE(void) iemInitExec(PVMCPUCC pVCpu, uint32_t fExecOpts) RT_NOEXCEPT
 DECLINLINE(void) iemReInitExec(PVMCPUCC pVCpu, uint8_t cbInstr) RT_NOEXCEPT
 {
     ICORE(pVCpu).fExec = iemCalcExecFlags(pVCpu) | (ICORE(pVCpu).fExec & IEM_F_USER_OPTS);
-#   ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     iemOpcodeFlushHeavy(pVCpu, cbInstr);
 #   elif !defined(IEM_WITH_CODE_TLB_IN_CUR_CTX)
     ICORE(pVCpu).cbOpcode = cbInstr;

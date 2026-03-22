@@ -267,7 +267,13 @@ static int apicMsrAccessError(PVMCPUCC pVCpu, uint32_t u32Reg, APICMSRACCESS enm
 
     size_t const i = enmAccess;
     Assert(i < RT_ELEMENTS(s_aAccess));
-    if (pVCpu->apic.s.cLogMaxAccessError++ < 5)
+#ifdef IN_RING0
+# define APIC_S  apic.s
+#else
+# define APIC_S  apic.s
+#endif
+
+    if (pVCpu->APIC_S.cLogMaxAccessError++ < 5)
         LogRel(("APIC%u: Attempt to %s (%#x)%s -> #GP(0)\n", pVCpu->idCpu, s_aAccess[i].pszBefore, u32Reg, s_aAccess[i].pszAfter));
     return VERR_CPUM_RAISE_GP_0;
 }
@@ -429,7 +435,7 @@ static int apicSetSvr(PVMCPUCC pVCpu, uint32_t uSvr)
     if (pXApicPage->version.u.fEoiBroadcastSupression)
         uValidMask |= XAPIC_SVR_SUPRESS_EOI_BROADCAST;
 
-    if (   XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr)
+    if (   XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr)
         && (uSvr & ~uValidMask))
         return apicMsrAccessError(pVCpu, MSR_IA32_X2APIC_SVR, APICMSRACCESS_WRITE_RSVD_BITS);
 
@@ -476,10 +482,12 @@ static VBOXSTRICTRC apicSendIntr(PVMCC pVM, PVMCPUCC pVCpu, uint8_t uVector, XAP
                                  XAPICDELIVERYMODE enmDeliveryMode, PCVMCPUSET pDestCpuSet, bool *pfIntrAccepted,
                                  uint32_t uSrcTag, int rcRZ)
 {
-    AssertCompile(sizeof(pVM->apic.s) <= sizeof(pVM->apic.padding));
-    AssertCompile(sizeof(pVCpu->apic.s) <= sizeof(pVCpu->apic.padding));
 #ifdef IN_RING0
     AssertCompile(sizeof(pVM->apicr0.s) <= sizeof(pVM->apicr0.padding));
+    AssertCompile(sizeof(pVCpu->apic.s) <= sizeof(pVCpu->apic.padding));
+#else
+    AssertCompile(sizeof(pVM->apic.s) <= sizeof(pVM->apic.padding));
+    AssertCompile(sizeof(pVCpu->apic.s) <= sizeof(pVCpu->apic.padding));
 #endif
     VBOXSTRICTRC  rcStrict  = VINF_SUCCESS;
     VMCPUID const cCpus     = pVM->cCpus;
@@ -651,7 +659,7 @@ DECLINLINE(VBOXSTRICTRC) apicSendIpi(PVMCPUCC pVCpu, int rcRZ)
     uint8_t const            uVector          = pXApicPage->icr_lo.u.u8Vector;
 
     PX2APICPAGE pX2ApicPage = VMCPU_TO_X2APICPAGE(pVCpu);
-    uint32_t const fDest    = XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr) ? pX2ApicPage->icr_hi.u32IcrHi
+    uint32_t const fDest    = XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr) ? pX2ApicPage->icr_hi.u32IcrHi
                                                                                : pXApicPage->icr_hi.u.u8Dest;
     Log5(("apicSendIpi: delivery=%u mode=%u init=%u trigger=%u short=%u vector=%#x fDest=%#x\n",
           enmDeliveryMode, enmDestMode, enmInitLevel, enmTriggerMode, enmDestShorthand, uVector, fDest));
@@ -689,7 +697,7 @@ DECLINLINE(VBOXSTRICTRC) apicSendIpi(PVMCPUCC pVCpu, int rcRZ)
         case XAPICDESTSHORTHAND_NONE:
         {
             PVMCC pVM = pVCpu->CTX_SUFF(pVM);
-            uint32_t const fBroadcastMask = XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr) ? X2APIC_ID_BROADCAST_MASK
+            uint32_t const fBroadcastMask = XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr) ? X2APIC_ID_BROADCAST_MASK
                                                                                              : XAPIC_ID_BROADCAST_MASK;
             apicCommonGetDestCpuSet(pVM, fDest, fBroadcastMask, enmDestMode, enmDeliveryMode, &DestCpuSet);
             break;
@@ -731,11 +739,11 @@ DECLINLINE(VBOXSTRICTRC) apicSendIpi(PVMCPUCC pVCpu, int rcRZ)
 static VBOXSTRICTRC apicSetIcrHi(PVMCPUCC pVCpu, uint32_t uIcrHi)
 {
     VMCPU_ASSERT_EMT(pVCpu);
-    Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr));
+    Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr));
 
     PXAPICPAGE pXApicPage = VMCPU_TO_XAPICPAGE(pVCpu);
     pXApicPage->icr_hi.all.u32IcrHi = uIcrHi & XAPIC_ICR_HI_DEST;
-    STAM_COUNTER_INC(&pVCpu->apic.s.StatIcrHiWrite);
+    STAM_COUNTER_INC(&pVCpu->APIC_S.StatIcrHiWrite);
     Log2(("APIC%u: apicSetIcrHi: uIcrHi=%#RX32\n", pVCpu->idCpu, pXApicPage->icr_hi.all.u32IcrHi));
 
     return VINF_SUCCESS;
@@ -762,7 +770,7 @@ static VBOXSTRICTRC apicSetIcrLo(PVMCPUCC pVCpu, uint32_t uIcrLo, int rcRZ, bool
     Log2(("APIC%u: apicSetIcrLo: uIcrLo=%#RX32\n", pVCpu->idCpu, pXApicPage->icr_lo.all.u32IcrLo));
 
     if (fUpdateStat)
-        STAM_COUNTER_INC(&pVCpu->apic.s.StatIcrLoWrite);
+        STAM_COUNTER_INC(&pVCpu->APIC_S.StatIcrLoWrite);
     RT_NOREF(fUpdateStat);
 
     return apicSendIpi(pVCpu, rcRZ);
@@ -794,7 +802,7 @@ static DECLCALLBACK(VBOXSTRICTRC) apicSetIcr(PVMCPUCC pVCpu, uint64_t u64Icr, in
         /* Update high dword first, then update the low dword which sends the IPI. */
         PX2APICPAGE pX2ApicPage = VMCPU_TO_X2APICPAGE(pVCpu);
         pX2ApicPage->icr_hi.u32IcrHi = RT_HI_U32(u64Icr);
-        STAM_COUNTER_INC(&pVCpu->apic.s.StatIcrFullWrite);
+        STAM_COUNTER_INC(&pVCpu->APIC_S.StatIcrFullWrite);
         return apicSetIcrLo(pVCpu, uLo, rcRZ, false /* fUpdateStat */);
     }
     return apicMsrAccessError(pVCpu, MSR_IA32_X2APIC_ICR, APICMSRACCESS_WRITE_RSVD_BITS);
@@ -814,7 +822,7 @@ static int apicSetEsr(PVMCPUCC pVCpu, uint32_t uEsr)
 
     Log2(("APIC%u: apicSetEsr: uEsr=%#RX32\n", pVCpu->idCpu, uEsr));
 
-    if (   XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr)
+    if (   XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr)
         && (uEsr & ~XAPIC_ESR_WO_VALID))
         return apicMsrAccessError(pVCpu, MSR_IA32_X2APIC_ESR, APICMSRACCESS_WRITE_RSVD_BITS);
 
@@ -858,7 +866,7 @@ static void apicUpdatePpr(PVMCPUCC pVCpu)
 static uint8_t apicGetPpr(PVMCPUCC pVCpu)
 {
     VMCPU_ASSERT_EMT(pVCpu);
-    STAM_COUNTER_INC(&pVCpu->apic.s.StatTprRead);
+    STAM_COUNTER_INC(&pVCpu->APIC_S.StatTprRead);
 
     /*
      * With virtualized APIC registers or with TPR virtualization, the hardware may
@@ -890,9 +898,9 @@ static int apicSetTprEx(PVMCPUCC pVCpu, uint32_t uTpr, bool fForceX2ApicBehaviou
     VMCPU_ASSERT_EMT(pVCpu);
 
     Log2(("APIC%u: apicSetTprEx: uTpr=%#RX32\n", pVCpu->idCpu, uTpr));
-    STAM_COUNTER_INC(&pVCpu->apic.s.StatTprWrite);
+    STAM_COUNTER_INC(&pVCpu->APIC_S.StatTprWrite);
 
-    bool const fX2ApicMode = XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr) || fForceX2ApicBehaviour;
+    bool const fX2ApicMode = XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr) || fForceX2ApicBehaviour;
     if (   fX2ApicMode
         && (uTpr & ~XAPIC_TPR_VALID))
         return apicMsrAccessError(pVCpu, MSR_IA32_X2APIC_TPR, APICMSRACCESS_WRITE_RSVD_BITS);
@@ -919,9 +927,9 @@ static DECLCALLBACK(VBOXSTRICTRC) apicSetEoi(PVMCPUCC pVCpu, uint32_t uEoi, bool
     VMCPU_ASSERT_EMT(pVCpu);
 
     Log2(("APIC%u: apicSetEoi: uEoi=%#RX32\n", pVCpu->idCpu, uEoi));
-    STAM_COUNTER_INC(&pVCpu->apic.s.StatEoiWrite);
+    STAM_COUNTER_INC(&pVCpu->APIC_S.StatEoiWrite);
 
-    bool const fX2ApicMode = XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr) || fForceX2ApicBehaviour;
+    bool const fX2ApicMode = XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr) || fForceX2ApicBehaviour;
     if (   fX2ApicMode
         && (uEoi & ~XAPIC_EOI_WO_VALID))
         return apicMsrAccessError(pVCpu, MSR_IA32_X2APIC_EOI, APICMSRACCESS_WRITE_RSVD_BITS);
@@ -1005,13 +1013,13 @@ static VBOXSTRICTRC apicSetLdr(PVMCPUCC pVCpu, uint32_t uLdr)
 {
     VMCPU_ASSERT_EMT(pVCpu);
     PCAPIC pApic = VM_TO_APIC(pVCpu->CTX_SUFF(pVM));
-    Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr) || pApic->fHyperVCompatMode); RT_NOREF_PV(pApic);
+    Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr) || pApic->fHyperVCompatMode); RT_NOREF_PV(pApic);
 
     Log2(("APIC%u: apicSetLdr: uLdr=%#RX32\n", pVCpu->idCpu, uLdr));
 
     PXAPICPAGE pXApicPage = VMCPU_TO_XAPICPAGE(pVCpu);
     apicWriteRaw32(pXApicPage, XAPIC_OFF_LDR, uLdr & XAPIC_LDR_VALID);
-    STAM_COUNTER_INC(&pVCpu->apic.s.StatLdrWrite);
+    STAM_COUNTER_INC(&pVCpu->APIC_S.StatLdrWrite);
     return VINF_SUCCESS;
 }
 
@@ -1028,7 +1036,7 @@ static VBOXSTRICTRC apicSetLdr(PVMCPUCC pVCpu, uint32_t uLdr)
 static VBOXSTRICTRC apicSetDfr(PVMCPUCC pVCpu, uint32_t uDfr)
 {
     VMCPU_ASSERT_EMT(pVCpu);
-    Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr));
+    Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr));
 
     uDfr &= XAPIC_DFR_VALID;
     uDfr |= XAPIC_DFR_RSVD_MB1;
@@ -1037,7 +1045,7 @@ static VBOXSTRICTRC apicSetDfr(PVMCPUCC pVCpu, uint32_t uDfr)
 
     PXAPICPAGE pXApicPage = VMCPU_TO_XAPICPAGE(pVCpu);
     apicWriteRaw32(pXApicPage, XAPIC_OFF_DFR, uDfr);
-    STAM_COUNTER_INC(&pVCpu->apic.s.StatDfrWrite);
+    STAM_COUNTER_INC(&pVCpu->APIC_S.StatDfrWrite);
     return VINF_SUCCESS;
 }
 
@@ -1052,7 +1060,7 @@ static VBOXSTRICTRC apicSetDfr(PVMCPUCC pVCpu, uint32_t uDfr)
 static VBOXSTRICTRC apicSetTimerDcr(PVMCPUCC pVCpu, uint32_t uTimerDcr)
 {
     VMCPU_ASSERT_EMT(pVCpu);
-    if (   XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr)
+    if (   XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr)
         && (uTimerDcr & ~XAPIC_TIMER_DCR_VALID))
         return apicMsrAccessError(pVCpu, MSR_IA32_X2APIC_TIMER_DCR, APICMSRACCESS_WRITE_RSVD_BITS);
 
@@ -1060,7 +1068,7 @@ static VBOXSTRICTRC apicSetTimerDcr(PVMCPUCC pVCpu, uint32_t uTimerDcr)
 
     PXAPICPAGE pXApicPage = VMCPU_TO_XAPICPAGE(pVCpu);
     apicWriteRaw32(pXApicPage, XAPIC_OFF_TIMER_DCR, uTimerDcr);
-    STAM_COUNTER_INC(&pVCpu->apic.s.StatDcrWrite);
+    STAM_COUNTER_INC(&pVCpu->APIC_S.StatDcrWrite);
     return VINF_SUCCESS;
 }
 
@@ -1195,11 +1203,11 @@ static VBOXSTRICTRC apicSetLvtEntry(PVMCPUCC pVCpu, uint16_t offLvt, uint32_t uL
     PCAPIC pApic = VM_TO_APIC(pVCpu->CTX_SUFF(pVM));
     if (offLvt == XAPIC_OFF_LVT_TIMER)
     {
-        STAM_COUNTER_INC(&pVCpu->apic.s.StatLvtTimerWrite);
+        STAM_COUNTER_INC(&pVCpu->APIC_S.StatLvtTimerWrite);
         if (   !pApic->fSupportsTscDeadline
             && (uLvt & XAPIC_LVT_TIMER_TSCDEADLINE))
         {
-            if (XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr))
+            if (XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr))
                 return apicMsrAccessError(pVCpu, XAPIC_GET_X2APIC_MSR(offLvt), APICMSRACCESS_WRITE_RSVD_BITS);
             uLvt &= ~XAPIC_LVT_TIMER_TSCDEADLINE;
             /** @todo TSC-deadline timer mode transition */
@@ -1216,7 +1224,7 @@ static VBOXSTRICTRC apicSetLvtEntry(PVMCPUCC pVCpu, uint16_t offLvt, uint32_t uL
      * For x2APIC, disallow setting of invalid/reserved bits.
      * For xAPIC, mask out invalid/reserved bits (i.e. ignore them).
      */
-    if (   XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr)
+    if (   XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr)
         && (uLvt & ~g_au32LvtValidMasks[idxLvt]))
         return apicMsrAccessError(pVCpu, XAPIC_GET_X2APIC_MSR(offLvt), APICMSRACCESS_WRITE_RSVD_BITS);
 
@@ -1368,7 +1376,7 @@ DECLINLINE(VBOXSTRICTRC) apicReadRegister(PPDMDEVINS pDevIns, PVMCPUCC pVCpu, ui
         case XAPIC_OFF_TIMER_ICR:
         case XAPIC_OFF_TIMER_DCR:
         {
-            Assert(   !XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr)
+            Assert(   !XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr)
                    || (   offReg != XAPIC_OFF_DFR
                        && offReg != XAPIC_OFF_ICR_HI
                        && offReg != XAPIC_OFF_EOI));
@@ -1385,7 +1393,7 @@ DECLINLINE(VBOXSTRICTRC) apicReadRegister(PPDMDEVINS pDevIns, PVMCPUCC pVCpu, ui
 
         case XAPIC_OFF_TIMER_CCR:
         {
-            Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr));
+            Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr));
             rc = apicGetTimerCcr(pDevIns, pVCpu, VINF_IOM_R3_MMIO_READ, &uValue);
             break;
         }
@@ -1394,7 +1402,7 @@ DECLINLINE(VBOXSTRICTRC) apicReadRegister(PPDMDEVINS pDevIns, PVMCPUCC pVCpu, ui
         {
 #if XAPIC_HARDWARE_VERSION == XAPIC_HARDWARE_VERSION_P4
             /* Unsupported on Pentium 4 and Xeon CPUs, invalid in x2APIC mode. */
-            Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr));
+            Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr));
 #else
 # error "Implement Pentium and P6 family APIC architectures"
 #endif
@@ -1403,7 +1411,7 @@ DECLINLINE(VBOXSTRICTRC) apicReadRegister(PPDMDEVINS pDevIns, PVMCPUCC pVCpu, ui
 
         default:
         {
-            Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr));
+            Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr));
             rc = PDMDevHlpDBGFStop(pDevIns, RT_SRC_POS, "VCPU[%u]: offReg=%#RX16\n", pVCpu->idCpu, offReg);
             apicSetError(pVCpu, XAPIC_ESR_ILLEGAL_REG_ADDRESS);
             break;
@@ -1428,7 +1436,7 @@ DECLINLINE(VBOXSTRICTRC) apicWriteRegister(PPDMDEVINS pDevIns, PVMCPUCC pVCpu, u
 {
     VMCPU_ASSERT_EMT(pVCpu);
     Assert(offReg <= XAPIC_OFF_MAX_VALID);
-    Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr));
+    Assert(!XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr));
 
     VBOXSTRICTRC rcStrict = VINF_SUCCESS;
     switch (offReg)
@@ -1574,10 +1582,10 @@ static DECLCALLBACK(VBOXSTRICTRC) apicReadMsr(PVMCPUCC pVCpu, uint32_t u32Reg, u
         return VINF_CPUM_R3_MSR_READ;
 #endif
 
-    STAM_COUNTER_INC(&pVCpu->apic.s.CTX_SUFF_Z(StatMsrRead));
+    STAM_COUNTER_INC(&pVCpu->APIC_S.CTX_SUFF_Z(StatMsrRead));
 
     VBOXSTRICTRC rcStrict = VINF_SUCCESS;
-    if (RT_LIKELY(   XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr)
+    if (RT_LIKELY(   XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr)
                   || pApic->fHyperVCompatMode))
     {
         switch (u32Reg)
@@ -1608,7 +1616,7 @@ static DECLCALLBACK(VBOXSTRICTRC) apicReadMsr(PVMCPUCC pVCpu, uint32_t u32Reg, u
             /* Raw read, compatible with xAPIC: */
             case MSR_IA32_X2APIC_ID:
             {
-                STAM_COUNTER_INC(&pVCpu->apic.s.StatIdMsrRead);
+                STAM_COUNTER_INC(&pVCpu->APIC_S.StatIdMsrRead);
                 /* Horrible macOS hack (sample rdmsr addres: 0008:ffffff801686f21a). */
                 if (   !pApic->fMacOSWorkaround
                     || pVCpu->cpum.GstCtx.cs.Sel != 8
@@ -1715,7 +1723,7 @@ static DECLCALLBACK(VBOXSTRICTRC) apicWriteMsr(PVMCPUCC pVCpu, uint32_t u32Reg, 
         return VINF_CPUM_R3_MSR_WRITE;
 #endif
 
-    STAM_COUNTER_INC(&pVCpu->apic.s.CTX_SUFF_Z(StatMsrWrite));
+    STAM_COUNTER_INC(&pVCpu->APIC_S.CTX_SUFF_Z(StatMsrWrite));
 
     /*
      * In x2APIC mode, we need to raise #GP(0) for writes to reserved bits, unlike MMIO
@@ -1732,7 +1740,7 @@ static DECLCALLBACK(VBOXSTRICTRC) apicWriteMsr(PVMCPUCC pVCpu, uint32_t u32Reg, 
 
     uint32_t     u32Value = RT_LO_U32(u64Value);
     VBOXSTRICTRC rcStrict = VINF_SUCCESS;
-    if (RT_LIKELY(   XAPIC_IN_X2APIC_MODE(pVCpu->apic.s.uApicBaseMsr)
+    if (RT_LIKELY(   XAPIC_IN_X2APIC_MODE(pVCpu->APIC_S.uApicBaseMsr)
                   || pApic->fHyperVCompatMode))
     {
         switch (u32Reg)
@@ -1956,7 +1964,7 @@ static DECLCALLBACK(int) apicSetBaseMsr(PVMCPUCC pVCpu, uint64_t u64BaseMsr)
     /** @todo Handle per-VCPU APIC base relocation. */
     if (MSR_IA32_APICBASE_GET_ADDR(uBaseMsr) != MSR_IA32_APICBASE_ADDR)
     {
-        if (pVCpu->apic.s.cLogMaxSetApicBaseAddr++ < 5)
+        if (pVCpu->APIC_S.cLogMaxSetApicBaseAddr++ < 5)
             LogRel(("APIC%u: Attempt to relocate base to %#RGp, unsupported -> #GP(0)\n", pVCpu->idCpu,
                     MSR_IA32_APICBASE_GET_ADDR(uBaseMsr)));
         return VERR_CPUM_RAISE_GP_0;
@@ -2087,7 +2095,7 @@ static DECLCALLBACK(VBOXSTRICTRC) apicGetBaseMsr(PVMCPUCC pVCpu, uint64_t *pu64V
         return VINF_SUCCESS;
     }
 
-    if (pVCpu->apic.s.cLogMaxGetApicBaseAddr++ < 5)
+    if (pVCpu->APIC_S.cLogMaxGetApicBaseAddr++ < 5)
         LogRel(("APIC%u: Reading APIC base MSR (%#x) when there is no APIC -> #GP(0)\n", pVCpu->idCpu, MSR_IA32_APICBASE));
     return VERR_CPUM_RAISE_GP_0;
 }
@@ -2411,7 +2419,7 @@ static DECLCALLBACK(int) apicGetInterrupt(PVMCPUCC pVCpu, uint8_t *pu8Vector, ui
                       uVector, uTpr, pXApicPage->svr.u.u8SpuriousVector));
                 *pu8Vector = uVector;
                 *puSrcTag  = 0;
-                STAM_COUNTER_INC(&pVCpu->apic.s.StatMaskedByTpr);
+                STAM_COUNTER_INC(&pVCpu->APIC_S.StatMaskedByTpr);
                 return VERR_APIC_INTR_MASKED_BY_TPR;
             }
 
@@ -2440,7 +2448,7 @@ static DECLCALLBACK(int) apicGetInterrupt(PVMCPUCC pVCpu, uint8_t *pu8Vector, ui
                 return VINF_SUCCESS;
             }
 
-            STAM_COUNTER_INC(&pVCpu->apic.s.StatMaskedByPpr);
+            STAM_COUNTER_INC(&pVCpu->APIC_S.StatMaskedByPpr);
             Log2(("APIC%u: apicGetInterrupt: Interrupt's priority is not higher than the PPR. uVector=%#x PPR=%#x\n",
                   pVCpu->idCpu, uVector, uPpr));
         }
@@ -2469,7 +2477,7 @@ DECLCALLBACK(VBOXSTRICTRC) apicReadMmio(PPDMDEVINS pDevIns, void *pvUser, RTGCPH
     uint16_t offReg   = off & 0xff0;
     uint32_t uValue   = 0;
 
-    STAM_COUNTER_INC(&pVCpu->apic.s.CTX_SUFF_Z(StatMmioRead));
+    STAM_COUNTER_INC(&pVCpu->APIC_S.CTX_SUFF_Z(StatMmioRead));
 
     VBOXSTRICTRC rc = VBOXSTRICTRC_VAL(apicReadRegister(pDevIns, pVCpu, offReg, &uValue));
     *(uint32_t *)pv = uValue;
@@ -2492,7 +2500,7 @@ DECLCALLBACK(VBOXSTRICTRC) apicWriteMmio(PPDMDEVINS pDevIns, void *pvUser, RTGCP
     uint16_t offReg   = off & 0xff0;
     uint32_t uValue   = *(uint32_t *)pv;
 
-    STAM_COUNTER_INC(&pVCpu->apic.s.CTX_SUFF_Z(StatMmioWrite));
+    STAM_COUNTER_INC(&pVCpu->APIC_S.CTX_SUFF_Z(StatMmioWrite));
 
     Log2(("APIC%u: apicWriteMmio: offReg=%#RX16 uValue=%#RX32\n", pVCpu->idCpu, offReg, uValue));
 

@@ -55,7 +55,7 @@
 /*********************************************************************************************************************************
 *   Defined Constants And Macros                                                                                                 *
 *********************************************************************************************************************************/
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /** Saved state data unit version.  */
 # define PGM_SAVED_STATE_VERSION                 14
 /** Saved state data unit version before the PAE PDPE registers. */
@@ -76,7 +76,7 @@
 # define PGM_SAVED_STATE_VERSION_RR_DESC         7
 /** Saved state data unit version. */
 # define PGM_SAVED_STATE_VERSION_OLD_PHYS_CODE   6
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 /** Saved state data unit version.  */
 # define PGM_SAVED_STATE_VERSION                 1
 #endif
@@ -178,7 +178,7 @@ static const SSMFIELD s_aPGMFields[] =
     SSMFIELD_ENTRY_TERM()
 };
 
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 static const SSMFIELD s_aPGMFieldsPreBalloon[] =
 {
     SSMFIELD_ENTRY_OLD(          fMappingsFixed, sizeof(bool)),
@@ -217,7 +217,7 @@ static const SSMFIELD s_aPGMFields_Old[] =
     SSMFIELD_ENTRY(         PGMOLD, enmGuestMode),
     SSMFIELD_ENTRY_TERM()
 };
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 static const SSMFIELD s_aPGMCpuFields[] =
 {
     SSMFIELD_ENTRY_TERM()
@@ -227,7 +227,7 @@ static const SSMFIELD s_aPGMCpuFields[] =
 #endif
 
 
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /**
  * Find the ROM tracking structure for the given page.
  *
@@ -2239,7 +2239,7 @@ static DECLCALLBACK(int) pgmR3LoadPrep(PVM pVM, PSSMHANDLE pSSM)
 }
 
 
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
 /**
  * Load an ignored page.
  *
@@ -2709,7 +2709,7 @@ static int pgmR3LoadMemory(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion, uint32_t
 {
     NOREF(uPass);
 
-#if defined(VBOX_VMM_TARGET_ARMV8)
+#if defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     RT_NOREF(uVersion);
 #endif
 
@@ -2811,7 +2811,7 @@ static int pgmR3LoadMemory(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion, uint32_t
                         if (PGM_PAGE_IS_BALLOONED(pPage))
                         {
                             Assert(PGM_PAGE_GET_TYPE(pPage) == PGMPAGETYPE_RAM);
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
                             if (uVersion == PGM_SAVED_STATE_VERSION_BALLOON_BROKEN)
                                 break;
 #endif
@@ -3118,7 +3118,7 @@ static int pgmR3LoadFinalLocked(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion)
     /*
      * Load basic data (required / unaffected by relocation).
      */
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     uint32_t    u32Sep;
 
     if (uVersion >= PGM_SAVED_STATE_VERSION_3_0_0)
@@ -3251,7 +3251,7 @@ static int pgmR3LoadFinalLocked(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion)
     else
         rc = pgmR3LoadMemoryOld(pVM, pSSM, uVersion);
 
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     rc = SSMR3GetStructEx(pSSM, pPGM, sizeof(*pPGM), 0 /*fFlags*/, &s_aPGMFields[0], NULL /*pvUser*/);
     AssertLogRelRCReturn(rc, rc);
 
@@ -3303,7 +3303,7 @@ static DECLCALLBACK(int) pgmR3Load(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion, 
     /*
      * Validate version.
      */
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
     if (   (   uPass != SSM_PASS_FINAL
             && uVersion != PGM_SAVED_STATE_VERSION
             && uVersion != PGM_SAVED_STATE_VERSION_PRE_PAE
@@ -3324,7 +3324,7 @@ static DECLCALLBACK(int) pgmR3Load(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion, 
         AssertMsgFailed(("pgmR3Load: Invalid version uVersion=%d (current %d)!\n", uVersion, PGM_SAVED_STATE_VERSION));
         return VERR_SSM_UNSUPPORTED_DATA_UNIT_VERSION;
     }
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
     if (uVersion != PGM_SAVED_STATE_VERSION)
     {
         AssertMsgFailed(("pgmR3Load: Invalid version uVersion=%d (current %d)!\n", uVersion, PGM_SAVED_STATE_VERSION));
@@ -3365,7 +3365,7 @@ static DECLCALLBACK(int) pgmR3Load(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion, 
         PGM_UNLOCK(pVM);
         if (RT_SUCCESS(rc))
         {
-#if defined(VBOX_VMM_TARGET_X86)
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
             /*
              * We require a full resync now.
              */
@@ -3396,7 +3396,7 @@ static DECLCALLBACK(int) pgmR3Load(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion, 
             {
                 PVMCPU pVCpu = pVM->apCpusR3[i];
 
-#ifdef VBOX_VMM_TARGET_X86
+#if defined(VBOX_VMM_TARGET_X86) || defined(VRA_VMM_TARGET_X86)
                 /** @todo ARM VMs may have an invalid value here, since PGMMODE_NONE was
                  *        moved from 12 to 31.  Thus far, though, this is a complete NOOP on
                  *        ARM and we still have very limited PGM functionality there (the
@@ -3407,7 +3407,7 @@ static DECLCALLBACK(int) pgmR3Load(PVM pVM, PSSMHANDLE pSSM, uint32_t uVersion, 
                 /* Update the PSE, NX flags and validity masks. */
                 pVCpu->pgm.s.fGst32BitPageSizeExtension = CPUMIsGuestPageSizeExtEnabled(pVCpu);
                 PGMNotifyNxeChanged(pVCpu, CPUMIsGuestNXEnabled(pVCpu));
-#elif defined(VBOX_VMM_TARGET_ARMV8)
+#elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
                 RT_NOREF(pVCpu); /** @todo */
 #else
 # error "Port me"
