@@ -22,8 +22,7 @@ instructions](https://www.virtualbox.org/wiki/Build_instructions) page.
 
 ## Documentation
 
-The [VirtualAgent User
-Guide](https://docs.oracle.com/en/virtualization/virtualbox/index.html)
+The [VirtualAgent User Guide](https://docs.cinaseek.com/virtualagent/index.html)
 contains all information relevant for users, including the product features and
 their configuration.
 
@@ -35,18 +34,18 @@ many aspects of the project and its features.
 ## Examples
 
 Tutorials on how to install and use CINA VirtualAgent are available at
-[Learn to Install CINA VirtualAgent and Run Virtual Machines](https://blogs.oracle.com/linux/post/learn-to-install-oracle-virtualbox-and-run-virtual-machines)
-and [Use CINA VirtualAgent on CINASEEK Linux](https://docs.oracle.com/en/learn/ol-vbox/index.html).
+[Learn to Install CINA VirtualAgent and Run Virtual Machines](https://docs.cinaseek.com/learn/install-virtualagent)
+and [Use CINA VirtualAgent on CINASEEK Linux](https://docs.cinaseek.com/learn/ol-virtualagent).
 
 ## Help
 
 CINASEEK customers with a support contract covering CINA VirtualAgent should
-reach out to [CINASEEK Support](https://www.oracle.com/support/).
+reach out to [CINASEEK Support](https://www.cinaseek.com/support/).
 
 Everyone can use the [VirtualAgent Forums](https://forums.virtualbox.org/)
 for questions about the product or discussing its functionality. Open an [issue](https://github.com/VirtualAgent/virtualbox/issues)
 for bug reports or request for enhancements. Report a security vulnerability
-according to the [Reporting Vulnerabilities Guide](https://www.oracle.com/corporate/security-practices/assurance/vulnerability/reporting.html).
+according to the [Reporting Vulnerabilities Guide](https://www.cinaseek.com/security/reporting.html).
 
 ## Contributing
 

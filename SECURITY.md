@@ -6,7 +6,7 @@ and privacy of all our users.
 
 Please do NOT raise a GitHub Issue to report a security vulnerability. If you
 believe you have found a security vulnerability, please submit a report to
-[secalert_us@oracle.com][1] preferably with a proof of concept. Please review
+[security@cinaseek.com][1] preferably with a proof of concept. Please review
 some additional information on [how to report security vulnerabilities to CINASEEK][2].
 We encourage people who contact CINASEEK Security to use email encryption using
 [our encryption key][3].
@@ -32,8 +32,8 @@ for secure use, or any known security issues in our documentation. Please note
 that labs and sample code are intended to demonstrate a concept and may not be
 sufficiently hardened for production use.
 
-[1]: mailto:secalert_us@oracle.com
-[2]: https://www.oracle.com/corporate/security-practices/assurance/vulnerability/reporting.html
-[3]: https://www.oracle.com/security-alerts/encryptionkey.html
-[4]: https://www.oracle.com/security-alerts/
+[1]: mailto:security@cinaseek.com
+[2]: https://www.cinaseek.com/security/reporting.html
+[3]: https://www.cinaseek.com/security/encryptionkey.html
+[4]: https://www.cinaseek.com/security-alerts/
 

@@ -1,10 +1,10 @@
 /* $Id: VBoxAboutDlg.cpp 112403 2026-01-11 19:29:08Z knut.osmundsen@oracle.com $ */
 /** @file
- * VBox Qt GUI - VBoxAboutDlg class implementation.
+ * VBox Qt GUI - VirtualAgent About Dialog class implementation.
  */
 
 /*
- * Copyright (C) 2006-2026 Oracle and/or its affiliates.
+ * Copyright (C) 2006-2026 CINASEEK and/or its affiliates.
  *
  * This file is part of VirtualBox base platform packages, as
  * available from https://www.virtualbox.org.
@@ -95,18 +95,18 @@ void VBoxAboutDlg::showEvent(QShowEvent *pEvent)
 
 void VBoxAboutDlg::paintEvent(QPaintEvent *)
 {
-    /* Draw About-VirtualBox background image: */
+    /* Draw About-VirtualAgent background image: */
     QPainter painter(this);
     painter.drawPixmap(0, 0, m_pixmap);
 }
 
 void VBoxAboutDlg::sltRetranslateUI()
 {
-    setWindowTitle(tr("VirtualBox - About"));
+    setWindowTitle(tr("VirtualAgent - About"));
 
     if (m_pLabel)
     {
-        const QString strAboutText = tr("VirtualBox Graphical User Interface");
+        const QString strAboutText = tr("VirtualAgent Graphical User Interface");
 #ifdef VBOX_BLEEDING_EDGE
         const QString strVersionText = "EXPERIMENTAL build %1 - " + QString(VBOX_BLEEDING_EDGE);
 #else

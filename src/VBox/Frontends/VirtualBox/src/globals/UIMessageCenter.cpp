@@ -262,7 +262,7 @@ void UIMessageCenter::cannotFindLanguage(const QString &strLangId, const QString
           tr("<p>Could not find a language file for the language <b>%1</b> in the directory <b><nobr>%2</nobr></b>.</p>"
              "<p>The language will be temporarily reset to the system default language. "
              "Please go to the <b>Preferences</b> window which you can open from the <b>File</b> menu of the "
-             "VirtualBox Manager window, and select one of the existing languages on the <b>Language</b> page.</p>")
+             "VirtualAgent Manager window, and select one of the existing languages on the <b>Language</b> page.</p>")
              .arg(strLangId).arg(strNlsPath));
 }
 
@@ -272,7 +272,7 @@ void UIMessageCenter::cannotLoadLanguage(const QString &strLangFile) const
           tr("<p>Could not load the language file <b><nobr>%1</nobr></b>. "
              "<p>The language will be temporarily reset to English (built-in). "
              "Please go to the <b>Preferences</b> window which you can open from the <b>File</b> menu of the "
-             "VirtualBox Manager window, and select one of the existing languages on the <b>Language</b> page.</p>")
+             "VirtualAgent Manager window, and select one of the existing languages on the <b>Language</b> page.</p>")
              .arg(strLangFile));
 }
 
@@ -299,14 +299,14 @@ void UIMessageCenter::cannotInitCOM(HRESULT rc) const
 void UIMessageCenter::cannotHandleRuntimeOption(const QString &strOption) const
 {
     alert(0, MessageType_Error,
-          tr("<b>%1</b> is an option for the VirtualBox VM runner (VirtualBoxVM) application, not the VirtualBox Manager.")
+          tr("<b>%1</b> is an option for the VirtualAgent VM runner (VirtualBoxVM) application, not the VirtualAgent Manager.")
              .arg(strOption));
 }
 
 void UIMessageCenter::cannotStartSelector() const
 {
     alert(0, MessageType_Critical,
-          tr("<p>Cannot start the VirtualBox Manager due to local restrictions.</p>"
+          tr("<p>Cannot start the VirtualAgent Manager due to local restrictions.</p>"
              "<p>The application will now terminate.</p>"));
 }
 
@@ -685,27 +685,27 @@ int UIMessageCenter::showMessageBox(QWidget *pParent, MessageType enmType,
     {
         default:
         case MessageType_Info:
-            title = tr("VirtualBox - Information", "msg box title");
+            title = tr("VirtualAgent - Information", "msg box title");
             icon = AlertIconType_Information;
             break;
         case MessageType_Question:
-            title = tr("VirtualBox - Question", "msg box title");
+            title = tr("VirtualAgent - Question", "msg box title");
             icon = AlertIconType_Question;
             break;
         case MessageType_Warning:
-            title = tr("VirtualBox - Warning", "msg box title");
+            title = tr("VirtualAgent - Warning", "msg box title");
             icon = AlertIconType_Warning;
             break;
         case MessageType_Error:
-            title = tr("VirtualBox - Error", "msg box title");
+            title = tr("VirtualAgent - Error", "msg box title");
             icon = AlertIconType_Critical;
             break;
         case MessageType_Critical:
-            title = tr("VirtualBox - Critical Error", "msg box title");
+            title = tr("VirtualAgent - Critical Error", "msg box title");
             icon = AlertIconType_Critical;
             break;
         case MessageType_GuruMeditation:
-            title = "VirtualBox - Guru Meditation"; /* don't translate this */
+            title = "VirtualAgent - Guru Meditation"; /* don't translate this */
             icon = AlertIconType_GuruMeditation;
             break;
     }

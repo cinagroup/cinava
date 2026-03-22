@@ -43,7 +43,7 @@ class QLabel;
 class QVBoxLayout;
 
 /** QDialog extension
-  * used to show the About-VirtualBox dialog. */
+  * used to show the About-VirtualAgent dialog. */
 class SHARED_LIBRARY_STUFF VBoxAboutDlg : public QDialog
 {
     Q_OBJECT;
@@ -84,19 +84,19 @@ private:
     /** Holds whether window is polished. */
     bool  m_fPolished;
 
-    /** Holds the About-VirtualBox text. */
+    /** Holds the About-VirtualAgent text. */
     QString  m_strAboutText;
     /** Holds the VirtualBox version number. */
     QString  m_strVersion;
 
-    /** Holds the About-VirtualBox image. */
+    /** Holds the About-VirtualAgent image. */
     QPixmap  m_pixmap;
-    /** Holds the About-VirtualBox dialog size. */
+    /** Holds the About-VirtualAgent dialog size. */
     QSize    m_size;
 
-    /** Holds About-VirtualBox main-layout instance. */
+    /** Holds About-VirtualAgent main-layout instance. */
     QVBoxLayout *m_pMainLayout;
-    /** Holds About-VirtualBox text-label instance. */
+    /** Holds About-VirtualAgent text-label instance. */
     QLabel      *m_pLabel;
 };
 

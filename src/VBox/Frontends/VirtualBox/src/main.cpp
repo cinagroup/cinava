@@ -762,7 +762,7 @@ int main(int argc, char **argv, char **envp)
 # endif
 
         /* Prepare the error-message: */
-        QString strTitle = QApplication::tr("VirtualBox - Runtime Error");
+        QString strTitle = QApplication::tr("VirtualAgent - Runtime Error");
         QString strText = "<html>";
         switch (rc)
         {
@@ -918,7 +918,7 @@ extern "C" DECLEXPORT(void) TrustedError(const char *pszWhere, SUPINITOP enmWhat
     strText += "</html>";
 
     /* Create and show the error message-box: */
-    QMessageBox::critical(0, QApplication::tr("VirtualBox - Error In %1").arg(pszWhere), strText);
+    QMessageBox::critical(0, QApplication::tr("VirtualAgent - Error In %1").arg(pszWhere), strText);
 
     qFatal("%s", strText.toUtf8().constData());
 }

@@ -71,23 +71,23 @@ void UIUpdateSettingsEditor::sltRetranslateUI()
     if (m_mapRadioButtons.value(KUpdateChannel_Stable))
     {
         m_mapRadioButtons.value(KUpdateChannel_Stable)->setText(tr("&Stable Release Versions"));
-        m_mapRadioButtons.value(KUpdateChannel_Stable)->setToolTip(tr("Notify about stable updates to VirtualBox"));
+        m_mapRadioButtons.value(KUpdateChannel_Stable)->setToolTip(tr("Notify about stable updates to VirtualAgent"));
     }
     if (m_mapRadioButtons.value(KUpdateChannel_All))
     {
         m_mapRadioButtons.value(KUpdateChannel_All)->setText(tr("&All New Releases"));
-        m_mapRadioButtons.value(KUpdateChannel_All)->setToolTip(tr("Notify about all new VirtualBox releases"));
+        m_mapRadioButtons.value(KUpdateChannel_All)->setToolTip(tr("Notify about all new VirtualAgent releases"));
     }
     if (m_mapRadioButtons.value(KUpdateChannel_WithBetas))
     {
         m_mapRadioButtons.value(KUpdateChannel_WithBetas)->setText(tr("All New Releases and &Pre-Releases"));
-        m_mapRadioButtons.value(KUpdateChannel_WithBetas)->setToolTip(tr("Notify about all new VirtualBox releases "
+        m_mapRadioButtons.value(KUpdateChannel_WithBetas)->setToolTip(tr("Notify about all new VirtualAgent releases "
                                                                          "and pre-release versions of VirtualBox"));
     }
     if (m_mapRadioButtons.value(KUpdateChannel_WithTesting))
     {
         m_mapRadioButtons.value(KUpdateChannel_WithTesting)->setText(tr("All New Releases, &Pre-Releases and Testing Builds"));
-        m_mapRadioButtons.value(KUpdateChannel_WithTesting)->setToolTip(tr("Notify about all new VirtualBox releases, "
+        m_mapRadioButtons.value(KUpdateChannel_WithTesting)->setToolTip(tr("Notify about all new VirtualAgent releases, "
                                                                            "pre-release versions and testing builds of "
                                                                            "VirtualBox."));
     }

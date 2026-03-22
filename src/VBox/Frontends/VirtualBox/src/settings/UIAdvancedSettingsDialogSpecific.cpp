@@ -180,7 +180,7 @@ void UIAdvancedSettingsDialogGlobal::save()
 
 QString UIAdvancedSettingsDialogGlobal::title() const
 {
-    return tr("VirtualBox - Preferences", "global preferences dialog name");
+    return tr("VirtualAgent - Preferences", "global preferences dialog name");
 }
 
 void UIAdvancedSettingsDialogGlobal::prepare()

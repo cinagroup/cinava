@@ -607,7 +607,7 @@ UIExtensionPackManager::UIExtensionPackManager(QWidget *pCenterWidget, UIActionP
 void UIExtensionPackManager::sltRetranslateUI()
 {
     /* Translate window title: */
-    setWindowTitle(tr("Extension Pack Manager"));
+    setWindowTitle(tr("VirtualAgent Extension Pack Manager"));
 
     /* Translate buttons: */
     button(ButtonType_Close)->setText(tr("Close"));

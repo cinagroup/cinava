@@ -399,7 +399,7 @@ bool UINotificationQuestion::confirmInstallExtensionPack(const QString &strPackN
 {
     return createBlockingQuestion(
         QApplication::translate("UIMessageCenter", "Install extension pack?"),
-        QApplication::translate("UIMessageCenter", "<p>You are about to install a VirtualBox extension pack. Extension packs "
+        QApplication::translate("UIMessageCenter", "<p>You are about to install a VirtualAgent extension pack. Extension packs "
                                                    "complement the functionality of VirtualBox and can contain system level "
                                                    "software that could be potentially harmful to your system. Please review "
                                                    "the description below and only proceed if you have obtained the extension "
@@ -513,7 +513,7 @@ bool UINotificationQuestion::confirmRemoveExtensionPack(const QString &strPackNa
 {
     return createBlockingQuestion(
         QApplication::translate("UIMessageCenter", "Remove extension pack?"),
-        QApplication::translate("UIMessageCenter", "<p>You are about to remove the VirtualBox extension pack <b>%1</b>.</p>"
+        QApplication::translate("UIMessageCenter", "<p>You are about to remove the VirtualAgent extension pack <b>%1</b>.</p>"
                                                    "<p>Are you sure you want to proceed?</p>").arg(strPackName),
         QStringList() << QString() /* cancel button text */
                       << QApplication::translate("UIMessageCenter", "Remove", "extension pack") /* ok button text */,
