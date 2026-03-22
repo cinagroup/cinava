@@ -186,15 +186,15 @@ static int vbglR3GetAdditionsCompileTimeVersion(char **ppszVer, char **ppszVerEx
 {
     int rc = VINF_SUCCESS;
     if (ppszVer)
-        rc = RTStrDupEx(ppszVer, VBOX_VERSION_STRING_RAW);
+        rc = RTStrDupEx(ppszVer, VRA_VERSION_STRING_RAW);
     if (RT_SUCCESS(rc))
     {
         if (ppszVerExt)
-            rc = RTStrDupEx(ppszVerExt, VBOX_VERSION_STRING);
+            rc = RTStrDupEx(ppszVerExt, VRA_VERSION_STRING);
         if (RT_SUCCESS(rc))
         {
             if (ppszRev)
-                rc = RTStrDupEx(ppszRev, RT_XSTR(VBOX_SVN_REV));
+                rc = RTStrDupEx(ppszRev, RT_XSTR(VRA_SVN_REV));
             if (RT_SUCCESS(rc))
                 return VINF_SUCCESS;
 

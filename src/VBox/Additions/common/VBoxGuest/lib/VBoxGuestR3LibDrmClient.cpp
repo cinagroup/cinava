@@ -66,6 +66,7 @@
  */
 static bool vbglR3DrmClientCheckProp(const char *pszPropName, uint32_t fPropFlags)
 {
+    RT_NOREF2(pszPropName, fPropFlags);
     bool fExist = false;
 
 # if defined(VBOX_WITH_GUEST_PROPS)

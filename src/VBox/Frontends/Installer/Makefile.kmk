@@ -1,0 +1,9 @@
+# -*- Makefile -*-
+# Stub Makefile for VirtualAgent Installer
+
+SUB_DEPTH = ../../../../..
+include $(KBUILD_PATH)/subheader.kmk
+
+# Minimal installer configuration
+
+include $(FILE_KBUILD_SUB_FOOTER)

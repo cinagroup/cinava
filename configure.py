@@ -1755,6 +1755,8 @@ class LibraryCheck(CheckBase):
         """
         Tweaks needed for using Qt 6.x.
         """
+        # Set offscreen platform for headless test execution
+        g_oEnv.set('QT_QPA_PLATFORM', 'offscreen');
 
         sPathBase = None;
         sPathInc = None;
