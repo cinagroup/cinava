@@ -190,7 +190,7 @@ private:
 /** QAccessibleWidget extension used as an accessibility interface for QIListWidget. */
 class QIAccessibilityInterfaceForQIListWidget
     : public QAccessibleWidget
-#ifndef VBOX_WS_MAC
+#if !defined(VBOX_WS_MAC) && (QT_VERSION < QT_VERSION_CHECK(6, 4, 0))
     , public QAccessibleSelectionInterface
 #endif
 {
@@ -218,9 +218,9 @@ public:
         const int iCase = static_cast<int>(enmType);
         switch (iCase)
         {
-#ifdef VBOX_WS_MAC
+#if defined(VBOX_WS_MAC)
             /// @todo Fix selection interface for macOS first of all!
-#else
+#elif (QT_VERSION < QT_VERSION_CHECK(6, 4, 0))
             case QAccessible::SelectionInterface:
                 return static_cast<QAccessibleSelectionInterface*>(this);
 #endif
@@ -315,7 +315,7 @@ public:
         return QString();
     }
 
-#ifndef VBOX_WS_MAC
+#if !defined(VBOX_WS_MAC) && (QT_VERSION < QT_VERSION_CHECK(6, 4, 0))
     /** Returns the total number of selected accessible items. */
     virtual int selectedItemCount() const RT_OVERRIDE
     {
@@ -363,7 +363,7 @@ public:
         /// @todo implement
         return false;
     }
-#endif /* VBOX_WS_MAC */
+#endif /* !VBOX_WS_MAC && QT_VERSION < 0x060400 */
 
 private:
 
