@@ -1328,8 +1328,8 @@ static RTEXITCODE vboxDrvInstShowVersion(PRTSTREAM pStrm)
  */
 static void vboxDrvInstShowLogo(PRTSTREAM pStream)
 {
-    RTStrmPrintf(pStream, VBOX_PRODUCT " VBoxDrvInst (Driver Installation Utility) Version " VBOX_VERSION_STRING " - r%s (%s)\n"
-                 "Copyright (C) " VBOX_C_YEAR " " VBOX_VENDOR "\n\n", RTBldCfgRevisionStr(), RTBldCfgTargetArch());
+    RTStrmPrintf(pStream, VRA_PRODUCT " VBoxDrvInst (Driver Installation Utility) Version " VRA_VERSION_STRING " - r%s (%s)\n"
+                 "Copyright (C) " VRA_C_YEAR " " VRA_VENDOR "\n\n", RTBldCfgRevisionStr(), RTBldCfgTargetArch());
 }
 
 /**

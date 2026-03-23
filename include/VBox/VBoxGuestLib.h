@@ -33,6 +33,56 @@
 # pragma once
 #endif
 
+/** @name Compatibility defines for VRA (VirtualBox Guest Additions fork)
+ * These map VRA_* defines to VBOX_* equivalents for compatibility with upstream headers.
+ * @{ */
+#ifdef VRA_WITH_HGCM
+# ifndef VBOX_WITH_HGCM
+#  define VBOX_WITH_HGCM
+# endif
+#endif
+#ifdef VRA_WITH_SHARED_FOLDERS
+# ifndef VBOX_WITH_SHARED_FOLDERS
+#  define VBOX_WITH_SHARED_FOLDERS
+# endif
+#endif
+#ifdef VRA_WITH_GUEST_PROPS
+# ifndef VBOX_WITH_GUEST_PROPS
+#  define VBOX_WITH_GUEST_PROPS
+# endif
+#endif
+#ifdef VRA_WITH_SHARED_CLIPBOARD
+# ifndef VBOX_WITH_SHARED_CLIPBOARD
+#  define VBOX_WITH_SHARED_CLIPBOARD
+# endif
+#endif
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
+# ifndef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#  define VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+# endif
+#endif
+#ifdef VRA_WITH_DRAG_AND_DROP
+# ifndef VBOX_WITH_DRAG_AND_DROP
+#  define VBOX_WITH_DRAG_AND_DROP
+# endif
+#endif
+#ifdef VRA_WITH_DRAG_AND_DROP_GH
+# ifndef VBOX_WITH_DRAG_AND_DROP_GH
+#  define VBOX_WITH_DRAG_AND_DROP_GH
+# endif
+#endif
+#ifdef VRA_WITH_GUEST_CONTROL
+# ifndef VBOX_WITH_GUEST_CONTROL
+#  define VBOX_WITH_GUEST_CONTROL
+# endif
+#endif
+#ifdef VRA_WITH_GSTCTL_TOOLBOX_AS_CMDS
+# ifndef VBOX_WITH_GSTCTL_TOOLBOX_AS_CMDS
+#  define VBOX_WITH_GSTCTL_TOOLBOX_AS_CMDS
+# endif
+#endif
+/** @} */
+
 #include <VBox/types.h>
 #include <VBox/VMMDev.h>
 #include <VBox/VBoxGuestCoreTypes.h>

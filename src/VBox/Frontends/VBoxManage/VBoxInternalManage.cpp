@@ -364,7 +364,7 @@ static RTEXITCODE errorGetOptInternal(USAGECATEGORY enmCommand, int vrc, union R
      */
     if (vrc == 'V')
     {
-        RTPrintf("%sr%d\n", VBOX_VERSION_STRING, RTBldCfgRevision());
+        RTPrintf("%sr%d\n", VRA_VERSION_STRING, RTBldCfgRevision());
         return RTEXITCODE_SUCCESS;
     }
 

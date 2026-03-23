@@ -1,19 +1,19 @@
 <!DOCTYPE RCC><RCC version="1.0">
  <qresource prefix="/">
-    <file alias="about.png">@VBOX_ABOUT_PNG@</file>
-    <file alias="about_x2.png">@VBOX_ABOUT_X2_PNG@</file>
-    <file alias="about_x3.png">@VBOX_ABOUT_X3_PNG@</file>
-    <file alias="about_x4.png">@VBOX_ABOUT_X4_PNG@</file>
-    <file alias="about_16px.png">@VBOX_ABOUT_16PX_PNG@</file>
-    <file alias="about_16px_x2.png">@VBOX_ABOUT_16PX_X2_PNG@</file>
-    <file alias="about_16px_x3.png">@VBOX_ABOUT_16PX_X3_PNG@</file>
-    <file alias="about_16px_x4.png">@VBOX_ABOUT_16PX_X4_PNG@</file>
-    <file alias="VirtualBox_16px.png">@VBOX_VBOX_16PX_PNG@</file>
-    <file alias="VirtualBox_20px.png">@VBOX_VBOX_20PX_PNG@</file>
-    <file alias="VirtualBox_32px.png">@VBOX_VBOX_32PX_PNG@</file>
-    <file alias="VirtualBox_40px.png">@VBOX_VBOX_40PX_PNG@</file>
-    <file alias="VirtualBox_48px.png">@VBOX_VBOX_48PX_PNG@</file>
-    <file alias="VirtualBox_64px.png">@VBOX_VBOX_64PX_PNG@</file>
-    <file alias="VirtualBox.svg">@VBOX_CUBE_SVG@</file>
+    <file alias="about.png">@VRA_ABOUT_PNG@</file>
+    <file alias="about_x2.png">@VRA_ABOUT_X2_PNG@</file>
+    <file alias="about_x3.png">@VRA_ABOUT_X3_PNG@</file>
+    <file alias="about_x4.png">@VRA_ABOUT_X4_PNG@</file>
+    <file alias="about_16px.png">@VRA_ABOUT_16PX_PNG@</file>
+    <file alias="about_16px_x2.png">@VRA_ABOUT_16PX_X2_PNG@</file>
+    <file alias="about_16px_x3.png">@VRA_ABOUT_16PX_X3_PNG@</file>
+    <file alias="about_16px_x4.png">@VRA_ABOUT_16PX_X4_PNG@</file>
+    <file alias="VirtualAgent_16px.png">@VRA_VRA_16PX_PNG@</file>
+    <file alias="VirtualAgent_20px.png">@VRA_VRA_20PX_PNG@</file>
+    <file alias="VirtualAgent_32px.png">@VRA_VRA_32PX_PNG@</file>
+    <file alias="VirtualAgent_40px.png">@VRA_VRA_40PX_PNG@</file>
+    <file alias="VirtualAgent_48px.png">@VRA_VRA_48PX_PNG@</file>
+    <file alias="VirtualAgent_64px.png">@VRA_VRA_64PX_PNG@</file>
+    <file alias="VirtualAgent.svg">@VRA_CUBE_SVG@</file>
  </qresource>
  </RCC>

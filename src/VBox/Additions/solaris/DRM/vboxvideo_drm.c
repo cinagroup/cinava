@@ -109,7 +109,7 @@ static struct dev_ops g_VBoxVideoSolarisDevOps =
 static struct modldrv g_VBoxVideoSolarisModule =
 {
     &mod_driverops,         /* extern from kernel */
-    DEVICE_DESC_DRV " " VBOX_VERSION_STRING "r" VBOXSOLQUOTE(VBOX_SVN_REV),
+    DEVICE_DESC_DRV " " VRA_VERSION_STRING "r" VBOXSOLQUOTE(VRA_SVN_REV),
     &g_VBoxVideoSolarisDevOps
 };
 

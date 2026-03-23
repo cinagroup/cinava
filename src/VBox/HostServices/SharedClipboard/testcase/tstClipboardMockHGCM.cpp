@@ -212,7 +212,7 @@ static void tstOperationModes(void)
     tstClipboardGetMode(pSvc, VBOX_SHCL_MODE_OFF);
 }
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 static void testSetTransferMode(void)
 {
     RTTestISub("Testing VBOX_SHCL_HOST_FN_SET_TRANSFER_MODE");
@@ -240,7 +240,7 @@ static void testSetTransferMode(void)
     rc = TstHgcmMockSvcHostCall(pSvc, NULL, VBOX_SHCL_HOST_FN_SET_TRANSFER_MODE, 1, parms);
     RTTESTI_CHECK_RC(rc, VINF_SUCCESS);
 }
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
 
 static void testGuestSimple(void)
 {
@@ -399,9 +399,9 @@ static void testSetHeadless(void)
 static void testHostCall(void)
 {
     tstOperationModes();
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     testSetTransferMode();
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
     testSetHeadless();
 }
 

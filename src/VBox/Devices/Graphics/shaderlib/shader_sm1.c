@@ -247,7 +247,7 @@ static const struct wined3d_sm1_opcode_info vs_opcode_table[] =
     {WINED3D_SM1_OP_FRC,      1, 2, WINED3DSIH_FRC,          0,                           0                          },
     {WINED3D_SM1_OP_POW,      1, 3, WINED3DSIH_POW,          0,                           0                          },
     {WINED3D_SM1_OP_CRS,      1, 3, WINED3DSIH_CRS,          0,                           0                          },
-#ifdef VBOX_WITH_VMSVGA /* appears incorrect */
+#ifdef VRA_WITH_VMSVGA /* appears incorrect */
     {WINED3D_SM1_OP_SGN,      1, 4, WINED3DSIH_SGN,          0,                           0                          },
 #else
     {WINED3D_SM1_OP_SGN,      1, 4, WINED3DSIH_SGN,          WINED3D_SHADER_VERSION(2,0), WINED3D_SHADER_VERSION(2,1)},

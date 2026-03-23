@@ -197,15 +197,15 @@ int main(int argc, char *argv[])
 
     if (fShowVersion)
     {
-        (void) printf("%sr%u\n", VBOX_VERSION_STRING, RTBldCfgRevision());
+        (void) printf("%sr%u\n", VRA_VERSION_STRING, RTBldCfgRevision());
         exit(EXIT_SUCCESS);
     }
 
     if (!fNoLogo)
-        (void) printf(VBOX_PRODUCT
+        (void) printf(VRA_PRODUCT
                       " Guest Additions utility for enabling Solaris pointer\nintegration Version "
-                      VBOX_VERSION_STRING "\n"
-                      "Copyright (C) " VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+                      VRA_VERSION_STRING "\n"
+                      "Copyright (C) " VRA_C_YEAR " " VRA_VENDOR "\n\n");
 
     if (fStart)
         vboxmslnk_start(fNoLogo);

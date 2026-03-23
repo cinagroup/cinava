@@ -1586,7 +1586,7 @@ int main(int argc, char **argv)
                 break;
 
             case 'V':
-                ShowInfo("Version: %u.%u.%ur%u", VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VBOX_SVN_REV);
+                ShowInfo("Version: %u.%u.%ur%u", VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VRA_SVN_REV);
                 return RTEXITCODE_SUCCESS;
 
             case 'v':
@@ -1644,7 +1644,7 @@ int main(int argc, char **argv)
                          "Examples:\n"
                          "  %s --msiparams \"INSTALLDIR=\"\"C:\\Program Files\\VirtualBox\"\"\"\n"
                          "  %s --extract -path C:\\VBox",
-                         VBOX_STUB_TITLE, VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VBOX_SVN_REV,
+                         VBOX_STUB_TITLE, VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VRA_SVN_REV,
                          argv[0], argv[0]);
                 return RTEXITCODE_SUCCESS;
 

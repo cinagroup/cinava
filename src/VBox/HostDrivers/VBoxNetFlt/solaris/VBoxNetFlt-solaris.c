@@ -250,7 +250,7 @@ static struct dev_ops g_VBoxNetFltSolarisDevOps =
 static struct modldrv g_VBoxNetFltSolarisDriver =
 {
     &mod_driverops,                 /* extern from kernel */
-    DEVICE_DESC_DRV " " VBOX_VERSION_STRING "r" RT_XSTR(VBOX_SVN_REV),
+    DEVICE_DESC_DRV " " VRA_VERSION_STRING "r" RT_XSTR(VRA_SVN_REV),
     &g_VBoxNetFltSolarisDevOps
 };
 
@@ -270,7 +270,7 @@ static struct fmodsw g_VBoxNetFltSolarisModOps =
 static struct modlstrmod g_VBoxNetFltSolarisModule =
 {
     &mod_strmodops,                 /* extern from kernel */
-    DEVICE_DESC_MOD " " VBOX_VERSION_STRING "r" RT_XSTR(VBOX_SVN_REV),
+    DEVICE_DESC_MOD " " VRA_VERSION_STRING "r" RT_XSTR(VRA_SVN_REV),
     &g_VBoxNetFltSolarisModOps
 };
 

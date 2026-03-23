@@ -46,7 +46,7 @@
 #include <VBoxVideo.h>
 #include "version-generated.h"
 
-#define VBOX_VENDORID 0x80EE
+#define VRA_VENDORID 0x80EE
 #define VBOX_DEVICEID 0xBEEF
 
 #ifndef VBVA_SCREEN_F_BLANK

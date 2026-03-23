@@ -389,7 +389,7 @@ RTEXITCODE
 VBoxNetSlirpNAT::usage()
 {
     RTPrintf("%s Version %sr%u\n"
-             "Copyright (C) 2009-" VBOX_C_YEAR " " VBOX_VENDOR "\n"
+             "Copyright (C) 2009-" VRA_C_YEAR " " VRA_VENDOR "\n"
              "\n"
              "Usage: %s <options>\n"
              "\n"

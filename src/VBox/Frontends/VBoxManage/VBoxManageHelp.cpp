@@ -473,7 +473,7 @@ RTEXITCODE errorGetOpt(int rcGetOpt, union RTGETOPTUNION const *pValueUnion)
      */
     if (rcGetOpt == 'V')
     {
-        RTPrintf("%sr%d\n", VBOX_VERSION_STRING, RTBldCfgRevision());
+        RTPrintf("%sr%d\n", VRA_VERSION_STRING, RTBldCfgRevision());
         return RTEXITCODE_SUCCESS;
     }
 
@@ -505,9 +505,9 @@ void showLogo(PRTSTREAM pStrm)
 
     if (!s_fShown)
     {
-        RTStrmPrintf(pStrm, VBOX_PRODUCT " Command Line Management Interface Version "
-                     VBOX_VERSION_STRING "\n"
-                     "Copyright (C) 2005-" VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+        RTStrmPrintf(pStrm, VRA_PRODUCT " Command Line Management Interface Version "
+                     VRA_VERSION_STRING "\n"
+                     "Copyright (C) 2005-" VRA_C_YEAR " " VRA_VENDOR "\n\n");
         s_fShown = true;
     }
 }

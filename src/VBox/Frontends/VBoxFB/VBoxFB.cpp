@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     };
 
     printf("VirtualBox DirectFB GUI built %s %s\n"
-           "Copyright (C) 2004-" VBOX_C_YEAR " " VBOX_VENDOR "\n"
+           "Copyright (C) 2004-" VRA_C_YEAR " " VRA_VENDOR "\n"
            "Copyright (C) 2004-2005 secunet Security Networks AG\n", __DATE__, __TIME__);
 
     fputs("\nWARNING! Unmaintained code.\nWARNING! Needs fixing & debugging!\n\n", stdout);

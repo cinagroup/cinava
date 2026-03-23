@@ -68,7 +68,7 @@ using namespace DragAndDropSvc;
 #define WM_VBOXTRAY_DND_MESSAGE       WM_APP + 401
 
 /** The notification header text for hlpShowBalloonTip(). */
-#define VBOX_DND_SHOWBALLOON_HEADER   VBOX_PRODUCT " Drag'n Drop"
+#define VBOX_DND_SHOWBALLOON_HEADER   VRA_PRODUCT " Drag'n Drop"
 
 
 /*********************************************************************************************************************************

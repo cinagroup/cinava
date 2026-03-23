@@ -131,7 +131,7 @@
 #define VBOX_MAX_XPROPERTIES (LONG_MAX-1)
 
 /** The notification header text for VBClShowNotify(). */
-#define VBOX_DND_SHOWNOTIFY_HEADER              VBOX_PRODUCT " Drag'n Drop"
+#define VBOX_DND_SHOWNOTIFY_HEADER              VRA_PRODUCT " Drag'n Drop"
 
 enum XA_Type
 {

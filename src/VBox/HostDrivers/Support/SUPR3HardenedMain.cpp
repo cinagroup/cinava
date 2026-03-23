@@ -1505,8 +1505,8 @@ DECLHIDDEN(void) supR3HardenedOpenLog(int *pcArgs, char **papszArgs)
                                       NULL);
                 if (RT_SUCCESS(rc))
                 {
-                    SUP_DPRINTF(("Log file opened: " VBOX_VERSION_STRING "r%u g_hStartupLog=%p g_uNtVerCombined=%#x\n",
-                                 VBOX_SVN_REV, g_hStartupLog, g_uNtVerCombined));
+                    SUP_DPRINTF(("Log file opened: " VRA_VERSION_STRING "r%u g_hStartupLog=%p g_uNtVerCombined=%#x\n",
+                                 VRA_SVN_REV, g_hStartupLog, g_uNtVerCombined));
 
                     /*
                      * If the path contains a drive volume, save it so we can

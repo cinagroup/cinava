@@ -726,11 +726,11 @@ static int supSvcWinShowVersion(int argc, char **argv)
      * Do the printing.
      */
     if (fBrief)
-        RTPrintf("%s\n", VBOX_VERSION_STRING);
+        RTPrintf("%s\n", VRA_VERSION_STRING);
     else
         RTPrintf("VirtualBox System Service Version %s\n"
-                 "Copyright (C) 2008-" VBOX_C_YEAR " Oracle and/or its affiliates\n\n",
-                 VBOX_VERSION_STRING);
+                 "Copyright (C) 2008-" VRA_C_YEAR " Oracle and/or its affiliates\n\n",
+                 VRA_VERSION_STRING);
     return 0;
 }
 
@@ -743,8 +743,8 @@ static int supSvcWinShowVersion(int argc, char **argv)
 static int supSvcWinShowHelp(void)
 {
     RTPrintf("VirtualBox System Service Version %s\n"
-             "Copyright (C) 2008-" VBOX_C_YEAR " Oracle and/or its affiliates\n\n",
-             VBOX_VERSION_STRING);
+             "Copyright (C) 2008-" VRA_C_YEAR " Oracle and/or its affiliates\n\n",
+             VRA_VERSION_STRING);
     RTPrintf("Usage:\n"
              "\n"
              "VBoxSupSvc\n"

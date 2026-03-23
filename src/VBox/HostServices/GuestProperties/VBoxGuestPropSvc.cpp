@@ -1639,13 +1639,13 @@ int Service::setHostVersionProps()
 
     /* Set the raw VBox version string as a guest property. Used for host/guest
      * version comparison. */
-    int rc = setPropertyInternal("/VirtualBox/HostInfo/VBoxVer", VBOX_VERSION_STRING_RAW,
+    int rc = setPropertyInternal("/VirtualBox/HostInfo/VBoxVer", VRA_VERSION_STRING_RAW,
                                  GUEST_PROP_F_TRANSIENT | GUEST_PROP_F_RDONLYGUEST, nsTimestamp);
     AssertRCReturn(rc, rc);
 
     /* Set the full VBox version string as a guest property. Can contain vendor-specific
      * information/branding and/or pre-release tags. */
-    rc = setPropertyInternal("/VirtualBox/HostInfo/VBoxVerExt", VBOX_VERSION_STRING,
+    rc = setPropertyInternal("/VirtualBox/HostInfo/VBoxVerExt", VRA_VERSION_STRING,
                              GUEST_PROP_F_TRANSIENT | GUEST_PROP_F_RDONLYGUEST, nsTimestamp + 1);
     AssertRCReturn(rc, rc);
 

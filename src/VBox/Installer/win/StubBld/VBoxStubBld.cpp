@@ -149,8 +149,8 @@ int main(int argc, char* argv[])
     const char *pszSetupStub = "VBoxStub.exe";
     const char *pszOutput    = "VirtualBox-MultiArch.exe";
 
-    printf(VBOX_PRODUCT " Stub Builder v%d.%d.%d.%d\n",
-           VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VBOX_SVN_REV);
+    printf(VRA_PRODUCT " Stub Builder v%d.%d.%d.%d\n",
+           VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VRA_SVN_REV);
 
     struct VBOXSTUBBUILDPKG
     {

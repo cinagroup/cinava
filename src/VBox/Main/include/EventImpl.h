@@ -34,6 +34,7 @@
 #include "EventWrap.h"
 #include "EventSourceWrap.h"
 #include "VetoEventWrap.h"
+#include <vector>
 
 
 class ATL_NO_VTABLE VBoxEvent

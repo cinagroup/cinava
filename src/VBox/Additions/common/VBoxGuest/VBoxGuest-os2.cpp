@@ -227,8 +227,8 @@ DECLASM(int) vgdrvOS2Init(const char *pszArgs)
                         {
                             strcpy(&g_szInitText[0],
                                    "\r\n"
-                                   "VirtualBox Guest Additions Driver for OS/2 version " VBOX_VERSION_STRING "\r\n"
-                                   "Copyright (C) 2008-" VBOX_C_YEAR " " VBOX_VENDOR "\r\n");
+                                   "VirtualBox Guest Additions Driver for OS/2 version " VRA_VERSION_STRING "\r\n"
+                                   "Copyright (C) 2008-" VRA_C_YEAR " " VRA_VENDOR "\r\n");
                             g_cchInitText = strlen(&g_szInitText[0]);
                         }
                         Log(("vgdrvOS2Init: Successfully loaded\n%s", g_szInitText));

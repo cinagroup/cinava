@@ -87,7 +87,7 @@ RT_C_DECLS_BEGIN
 extern kern_return_t _start(struct kmod_info *pKModInfo, void *pvData);
 extern kern_return_t _stop(struct kmod_info *pKModInfo, void *pvData);
 
-KMOD_EXPLICIT_DECL(VBoxSF, VBOX_VERSION_STRING, _start, _stop)
+KMOD_EXPLICIT_DECL(VBoxSF, VRA_VERSION_STRING, _start, _stop)
 DECL_HIDDEN_DATA(kmod_start_func_t *) _realmain      = vboxSfDwnModuleLoad;
 DECL_HIDDEN_DATA(kmod_stop_func_t *)  _antimain      = vboxSfDwnModuleUnload;
 DECL_HIDDEN_DATA(int)                 _kext_apple_cc = __APPLE_CC__;

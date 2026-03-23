@@ -808,8 +808,8 @@ static void vboxSdsShowInfoMsgBox(const char *pszFormat, ...)
 static RTEXITCODE vboxSdsShowUsage(void)
 {
     vboxSdsShowInfoMsgBox(
-                 VBOX_PRODUCT " VBoxSDS (System Directory Service) Version " VBOX_VERSION_STRING " - r%s\n"
-                 "Copyright (C) " VBOX_C_YEAR " " VBOX_VENDOR "\n"
+                 VRA_PRODUCT " VBoxSDS (System Directory Service) Version " VRA_VERSION_STRING " - r%s\n"
+                 "Copyright (C) " VRA_C_YEAR " " VRA_VENDOR "\n"
                  "\n"
                  " Service handling:\n"
                  " --regservice, /RegService\n"

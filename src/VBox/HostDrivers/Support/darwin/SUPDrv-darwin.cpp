@@ -224,7 +224,7 @@ RT_C_DECLS_BEGIN
 extern kern_return_t _start(struct kmod_info *pKModInfo, void *pvData);
 extern kern_return_t _stop(struct kmod_info *pKModInfo, void *pvData);
 
-KMOD_EXPLICIT_DECL(VBoxDrv, VBOX_VERSION_STRING, _start, _stop)
+KMOD_EXPLICIT_DECL(VBoxDrv, VRA_VERSION_STRING, _start, _stop)
 DECL_HIDDEN_DATA(kmod_start_func_t *) _realmain = VBoxDrvDarwinStart;
 DECL_HIDDEN_DATA(kmod_stop_func_t *)  _antimain = VBoxDrvDarwinStop;
 DECL_HIDDEN_DATA(int)                 _kext_apple_cc = __APPLE_CC__;
@@ -372,8 +372,8 @@ static kern_return_t    VBoxDrvDarwinStart(struct kmod_info *pKModInfo, void *pv
                                                                 UID_ROOT, GID_WHEEL, 0666, DEVICE_NAME_USR);
                             if (g_hDevFsDeviceUsr)
                             {
-                                LogRel(("VBoxDrv: version " VBOX_VERSION_STRING " r%d; IOCtl version %#x; IDC version %#x; dev major=%d\n",
-                                        VBOX_SVN_REV, SUPDRV_IOC_VERSION, SUPDRV_IDC_VERSION, g_iMajorDeviceNo));
+                                LogRel(("VBoxDrv: version " VRA_VERSION_STRING " r%d; IOCtl version %#x; IDC version %#x; dev major=%d\n",
+                                        VRA_SVN_REV, SUPDRV_IOC_VERSION, SUPDRV_IDC_VERSION, g_iMajorDeviceNo));
 
                                 /* Register a sleep/wakeup notification callback */
                                 g_pSleepNotifier = registerPrioritySleepWakeInterest(&VBoxDrvDarwinSleepHandler, &g_DevExt, NULL);

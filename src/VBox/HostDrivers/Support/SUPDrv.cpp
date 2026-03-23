@@ -145,10 +145,10 @@ extern "C" uint8_t __stdcall IoWithinStackLimits(uintptr_t, size_t) RT_NOEXCEPT;
 /*********************************************************************************************************************************
 *   Defined Constants And Macros                                                                                                 *
 *********************************************************************************************************************************/
-/** @def VBOX_SVN_REV
+/** @def VRA_SVN_REV
  * The makefile should define this if it can. */
-#ifndef VBOX_SVN_REV
-# define VBOX_SVN_REV 0
+#ifndef VRA_SVN_REV
+# define VRA_SVN_REV 0
 #endif
 
 /** @ SUPDRV_CHECK_SMAP_SETUP
@@ -2907,7 +2907,7 @@ int VBOXCALL supdrvIDC(uintptr_t uReq, PSUPDRVDEVEXT pDevExt, PSUPDRVSESSION pSe
                 pReq->u.Out.pSession        = NULL;
                 pReq->u.Out.uSessionVersion = 0xffffffff;
                 pReq->u.Out.uDriverVersion  = SUPDRV_IDC_VERSION;
-                pReq->u.Out.uDriverRevision = VBOX_SVN_REV;
+                pReq->u.Out.uDriverRevision = VRA_SVN_REV;
                 pReq->Hdr.rc = VERR_VERSION_MISMATCH;
                 return VINF_SUCCESS;
             }
@@ -2915,7 +2915,7 @@ int VBOXCALL supdrvIDC(uintptr_t uReq, PSUPDRVDEVEXT pDevExt, PSUPDRVSESSION pSe
             pReq->u.Out.pSession        = NULL;
             pReq->u.Out.uSessionVersion = SUPDRV_IDC_VERSION;
             pReq->u.Out.uDriverVersion  = SUPDRV_IDC_VERSION;
-            pReq->u.Out.uDriverRevision = VBOX_SVN_REV;
+            pReq->u.Out.uDriverRevision = VRA_SVN_REV;
 
             pReq->Hdr.rc = supdrvCreateSession(pDevExt, false /* fUser */, true /*fUnrestricted*/, &pSession);
             if (RT_FAILURE(pReq->Hdr.rc))

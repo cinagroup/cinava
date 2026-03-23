@@ -43,7 +43,7 @@
 #include <iprt/assert.h>
 #include <iprt/critsect.h>
 #include <iprt/fs.h>
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
 # include <iprt/http-server.h>
 #endif
 #include <iprt/list.h>
@@ -983,7 +983,7 @@ typedef struct _SHCLTRANSFERREPORT
 /** Pointer to Shared Clipboard transfer status. */
 typedef SHCLTRANSFERREPORT *PSHCLTRANSFERREPORT;
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
 /**
  * Enumeration for HTTP server status changes.
  *
@@ -1049,7 +1049,7 @@ typedef struct _SHCLHTTPCONTEXT
 /** Pointer to Shared Clipboard HTTP transfer context. */
 typedef SHCLHTTPCONTEXT *PSHCLHTTPCONTEXT;
 
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP */
 
 /**
  * Structure for keeping a single transfer context event.
@@ -1227,7 +1227,7 @@ int ShClTransferCtxUnregisterById(PSHCLTRANSFERCTX pTransferCtx, SHCLTRANSFERID 
 int ShClTransferCtxWait(PSHCLTRANSFERCTX pTransferCtx, RTMSINTERVAL msTimeout, bool fRegister, SHCLTRANSFERID idTransfer, PSHCLTRANSFER *ppTransfer);
 /** @} */
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
 /** Namespace used as a prefix for HTTP(S) transfer URLs. */
 #define SHCL_HTTPT_URL_NAMESPACE "vbcl"
 
@@ -1260,7 +1260,7 @@ bool ShClTransferHttpServerIsInitialized(PSHCLHTTPSERVER pSrv);
 bool ShClTransferHttpServerIsRunning(PSHCLHTTPSERVER pSrv);
 int ShClTransferHttpServerWaitForStatusChange(PSHCLHTTPSERVER pSrv, SHCLHTTPSERVERSTATUS fStatus, RTMSINTERVAL msTimeout);
 /** @} */
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP */
 
 /** @name Shared Clipboard transfers utility functions.
  *  @{

@@ -132,7 +132,7 @@ void vbCpuRepFileHdr(const char *pszName, const char *pszNameC)
                    " */\n"
                    "\n"
                    "/*\n"
-                   " * Copyright (C) 2013-" VBOX_C_YEAR " Oracle and/or its affiliates.\n"
+                   " * Copyright (C) 2013-" VRA_C_YEAR " Oracle and/or its affiliates.\n"
                    " *\n"
                    " * This file is part of VirtualBox base platform packages, as\n"
                    " * available from https://www.virtualbox.org.\n"

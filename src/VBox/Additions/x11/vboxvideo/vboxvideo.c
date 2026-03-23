@@ -137,7 +137,7 @@ enum GenericTypes
 #ifdef PCIACCESS
 static const struct pci_id_match vbox_device_match[] = {
     {
-        VBOX_VENDORID, VBOX_DEVICEID, PCI_MATCH_ANY, PCI_MATCH_ANY,
+        VRA_VENDORID, VBOX_DEVICEID, PCI_MATCH_ANY, PCI_MATCH_ANY,
         0, 0, 0
     },
 
@@ -776,7 +776,7 @@ VBOXProbe(DriverPtr drv, int flags)
         int numUsed;
         int *usedChips;
         int i;
-        numUsed = xf86MatchPciInstances(VBOX_NAME, VBOX_VENDORID,
+        numUsed = xf86MatchPciInstances(VBOX_NAME, VRA_VENDORID,
                         VBOXChipsets, VBOXPCIchipsets,
                         devSections, numDevSections,
                         drv, &usedChips);

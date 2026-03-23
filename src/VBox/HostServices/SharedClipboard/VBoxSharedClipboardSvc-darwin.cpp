@@ -229,7 +229,7 @@ int ShClBackendReportFormats(PSHCLBACKEND pBackend, PSHCLCLIENT pClient, SHCLFOR
         return VINF_SUCCESS;
     }
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     if (fFormats & VBOX_SHCL_FMT_URI_LIST) /* No transfer support yet. */
         return VINF_SUCCESS;
 #endif
@@ -303,7 +303,7 @@ int ShClBackendWriteData(PSHCLBACKEND pBackend, PSHCLCLIENT pClient, PSHCLCLIENT
     return VINF_SUCCESS;
 }
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 
 int ShClBackendTransferReadDir(PSHCLBACKEND pBackend, PSHCLCLIENT pClient, PSHCLDIRDATA pDirData)
 {
@@ -341,5 +341,5 @@ int ShClBackendTransferWriteFileData(PSHCLBACKEND pBackend, PSHCLCLIENT pClient,
     return VERR_NOT_IMPLEMENTED;
 }
 
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
 

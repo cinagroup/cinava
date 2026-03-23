@@ -650,7 +650,7 @@ bool UIVirtualBoxManager::eventFilter(QObject *pObject, QEvent *pEvent)
 void UIVirtualBoxManager::sltRetranslateUI()
 {
     /* Set window title: */
-    QString strTitle(VBOX_PRODUCT);
+    QString strTitle(VRA_PRODUCT);
     strTitle += " " + tr("Manager", "Note: main window title which is prepended by the product name.");
 #ifdef VBOX_BLEEDING_EDGE
     strTitle += QString(" EXPERIMENTAL build ")

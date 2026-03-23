@@ -971,9 +971,9 @@ DECLEXPORT(int) TrustedMain(int argc, char **argv, char **envp)
     SDL_Event EvHKeyDown2;
 
     LogFlow(("SDL GUI started\n"));
-    RTPrintf(VBOX_PRODUCT " SDL GUI version %s\n"
-             "Copyright (C) 2005-" VBOX_C_YEAR " " VBOX_VENDOR "\n",
-             VBOX_VERSION_STRING);
+    RTPrintf(VRA_PRODUCT " SDL GUI version %s\n"
+             "Copyright (C) 2005-" VRA_C_YEAR " " VRA_VENDOR "\n",
+             VRA_VERSION_STRING);
 
     // less than one parameter is not possible
     if (argc < 2)
@@ -3368,7 +3368,7 @@ static void UpdateTitlebar(TitlebarMode mode, uint32_t u32User)
     Bstr bstrName;
     gpMachine->COMGETTER(Name)(bstrName.asOutParam());
 
-    RTStrPrintf(szTitle, sizeof(szTitle), "%s - " VBOX_PRODUCT,
+    RTStrPrintf(szTitle, sizeof(szTitle), "%s - " VRA_PRODUCT,
                 !bstrName.isEmpty() ? Utf8Str(bstrName).c_str() : "<noname>");
 
     /* which mode are we in? */

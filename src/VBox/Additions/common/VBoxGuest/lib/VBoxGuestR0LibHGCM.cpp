@@ -159,14 +159,14 @@ DECLR0VBGL(int) VbglR0HGCMConnect(VBGLHGCMHANDLE *pHandle, const char *pszServic
                                NULL /*puSessionVersion*/, NULL /*puDriverVersion*/, NULL /*uDriverRevision*/);
             if (RT_SUCCESS(rc))
             {
-                VBGLIOCHGCMCONNECT Info;
+                VBGLIOCIDCCONNECT Info;
                 RT_ZERO(Info);
                 VBGLREQHDR_INIT(&Info.Hdr, HGCM_CONNECT);
                 Info.u.In.Loc.type     = VMMDevHGCMLoc_LocalHost_Existing;
                 rc = RTStrCopy(Info.u.In.Loc.u.host.achName, sizeof(Info.u.In.Loc.u.host.achName), pszServiceName);
                 if (RT_SUCCESS(rc))
                 {
-                    rc = VbglR0IdcCall(&pHandleData->IdcHandle, VBGL_IOCTL_HGCM_CONNECT, &Info.Hdr, sizeof(Info));
+                    rc = VbglR0IdcCall(&pHandleData->IdcHandle, VBGL_IOCTL_IDC_CONNECT, &Info.Hdr, sizeof(Info));
                     if (RT_SUCCESS(rc))
                     {
                         *pidClient = Info.u.Out.idClient;
@@ -191,12 +191,12 @@ DECLR0VBGL(int) VbglR0HGCMConnect(VBGLHGCMHANDLE *pHandle, const char *pszServic
 DECLR0VBGL(int) VbglR0HGCMDisconnect(VBGLHGCMHANDLE handle, HGCMCLIENTID idClient)
 {
     int rc;
-    VBGLIOCHGCMDISCONNECT Info;
+    VBGLIOCIDCDISCONNECT Info;
 
     RT_ZERO(Info);
-    VBGLREQHDR_INIT(&Info.Hdr, HGCM_DISCONNECT);
+    VBGLREQHDR_INIT(&Info.Hdr, IDC_DISCONNECT);
     Info.u.In.idClient = idClient;
-    rc = VbglR0IdcCall(&handle->IdcHandle, VBGL_IOCTL_HGCM_DISCONNECT, &Info.Hdr, sizeof(Info));
+    rc = VbglR0IdcCall(&handle->IdcHandle, VBGL_IOCTL_IDC_DISCONNECT, &Info.Hdr, sizeof(Info));
 
     VbglR0IdcClose(&handle->IdcHandle);
 
@@ -205,16 +205,16 @@ DECLR0VBGL(int) VbglR0HGCMDisconnect(VBGLHGCMHANDLE handle, HGCMCLIENTID idClien
     return rc;
 }
 
-DECLR0VBGL(int) VbglR0HGCMCallRaw(VBGLHGCMHANDLE handle, PVBGLIOCHGCMCALL pData, uint32_t cbData)
+DECLR0VBGL(int) VbglR0HGCMCallRaw(VBGLHGCMHANDLE handle, PVBGLIOCIDCCALL pData, uint32_t cbData)
 {
-    VBGL_HGCM_ASSERT_MSG(cbData >= sizeof(VBGLIOCHGCMCALL) + pData->cParms * sizeof(HGCMFunctionParameter),
+    VBGL_HGCM_ASSERT_MSG(cbData >= sizeof(VBGLIOCIDCCALL) + pData->cParms * sizeof(HGCMFunctionParameter),
                          ("cbData = %d, cParms = %d (calculated size %d)\n", cbData, pData->cParms,
-                          sizeof(VBGLIOCHGCMCALL) + pData->cParms * sizeof(VBGLIOCHGCMCALL)));
+                          sizeof(VBGLIOCIDCCALL) + pData->cParms * sizeof(VBGLIOCIDCCALL)));
 
-    return VbglR0IdcCallRaw(&handle->IdcHandle, VBGL_IOCTL_HGCM_CALL(cbData), &pData->Hdr, cbData);
+    return VbglR0IdcCallRaw(&handle->IdcHandle, VBGL_IOCTL_IDC_CALL(cbData), &pData->Hdr, cbData);
 }
 
-DECLR0VBGL(int) VbglR0HGCMCall(VBGLHGCMHANDLE handle, PVBGLIOCHGCMCALL pData, uint32_t cbData)
+DECLR0VBGL(int) VbglR0HGCMCall(VBGLHGCMHANDLE handle, PVBGLIOCIDCCALL pData, uint32_t cbData)
 {
     int rc = VbglR0HGCMCallRaw(handle, pData, cbData);
     if (RT_SUCCESS(rc))
@@ -222,13 +222,13 @@ DECLR0VBGL(int) VbglR0HGCMCall(VBGLHGCMHANDLE handle, PVBGLIOCHGCMCALL pData, ui
     return rc;
 }
 
-DECLR0VBGL(int) VbglR0HGCMCallUserDataRaw(VBGLHGCMHANDLE handle, PVBGLIOCHGCMCALL pData, uint32_t cbData)
+DECLR0VBGL(int) VbglR0HGCMCallUserDataRaw(VBGLHGCMHANDLE handle, PVBGLIOCIDCCALL pData, uint32_t cbData)
 {
-    VBGL_HGCM_ASSERT_MSG(cbData >= sizeof(VBGLIOCHGCMCALL) + pData->cParms * sizeof(HGCMFunctionParameter),
+    VBGL_HGCM_ASSERT_MSG(cbData >= sizeof(VBGLIOCIDCCALL) + pData->cParms * sizeof(HGCMFunctionParameter),
                          ("cbData = %d, cParms = %d (calculated size %d)\n", cbData, pData->cParms,
-                          sizeof(VBGLIOCHGCMCALL) + pData->cParms * sizeof(VBGLIOCHGCMCALL)));
+                          sizeof(VBGLIOCIDCCALL) + pData->cParms * sizeof(VBGLIOCIDCCALL)));
 
-    return VbglR0IdcCallRaw(&handle->IdcHandle, VBGL_IOCTL_HGCM_CALL_WITH_USER_DATA(cbData), &pData->Hdr, cbData);
+    return VbglR0IdcCallRaw(&handle->IdcHandle, VBGL_IOCTL_IDC_CALL_WITH_USER_DATA(cbData), &pData->Hdr, cbData);
 }
 
 

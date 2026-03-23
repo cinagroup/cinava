@@ -165,9 +165,9 @@ static VBOXSERVICETOOLBOXTOOL const g_aTools[] =
  */
 static void vgsvcToolboxShowUsageHeader(void)
 {
-    RTPrintf(VBOX_PRODUCT " Guest Toolbox Version "
-             VBOX_VERSION_STRING "\n"
-             "Copyright (C) " VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+    RTPrintf(VRA_PRODUCT " Guest Toolbox Version "
+             VRA_VERSION_STRING "\n"
+             "Copyright (C) " VRA_C_YEAR " " VRA_VENDOR "\n\n");
     RTPrintf("Usage:\n\n");
 }
 
@@ -203,7 +203,7 @@ static void vgsvcToolboxShowUsage(void)
  */
 static void vgsvcToolboxShowVersion(void)
 {
-    RTPrintf("%sr%d\n", VBOX_VERSION_STRING, RTBldCfgRevision());
+    RTPrintf("%sr%d\n", VRA_VERSION_STRING, RTBldCfgRevision());
 }
 
 

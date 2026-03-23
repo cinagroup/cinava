@@ -153,6 +153,20 @@ AssertCompileSize(VBGLIOCHGCMCALL, 24 + 16);
 typedef VBGLIOCHGCMCALL const RT_FAR *PCVBGLIOCHGCMCALL;
 
 /**
+ * Compatibility typedef for legacy code migration.
+ *
+ * The VBGLIOCIDCCALL name was incorrectly used in the codebase when it should
+ * have been VBGLIOCHGCMCALL. This typedef allows existing code to compile
+ * during the migration period.
+ *
+ * @note VBGLIOCIDCCALL is semantically identical to VBGLIOCHGCMCALL for ring-3.
+ *       The "IDC" naming was a historical artifact from ring-0 driver code.
+ */
+typedef VBGLIOCHGCMCALL VBGLIOCIDCCALL;
+typedef PVBGLIOCHGCMCALL PVBGLIOCIDCCALL;
+typedef PCVBGLIOCHGCMCALL PCVBGLIOCIDCCALL;
+
+/**
  * Initialize a HGCM header (VBGLIOCHGCMCALL) for a non-timed call.
  *
  * @param   a_pHdr          The header to initalize.

@@ -715,11 +715,11 @@ static void vgsvcVMInfoWriteFixedProperties(void)
     char *pszAddRev;
     rc = VbglR3QueryAdditionsVersion(&pszAddVer, &pszAddVerExt, &pszAddRev);
     VGSvcWriteProp(&g_VMInfoGuestPropSvcClient, "/VirtualBox/GuestAdd/Version",
-                   RT_SUCCESS(rc) ? pszAddVer    : VBOX_VERSION_STRING_RAW);
+                   RT_SUCCESS(rc) ? pszAddVer    : VRA_VERSION_STRING_RAW);
     VGSvcWriteProp(&g_VMInfoGuestPropSvcClient, "/VirtualBox/GuestAdd/VersionExt",
-                   RT_SUCCESS(rc) ? pszAddVerExt : VBOX_VERSION_STRING);
+                   RT_SUCCESS(rc) ? pszAddVerExt : VRA_VERSION_STRING);
     VGSvcWriteProp(&g_VMInfoGuestPropSvcClient, "/VirtualBox/GuestAdd/Revision",
-                   RT_SUCCESS(rc) ? pszAddRev    : RT_XSTR(VBOX_SVN_REV));
+                   RT_SUCCESS(rc) ? pszAddRev    : RT_XSTR(VRA_SVN_REV));
     if (RT_SUCCESS(rc))
     {
         RTStrFree(pszAddVer);

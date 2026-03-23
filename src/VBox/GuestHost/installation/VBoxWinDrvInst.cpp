@@ -2192,7 +2192,7 @@ int VBoxWinDrvInstCreateEx(PVBOXWINDRVINST phDrvInst, unsigned uVerbosity, PFNVB
         }
         /* else not fatal. */
 
-        vboxWinDrvInstLogInfo(pCtx, VBOX_PRODUCT " Version " VBOX_VERSION_STRING " - r%s", RTBldCfgRevisionStr());
+        vboxWinDrvInstLogInfo(pCtx, VRA_PRODUCT " Version " VRA_VERSION_STRING " - r%s", RTBldCfgRevisionStr());
         vboxWinDrvInstLogInfo(pCtx, "Using Windows version %d.%d.%d (%s)", RTSYSTEM_NT_VERSION_GET_MAJOR(pCtx->uOsVer),
                                                                            RTSYSTEM_NT_VERSION_GET_MINOR(pCtx->uOsVer),
                                                                            RTSYSTEM_NT_VERSION_GET_BUILD(pCtx->uOsVer),

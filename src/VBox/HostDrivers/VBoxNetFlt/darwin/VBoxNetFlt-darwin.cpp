@@ -161,7 +161,7 @@ RT_C_DECLS_BEGIN
 extern kern_return_t _start(struct kmod_info *pKModInfo, void *pvData);
 extern kern_return_t _stop(struct kmod_info *pKModInfo, void *pvData);
 
-KMOD_EXPLICIT_DECL(VBoxNetFlt, VBOX_VERSION_STRING, _start, _stop)
+KMOD_EXPLICIT_DECL(VBoxNetFlt, VRA_VERSION_STRING, _start, _stop)
 DECL_HIDDEN_DATA(kmod_start_func_t *) _realmain = VBoxNetFltDarwinStart;
 DECL_HIDDEN_DATA(kmod_stop_func_t  *) _antimain = VBoxNetFltDarwinStop;
 DECL_HIDDEN_DATA(int)                 _kext_apple_cc = __APPLE_CC__;
@@ -290,7 +290,7 @@ static kern_return_t    VBoxNetFltDarwinStart(struct kmod_info *pKModInfo, void 
             rc = vboxNetFltInitGlobalsAndIdc(&g_VBoxNetFltGlobals);
             if (RT_SUCCESS(rc))
             {
-                LogRel(("VBoxFltDrv: version " VBOX_VERSION_STRING " r%d\n", VBOX_SVN_REV));
+                LogRel(("VBoxFltDrv: version " VRA_VERSION_STRING " r%d\n", VRA_SVN_REV));
                 return KMOD_RETURN_SUCCESS;
             }
 

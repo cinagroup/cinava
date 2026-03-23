@@ -134,8 +134,8 @@ static RTEXITCODE DoStandardOption(int ch)
     {
         case 'h':
         {
-            RTMsgInfo(VBOX_PRODUCT " Extension Pack Helper App\n"
-                      "Copyright (C) " VBOX_C_YEAR " " VBOX_VENDOR "\n"
+            RTMsgInfo(VRA_PRODUCT " Extension Pack Helper App\n"
+                      "Copyright (C) " VRA_C_YEAR " " VRA_VENDOR "\n"
                       "\n"
                       "This NOT intended for general use, please use VBoxManage instead\n"
                       "or call the IExtPackManager API directly.\n"
@@ -151,7 +151,7 @@ static RTEXITCODE DoStandardOption(int ch)
         }
 
         case 'V':
-            RTPrintf("%sr%d\n", VBOX_VERSION_STRING, RTBldCfgRevision());
+            RTPrintf("%sr%d\n", VRA_VERSION_STRING, RTBldCfgRevision());
             return RTEXITCODE_SUCCESS;
 
         default:

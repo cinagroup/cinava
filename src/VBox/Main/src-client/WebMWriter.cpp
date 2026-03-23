@@ -865,7 +865,7 @@ void WebMWriter::writeSeekHeader(void)
 #endif
                 );
     char szApp[64];
-    RTStrPrintf(szApp, sizeof(szApp), VBOX_PRODUCT " %sr%u", VBOX_VERSION_STRING, RTBldCfgRevision());
+    RTStrPrintf(szApp, sizeof(szApp), VRA_PRODUCT " %sr%u", VRA_VERSION_STRING, RTBldCfgRevision());
 
     Assert(m_CurSeg.m_tcAbsLastWrittenMs >= m_CurSeg.m_tcAbsStartMs);
     const WebMTimecodeAbs tcAbsDurationMs = m_CurSeg.m_tcAbsLastWrittenMs - m_CurSeg.m_tcAbsStartMs;

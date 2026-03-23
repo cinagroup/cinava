@@ -1060,8 +1060,8 @@ int main(int argc, char *argv[])
     // store a log prefix for this thread
     g_mapThreads[RTThreadSelf()] = "[M  ]";
 
-    RTStrmPrintf(g_pStdErr, VBOX_PRODUCT " web service Version " VBOX_VERSION_STRING "\n"
-                            "Copyright (C) 2007-" VBOX_C_YEAR " " VBOX_VENDOR "\n");
+    RTStrmPrintf(g_pStdErr, VRA_PRODUCT " web service Version " VRA_VERSION_STRING "\n"
+                            "Copyright (C) 2007-" VRA_C_YEAR " " VRA_VENDOR "\n");
 
     int c;
     const char *pszLogFile = NULL;

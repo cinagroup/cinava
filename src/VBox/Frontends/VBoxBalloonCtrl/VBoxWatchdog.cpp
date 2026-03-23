@@ -828,8 +828,8 @@ void serviceLog(const char *pszFormat, ...)
 
 static void displayHeader()
 {
-    RTStrmPrintf(g_pStdErr, VBOX_PRODUCT " Watchdog " VBOX_VERSION_STRING "\n"
-                 "Copyright (C) " VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+    RTStrmPrintf(g_pStdErr, VRA_PRODUCT " Watchdog " VRA_VERSION_STRING "\n"
+                 "Copyright (C) " VRA_C_YEAR " " VRA_VENDOR "\n\n");
 }
 
 /**

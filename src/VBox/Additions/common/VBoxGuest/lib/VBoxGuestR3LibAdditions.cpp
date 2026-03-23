@@ -68,9 +68,9 @@ static int vbglR3WinOpenAdditionRegisterKey(PHKEY phKey)
      */
     static PCRTUTF16 s_apwszKeys[] =
     {
-        L"SOFTWARE\\" RT_LSTR(VBOX_VENDOR_SHORT) L"\\VirtualBox Guest Additions",
+        L"SOFTWARE\\" RT_LSTR(VRA_VENDOR_SHORT) L"\\VirtualBox Guest Additions",
 #ifdef RT_ARCH_AMD64
-        L"SOFTWARE\\Wow6432Node\\" RT_LSTR(VBOX_VENDOR_SHORT) L"\\VirtualBox Guest Additions",
+        L"SOFTWARE\\Wow6432Node\\" RT_LSTR(VRA_VENDOR_SHORT) L"\\VirtualBox Guest Additions",
 #endif
         L"SOFTWARE\\Sun\\VirtualBox Guest Additions",
 #ifdef RT_ARCH_AMD64

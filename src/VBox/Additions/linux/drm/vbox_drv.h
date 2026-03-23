@@ -217,10 +217,10 @@ static inline void drm_gem_object_put(struct drm_gem_object *obj)
 }
 #endif
 
-#define DRIVER_AUTHOR       VBOX_VENDOR
+#define DRIVER_AUTHOR       VRA_VENDOR
 
 #define DRIVER_NAME         "vboxvideo"
-#define DRIVER_DESC         VBOX_PRODUCT " Graphics Card"
+#define DRIVER_DESC         VRA_PRODUCT " Graphics Card"
 #define DRIVER_DATE         "20130823"
 
 #define DRIVER_MAJOR        1

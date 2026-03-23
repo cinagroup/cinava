@@ -1039,7 +1039,7 @@ int AudioTestSetCreate(PAUDIOTESTSET pSet, const char *pszPath, const char *pszT
     AssertRCReturn(rc, rc);
 
     rc = audioTestManifestWrite(pSet, "vbox_ver=%s r%u %s (%s %s)\n",
-                                VBOX_VERSION_STRING, RTBldCfgRevision(), RTBldCfgTargetDotArch(), __DATE__, __TIME__);
+                                VRA_VERSION_STRING, RTBldCfgRevision(), RTBldCfgTargetDotArch(), __DATE__, __TIME__);
     AssertRCReturn(rc, rc);
 
     rc = audioTestManifestWrite(pSet, "test_count=");

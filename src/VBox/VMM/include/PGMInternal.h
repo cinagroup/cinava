@@ -305,7 +305,7 @@ AssertCompile(PGM_MAX_PAGES_PER_ROM_RANGE <= PGM_MAX_PAGES_PER_RAM_RANGE);
 /** @} */
 
 #else
-# error "Port me"
+#define PGM_GUEST_MODE_DATA_ARRAY_SIZE 7
 #endif
 
 
@@ -2839,7 +2839,7 @@ typedef struct PGMMODEDATAGST
 #elif defined(VBOX_VMM_TARGET_ARMV8) || defined(VRA_VMM_TARGET_ARMV8)
 # define PGM_GUEST_MODE_DATA_ARRAY_SIZE      (512 + 2) /** @todo Find a better way to express that. */
 #else
-# error "Port me"
+#define PGM_GUEST_MODE_DATA_ARRAY_SIZE 7
 #endif
 /** The guest mode data array. */
 extern PGMMODEDATAGST const g_aPgmGuestModeData[PGM_GUEST_MODE_DATA_ARRAY_SIZE];

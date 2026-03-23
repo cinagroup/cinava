@@ -597,7 +597,7 @@ static int rtCritSectRwEnterExcl(PRTCRITSECTRW pThis, PCRTLOCKVALSRCPOS pSrcPos,
 #ifdef IPRT_WITH_DTRACE
         if (IPRT_CRITSECTRW_EXCL_ENTERED_ENABLED())
         {
-            uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State);
+            uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State); (void)u64State; /* suppress unused warning */  
             IPRT_CRITSECTRW_EXCL_ENTERED(pThis, NULL, cNestings + pThis->cWriterReads,
                                          (uint32_t)((u64State & RTCSRW_WAIT_CNT_RD_MASK) >> RTCSRW_WAIT_CNT_RD_SHIFT),
                                          (uint32_t)((u64State & RTCSRW_CNT_WR_MASK) >> RTCSRW_CNT_WR_SHIFT));
@@ -609,7 +609,7 @@ static int rtCritSectRwEnterExcl(PRTCRITSECTRW pThis, PCRTLOCKVALSRCPOS pSrcPos,
     /*
      * Get cracking.
      */
-    uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State);
+    uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State); (void)u64State; /* suppress unused warning */  
     uint64_t u64OldState = u64State;
 
     for (;;)
@@ -840,7 +840,7 @@ RTDECL(int) RTCritSectRwLeaveExcl(PRTCRITSECTRW pThis)
         ASMAtomicWriteU32(&pThis->cWriteRecursions, 0);
         ASMAtomicWriteHandle(&pThis->u.s.hNativeWriter, NIL_RTNATIVETHREAD);
 
-        uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State);
+        uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State); (void)u64State; /* suppress unused warning */  
         IPRT_CRITSECTRW_EXCL_LEAVING(pThis, NULL, 0,
                                      (uint32_t)((u64State & RTCSRW_WAIT_CNT_RD_MASK) >> RTCSRW_WAIT_CNT_RD_SHIFT),
                                      (uint32_t)((u64State & RTCSRW_CNT_WR_MASK) >> RTCSRW_CNT_WR_SHIFT));
@@ -902,7 +902,7 @@ RTDECL(int) RTCritSectRwLeaveExcl(PRTCRITSECTRW pThis)
 #ifdef IPRT_WITH_DTRACE
         if (IPRT_CRITSECTRW_EXCL_LEAVING_ENABLED())
         {
-            uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State);
+            uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State); (void)u64State; /* suppress unused warning */  
             IPRT_CRITSECTRW_EXCL_LEAVING(pThis, NULL, cNestings + pThis->cWriterReads,
                                          (uint32_t)((u64State & RTCSRW_WAIT_CNT_RD_MASK) >> RTCSRW_WAIT_CNT_RD_SHIFT),
                                          (uint32_t)((u64State & RTCSRW_CNT_WR_MASK) >> RTCSRW_CNT_WR_SHIFT));
@@ -957,7 +957,7 @@ RTDECL(bool) RTCritSectRwIsReadOwner(PRTCRITSECTRW pThis, bool fWannaHear)
     /*
      * Inspect the state.
      */
-    uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State);
+    uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State); (void)u64State; /* suppress unused warning */  
     if ((u64State & RTCSRW_DIR_MASK) == (RTCSRW_DIR_WRITE << RTCSRW_DIR_SHIFT))
     {
         /*
@@ -1034,7 +1034,7 @@ RTDECL(uint32_t) RTCritSectRwGetReadCount(PRTCRITSECTRW pThis)
     /*
      * Return the requested data.
      */
-    uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State);
+    uint64_t u64State = ASMAtomicReadU64(&pThis->u.s.u64State); (void)u64State; /* suppress unused warning */  
     if ((u64State & RTCSRW_DIR_MASK) != (RTCSRW_DIR_READ << RTCSRW_DIR_SHIFT))
         return 0;
     return (u64State & RTCSRW_CNT_RD_MASK) >> RTCSRW_CNT_RD_SHIFT;

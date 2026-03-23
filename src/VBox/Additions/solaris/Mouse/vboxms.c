@@ -203,7 +203,7 @@ static struct dev_ops g_vbmsSolDevOps =
 static struct modldrv g_vbmsSolModule =
 {
     &mod_driverops,         /* extern from kernel */
-    DEVICE_DESC " " VBOX_VERSION_STRING "r" RT_XSTR(VBOX_SVN_REV),
+    DEVICE_DESC " " VRA_VERSION_STRING "r" RT_XSTR(VRA_SVN_REV),
     &g_vbmsSolDevOps
 };
 

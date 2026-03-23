@@ -1683,15 +1683,15 @@ static int __init init(void)
                  */
                 rc = register_filesystem(&g_vboxsf_fs_type);
                 if (rc == 0) {
-                    printk(KERN_INFO "vboxsf: Successfully loaded version " VBOX_VERSION_STRING " r" __stringify(VBOX_SVN_REV) "\n");
+                    printk(KERN_INFO "vboxsf: Successfully loaded version " VRA_VERSION_STRING " r" __stringify(VRA_SVN_REV) "\n");
 #ifdef VERMAGIC_STRING
-                    LogRel(("vboxsf: Successfully loaded version " VBOX_VERSION_STRING " r" __stringify(VBOX_SVN_REV) " on %s (LINUX_VERSION_CODE=%#x)\n",
+                    LogRel(("vboxsf: Successfully loaded version " VRA_VERSION_STRING " r" __stringify(VRA_SVN_REV) " on %s (LINUX_VERSION_CODE=%#x)\n",
                             VERMAGIC_STRING, LINUX_VERSION_CODE));
 #elif defined(UTS_RELEASE)
-                    LogRel(("vboxsf: Successfully loaded version " VBOX_VERSION_STRING " r" __stringify(VBOX_SVN_REV) " on %s (LINUX_VERSION_CODE=%#x)\n",
+                    LogRel(("vboxsf: Successfully loaded version " VRA_VERSION_STRING " r" __stringify(VRA_SVN_REV) " on %s (LINUX_VERSION_CODE=%#x)\n",
                             UTS_RELEASE, LINUX_VERSION_CODE));
 #else
-                    LogRel(("vboxsf: Successfully loaded version " VBOX_VERSION_STRING " r" __stringify(VBOX_SVN_REV) " (LINUX_VERSION_CODE=%#x)\n", LINUX_VERSION_CODE));
+                    LogRel(("vboxsf: Successfully loaded version " VRA_VERSION_STRING " r" __stringify(VRA_SVN_REV) " (LINUX_VERSION_CODE=%#x)\n", LINUX_VERSION_CODE));
 #endif
                     return 0;
                 }
@@ -1747,13 +1747,13 @@ MODULE_PARM_DESC(follow_symlinks,
 module_init(init);
 module_exit(fini);
 
-MODULE_DESCRIPTION(VBOX_PRODUCT " VFS Module for Host File System Access");
-MODULE_AUTHOR(VBOX_VENDOR);
+MODULE_DESCRIPTION(VRA_PRODUCT " VFS Module for Host File System Access");
+MODULE_AUTHOR(VRA_VENDOR);
 MODULE_LICENSE("GPL and additional rights");
 #ifdef MODULE_ALIAS_FS
 MODULE_ALIAS_FS("vboxsf");
 #endif
 #ifdef MODULE_VERSION
-MODULE_VERSION(VBOX_VERSION_STRING " r" RT_XSTR(VBOX_SVN_REV));
+MODULE_VERSION(VRA_VERSION_STRING " r" RT_XSTR(VRA_SVN_REV));
 #endif
 

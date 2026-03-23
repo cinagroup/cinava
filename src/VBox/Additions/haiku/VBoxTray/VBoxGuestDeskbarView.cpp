@@ -243,9 +243,9 @@ status_t VBoxGuestDeskbarView::RemoveFromDeskbar()
 status_t VBoxGuestDeskbarView::_Init(BMessage *archive)
 {
     BString toolTipText;
-    toolTipText << VBOX_PRODUCT << " Guest Additions ";
+    toolTipText << VRA_PRODUCT << " Guest Additions ";
     toolTipText << VBOX_VERSION_MAJOR << "." << VBOX_VERSION_MINOR << "." << VBOX_VERSION_BUILD;
-    toolTipText << "r" << VBOX_SVN_REV;
+    toolTipText << "r" << VRA_SVN_REV;
 
     SetToolTip(toolTipText.String());
 

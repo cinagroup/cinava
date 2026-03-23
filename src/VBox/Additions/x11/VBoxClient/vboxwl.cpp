@@ -644,9 +644,9 @@ static int vboxwl_run_command(void)
  */
 static void vboxwl_usage(void)
 {
-    RTPrintf(VBOX_PRODUCT " %s "
-             VBOX_VERSION_STRING "\n"
-             "Copyright (C) 2005-" VBOX_C_YEAR " " VBOX_VENDOR "\n\n", g_pszProgName);
+    RTPrintf(VRA_PRODUCT " %s "
+             VRA_VERSION_STRING "\n"
+             "Copyright (C) 2005-" VRA_C_YEAR " " VRA_VENDOR "\n\n", g_pszProgName);
 
     RTPrintf("Usage: %s [ %s %s|%s|%s ] | [--help|-h] [--version|-V] [--verbose|-v]\n\n",
              g_pszProgName, VBOXWL_ARG_SESSION_ID, VBOXWL_ARG_CLIP_HG_COPY,

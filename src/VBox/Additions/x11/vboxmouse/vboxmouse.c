@@ -355,7 +355,7 @@ VBoxPlug(pointer module, pointer options, int *errmaj, int *errmin)
 static XF86ModuleVersionInfo VBoxVersionRec =
 {
     "vboxmouse",
-    VBOX_VENDOR,
+    VRA_VENDOR,
     MODINFOSTRING1,
     MODINFOSTRING2,
     0, /* Missing from SDK: XORG_VERSION_CURRENT, */

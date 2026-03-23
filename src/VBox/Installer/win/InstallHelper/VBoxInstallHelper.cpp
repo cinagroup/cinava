@@ -1258,9 +1258,9 @@ static LONG installBrandingValue(MSIHANDLE hModule,
     {
         WCHAR wszKey[MAX_PATH + 64];
         if (RTUtf16ICmpAscii(pwszSection, "General") != 0)
-            RTUtf16Printf(wszKey, RT_ELEMENTS(wszKey), "SOFTWARE\\%s\\VirtualBox\\Branding\\%ls", VBOX_VENDOR_SHORT, pwszSection);
+            RTUtf16Printf(wszKey, RT_ELEMENTS(wszKey), "SOFTWARE\\%s\\VirtualBox\\Branding\\%ls", VRA_VENDOR_SHORT, pwszSection);
         else
-            RTUtf16Printf(wszKey, RT_ELEMENTS(wszKey), "SOFTWARE\\%s\\VirtualBox\\Branding", VBOX_VENDOR_SHORT);
+            RTUtf16Printf(wszKey, RT_ELEMENTS(wszKey), "SOFTWARE\\%s\\VirtualBox\\Branding", VRA_VENDOR_SHORT);
 
         HKEY hkBranding = NULL;
         rc = RegOpenKeyExW(HKEY_LOCAL_MACHINE, wszKey, 0, KEY_WRITE, &hkBranding);
@@ -2644,7 +2644,7 @@ static bool isTAPDevice(const WCHAR *pwszGUID)
                     && !RTUtf16Cmp(wszNetProductName, L"VirtualBox TAP Adapter")
                     && (   (!RTUtf16Cmp(wszNetProviderName, L"innotek GmbH")) /* Legacy stuff. */
                         || (!RTUtf16Cmp(wszNetProviderName, L"Sun Microsystems, Inc.")) /* Legacy stuff. */
-                        || (!RTUtf16Cmp(wszNetProviderName, MY_WTEXT(VBOX_VENDOR))) /* Reflects current vendor string. */
+                        || (!RTUtf16Cmp(wszNetProviderName, MY_WTEXT(VRA_VENDOR))) /* Reflects current vendor string. */
                        )
                    )
                 {

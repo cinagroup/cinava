@@ -5509,7 +5509,7 @@ DriverEntry(
 
     LOGREL(("VBox WDDM Driver for Windows %s version %d.%d.%dr%d %s, %d bit; Built %s %s",
             VBoxQueryWinVersion(NULL) >= WINVERSION_8 ? "8+" : "Vista and 7",
-            VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VBOX_SVN_REV,
+            VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VRA_SVN_REV,
             VBOXWDDM_BUILD_TYPE,
             (sizeof (void*) << 3), __DATE__, __TIME__));
 

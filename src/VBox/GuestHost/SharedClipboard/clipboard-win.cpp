@@ -32,7 +32,7 @@
 #include <iprt/ldr.h>
 #include <iprt/mem.h>
 #include <iprt/thread.h>
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 # include <iprt/win/windows.h>
 # include <iprt/win/shlobj.h> /* For CFSTR_FILEDESCRIPTORXXX + CFSTR_FILECONTENTS. */
 # include <iprt/utf16.h>
@@ -45,14 +45,14 @@
 #include <VBox/log.h>
 
 #include <VBox/HostServices/VBoxClipboardSvc.h>
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 # include <VBox/GuestHost/SharedClipboard-transfers.h>
 #endif
 #include <VBox/GuestHost/SharedClipboard-win.h>
 #include <VBox/GuestHost/clipboard-helper.h>
 
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 int ShClWinTransferDropFilesToStringList(DROPFILES *pDropFiles, char **ppszList, uint32_t *pcbList);
 #endif
 
@@ -176,7 +176,7 @@ int ShClWinCtxInit(PSHCLWINCTX pWinCtx)
         pWinCtx->hWndClipboardOwnerUs = NULL;
         pWinCtx->hWndNextInChain      = NULL;
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
         pWinCtx->pDataObjInFlight = NULL;
 #endif
     }
@@ -400,7 +400,7 @@ SHCLFORMAT ShClWinClipboardFormatToVBox(UINT uFormat)
             vboxFormat = VBOX_SHCL_FMT_BITMAP;
             break;
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
         /* CF_HDROP handles file system entries which are locally present
          * on source for transferring to the target.
          *
@@ -421,7 +421,7 @@ SHCLFORMAT ShClWinClipboardFormatToVBox(UINT uFormat)
 
                     if (RTStrCmp(szFormatName, SHCL_WIN_REGFMT_HTML) == 0)
                         vboxFormat = VBOX_SHCL_FMT_HTML;
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
                     /* These types invoke our IDataObject / IStream implementations. */
                     else if (   (RTStrCmp(szFormatName, CFSTR_FILEDESCRIPTORA) == 0)
                              || (RTStrCmp(szFormatName, CFSTR_FILECONTENTS)    == 0))
@@ -876,7 +876,7 @@ static int shClWinAnnounceFormats(PSHCLWINCTX pWinCtx, SHCLFORMATS fFormats)
     } s_aFormats[] =
     {
         { VBOX_SHCL_FMT_UNICODETEXT,    CF_UNICODETEXT, NULL,                 "CF_UNICODETEXT" },
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
         /* We don't announce anything here for an URI list to the Windows clipboard, as we later have to
          * initialize our custom IDataObject and set it via OleSetClipboard(). */
         { VBOX_SHCL_FMT_URI_LIST,       0,              NULL,                 "SHCL_URI_LIST" },
@@ -1039,7 +1039,7 @@ int ShClWinDataWrite(UINT cfFormat, void *pvData, uint32_t cbData)
     return rc;
 }
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 /**
  * Creates an Shared Clipboard transfer by announcing transfer data (via IDataObject) to Windows.
  *
@@ -1476,5 +1476,5 @@ int ShClWinTransferDropFilesToStringList(DROPFILES *pDropFiles, char **ppszList,
     LogFlowFuncLeaveRC(rc);
     return rc;
 }
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
 

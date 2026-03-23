@@ -951,7 +951,7 @@ static int vboxVBVASaveDevStateExec(PCPDMDEVHLPR3 pHlp, PVGASTATE pThis, PVGASTA
                 AssertRCReturn(rc, rc);
             }
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
             /* Size of some additional data. For future extensions. */
             rc = pHlp->pfnSSMPutU32(pSSM, 4);
             AssertRCReturn(rc, rc);
@@ -1127,7 +1127,7 @@ int vboxVBVALoadStateExec(PPDMDEVINS pDevIns, PSSMHANDLE pSSM, uint32_t uVersion
                 uint32_t cbExtra = 0;
                 rc = pHlp->pfnSSMGetU32 (pSSM, &cbExtra);
                 AssertRCReturn(rc, rc);
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
                 if (cbExtra >= 4)
                 {
                     rc = pHlp->pfnSSMGetU32 (pSSM, &pThis->fGuestCaps);
@@ -1554,7 +1554,7 @@ static int vbvaHandleQueryModeHints(PVGASTATECC pThisCC, VBVAQUERYMODEHINTS vola
 
 static DECLCALLBACK(void) vbvaNotifyGuest(void *pvCallback)
 {
-#if defined(VBOX_WITH_HGSMI) && (defined(VBOX_WITH_VDMA) || defined(VBOX_WITH_WDDM))
+#if defined(VBOX_WITH_HGSMI) && (defined(VBOX_WITH_VDMA) || defined(VRA_WITH_WDDM))
     PPDMDEVINS pDevIns = (PPDMDEVINS)pvCallback;
     PVGASTATE       pThis   = PDMDEVINS_2_DATA(pDevIns, PVGASTATE);
     PVGASTATECC     pThisCC = PDMDEVINS_2_DATA_CC(pDevIns, PVGASTATECC);
@@ -1706,7 +1706,7 @@ static DECLCALLBACK(int) vbvaChannelHandler(void *pvHandler, uint16_t u16Channel
                 rc = VERR_INVALID_PARAMETER;
             break;
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
         case VBVA_INFO_CAPS:
             if (cbBuffer >= sizeof(VBVACAPS))
             {

@@ -134,7 +134,7 @@ static struct modlfs_s10 modlfs = {
 static struct modlfs modlfs = {
 #endif
 	&mod_fsops,
-	DEVICE_DESC " " VBOX_VERSION_STRING "r" VBOXSOLQUOTE(VBOX_SVN_REV),
+	DEVICE_DESC " " VRA_VERSION_STRING "r" VBOXSOLQUOTE(VRA_SVN_REV),
 	&sffs_vfsdef
 };
 

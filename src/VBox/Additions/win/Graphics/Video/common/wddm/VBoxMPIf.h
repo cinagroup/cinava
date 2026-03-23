@@ -42,7 +42,7 @@
 #include "../../../../include/VBoxDisplay.h"
 #include "../VBoxVideoTools.h"
 #include <VBoxUhgsmi.h>
-#include <VBox/VBoxGuestCoreTypes.h> /* for VBGLIOCHGCMCALL */
+#include <VBox/VBoxGuestCoreTypes.h> /* for VBGLIOCIDCCALL */
 
 #if defined(VBOXWDDMDISP) || defined(VBOX_WDDM_MINIPORT)
 #include <VBoxGaTypes.h>

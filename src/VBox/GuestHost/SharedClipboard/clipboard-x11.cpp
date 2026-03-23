@@ -65,7 +65,7 @@
 #include <iprt/utf16.h>
 #include <iprt/uri.h>
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 # include <iprt/cpp/list.h>
 # include <iprt/cpp/ministring.h>
 # include <VBox/GuestHost/SharedClipboard-transfers.h>
@@ -137,7 +137,7 @@ SHCL_X11_DECL(SHCLX11FMTTABLE) g_aFormats[] =
     { "image/x-MS-bmp",                     SHCLX11FMT_BMP,         VBOX_SHCL_FMT_BITMAP },
     /** @todo Inkscape exports image/png but not bmp... */
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     { "text/uri-list",                      SHCLX11FMT_URI_LIST,                    VBOX_SHCL_FMT_URI_LIST },
     { "x-special/gnome-copied-files",       SHCLX11FMT_URI_LIST_GNOME_COPIED_FILES, VBOX_SHCL_FMT_URI_LIST },
     { "x-special/mate-copied-files",        SHCLX11FMT_URI_LIST_MATE_COPIED_FILES,  VBOX_SHCL_FMT_URI_LIST },
@@ -431,7 +431,7 @@ static void clipReportFormatsToVBox(PSHCLX11CTX pCtx)
     SHCLFORMATS vboxFmt  = clipVBoxFormatForX11Format(pCtx->idxFmtText);
                 vboxFmt |= clipVBoxFormatForX11Format(pCtx->idxFmtBmp);
                 vboxFmt |= clipVBoxFormatForX11Format(pCtx->idxFmtHTML);
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
                 vboxFmt |= clipVBoxFormatForX11Format(pCtx->idxFmtURI);
 #endif
 
@@ -439,7 +439,7 @@ static void clipReportFormatsToVBox(PSHCLX11CTX pCtx)
                  pCtx->idxFmtText, g_aFormats[pCtx->idxFmtText].pcszAtom,
                  pCtx->idxFmtBmp,  g_aFormats[pCtx->idxFmtBmp].pcszAtom,
                  pCtx->idxFmtHTML, g_aFormats[pCtx->idxFmtHTML].pcszAtom));
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     Log((", idxFmtURI=%u ('%s')", pCtx->idxFmtURI, g_aFormats[pCtx->idxFmtURI].pcszAtom));
 #endif
     Log((" -> vboxFmt=%#x\n", vboxFmt));
@@ -468,7 +468,7 @@ static void clipResetX11Formats(PSHCLX11CTX pCtx)
     pCtx->idxFmtText = 0;
     pCtx->idxFmtBmp  = 0;
     pCtx->idxFmtHTML = 0;
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     pCtx->idxFmtURI  = 0;
 #endif
 }
@@ -588,7 +588,7 @@ static SHCLX11FMTIDX clipGetHtmlFormatFromTargets(PSHCLX11CTX pCtx,
     return idxFmtHTML;
 }
 
-# ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+# ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 /**
  * Goes through an array of X11 clipboard targets to see if they contain an URI list
  * format we can support, and if so choose the ones we prefer.
@@ -622,7 +622,7 @@ static SHCLX11FMTIDX clipGetURIListFormatFromTargets(PSHCLX11CTX pCtx,
     }
     return idxFmtURI;
 }
-# endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+# endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
 
 /**
  * Goes through an array of X11 clipboard targets to see if we can support any
@@ -652,7 +652,7 @@ static void clipGetFormatsFromTargets(PSHCLX11CTX pCtx,
     if (pCtx->idxFmtHTML != idxFmtHTML)
         pCtx->idxFmtHTML = idxFmtHTML;
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     SHCLX11FMTIDX idxFmtURI = clipGetURIListFormatFromTargets(pCtx, paIdxFmtTargets, cTargets);
     if (pCtx->idxFmtURI != idxFmtURI)
         pCtx->idxFmtURI = idxFmtURI;
@@ -1234,7 +1234,7 @@ int ShClX11Init(PSHCLX11CTX pCtx, PSHCLCALLBACKS pCallbacks, PSHCLCONTEXT pParen
 
     if (!pCtx->fHeadless)
     {
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
         rc = ShClTransferHttpServerInit(&pCtx->HttpCtx.HttpServer);
 #endif
 
@@ -1273,7 +1273,7 @@ int ShClX11Destroy(PSHCLX11CTX pCtx)
     ShClCacheDestroy(&pCtx->Cache);
 
     int rc = VINF_SUCCESS;
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
     if (!shClX11HeadlessIsEnabled(pCtx))
         rc = ShClTransferHttpServerDestroy(&pCtx->HttpCtx.HttpServer);
 #endif
@@ -1830,7 +1830,7 @@ static int clipConvertToX11Data(PSHCLX11CTX pCtx, Atom *atomTarget,
             RTMemFree(pv);
         }
     }
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     else if (   fmtX11 == SHCLX11FMT_URI_LIST
              || fmtX11 == SHCLX11FMT_URI_LIST_GNOME_COPIED_FILES
             /** @todo BUGBUG Not sure about the following ones; test those. */
@@ -1860,7 +1860,7 @@ static int clipConvertToX11Data(PSHCLX11CTX pCtx, Atom *atomTarget,
         }
         /* else not supported yet. */
     }
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
     else
     {
         *atomTypeReturn = XT_CONVERT_FAIL;
@@ -2054,7 +2054,7 @@ int ShClX11ReportFormatsToX11Async(PSHCLX11CTX pCtx, SHCLFORMATS uFormats)
     return rc;
 }
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 /**
  * Converts transfer data to a format returned back to X11.
  *
@@ -2202,7 +2202,7 @@ int ShClX11TransferConvertFromX11(const char *pvData, size_t cbData, char **ppsz
 
     return rc;
 }
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
 
 /**
  * Worker function for clipConvertDataFromX11.
@@ -2381,7 +2381,7 @@ SHCL_X11_DECL(void) clipConvertDataFromX11Worker(void *pClient, void *pvSrc, uns
             }
         }
     }
-# ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+# ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     else if (pReq->Read.uFmtVBox == VBOX_SHCL_FMT_URI_LIST)
     {
         /* In which format is the clipboard data? */
@@ -2408,7 +2408,7 @@ SHCL_X11_DECL(void) clipConvertDataFromX11Worker(void *pClient, void *pvSrc, uns
             }
         }
     }
-# endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+# endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
     else
         rc = VERR_NOT_SUPPORTED;
 
@@ -2627,7 +2627,7 @@ static void ShClX11ReadDataFromX11Worker(void *pvUserData, void * /* interval */
             rc = clipGetSelectionValue(pCtx, pCtx->idxFmtHTML, pReq);
         }
     }
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     else if (pReq->Read.uFmtVBox & VBOX_SHCL_FMT_URI_LIST)
     {
         pReq->Read.idxFmtX11 = pCtx->idxFmtURI;

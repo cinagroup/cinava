@@ -265,9 +265,9 @@ static void QtMessageOutput(QtMsgType enmType, const QMessageLogContext &context
 static void ShowHelp()
 {
 #ifndef VBOX_RUNTIME_UI
-    static const char s_szTitle[] = VBOX_PRODUCT " Manager";
+    static const char s_szTitle[] = VRA_PRODUCT " Manager";
 #else
-    static const char s_szTitle[] = VBOX_PRODUCT " Runner";
+    static const char s_szTitle[] = VRA_PRODUCT " Runner";
 #endif
 
     static const char s_szUsage[] =
@@ -325,7 +325,7 @@ static void ShowHelp()
         ;
 
     RTPrintf("%s v%s\n"
-             "Copyright (C) 2005-" VBOX_C_YEAR " " VBOX_VENDOR "\n"
+             "Copyright (C) 2005-" VRA_C_YEAR " " VRA_VENDOR "\n"
              "\n"
              "%s",
              s_szTitle, RTBldCfgVersion(), s_szUsage);

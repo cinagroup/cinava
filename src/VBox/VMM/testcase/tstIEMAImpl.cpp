@@ -1003,7 +1003,7 @@ static void GenerateHeader(PRTSTREAM pOut, const char *pszCpuDesc, const char *p
                  " */\n"
                  "\n"
                  "/*\n"
-                 " * Copyright (C) 2022-" VBOX_C_YEAR " Oracle and/or its affiliates.\n"
+                 " * Copyright (C) 2022-" VRA_C_YEAR " Oracle and/or its affiliates.\n"
                  " *\n"
                  " * This file is part of VirtualBox base platform packages, as\n"
                  " * available from https://www.virtualbox.org.\n"

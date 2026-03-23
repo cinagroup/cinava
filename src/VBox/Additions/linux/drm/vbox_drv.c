@@ -451,7 +451,7 @@ static int __init vbox_init(void)
 	if (!vbox_mod_should_load())
 		return -EINVAL;
 
-	printk("vboxvideo: loading version " VBOX_VERSION_STRING " r" __stringify(VBOX_SVN_REV) "\n");
+	printk("vboxvideo: loading version " VRA_VERSION_STRING " r" __stringify(VRA_SVN_REV) "\n");
 	if (VBOX_VIDEO_NOMODESET())
 	{
 		printk("vboxvideo: kernel is running with *nomodeset* parameter,\n");
@@ -489,5 +489,5 @@ MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(DRIVER_DESC);
 MODULE_LICENSE("GPL and additional rights");
 #ifdef MODULE_VERSION
-MODULE_VERSION(VBOX_VERSION_STRING " r" __stringify(VBOX_SVN_REV));
+MODULE_VERSION(VRA_VERSION_STRING " r" __stringify(VRA_SVN_REV));
 #endif

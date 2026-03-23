@@ -7,7 +7,7 @@
  *       include file is generated automatically at build time from
  *       /src/VBox/Main/idl/VirtualBox.xidl, which contains all the VirtualBox
  *       interfaces; the include file is called VirtualBox.h on Windows hosts
- *       and VirtualBox_XPCOM.h on Linux hosts.  The build process places it in
+ *       and VirtualAgent_XPCOM.h on Linux hosts.  The build process places it in
  *       out/{platform}/bin/sdk/include, from where it gets
  *       included by the rest of the VirtualBox code.
  */
@@ -59,7 +59,7 @@
 #  include <VirtualBox.h>
 # else
 #  define VBOX_WITH_XPCOM_CPP_ENUM_HACK
-#  include <VirtualBox_XPCOM.h>
+#  include <VirtualAgent_XPCOM.h>
 # endif
 #endif
 

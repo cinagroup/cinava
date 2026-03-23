@@ -46,7 +46,7 @@
 
 #include <VBox/GuestHost/SharedClipboard.h>
 
-# ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+# ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 #  include <vector>
 
 #  include <iprt/cpp/ministring.h> /* For RTCString. */
@@ -57,7 +57,7 @@
 # include <VBox/GuestHost/SharedClipboard-transfers.h>
 
 using namespace com;
-# endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+# endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
 
 #ifndef WM_CLIPBOARDUPDATE
 # define WM_CLIPBOARDUPDATE 0x031D
@@ -76,7 +76,7 @@ using namespace com;
 #define SHCL_WIN_WM_REPORT_FORMATS          WM_USER
 /** Reads data from the clipboard and sends it to the destination. */
 #define SHCL_WIN_WM_READ_DATA               WM_USER + 1
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 /** Starts a transfer on the guest.
  *  This creates the necessary IDataObject in the matching window thread. */
 # define SHCL_WIN_WM_TRANSFER_START         WM_USER + 2
@@ -110,7 +110,7 @@ typedef struct _SHCLWINAPIOLD
     bool                   fCBChainPingInProcess;
 } SHCLWINAPIOLD, *PSHCLWINAPIOLD;
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 /** Forward declaration for the Windows data object. */
 class ShClWinDataObject;
 #endif
@@ -136,7 +136,7 @@ typedef struct _SHCLWINCTX
     SHCLWINAPINEW      newAPI;
     /** Structure for maintaining the old clipboard API. */
     SHCLWINAPIOLD      oldAPI;
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     /** The "in-flight" data object for file transfers.
      *  This is the current data object which has been created and sent to the Windows clipboard.
      *  That way Windows knows that a potential file transfer is available, but the actual transfer
@@ -181,7 +181,7 @@ int ShClWinHandleWMTimer(PSHCLWINCTX pWinCtx);
 
 int ShClWinClearAndAnnounceFormats(PSHCLWINCTX pWinCtx, SHCLFORMATS fFormats, HWND hWnd);
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 class SharedClipboardTransferList;
 #  ifndef FILEGROUPDESCRIPTOR
 class FILEGROUPDESCRIPTOR;
@@ -500,6 +500,6 @@ void ShClWinTransferDestroy(PSHCLWINCTX pWinCtx, PSHCLTRANSFER pTransfer);
 int ShClWinTransferCreateAndSetDataObject(PSHCLWINCTX pWinCtx, PSHCLCONTEXT pCtx, ShClWinDataObject::PCALLBACKS pCallbacks);
 int ShClWinTransferInitialize(PSHCLWINCTX pWinCtx, PSHCLTRANSFER pTransfer);
 int ShClWinTransferStart(PSHCLWINCTX pWinCtx, PSHCLTRANSFER pTransfer);
-# endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+# endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
 #endif /* !VBOX_INCLUDED_GuestHost_SharedClipboard_win_h */
 

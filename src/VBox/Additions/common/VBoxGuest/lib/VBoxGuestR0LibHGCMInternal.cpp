@@ -188,7 +188,7 @@ DECLR0VBGL(int) VbglR0HGCMInternalDisconnect(HGCMCLIENTID idClient, uint32_t fRe
  * @param   pcbExtra        Where to return the extra request space needed for
  *                          physical page lists.
  */
-static int vbglR0HGCMInternalPreprocessCall(PCVBGLIOCHGCMCALL pCallInfo, uint32_t cbCallInfo,
+static int vbglR0HGCMInternalPreprocessCall(PCVBGLIOCIDCCALL pCallInfo, uint32_t cbCallInfo,
                                             bool fIsUser, struct VbglR0ParmInfo *pParmInfo,  size_t *pcbExtra)
 {
     HGCMFunctionParameter const *pSrcParm = VBGL_HGCM_GET_CALL_PARMS(pCallInfo);
@@ -513,11 +513,11 @@ static uint32_t vbglR0HGCMInternalLinAddrTypeToPageListFlags(HGCMFunctionParamet
  * @param   pcbExtra        Where to return the extra request space needed for
  *                          physical page lists.
  */
-static void vbglR0HGCMInternalInitCall(VMMDevHGCMCall *pHGCMCall, PCVBGLIOCHGCMCALL pCallInfo,
+static void vbglR0HGCMInternalInitCall(VMMDevHGCMCall *pHGCMCall, PCVBGLIOCIDCCALL pCallInfo,
                                        uint32_t cbCallInfo, uint32_t fRequestor, bool fIsUser, struct VbglR0ParmInfo *pParmInfo)
 {
     HGCMFunctionParameter const *pSrcParm = VBGL_HGCM_GET_CALL_PARMS(pCallInfo);
-    HGCMFunctionParameter       *pDstParm = VMMDEV_HGCM_CALL_PARMS(pHGCMCall);
+    HGCMFunctionParameter       *pDstParm = VMMDEV_IDC_CALL_PARMS(pHGCMCall);
     uint32_t const               cParms   = pCallInfo->cParms;
     uint32_t    offExtra = (uint32_t)((uintptr_t)(pDstParm + cParms) - (uintptr_t)pHGCMCall);
     uint32_t    iLockBuf = 0;
@@ -821,11 +821,11 @@ static int vbglR0HGCMInternalDoCall(VMMDevHGCMCall *pHGCMCall, PFNVBGLHGCMCALLBA
  * @param   rc                  The current result code. Passed along to
  *                              preserve informational status codes.
  */
-static int vbglR0HGCMInternalCopyBackResult(PVBGLIOCHGCMCALL pCallInfo, uint32_t cbCallInfo,
+static int vbglR0HGCMInternalCopyBackResult(PVBGLIOCIDCCALL pCallInfo, uint32_t cbCallInfo,
                                             VMMDevHGCMCall const *pHGCMCall, uint32_t cbHGCMCall,
                                             struct VbglR0ParmInfo *pParmInfo, bool fIsUser, int rc)
 {
-    HGCMFunctionParameter const *pSrcParm = VMMDEV_HGCM_CALL_PARMS(pHGCMCall);
+    HGCMFunctionParameter const *pSrcParm = VMMDEV_IDC_CALL_PARMS(pHGCMCall);
     HGCMFunctionParameter       *pDstParm = VBGL_HGCM_GET_CALL_PARMS(pCallInfo);
     uint32_t const               cParms   = pCallInfo->cParms;
 #ifdef USE_BOUNCE_BUFFERS
@@ -954,7 +954,7 @@ static int vbglR0HGCMInternalCopyBackResult(PVBGLIOCHGCMCALL pCallInfo, uint32_t
 }
 
 
-DECLR0VBGL(int) VbglR0HGCMInternalCall(PVBGLIOCHGCMCALL pCallInfo, uint32_t cbCallInfo, uint32_t fFlags, uint32_t fRequestor,
+DECLR0VBGL(int) VbglR0HGCMInternalCall(PVBGLIOCIDCCALL pCallInfo, uint32_t cbCallInfo, uint32_t fFlags, uint32_t fRequestor,
                                        PFNVBGLHGCMCALLBACK pfnAsyncCallback, void *pvAsyncData, uint32_t u32AsyncData)
 {
     bool                    fIsUser = (fFlags & VBGLR0_HGCMCALL_F_MODE_MASK) == VBGLR0_HGCMCALL_F_USER;
@@ -971,7 +971,7 @@ DECLR0VBGL(int) VbglR0HGCMInternalCall(PVBGLIOCHGCMCALL pCallInfo, uint32_t cbCa
                     || !(fFlags & ~VBGLR0_HGCMCALL_F_MODE_MASK),
                     ("pCallInfo=%p pfnAsyncCallback=%p fFlags=%#x\n", pCallInfo, pfnAsyncCallback, fFlags),
                     VERR_INVALID_PARAMETER);
-    AssertReturn(   cbCallInfo >= sizeof(VBGLIOCHGCMCALL)
+    AssertReturn(   cbCallInfo >= sizeof(VBGLIOCIDCCALL)
                  || cbCallInfo >= pCallInfo->cParms * sizeof(HGCMFunctionParameter),
                  VERR_INVALID_PARAMETER);
 
@@ -1042,10 +1042,10 @@ DECLR0VBGL(int) VbglR0HGCMInternalCall(PVBGLIOCHGCMCALL pCallInfo, uint32_t cbCa
 
 
 #if ARCH_BITS == 64
-DECLR0VBGL(int) VbglR0HGCMInternalCall32(PVBGLIOCHGCMCALL pCallInfo, uint32_t cbCallInfo, uint32_t fFlags, uint32_t fRequestor,
+DECLR0VBGL(int) VbglR0HGCMInternalCall32(PVBGLIOCIDCCALL pCallInfo, uint32_t cbCallInfo, uint32_t fFlags, uint32_t fRequestor,
                                          PFNVBGLHGCMCALLBACK pfnAsyncCallback, void *pvAsyncData, uint32_t u32AsyncData)
 {
-    PVBGLIOCHGCMCALL         pCallInfo64 = NULL;
+    PVBGLIOCIDCCALL         pCallInfo64 = NULL;
     HGCMFunctionParameter   *pParm64 = NULL;
     HGCMFunctionParameter32 *pParm32 = NULL;
     uint32_t                 cParms = 0;
@@ -1061,7 +1061,7 @@ DECLR0VBGL(int) VbglR0HGCMInternalCall32(PVBGLIOCHGCMCALL pCallInfo, uint32_t cb
                     || !(fFlags & ~VBGLR0_HGCMCALL_F_MODE_MASK),
                     ("pCallInfo=%p pfnAsyncCallback=%p fFlags=%#x\n", pCallInfo, pfnAsyncCallback, fFlags),
                     VERR_INVALID_PARAMETER);
-    AssertReturn(   cbCallInfo >= sizeof(VBGLIOCHGCMCALL)
+    AssertReturn(   cbCallInfo >= sizeof(VBGLIOCIDCCALL)
                  || cbCallInfo >= pCallInfo->cParms * sizeof(HGCMFunctionParameter32),
                  VERR_INVALID_PARAMETER);
 
@@ -1076,7 +1076,7 @@ DECLR0VBGL(int) VbglR0HGCMInternalCall32(PVBGLIOCHGCMCALL pCallInfo, uint32_t cb
     /*
      * The simple approach, allocate a temporary request and convert the parameters.
      */
-    pCallInfo64 = (PVBGLIOCHGCMCALL)RTMemTmpAllocZ(sizeof(*pCallInfo64) + cParms * sizeof(HGCMFunctionParameter));
+    pCallInfo64 = (PVBGLIOCIDCCALL)RTMemTmpAllocZ(sizeof(*pCallInfo64) + cParms * sizeof(HGCMFunctionParameter));
     if (!pCallInfo64)
         return VERR_NO_TMP_MEMORY;
 

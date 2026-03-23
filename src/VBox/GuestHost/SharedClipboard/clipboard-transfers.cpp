@@ -2728,7 +2728,7 @@ void ShClTransferCtxReset(PSHCLTRANSFERCTX pTransferCtx)
     RTListForEach(&pTransferCtx->List, pTransfer, SHCLTRANSFER, Node)
         ShClTransferReset(pTransfer);
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
     /** @todo Anything to do here? */
 #endif
 

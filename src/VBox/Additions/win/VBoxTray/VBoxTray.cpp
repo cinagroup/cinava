@@ -186,7 +186,7 @@ static int vboxTrayCreateTrayIcon(void)
     g_NotifyIconData.hIcon            = hIcon;
 
     RTStrPrintf(g_NotifyIconData.szTip, sizeof(g_NotifyIconData.szTip), "%s Guest Additions %d.%d.%dr%d",
-                VBOX_PRODUCT, VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VBOX_SVN_REV);
+                VRA_PRODUCT, VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VRA_SVN_REV);
 
     int rc = VINF_SUCCESS;
     if (!Shell_NotifyIcon(NIM_ADD, &g_NotifyIconData))
@@ -1020,10 +1020,10 @@ static RTEXITCODE vboxTrayPrintHelp(int cArgs, char **papszArgs)
         AssertRCBreak(rc2);
     }
 
-    VBoxTrayShowMsgBox(VBOX_PRODUCT " - " VBOX_VBOXTRAY_TITLE,
+    VBoxTrayShowMsgBox(VRA_PRODUCT " - " VBOX_VBOXTRAY_TITLE,
                        MB_ICONINFORMATION,
-                       VBOX_PRODUCT " %s v%u.%u.%ur%u\n"
-                       "Copyright (C) 2009-" VBOX_C_YEAR " " VBOX_VENDOR "\n\n"
+                       VRA_PRODUCT " %s v%u.%u.%ur%u\n"
+                       "Copyright (C) 2009-" VRA_C_YEAR " " VRA_VENDOR "\n\n"
                        "Command Line Parameters:\n\n"
                        "-d, --debug\n"
                        "    Enables debugging mode\n"
@@ -1051,7 +1051,7 @@ static RTEXITCODE vboxTrayPrintHelp(int cArgs, char **papszArgs)
                        "  %s --foreground -vvvv --only-draganddrop\n"
                        "\n"
                        "Available services: %s\n\n",
-                       VBOX_VBOXTRAY_TITLE, VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VBOX_SVN_REV,
+                       VBOX_VBOXTRAY_TITLE, VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VRA_SVN_REV,
                        papszArgs[0], papszArgs[0], szServices);
 
     vboxTrayDestroy();
@@ -1147,9 +1147,9 @@ int main(int cArgs, char **papszArgs)
                 break;
 
             case 'V':
-                VBoxTrayShowMsgBox(VBOX_PRODUCT " - " VBOX_VBOXTRAY_TITLE,
+                VBoxTrayShowMsgBox(VRA_PRODUCT " - " VBOX_VBOXTRAY_TITLE,
                                    MB_ICONINFORMATION,
-                                   "%u.%u.%ur%u", VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VBOX_SVN_REV);
+                                   "%u.%u.%ur%u", VBOX_VERSION_MAJOR, VBOX_VERSION_MINOR, VBOX_VERSION_BUILD, VRA_SVN_REV);
                 return vboxTrayDestroy();
 
             default:

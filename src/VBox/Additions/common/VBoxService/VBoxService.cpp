@@ -423,7 +423,7 @@ static int vgsvcUsage(void)
             RTPrintf("%s", g_aServices[j].pDesc->pszOptions);
     }
     RTPrintf("\n"
-             " Copyright (C) 2009-" VBOX_C_YEAR " " VBOX_VENDOR "\n");
+             " Copyright (C) 2009-" VRA_C_YEAR " " VRA_VENDOR "\n");
 
     return 1;
 }

@@ -1389,8 +1389,8 @@ RTEXITCODE audioTestVersion(void)
  */
 void audioTestShowLogo(PRTSTREAM pStream)
 {
-    RTStrmPrintf(pStream, VBOX_PRODUCT " VKAT (Validation Kit Audio Test) Version " VBOX_VERSION_STRING " - r%s\n"
-                 "Copyright (C) " VBOX_C_YEAR " " VBOX_VENDOR "\n\n", RTBldCfgRevisionStr());
+    RTStrmPrintf(pStream, VRA_PRODUCT " VKAT (Validation Kit Audio Test) Version " VRA_VERSION_STRING " - r%s\n"
+                 "Copyright (C) " VRA_C_YEAR " " VRA_VENDOR "\n\n", RTBldCfgRevisionStr());
 }
 
 int main(int argc, char **argv)

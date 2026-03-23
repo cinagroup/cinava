@@ -655,7 +655,7 @@ int main(int argc, char *argv[])
             || !strcmp(argv[i], "-Version") /* deprecated */)
         {
             /* Print version number, and do nothing else. */
-            RTPrintf("%sr%u\n", VBOX_VERSION_STRING, RTBldCfgRevision());
+            RTPrintf("%sr%u\n", VRA_VERSION_STRING, RTBldCfgRevision());
             return 0;
         }
         if (!strcmp(argv[i], "--dump-build-type"))

@@ -42,7 +42,7 @@
 #define NONAMELESSUNION
 #define NONAMELESSSTRUCT
 #define COBJMACROS
-#ifndef VBOX_WINE_WITHOUT_LIBWINE
+#ifndef VRA_WINE_WITHOUT_LIBWINE
 #include "windef.h"
 #include "winbase.h"
 #include "winreg.h"
@@ -59,7 +59,7 @@
 #include "wine/debug.h"
 #include "wine/unicode.h"
 
-#ifndef VBOX_WINE_WITHOUT_LIBWINE
+#ifndef VRA_WINE_WITHOUT_LIBWINE
 #include "objbase.h"
 #endif
 #include "wine/wined3d.h"
@@ -69,7 +69,7 @@
 
 #include "vboxext.h"
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 # ifndef LOG_GROUP
 #  define LOG_GROUP LOG_GROUP_DEV_VMSVGA
 # endif
@@ -79,11 +79,11 @@
 # include "shaderlib.h"
 #endif
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
 # include "vboxsharedrc.h"
 #endif
 
-#if defined(VBOX_WINE_WITH_SINGLE_CONTEXT) || defined(VBOX_WINE_WITH_SINGLE_SWAPCHAIN_CONTEXT)
+#if defined(VRA_WINE_WITH_SINGLE_CONTEXT) || defined(VRA_WINE_WITH_SINGLE_SWAPCHAIN_CONTEXT)
 # define VBoxTlsRefGetImpl(_tls) (TlsGetValue((DWORD)(_tls)))
 # define VBoxTlsRefSetImpl(_tls, _val) (TlsSetValue((DWORD)(_tls), (_val)))
 # define VBoxTlsRefAssertImpl Assert
@@ -843,7 +843,7 @@ extern int num_lock DECLSPEC_HIDDEN;
 /* Checking of API calls */
 /* --------------------- */
 #ifndef WINE_NO_DEBUG_MSGS
-# ifdef VBOX_WITH_VMSVGA
+# ifdef VRA_WITH_VMSVGA
 # define checkGLcall(A)                                              \
 do {                                                                \
     GLint err;                                                      \
@@ -1131,7 +1131,7 @@ struct wined3d_context
     DWORD                   numDirtyEntries;
     DWORD isStateDirty[STATE_HIGHEST / (sizeof(DWORD) * CHAR_BIT) + 1]; /* Bitmap to find out quickly if a state is dirty */
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
     IWineD3DDeviceImpl    *device;
     IWineD3DSwapChainImpl *currentSwapchain;
 #else
@@ -1155,7 +1155,7 @@ struct wined3d_context
     WORD fog_enabled : 1;
     WORD num_untracked_materials : 2;   /* Max value 2 */
     WORD current : 1;
-#if !defined(VBOX_WINE_WITH_SINGLE_CONTEXT) && !defined(VBOX_WINE_WITH_SINGLE_SWAPCHAIN_CONTEXT)
+#if !defined(VRA_WINE_WITH_SINGLE_CONTEXT) && !defined(VRA_WINE_WITH_SINGLE_SWAPCHAIN_CONTEXT)
     WORD destroyed : 1;
 #endif
     WORD valid : 1;
@@ -1174,16 +1174,16 @@ struct wined3d_context
     HGLRC restore_ctx;
     HDC restore_dc;
     HGLRC                   glCtx;
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
     HWND                    win_handle;
     HDC                     hdc;
 #endif
 
-#if defined(VBOX_WINE_WITH_SINGLE_CONTEXT) || defined(VBOX_WINE_WITH_SINGLE_SWAPCHAIN_CONTEXT)
+#if defined(VRA_WINE_WITH_SINGLE_CONTEXT) || defined(VRA_WINE_WITH_SINGLE_SWAPCHAIN_CONTEXT)
     VBOXTLSREFDATA
 #endif
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
     IWineD3DDeviceImpl     *pDeviceContext;
     BOOL                    fChangedVertexShaderConstant;
     BOOL                    fChangedPixelShaderConstant;
@@ -1319,12 +1319,12 @@ void context_attach_surface_fbo(const struct wined3d_context *context,
         GLenum fbo_target, DWORD idx, IWineD3DSurfaceImpl *surface) DECLSPEC_HIDDEN;
 struct wined3d_context *context_create(IWineD3DSwapChainImpl *swapchain, IWineD3DSurfaceImpl *target,
         const struct wined3d_format_desc *ds_format_desc
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
                 , struct VBOXUHGSMI *pHgsmi
 #endif
         ) DECLSPEC_HIDDEN;
 struct IWineD3DDeviceImpl *context_get_device(const struct wined3d_context *context); DECLSPEC_HIDDEN;
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
 struct wined3d_context *context_find_create(IWineD3DDeviceImpl *device, IWineD3DSwapChainImpl *swapchain, IWineD3DSurfaceImpl *target,
         const struct wined3d_format_desc *ds_format_desc) DECLSPEC_HIDDEN;
 BOOL context_acquire_context(struct wined3d_context * context, IWineD3DSurface *target, enum ContextUsage usage, BOOL bReValidate) DECLSPEC_HIDDEN;
@@ -1339,7 +1339,7 @@ BOOL context_set_current(struct wined3d_context *ctx) DECLSPEC_HIDDEN;
 void context_set_draw_buffer(struct wined3d_context *context, GLenum buffer) DECLSPEC_HIDDEN;
 void context_set_tls_idx(DWORD idx) DECLSPEC_HIDDEN;
 void context_surface_update(struct wined3d_context *context, IWineD3DSurfaceImpl *surface) DECLSPEC_HIDDEN;
-#if defined(VBOX_WINE_WITH_SINGLE_CONTEXT) || defined(VBOX_WINE_WITH_SINGLE_SWAPCHAIN_CONTEXT)
+#if defined(VRA_WINE_WITH_SINGLE_CONTEXT) || defined(VRA_WINE_WITH_SINGLE_SWAPCHAIN_CONTEXT)
 void context_clear_on_thread_detach(void);
 #endif
 /* Macros for doing basic GPU detection based on opengl capabilities */
@@ -1586,7 +1586,7 @@ struct wined3d_adapter
     int                     nCfgs;
     WineD3D_PixelFormat     *cfgs;
     BOOL                    brokenStencil; /* Set on cards which only offer mixed depth+stencil */
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
     unsigned int            TextureRam; /* Amount of texture memory both video ram + AGP/TurboCache/HyperMemory/.. */
     unsigned int            UsedTextureRam;
 #endif
@@ -1599,7 +1599,7 @@ struct wined3d_adapter
 
 BOOL initPixelFormats(struct wined3d_gl_info *gl_info, enum wined3d_pci_vendor vendor) DECLSPEC_HIDDEN;
 BOOL initPixelFormatsNoGL(struct wined3d_gl_info *gl_info) DECLSPEC_HIDDEN;
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
 extern long WineD3DAdapterChangeGLRam(IWineD3DDeviceImpl *D3DDevice, long glram) DECLSPEC_HIDDEN;
 #endif
 extern void add_gl_compat_wrappers(struct wined3d_gl_info *gl_info) DECLSPEC_HIDDEN;
@@ -1702,7 +1702,7 @@ typedef struct IWineD3DImpl
 } IWineD3DImpl;
 
 HRESULT wined3d_init(IWineD3DImpl *wined3d, UINT version, IUnknown *parent) DECLSPEC_HIDDEN;
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
 BOOL wined3d_register_window(HWND window, struct IWineD3DDeviceImpl *device) DECLSPEC_HIDDEN;
 void wined3d_unregister_window(HWND window, struct IWineD3DDeviceImpl *device) DECLSPEC_HIDDEN;
 #endif
@@ -1936,7 +1936,7 @@ struct IWineD3DDeviceImpl
     /* Internal use fields  */
     WINED3DDEVICE_CREATION_PARAMETERS createParms;
     WINED3DDEVTYPE                  devType;
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
     HWND focus_window;
 #endif
 
@@ -1985,7 +1985,7 @@ struct IWineD3DDeviceImpl
 
     /* Final position fixup constant */
     float                       posFixup[4];
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
     UINT                        rtHeight;
 #endif
 
@@ -2003,7 +2003,7 @@ struct IWineD3DDeviceImpl
     struct wined3d_context **contexts;
     UINT                    numContexts;
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
     struct VBOXUHGSMI *pHgsmi;
 #endif
 
@@ -2029,7 +2029,7 @@ HRESULT device_init(IWineD3DDeviceImpl *device, IWineD3DImpl *wined3d,
         UINT adapter_idx, WINED3DDEVTYPE device_type, HWND focus_window, DWORD flags,
         IUnknown *parent, IWineD3DDeviceParent *device_parent) DECLSPEC_HIDDEN;
 void device_preload_textures(IWineD3DDeviceImpl *device) DECLSPEC_HIDDEN;
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
 LRESULT device_process_message(IWineD3DDeviceImpl *device, HWND window,
         UINT message, WPARAM wparam, LPARAM lparam, WNDPROC proc) DECLSPEC_HIDDEN;
 #else
@@ -2088,7 +2088,7 @@ typedef struct IWineD3DResourceClass
     DWORD                   priority;
     BYTE                   *allocatedMemory; /* Pointer to the real data location */
     BYTE                   *heapMemory; /* Pointer to the HeapAlloced block of memory */
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
     DWORD                   sharerc_flags; /* shared resource flags */
     DWORD                   sharerc_handle; /* shared resource handle */
     DWORD                   sharerc_locks; /* lock count */
@@ -2114,7 +2114,7 @@ HRESULT resource_get_private_data(IWineD3DResource *iface, REFGUID guid,
 HRESULT resource_init(IWineD3DResource *iface, WINED3DRESOURCETYPE resource_type,
         IWineD3DDeviceImpl *device, UINT size, DWORD usage, const struct wined3d_format_desc *format_desc,
         WINED3DPOOL pool, IUnknown *parent, const struct wined3d_parent_ops *parent_ops
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
         , HANDLE *shared_handle
         , void *pvClientMem
 #endif
@@ -2124,7 +2124,7 @@ DWORD resource_set_priority(IWineD3DResource *iface, DWORD new_priority) DECLSPE
 HRESULT resource_set_private_data(IWineD3DResource *iface, REFGUID guid,
         const void *data, DWORD data_size, DWORD flags) DECLSPEC_HIDDEN;
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
 HRESULT WINAPI IWineD3DResourceImpl_SetShRcState(IWineD3DResource *iface, VBOXWINEEX_SHRC_STATE enmState);
 #endif
 
@@ -2192,7 +2192,7 @@ BOOL surface_init_sysmem(IWineD3DSurface *iface) DECLSPEC_HIDDEN;
 BOOL surface_is_offscreen(IWineD3DSurface *iface) DECLSPEC_HIDDEN;
 void surface_prepare_texture(IWineD3DSurfaceImpl *surface,
         const struct wined3d_gl_info *gl_info, BOOL srgb) DECLSPEC_HIDDEN;
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
 void surface_setup_location_onopen(IWineD3DSurfaceImpl *This) DECLSPEC_HIDDEN;
 #endif
 
@@ -2220,7 +2220,7 @@ DWORD basetexture_get_lod(IWineD3DBaseTexture *iface) DECLSPEC_HIDDEN;
 HRESULT basetexture_init(IWineD3DBaseTextureImpl *texture, UINT levels, WINED3DRESOURCETYPE resource_type,
         IWineD3DDeviceImpl *device, UINT size, DWORD usage, const struct wined3d_format_desc *format_desc,
         WINED3DPOOL pool, IUnknown *parent, const struct wined3d_parent_ops *parent_ops
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
         , HANDLE *shared_handle
         , void **pavClientMem
 #endif
@@ -2231,7 +2231,7 @@ BOOL basetexture_set_dirty(IWineD3DBaseTexture *iface, BOOL dirty) DECLSPEC_HIDD
 DWORD basetexture_set_lod(IWineD3DBaseTexture *iface, DWORD new_lod) DECLSPEC_HIDDEN;
 void basetexture_unload(IWineD3DBaseTexture *iface) DECLSPEC_HIDDEN;
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
 #define texture_gl_delete(_o, _t) do { \
         if (VBOXSHRC_IS_SHARED(_o)) GL_EXTCALL(glChromiumParameteriCR(GL_RCUSAGE_TEXTURE_CLEAR_CR, _t)); \
         else glDeleteTextures(1, &_t);  \
@@ -2263,7 +2263,7 @@ void texture_state_init(IWineD3DTexture *iface, struct gl_texture *gl_tex);
 HRESULT texture_init(IWineD3DTextureImpl *texture, UINT width, UINT height, UINT levels,
         IWineD3DDeviceImpl *device, DWORD usage, WINED3DFORMAT format, WINED3DPOOL pool,
         IUnknown *parent, const struct wined3d_parent_ops *parent_ops
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
         , HANDLE *shared_handle
         , void **pavClientMem
 #endif
@@ -2286,7 +2286,7 @@ typedef struct IWineD3DCubeTextureImpl
 HRESULT cubetexture_init(IWineD3DCubeTextureImpl *texture, UINT edge_length, UINT levels,
         IWineD3DDeviceImpl *device, DWORD usage, WINED3DFORMAT format, WINED3DPOOL pool,
         IUnknown *parent, const struct wined3d_parent_ops *parent_ops
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
         , HANDLE *shared_handle
         , void **pavClientMem
 #endif
@@ -2322,7 +2322,7 @@ void volume_add_dirty_box(IWineD3DVolume *iface, const WINED3DBOX *dirty_box) DE
 HRESULT volume_init(IWineD3DVolumeImpl *volume, IWineD3DDeviceImpl *device, UINT width,
         UINT height, UINT depth, DWORD usage, WINED3DFORMAT format, WINED3DPOOL pool,
         IUnknown *parent, const struct wined3d_parent_ops *parent_ops
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
         , HANDLE *shared_handle
         , void *pvClientMem
 #endif
@@ -2345,7 +2345,7 @@ typedef struct IWineD3DVolumeTextureImpl
 HRESULT volumetexture_init(IWineD3DVolumeTextureImpl *texture, UINT width, UINT height,
         UINT depth, UINT levels, IWineD3DDeviceImpl *device, DWORD usage, WINED3DFORMAT format,
         WINED3DPOOL pool, IUnknown *parent, const struct wined3d_parent_ops *parent_ops
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
         , HANDLE *shared_handle
         , void **pavClientMem
 #endif
@@ -2461,7 +2461,7 @@ struct IWineD3DSurfaceImpl
     struct list               overlays;
     struct list               overlay_entry;
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
     struct IWineD3DSwapChain  *presentSwapchain;
 #endif
 };
@@ -2476,7 +2476,7 @@ HRESULT surface_init(IWineD3DSurfaceImpl *surface, WINED3DSURFTYPE surface_type,
         UINT width, UINT height, UINT level, BOOL lockable, BOOL discard, WINED3DMULTISAMPLE_TYPE multisample_type,
         UINT multisample_quality, IWineD3DDeviceImpl *device, DWORD usage, WINED3DFORMAT format,
         WINED3DPOOL pool, IUnknown *parent, const struct wined3d_parent_ops *parent_ops
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
         , HANDLE *shared_handle
         , void *pvClientMem
 #endif
@@ -2562,7 +2562,7 @@ void flip_surface(IWineD3DSurfaceImpl *front, IWineD3DSurfaceImpl *back) DECLSPE
 #define SFLAG_INOVERLAYDRAW 0x00800000 /* Overlay drawing is in progress. Recursion prevention */
 #define SFLAG_SWAPCHAIN     0x01000000 /* The surface is part of a swapchain */
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
 # define SFLAG_CLIENTMEM     0x10000000 /* SYSMEM surface using client-supplied memory buffer */
 # define SFLAG_DONOTFREE_VBOXWDDM SFLAG_CLIENTMEM
 #else
@@ -2954,7 +2954,7 @@ struct IWineD3DSwapChainImpl
     long prev_time, frames;   /* Performance tracking */
     unsigned int vSyncCounter;
 
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
     struct wined3d_context **context;
     unsigned int            num_contexts;
     HWND                    win_handle;
@@ -3204,7 +3204,7 @@ static inline BOOL shader_is_scalar(const struct wined3d_shader_register *reg)
         case WINED3DSPR_DEPTHOUT:   /* oDepth */
         case WINED3DSPR_CONSTBOOL:  /* b# */
         case WINED3DSPR_LOOP:       /* aL */
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
         case WINED3DSPR_PREDICATE:  /* p0 */
             return TRUE;
 #else
@@ -3464,7 +3464,7 @@ void *MyNSGLGetProcAddress(const char *name);
  * non-strict builds.
  * @param   a_Expr  The OpenGL call expression.  Always executed!
  */
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 # define VBOX_CHECK_GL_CALL(a_Expr) \
         do { \
             GLint rcCheckCall; \

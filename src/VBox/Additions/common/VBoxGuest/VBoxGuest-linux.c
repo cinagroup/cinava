@@ -808,11 +808,11 @@ static int __init vgdrvLinuxModInit(void)
                         if (rc >= 0)
                         {
                             /* some useful information for the user but don't show this on the console */
-                            LogRel((DEVICE_NAME ": Successfully loaded version " VBOX_VERSION_STRING " r" __stringify(VBOX_SVN_REV) "\n"));
+                            LogRel((DEVICE_NAME ": Successfully loaded version " VRA_VERSION_STRING " r" __stringify(VRA_SVN_REV) "\n"));
                             LogRel((DEVICE_NAME ": misc device minor %d, IRQ %d, I/O port %RTiop, MMIO at %RHp (size 0x%x)\n",
                                     g_MiscDevice.minor, g_pPciDev->irq, g_IOPortBase, g_MMIOPhysAddr, g_cbMMIO));
                             printk(KERN_DEBUG DEVICE_NAME ": Successfully loaded version "
-                                   VBOX_VERSION_STRING " r" __stringify(VBOX_SVN_REV) " (interface " RT_XSTR(VMMDEV_VERSION) ")\n");
+                                   VRA_VERSION_STRING " r" __stringify(VRA_SVN_REV) " (interface " RT_XSTR(VMMDEV_VERSION) ")\n");
                             return rc;
                         }
 
@@ -1516,10 +1516,10 @@ module_param_call(r3_log_to_host, vgdrvLinuxParamR3LogToHostSet, vgdrvLinuxParam
 module_init(vgdrvLinuxModInit);
 module_exit(vgdrvLinuxModExit);
 
-MODULE_AUTHOR(VBOX_VENDOR);
-MODULE_DESCRIPTION(VBOX_PRODUCT " Guest Additions for Linux Module");
+MODULE_AUTHOR(VRA_VENDOR);
+MODULE_DESCRIPTION(VRA_PRODUCT " Guest Additions for Linux Module");
 MODULE_LICENSE("GPL");
 #ifdef MODULE_VERSION
-MODULE_VERSION(VBOX_VERSION_STRING " r" RT_XSTR(VBOX_SVN_REV));
+MODULE_VERSION(VRA_VERSION_STRING " r" RT_XSTR(VRA_SVN_REV));
 #endif
 

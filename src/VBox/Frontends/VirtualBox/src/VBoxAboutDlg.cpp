@@ -44,7 +44,7 @@
 
 /* Other VBox includes: */
 #include <iprt/path.h> /* RTPathExecDir */
-#include <VBox/version.h> /* VBOX_VENDOR */
+#include <VBox/version.h> /* VRA_VENDOR */
 
 
 VBoxAboutDlg::VBoxAboutDlg(QWidget *pParent, const QString &strVersion)
@@ -114,7 +114,7 @@ void VBoxAboutDlg::sltRetranslateUI()
 #endif
 #ifdef VBOX_OSE
         m_strAboutText = strAboutText + " " + strVersionText.arg(m_strVersion) + "\n"
-                       + QString("%1 2004-" VBOX_C_YEAR " " VBOX_VENDOR).arg(QChar(0xa9));
+                       + QString("%1 2004-" VRA_C_YEAR " " VRA_VENDOR).arg(QChar(0xa9));
 #else
         m_strAboutText = strAboutText + "\n" + strVersionText.arg(m_strVersion);
 #endif
@@ -124,7 +124,7 @@ void VBoxAboutDlg::sltRetranslateUI()
         else
             m_strAboutText = m_strAboutText + QString(" (Qt%1 on %2)").arg(qVersion()).arg(strPlatformName);
         m_strAboutText = m_strAboutText + "\n" + QString("Copyright %1 %2 %3.")
-                                                         .arg(QChar(0xa9)).arg(VBOX_C_YEAR).arg(VBOX_VENDOR);
+                                                         .arg(QChar(0xa9)).arg(VRA_C_YEAR).arg(VRA_VENDOR);
         m_pLabel->setText(m_strAboutText);
     }
 }

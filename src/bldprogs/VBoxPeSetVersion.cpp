@@ -38,6 +38,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 
 /*********************************************************************************************************************************
@@ -60,7 +61,7 @@ static int Error(const char *pszFormat, ...)
     va_list va;
     va_start(va, pszFormat);
     char szTmp[1024];
-    _vsnprintf(szTmp, sizeof(szTmp), pszFormat, va);
+    vsnprintf(szTmp, sizeof(szTmp), pszFormat, va);
     va_end(va);
     fprintf(stderr, "VBoxPeSetVersion: %s: error: %s\n", g_pszFilename, szTmp);
     return RTEXITCODE_FAILURE;
@@ -74,7 +75,7 @@ static void Info(unsigned iLevel, const char *pszFormat, ...)
         va_list va;
         va_start(va, pszFormat);
         char szTmp[1024];
-        _vsnprintf(szTmp, sizeof(szTmp), pszFormat, va);
+        vsnprintf(szTmp, sizeof(szTmp), pszFormat, va);
         va_end(va);
         fprintf(stderr, "VBoxPeSetVersion: %s: info: %s\n", g_pszFilename, szTmp);
     }

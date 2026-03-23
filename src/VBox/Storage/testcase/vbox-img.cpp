@@ -120,8 +120,8 @@ static void showLogo(PRTSTREAM pStrm)
 
     if (!s_fShown)
     {
-        RTStrmPrintf(pStrm, VBOX_PRODUCT " Disk Utility " VBOX_VERSION_STRING "\n"
-                     "Copyright (C) 2005-" VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+        RTStrmPrintf(pStrm, VRA_PRODUCT " Disk Utility " VRA_VERSION_STRING "\n"
+                     "Copyright (C) 2005-" VRA_C_YEAR " " VRA_VENDOR "\n\n");
         s_fShown = true;
     }
 }
@@ -2089,7 +2089,7 @@ int main(int argc, char *argv[])
             || !strcmp(argv[i], "--version"))
         {
             /* Print version number, and do nothing else. */
-            RTPrintf("%sr%d\n", VBOX_VERSION_STRING, RTBldCfgRevision());
+            RTPrintf("%sr%d\n", VRA_VERSION_STRING, RTBldCfgRevision());
             return 0;
         }
 

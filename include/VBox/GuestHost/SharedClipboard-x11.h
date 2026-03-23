@@ -45,7 +45,7 @@
 #include <iprt/thread.h>
 
 #include <VBox/GuestHost/SharedClipboard.h>
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 # include <VBox/GuestHost/SharedClipboard-transfers.h>
 #endif
 
@@ -72,7 +72,7 @@ typedef enum _SHCLX11FMT
     SHCLX11FMT_UTF8,
     SHCLX11FMT_BMP,
     SHCLX11FMT_HTML
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     /** URI list as (UTF-8) text. */
     , SHCLX11FMT_URI_LIST
     /** URI list as a representation for copying files for GNOME-based applications. */
@@ -84,7 +84,7 @@ typedef enum _SHCLX11FMT
     /** URI list as a representation for copying files for KDE-based applications.
      *  Also being used for Dolphin (KDE). */
     , SHCLX11FMT_URI_LIST_KDE_CUTSELECTION
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
 } SHCLX11FMT;
 
 /**
@@ -139,10 +139,10 @@ typedef struct _SHCLX11CTX
     SHCLX11FMTIDX    idxFmtBmp;
     /** The best HTML format X11 has to offer, as an index into the formats table. */
     SHCLX11FMTIDX    idxFmtHTML;
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     /** The best HTML format X11 has to offer, as an index into the formats table. */
     SHCLX11FMTIDX    idxFmtURI;
-# ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
+# ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS_HTTP
     /** HTTP transfer context data. */
     SHCLHTTPCONTEXT  HttpCtx;
 # endif
@@ -276,7 +276,7 @@ int ShClX11ReadDataFromX11(PSHCLX11CTX pCtx, PSHCLEVENTSOURCE pEventSource, RTMS
 int ShClX11WriteDataToX11Async(PSHCLX11CTX pCtx, SHCLFORMAT uFmt, const void *pvBuf, uint32_t cbBuf, PSHCLEVENT pEvent);
 int ShClX11WriteDataToX11(PSHCLX11CTX pCtx, PSHCLEVENTSOURCE pEventSource, RTMSINTERVAL msTimeout, SHCLFORMAT uFmt, const void *pvBuf, uint32_t cbBuf, uint32_t *pcbWritten);
 void ShClX11SetCallbacks(PSHCLX11CTX pCtx, PSHCLCALLBACKS pCallbacks);
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 int ShClX11TransferConvertToX11(const char *pszSrc, size_t cbSrc,  SHCLX11FMT enmFmtX11, void **ppvDst, size_t *pcbDst);
 int ShClX11TransferConvertFromX11(const char *pvData, size_t cbData, char **ppszList, size_t *pcbList);
 #endif

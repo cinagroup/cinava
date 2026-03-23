@@ -115,11 +115,11 @@ static int vboxNetAdpEthGetSettings(struct net_device *dev, struct ethtool_cmd *
 module_init(VBoxNetAdpLinuxInit);
 module_exit(VBoxNetAdpLinuxUnload);
 
-MODULE_AUTHOR(VBOX_VENDOR);
-MODULE_DESCRIPTION(VBOX_PRODUCT " Network Adapter Driver");
+MODULE_AUTHOR(VRA_VENDOR);
+MODULE_DESCRIPTION(VRA_PRODUCT " Network Adapter Driver");
 MODULE_LICENSE("GPL");
 #ifdef MODULE_VERSION
-MODULE_VERSION(VBOX_VERSION_STRING " r" RT_XSTR(VBOX_SVN_REV) " (" RT_XSTR(INTNETTRUNKIFPORT_VERSION) ")");
+MODULE_VERSION(VRA_VERSION_STRING " r" RT_XSTR(VRA_SVN_REV) " (" RT_XSTR(INTNETTRUNKIFPORT_VERSION) ")");
 #endif
 
 /**
@@ -217,11 +217,11 @@ static void vboxNetAdpEthGetDrvinfo(struct net_device *pNetDev, struct ethtool_d
                 "%s", VBOXNETADP_NAME);
 
     /*
-     * Would be nice to include VBOX_SVN_REV, but it's not available
+     * Would be nice to include VRA_SVN_REV, but it's not available
      * here.  Use file's svn revision via svn keyword?
      */
     RTStrPrintf(info->version, sizeof(info->version),
-                "%s", VBOX_VERSION_STRING);
+                "%s", VRA_VERSION_STRING);
 
     RTStrPrintf(info->fw_version, sizeof(info->fw_version),
                 "0x%08X", INTNETTRUNKIFPORT_VERSION);

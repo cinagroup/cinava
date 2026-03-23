@@ -974,7 +974,7 @@ dt_vopen(int version, int flags, int *errp,
 	rc = RTPathAppPrivateArch(szModPath, sizeof(szModPath));
 	if (RT_SUCCESS(rc))
 		rc = RTPathAppend(szModPath, sizeof(szModPath),
-		                  VBOX_EXTPACK_INSTALL_DIR RTPATH_SLASH_STR VBOX_EXTPACK_VBOXDTRACE_MANGLED_NAME);
+		                  VBOX_EXTPACK_INSTALL_DIR RTPATH_SLASH_STR VRA_EXTPACK_VRADTRACE_MANGLED_NAME);
 	if (RT_SUCCESS(rc))
 		rc = RTPathAppend(szModPath, sizeof(szModPath), RTBldCfgTargetDotArch());
 	if (RT_SUCCESS(rc))

@@ -643,9 +643,9 @@ static nsresult vboxsvcSpawnDaemonByReExec(const char *pszPath, bool fAutoShutdo
 
 static void showUsage(const char *pcszFileName)
 {
-    RTPrintf(VBOX_PRODUCT " VBoxSVC "
-             VBOX_VERSION_STRING "\n"
-             "Copyright (C) 2005-" VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+    RTPrintf(VRA_PRODUCT " VBoxSVC "
+             VRA_VERSION_STRING "\n"
+             "Copyright (C) 2005-" VRA_C_YEAR " " VRA_VENDOR "\n\n");
     RTPrintf("By default the service will be started in the background.\n"
              "\n");
     RTPrintf("Usage:\n"
@@ -905,12 +905,12 @@ int main(int argc, char **argv)
             size_t cSize;
 
             cSize = RTStrPrintf(szBuf, sizeof(szBuf),
-                                VBOX_PRODUCT" XPCOM Server Version "
-                                VBOX_VERSION_STRING);
+                                VRA_PRODUCT" XPCOM Server Version "
+                                VRA_VERSION_STRING);
             for (size_t i = cSize; i > 0; i--)
                 putchar('*');
             RTPrintf("\n%s\n", szBuf);
-            RTPrintf("Copyright (C) 2004-" VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+            RTPrintf("Copyright (C) 2004-" VRA_C_YEAR " " VRA_VENDOR "\n\n");
 #ifdef DEBUG
             RTPrintf("Debug version.\n");
 #endif

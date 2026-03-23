@@ -104,7 +104,7 @@ DECLVBGL(void) VbglR0SfDisconnect(PVBGLSFCLIENT pClient)
 DECLVBGL(int) VbglR0SfSetUtf8(PVBGLSFCLIENT pClient)
 {
     int rc;
-    VBGLIOCHGCMCALL callInfo;
+    VBGLIOCIDCCALL callInfo;
 
     VBOX_INIT_CALL(&callInfo, SHFL_FN_SET_UTF8, pClient, SHFL_CPARMS_SET_UTF8);
     rc = VbglR0HGCMCall(pClient->handle, &callInfo, sizeof(callInfo));
@@ -700,7 +700,7 @@ DECLVBGL(int) VbglR0SfSymlink(PVBGLSFCLIENT pClient, PVBGLSFMAP pMap, PSHFLSTRIN
 DECLVBGL(int) VbglR0SfSetSymlinks(PVBGLSFCLIENT pClient)
 {
     int rc;
-    VBGLIOCHGCMCALL callInfo;
+    VBGLIOCIDCCALL callInfo;
 
     VBOX_INIT_CALL(&callInfo, SHFL_FN_SET_SYMLINKS, pClient, SHFL_CPARMS_SET_SYMLINKS);
     rc = VbglR0HGCMCall(pClient->handle, &callInfo, sizeof(callInfo));

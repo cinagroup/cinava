@@ -45,7 +45,7 @@
 
 /* Other VBox includes: */
 #include <iprt/assert.h>
-#include <VBox/version.h> /* VBOX_PRODUCT */
+#include <VBox/version.h> /* VRA_PRODUCT */
 
 
 /*********************************************************************************************************************************
@@ -87,7 +87,7 @@ void UIHelpBrowserDialog::showHelpForKeyword(const QString &strKeyword)
 
 void UIHelpBrowserDialog::sltRetranslateUI()
 {
-    setWindowTitle(UIHelpBrowserWidget::tr("%1 User Guide", "[Product Name] User Guide").arg(VBOX_PRODUCT));
+    setWindowTitle(UIHelpBrowserWidget::tr("%1 User Guide", "[Product Name] User Guide").arg(VRA_PRODUCT));
 }
 
 bool UIHelpBrowserDialog::event(QEvent *pEvent)

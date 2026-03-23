@@ -216,7 +216,7 @@ VBGLR3DECL(int) VbglR3ClipboardReportFeatures(uint32_t idClient, uint64_t fGuest
     {
         struct
         {
-            VBGLIOCHGCMCALL         Hdr;
+            VBGLIOCIDCCALL         Hdr;
             HGCMFunctionParameter   f64Features0;
             HGCMFunctionParameter   f64Features1;
         } Msg;
@@ -292,7 +292,7 @@ static int vbglR3ClipboardFormatsReportRecv(PVBGLR3SHCLCMDCTX pCtx, PSHCLFORMATS
 
     struct
     {
-        VBGLIOCHGCMCALL         Hdr;
+        VBGLIOCIDCCALL         Hdr;
         HGCMFunctionParameter   id64Context;
         HGCMFunctionParameter   f32Formats;
     } Msg;
@@ -329,7 +329,7 @@ static int vbglR3ClipboardFetchReadDataCid(PVBGLR3SHCLCMDCTX pCtx, PSHCLFORMAT p
 
     struct
     {
-        VBGLIOCHGCMCALL         Hdr;
+        VBGLIOCIDCCALL         Hdr;
         HGCMFunctionParameter   id64Context;
         HGCMFunctionParameter   f32Format;
     } Msg;
@@ -368,7 +368,7 @@ static int vbglR3ClipboardFetchReadData(PVBGLR3SHCLCMDCTX pCtx, PSHCLFORMAT pfFo
 
     struct
     {
-        VBGLIOCHGCMCALL         Hdr;
+        VBGLIOCIDCCALL         Hdr;
         HGCMFunctionParameter   id32Msg;
         HGCMFunctionParameter   f32Format;
     } Msg;
@@ -447,7 +447,7 @@ VBGLR3DECL(int) VbglR3ClipboardReadData(HGCMCLIENTID idClient, uint32_t fFormat,
 
     struct
     {
-        VBGLIOCHGCMCALL      Hdr;
+        VBGLIOCIDCCALL      Hdr;
         VBoxShClParmDataRead Parms;
     } Msg;
 
@@ -573,7 +573,7 @@ VBGLR3DECL(int) VbglR3ClipboardQueryFeatures(uint32_t idClient, uint64_t *pfHost
     {
         struct
         {
-            VBGLIOCHGCMCALL         Hdr;
+            VBGLIOCIDCCALL         Hdr;
             HGCMFunctionParameter   f64Features0;
             HGCMFunctionParameter   f64Features1;
         } Msg;
@@ -629,7 +629,7 @@ static int vbglR3ClipboardMsgPeekEx(PVBGLR3SHCLCMDCTX pCtx, bool fWait, uint32_t
 
     struct
     {
-        VBGLIOCHGCMCALL Hdr;
+        VBGLIOCIDCCALL Hdr;
         HGCMFunctionParameter idMsg;       /* Doubles as restore check on input. */
         HGCMFunctionParameter cParameters;
     } Msg;
@@ -2848,7 +2848,7 @@ VBGLR3DECL(int) VbglR3ClipboardReportFormats(HGCMCLIENTID idClient, uint32_t fFo
 {
     struct
     {
-        VBGLIOCHGCMCALL             Hdr;
+        VBGLIOCIDCCALL             Hdr;
         VBoxShClParmReportFormats   Parms;
     } Msg;
 
@@ -2884,7 +2884,7 @@ VBGLR3DECL(int) VbglR3ClipboardWriteData(HGCMCLIENTID idClient, uint32_t fFormat
 
     struct
     {
-        VBGLIOCHGCMCALL             Hdr;
+        VBGLIOCIDCCALL             Hdr;
         VBoxShClParmDataWriteOld    Parms;
     } Msg;
 
@@ -2925,7 +2925,7 @@ VBGLR3DECL(int) VbglR3ClipboardWriteDataEx(PVBGLR3SHCLCMDCTX pCtx, SHCLFORMAT fF
     {
         struct
         {
-            VBGLIOCHGCMCALL         Hdr;
+            VBGLIOCIDCCALL         Hdr;
             VBoxShClParmDataWrite   Parms;
         } Msg;
 

@@ -43,7 +43,9 @@ ifndef VRA_ONLY_EXTPACKS
   include $(PATH_SUB_CURRENT)/webservice/Makefile.kmk
  endif
  include $(PATH_SUB_CURRENT)/testcase/Makefile.kmk
- include $(PATH_SUB_CURRENT)/cbinding/Makefile.kmk
+ ifdef VRA_WITH_CAPI
+  include $(PATH_SUB_CURRENT)/cbinding/Makefile.kmk
+ endif
  ifndef VRA_ONLY_SDK
   include $(PATH_SUB_CURRENT)/UnattendedTemplates/Makefile.kmk
   if defined(VRA_WITH_OPEN_WATCOM) && defined(VRA_WITH_UNATTENDED)

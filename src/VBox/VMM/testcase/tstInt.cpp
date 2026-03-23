@@ -107,7 +107,7 @@ int main(int argc, char **argv)
             CreateVMReq.cbVM            = sizeof(VM);
             CreateVMReq.cbVCpu          = sizeof(VMCPU);
             CreateVMReq.uStructVersion  = VM_STRUCT_VERSION;
-            CreateVMReq.uSvnRevision    = VBOX_SVN_REV;
+            CreateVMReq.uSvnRevision    = VRA_SVN_REV;
             CreateVMReq.pVMR3           = NULL;
             CreateVMReq.pVMR0           = NIL_RTR0PTR;
             rc = SUPR3CallVMMR0Ex(NIL_RTR0PTR, NIL_VMCPUID, VMMR0_DO_GVMM_CREATE_VM, 0, &CreateVMReq.Hdr);

@@ -607,7 +607,7 @@ static int __init VBoxDrvLinuxInit(void)
                                SUPGetGIPModeName(g_DevExt.pGip), g_DevExt.pGip->u64CpuHz);
                         LogFlow(("VBoxDrv::ModuleInit returning %#x\n", rc));
                         printk(KERN_DEBUG "vboxdrv: Successfully loaded version "
-                                VBOX_VERSION_STRING " r" RT_XSTR(VBOX_SVN_REV)
+                                VRA_VERSION_STRING " r" RT_XSTR(VRA_SVN_REV)
                                 VBOX_EXTRA_VERSION_STRING
                                 " (interface " RT_XSTR(SUPDRV_IOC_VERSION) ")\n");
                         return rc;
@@ -2093,11 +2093,11 @@ int VBOXCALL    supdrvOSGetCurrentGdtRw(RTHCUINTPTR *pGdtRw)
 module_init(VBoxDrvLinuxInit);
 module_exit(VBoxDrvLinuxUnload);
 
-MODULE_AUTHOR(VBOX_VENDOR);
-MODULE_DESCRIPTION(VBOX_PRODUCT " Support Driver");
+MODULE_AUTHOR(VRA_VENDOR);
+MODULE_DESCRIPTION(VRA_PRODUCT " Support Driver");
 MODULE_LICENSE("GPL");
 #ifdef MODULE_VERSION
-MODULE_VERSION(VBOX_VERSION_STRING " r" RT_XSTR(VBOX_SVN_REV) " (" RT_XSTR(SUPDRV_IOC_VERSION) ")");
+MODULE_VERSION(VRA_VERSION_STRING " r" RT_XSTR(VRA_SVN_REV) " (" RT_XSTR(SUPDRV_IOC_VERSION) ")");
 #endif
 #ifdef SUPDRV_LINUX_HAS_KVM_HWVIRT_API
 MODULE_SOFTDEP("pre: kvm_intel kvm_amd");

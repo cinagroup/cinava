@@ -129,10 +129,10 @@
 AssertCompile(GIP_TSC_DELTA_PRIMER_LOOPS < GIP_TSC_DELTA_READ_TIME_LOOPS);
 AssertCompile(GIP_TSC_DELTA_PRIMER_LOOPS + GIP_TSC_DELTA_READ_TIME_LOOPS < GIP_TSC_DELTA_LOOPS);
 
-/** @def VBOX_SVN_REV
+/** @def VRA_SVN_REV
  * The makefile should define this if it can. */
-#ifndef VBOX_SVN_REV
-# define VBOX_SVN_REV 0
+#ifndef VRA_SVN_REV
+# define VRA_SVN_REV 0
 #endif
 
 #if 0 /* Don't start the GIP timers. Useful when debugging the IPRT timer code. */

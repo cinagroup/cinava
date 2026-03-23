@@ -36,11 +36,11 @@
 #include <stdio.h>
 #include "wined3d_private.h"
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
 # include <VBoxCrHgsmi.h>
 #endif
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 # ifdef RT_OS_WINDOWS
 DECLIMPORT(void) APIENTRY glFinish(void);
 # else
@@ -232,7 +232,7 @@ glMultiTexCoordFunc multi_texcoord_funcs[WINED3D_FFP_EMIT_COUNT];
  * IWineD3D parts follows
  **********************************************************/
 
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
 /* GL locking is done by the caller */
 static inline BOOL test_arb_vs_offset_limit(const struct wined3d_gl_info *gl_info)
 {
@@ -372,7 +372,7 @@ static void test_pbo_functionality(struct wined3d_gl_info *gl_info)
     checkGLcall("Loading the PBO test texture");
 
     GL_EXTCALL(glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0));
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
     glFinish();
 #else
     wglFinish(); /* just to be sure */
@@ -469,7 +469,7 @@ static BOOL match_apple_nvts(const struct wined3d_gl_info *gl_info, const char *
     return gl_info->supported[NV_TEXTURE_SHADER];
 }
 
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
 /* A GL context is provided by the caller */
 static BOOL match_broken_nv_clip(const struct wined3d_gl_info *gl_info, const char *gl_renderer,
         enum wined3d_gl_vendor gl_vendor, enum wined3d_pci_vendor card_vendor, enum wined3d_pci_device device)
@@ -526,7 +526,7 @@ static BOOL match_fbo_tex_update(const struct wined3d_gl_info *gl_info, const ch
     GLuint tex, fbo;
     GLenum status;
 
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     if (wined3d_settings.offscreen_rendering_mode != ORM_FBO) return FALSE;
 #endif
     memset(data, 0xcc, sizeof(data));
@@ -697,7 +697,7 @@ static void quirk_apple_nvts(struct wined3d_gl_info *gl_info)
     gl_info->supported[NV_TEXTURE_SHADER2] = FALSE;
 }
 
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
 static void quirk_disable_nvvp_clip(struct wined3d_gl_info *gl_info)
 {
     gl_info->quirks |= WINED3D_QUIRK_NV_CLIP_BROKEN;
@@ -722,7 +722,7 @@ static void quirk_fullsize_blit(struct wined3d_gl_info *gl_info)
     gl_info->quirks |= WINED3D_QUIRK_FULLSIZE_BLIT;
 }
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
 static BOOL match_mesa_nvidia(const struct wined3d_gl_info *gl_info, const char *gl_renderer,
         enum wined3d_gl_vendor gl_vendor, enum wined3d_pci_vendor card_vendor, enum wined3d_pci_device device)
 {
@@ -829,7 +829,7 @@ static const struct driver_quirk quirk_table[] =
         quirk_apple_nvts,
         "Apple NV_texture_shader disable"
     },
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     {
         match_broken_nv_clip,
         quirk_disable_nvvp_clip,
@@ -846,7 +846,7 @@ static const struct driver_quirk quirk_table[] =
         quirk_fullsize_blit,
         "Fullsize blit"
     },
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
     {
         match_mesa_nvidia,
         quirk_no_shader_3,
@@ -1071,7 +1071,7 @@ static enum wined3d_pci_vendor wined3d_guess_card_vendor(const char *gl_vendor_s
 static enum wined3d_pci_device select_card_nvidia_binary(const struct wined3d_gl_info *gl_info,
         const char *gl_renderer, unsigned int *vidmem)
 {
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
     if (WINE_D3D10_CAPABLE(gl_info))
 #endif
     {
@@ -1328,7 +1328,7 @@ static enum wined3d_pci_device select_card_ati_binary(const struct wined3d_gl_in
      *
      * Beware: renderer string do not match exact card model,
      * eg HD 4800 is returned for multiple cards, even for RV790 based ones. */
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
     if (WINE_D3D10_CAPABLE(gl_info))
 #endif
     {
@@ -1731,7 +1731,7 @@ static enum wined3d_pci_device select_card_nvidia_mesa(const struct wined3d_gl_i
         const char *gl_renderer, unsigned int *vidmem)
 {
     FIXME_(d3d_caps)("Card selection not handled for Mesa Nouveau driver\n");
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
     if (WINE_D3D9_CAPABLE(gl_info)) return CARD_NVIDIA_GEFORCEFX_5600;
 #else
     /* tmp work around to disable quirk_no_np2 quirk for mesa drivers */
@@ -1862,7 +1862,7 @@ static enum wined3d_pci_device wined3d_guess_card(const struct wined3d_gl_info *
      * for Nvidia was because the hardware and drivers they make are of good quality. This makes
      * them a good generic choice. */
     *card_vendor = HW_VENDOR_NVIDIA;
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
     if (WINE_D3D9_CAPABLE(gl_info)) return CARD_NVIDIA_GEFORCEFX_5600;
 #else
     /* tmp work around to disable quirk_no_np2 quirk for not-recognized drivers */
@@ -1875,7 +1875,7 @@ static enum wined3d_pci_device wined3d_guess_card(const struct wined3d_gl_info *
     return CARD_NVIDIA_RIVA_128;
 }
 
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
 static const struct fragment_pipeline *select_fragment_implementation(struct wined3d_adapter *adapter)
 {
     const struct wined3d_gl_info *gl_info = &adapter->gl_info;
@@ -1898,13 +1898,13 @@ static const shader_backend_t *select_shader_backend(struct wined3d_adapter *ada
 
     select_shader_mode(&adapter->gl_info, &ps_selected_mode, &vs_selected_mode);
     if (vs_selected_mode == SHADER_GLSL || ps_selected_mode == SHADER_GLSL) return &glsl_shader_backend;
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     if (vs_selected_mode == SHADER_ARB || ps_selected_mode == SHADER_ARB) return &arb_program_shader_backend;
 #endif
     return &none_shader_backend;
 }
 
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
 static const struct blit_shader *select_blit_implementation(struct wined3d_adapter *adapter)
 {
     const struct wined3d_gl_info *gl_info = &adapter->gl_info;
@@ -1917,7 +1917,7 @@ static const struct blit_shader *select_blit_implementation(struct wined3d_adapt
 }
 #endif
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 /** Checks if @a pszExtension is one of the extensions we're looking for and
  *  updates @a pGlInfo->supported accordingly. */
 static void check_gl_extension(struct wined3d_gl_info *pGlInfo, const char *pszExtension)
@@ -1937,16 +1937,16 @@ static void check_gl_extension(struct wined3d_gl_info *pGlInfo, const char *pszE
 /* Context activation is done by the caller. */
 BOOL IWineD3DImpl_FillGLCaps(struct wined3d_adapter *adapter, struct VBOXVMSVGASHADERIF *pVBoxShaderIf)
 {
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     struct wined3d_driver_info *driver_info = &adapter->driver_info;
 #endif
     struct wined3d_gl_info *gl_info = &adapter->gl_info;
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     const char *GL_Extensions    = NULL;
     const char *WGL_Extensions   = NULL;
 #endif
     const char *gl_vendor_str, *gl_renderer_str, *gl_version_str;
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     struct fragment_caps fragment_caps;
 #endif
     enum wined3d_gl_vendor gl_vendor;
@@ -1955,12 +1955,12 @@ BOOL IWineD3DImpl_FillGLCaps(struct wined3d_adapter *adapter, struct VBOXVMSVGAS
     GLint       gl_max;
     GLfloat     gl_floatv[2];
     unsigned    i;
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     HDC         hdc;
 #endif
     unsigned int vidmem=0;
     DWORD gl_version;
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     size_t len;
 #endif
 
@@ -2061,7 +2061,7 @@ BOOL IWineD3DImpl_FillGLCaps(struct wined3d_adapter *adapter, struct VBOXVMSVGAS
     TRACE_(d3d_caps)("Maximum point size support - max point size=%f\n", gl_floatv[1]);
 
     /* Parse the gl supported features, in theory enabling parts of our code appropriately. */
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     GL_Extensions = (const char *)glGetString(GL_EXTENSIONS);
     if (!GL_Extensions)
     {
@@ -2079,7 +2079,7 @@ BOOL IWineD3DImpl_FillGLCaps(struct wined3d_adapter *adapter, struct VBOXVMSVGAS
 
     gl_info->supported[VBOX_SHARED_CONTEXTS] = TRUE;
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
     {
         void *pvEnumCtx = NULL;
         char  szCurExt[256];
@@ -2091,7 +2091,7 @@ BOOL IWineD3DImpl_FillGLCaps(struct wined3d_adapter *adapter, struct VBOXVMSVGAS
         while (pVBoxShaderIf->pfnGetNextExtension(pVBoxShaderIf, &pvEnumCtx, szCurExt, sizeof(szCurExt), true /*fOtherProfile*/))
             check_gl_extension(gl_info, szCurExt);
     }
-#else /* !VBOX_WITH_VMSVGA */
+#else /* !VRA_WITH_VMSVGA */
     while (*GL_Extensions)
     {
         const char *start;
@@ -2118,9 +2118,9 @@ BOOL IWineD3DImpl_FillGLCaps(struct wined3d_adapter *adapter, struct VBOXVMSVGAS
             }
         }
     }
-#endif /* !VBOX_WITH_VMSVGA */
+#endif /* !VRA_WITH_VMSVGA */
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 # ifdef RT_OS_WINDOWS
 #  define OGLGETPROCADDRESS      wglGetProcAddress
 # elif RT_OS_DARWIN
@@ -2142,7 +2142,7 @@ extern void (*glXGetProcAddress(const GLubyte *procname))( void );
     GL_EXT_FUNCS_GEN;
 #undef USE_GL_FUNC
 
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
 #define USE_GL_FUNC(type, pfn, ext, replace) gl_info->pfn = (type)OGLGETPROCADDRESS(#pfn);
     WGL_EXT_FUNCS_GEN;
 #undef USE_GL_FUNC
@@ -2380,7 +2380,7 @@ extern void (*glXGetProcAddress(const GLubyte *procname))( void );
 #ifdef VBOX_VMSVGA3D_DUAL_OPENGL_PROFILE
         pVBoxShaderIf->pfnSwitchInitProfile(pVBoxShaderIf, false /*fOtherProfile*/);
 #endif
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
         if (test_arb_vs_offset_limit(gl_info)) gl_info->quirks |= WINED3D_QUIRK_ARB_VS_OFFSET_LIMIT;
 #endif
     }
@@ -2388,7 +2388,7 @@ extern void (*glXGetProcAddress(const GLubyte *procname))( void );
     {
         VBOX_CHECK_GL_CALL(glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS_ARB, &gl_max));
         gl_info->limits.glsl_vs_float_constants = gl_max / 4;
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
         /* AFAICT the " / 4" here comes from that we're going to use the glsl_vs/ps_float_constants to create vec4 arrays,
          * thus each array element has 4 components, so the actual number of vec4 arrays is GL_MAX_VERTEX/FRAGMENT_UNIFORM_COMPONENTS_ARB / 4
          * win8 Aero won't properly work with this constant < 256 in any way,
@@ -2415,7 +2415,7 @@ extern void (*glXGetProcAddress(const GLubyte *procname))( void );
     {
         VBOX_CHECK_GL_CALL(glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS_ARB, &gl_max));
         gl_info->limits.glsl_ps_float_constants = gl_max / 4;
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
         /* AFAICT the " / 4" here comes from that we're going to use the glsl_vs/ps_float_constants to create vec4 arrays,
          * thus each array element has 4 components, so the actual number of vec4 arrays is GL_MAX_VERTEX/FRAGMENT_UNIFORM_COMPONENTS_ARB / 4
          * win8 Aero won't properly work with this constant < 256 in any way,
@@ -2512,16 +2512,16 @@ extern void (*glXGetProcAddress(const GLubyte *procname))( void );
     {
         gl_info->limits.point_sprite_units = 0;
     }
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     checkGLcall("extension detection");
 #endif
     LEAVE_GL();
 
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     adapter->fragment_pipe = select_fragment_implementation(adapter);
 #endif
     adapter->shader_backend = select_shader_backend(adapter);
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     adapter->blitter = select_blit_implementation(adapter);
 
     adapter->fragment_pipe->get_caps(gl_info, &fragment_caps);
@@ -2578,7 +2578,7 @@ extern void (*glXGetProcAddress(const GLubyte *procname))( void );
             gl_info->fbo_ops.glGetFramebufferAttachmentParameteriv = gl_info->glGetFramebufferAttachmentParameterivEXT;
             gl_info->fbo_ops.glGenerateMipmap = gl_info->glGenerateMipmapEXT;
         }
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
         else if (wined3d_settings.offscreen_rendering_mode == ORM_FBO)
         {
             WARN_(d3d_caps)("Framebuffer objects not supported, falling back to backbuffer offscreen rendering mode.\n");
@@ -2595,7 +2595,7 @@ extern void (*glXGetProcAddress(const GLubyte *procname))( void );
         }
     }
 
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     /* MRTs are currently only supported when FBOs are used. */
     if (wined3d_settings.offscreen_rendering_mode != ORM_FBO)
     {
@@ -2624,7 +2624,7 @@ extern void (*glXGetProcAddress(const GLubyte *procname))( void );
     gl_info->wrap_lookup[WINED3DTADDRESS_MIRRORONCE - WINED3DTADDRESS_WRAP] =
             gl_info->supported[ATI_TEXTURE_MIRROR_ONCE] ? GL_MIRROR_CLAMP_TO_EDGE_ATI : GL_REPEAT;
 
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     /* Make sure there's an active HDC else the WGL extensions will fail */
     hdc = pwglGetCurrentDC();
     if (hdc) {
@@ -2668,7 +2668,7 @@ extern void (*glXGetProcAddress(const GLubyte *procname))( void );
 #endif
 
     fixup_extensions(gl_info, gl_renderer_str, gl_vendor, card_vendor, device);
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
     init_driver_info(driver_info, card_vendor, device);
     add_gl_compat_wrappers(gl_info);
 #endif

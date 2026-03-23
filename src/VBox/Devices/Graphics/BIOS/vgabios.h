@@ -61,7 +61,7 @@ extern uint16_t biosfn_save_video_state(uint16_t CX, uint16_t ES, uint16_t BX);
 extern uint16_t biosfn_restore_video_state(uint16_t CX, uint16_t ES, uint16_t BX);
 
 /* Allow stand-alone compilation. */
-#ifndef VBOX_VERSION_STRING
+#ifndef VRA_VERSION_STRING
 #include <VBox/version.h>
 #endif
 

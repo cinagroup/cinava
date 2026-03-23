@@ -215,7 +215,7 @@ static void UpdateTitlebar(TitlebarMode mode, uint32_t u32User = 0)
     char szPrevTitle[1024];
     strcpy(szPrevTitle, szTitle);
 
-    RTStrPrintf(szTitle, sizeof(szTitle), "%s - " VBOX_PRODUCT,
+    RTStrPrintf(szTitle, sizeof(szTitle), "%s - " VRA_PRODUCT,
                 "<noname>");
 
     /* which mode are we in? */
@@ -972,7 +972,7 @@ DECLCALLBACK(int) vboxbfeVMPowerUpThread(RTTHREAD hThread, void *pvUser)
             RTLogRelLogger(pLogger, 0, ~0U,
                            "VBoxBFE %s (%s %s) release log\n"
                            "Log opened %s\n",
-                           VBOX_VERSION_STRING, __DATE__, __TIME__,
+                           VRA_VERSION_STRING, __DATE__, __TIME__,
                            szNowUct);
 
             /* register this logger as the release logger */
@@ -1088,8 +1088,8 @@ extern "C" DECLEXPORT(int) TrustedMain(int argc, char **argv, char **envp)
     unsigned fPaused = 0;
 
     LogFlow(("VBoxBFE STARTED.\n"));
-    RTPrintf(VBOX_PRODUCT " Basic Interface " VBOX_VERSION_STRING "\n"
-             "Copyright (C) 2023-" VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+    RTPrintf(VRA_PRODUCT " Basic Interface " VRA_VERSION_STRING "\n"
+             "Copyright (C) 2023-" VRA_C_YEAR " " VRA_VENDOR "\n\n");
 
     static const RTGETOPTDEF s_aOptions[] =
     {

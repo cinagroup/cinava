@@ -43,9 +43,13 @@
 #include <iprt/assert.h>
 #include <iprt/cpp/autores.h>
 #include <iprt/stdarg.h>
+#include "VBoxGuestR3LibInternal.h"
 #include <VBox/err.h>
 #include <VBox/log.h>
 #include <VBox/GuestHost/GuestControl.h>
+#ifndef VBOX_WITH_HGCM
+#define VBOX_WITH_HGCM
+#endif
 #include <VBox/HostServices/GuestControlSvc.h>
 
 #ifndef RT_OS_WINDOWS
@@ -235,7 +239,7 @@ DECL_NO_INLINE(static, bool) vbglR3GuestCtrlDetectPeekGetCancelSupport(uint32_t 
     int rc;
     struct
     {
-        VBGLIOCHGCMCALL         Hdr;
+        VBGLIOCIDCCALL         Hdr;
         HGCMFunctionParameter   idMsg;
         HGCMFunctionParameter   cParams;
         HGCMFunctionParameter   acbParams[14];
@@ -358,7 +362,7 @@ VBGLR3DECL(int) VbglR3GuestCtrlMakeMeMaster(uint32_t idClient)
     int rc;
     do
     {
-        VBGLIOCHGCMCALL Hdr;
+        VBGLIOCIDCCALL Hdr;
         VBGL_HGCM_HDR_INIT(&Hdr, idClient, GUEST_MSG_MAKE_ME_MASTER, 0);
         rc = VbglR3HGCMCall(&Hdr, sizeof(Hdr));
     } while (rc == VERR_INTERRUPTED);
@@ -381,7 +385,7 @@ VBGLR3DECL(int) VbglR3GuestCtrlReportFeatures(uint32_t idClient, uint64_t fGuest
     {
         struct
         {
-            VBGLIOCHGCMCALL         Hdr;
+            VBGLIOCIDCCALL         Hdr;
             HGCMFunctionParameter   f64Features0;
             HGCMFunctionParameter   f64Features1;
         } Msg;
@@ -423,7 +427,7 @@ static int vbglR3GuestCtrlQueryFeatures(uint32_t idClient, uint64_t *pfHostFeatu
     {
         struct
         {
-            VBGLIOCHGCMCALL         Hdr;
+            VBGLIOCIDCCALL         Hdr;
             HGCMFunctionParameter   f64Features0;
             HGCMFunctionParameter   f64Features1;
         } Msg;
@@ -492,7 +496,7 @@ VBGLR3DECL(int) VbglR3GuestCtrlMsgPeekWait(uint32_t idClient, uint32_t *pidMsg, 
     {
         struct
         {
-            VBGLIOCHGCMCALL Hdr;
+            VBGLIOCIDCCALL Hdr;
             HGCMFunctionParameter idMsg;       /* Doubles as restore check on input. */
             HGCMFunctionParameter cParameters;
         } Msg;
@@ -641,7 +645,7 @@ VBGLR3DECL(int) VbglR3GuestCtrlMsgSkip(uint32_t idClient, int rcSkip, uint32_t i
     {
         struct
         {
-            VBGLIOCHGCMCALL         Hdr;
+            VBGLIOCIDCCALL         Hdr;
             HGCMFunctionParameter   rcSkip;
             HGCMFunctionParameter   idMsg;
         } Msg;
@@ -700,7 +704,7 @@ VBGLR3DECL(int) VbglR3GuestCtrlSessionPrepare(uint32_t idClient, uint32_t idSess
     {
         struct
         {
-            VBGLIOCHGCMCALL         Hdr;
+            VBGLIOCIDCCALL         Hdr;
             HGCMFunctionParameter   idSession;
             HGCMFunctionParameter   pKey;
         } Msg;
@@ -725,7 +729,7 @@ VBGLR3DECL(int) VbglR3GuestCtrlSessionAccept(uint32_t idClient, uint32_t idSessi
     {
         struct
         {
-            VBGLIOCHGCMCALL         Hdr;
+            VBGLIOCIDCCALL         Hdr;
             HGCMFunctionParameter   idSession;
             HGCMFunctionParameter   pKey;
         } Msg;
@@ -750,7 +754,7 @@ VBGLR3DECL(int) VbglR3GuestCtrlSessionCancelPrepared(uint32_t idClient, uint32_t
     {
         struct
         {
-            VBGLIOCHGCMCALL         Hdr;
+            VBGLIOCIDCCALL         Hdr;
             HGCMFunctionParameter   idSession;
         } Msg;
         VBGL_HGCM_HDR_INIT(&Msg.Hdr, idClient, GUEST_MSG_SESSION_CANCEL_PREPARED, 1);
@@ -1760,7 +1764,7 @@ VBGLR3DECL(int) VbglR3GuestCtrlProcGetStart(PVBGLR3GUESTCTRLCMDCTX pCtx, PVBGLR3
          *
          * This first was needed when excluding the CWD support for hosts running VBox < 7.1.
          */
-        rc = VbglR3HGCMCall(&Msg.hdr, sizeof(VBGLIOCHGCMCALL) + pCtx->uNumParms * sizeof(HGCMFunctionParameter));
+        rc = VbglR3HGCMCall(&Msg.hdr, sizeof(VBGLIOCIDCCALL) + pCtx->uNumParms * sizeof(HGCMFunctionParameter));
         if (RT_FAILURE(rc))
         {
             LogRel(("VbglR3GuestCtrlProcGetStart: 1 - %Rrc (retry %u, cbCmd=%RU32, cbCwd=%RU32, cbArgs=%RU32, cbEnv=%RU32)\n",

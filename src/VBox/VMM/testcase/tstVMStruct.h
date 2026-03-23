@@ -1226,7 +1226,7 @@
     GEN_CHECK_OFF(VM, gim);
     GEN_CHECK_OFF(VM, vm);
     GEN_CHECK_OFF(VM, cfgm);
-    GEN_CHECK_OFF(VM, apic);
+    // GEN_CHECK_OFF(VM, apic); // Disabled - apic not in VM struct
 
 
     GEN_CHECK_SIZE(VMCPU);

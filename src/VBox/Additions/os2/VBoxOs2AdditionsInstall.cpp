@@ -1538,8 +1538,8 @@ static RTEXITCODE WriteStartupCmd(void)
 static RTEXITCODE ShowUsage(void)
 {
     static const char g_szUsage[] =
-        VBOX_PRODUCT " OS/2 Additions Installer " VBOX_VERSION_STRING "\r\n"
-        "Copyright (C) 2005-" VBOX_C_YEAR " " VBOX_VENDOR "\r\n"
+        VRA_PRODUCT " OS/2 Additions Installer " VRA_VERSION_STRING "\r\n"
+        "Copyright (C) 2005-" VRA_C_YEAR " " VRA_VENDOR "\r\n"
         "\r\n"
         "This is a very barebone OS/2 guest additions installer which main purpose is\r\n"
         "to help with unattended installation.  Do not expect it to handle complicated\r\n"
@@ -1590,7 +1590,7 @@ static RTEXITCODE ShowUsage(void)
 
 static RTEXITCODE ShowVersion(void)
 {
-    DoWriteNStr(g_hStdOut, RT_STR_TUPLE(VBOX_VERSION_STRING " r"));
+    DoWriteNStr(g_hStdOut, RT_STR_TUPLE(VRA_VERSION_STRING " r"));
 
     const char *pszRev = "$Rev: 112403 $";
     while (!RT_C_IS_DIGIT(*pszRev))

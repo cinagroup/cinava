@@ -345,9 +345,9 @@ static int vgdrvReportGuestInfo(VBOXOSTYPE enmOSType)
         pReqInfo2->guestInfo.additionsMajor    = VBOX_VERSION_MAJOR;
         pReqInfo2->guestInfo.additionsMinor    = VBOX_VERSION_MINOR;
         pReqInfo2->guestInfo.additionsBuild    = VBOX_VERSION_BUILD;
-        pReqInfo2->guestInfo.additionsRevision = VBOX_SVN_REV;
+        pReqInfo2->guestInfo.additionsRevision = VRA_SVN_REV;
         pReqInfo2->guestInfo.additionsFeatures = VBOXGSTINFO2_F_REQUESTOR_INFO;
-        RTStrCopy(pReqInfo2->guestInfo.szName, sizeof(pReqInfo2->guestInfo.szName), VBOX_VERSION_STRING);
+        RTStrCopy(pReqInfo2->guestInfo.szName, sizeof(pReqInfo2->guestInfo.szName), VRA_VERSION_STRING);
 
         rc = VbglR0GRAlloc((VMMDevRequestHeader **)&pReqInfo1, sizeof (VMMDevReportGuestInfo), VMMDevReq_ReportGuestInfo);
         Log(("vgdrvReportGuestInfo: VbglR0GRAlloc VMMDevReportGuestInfo completed with rc=%Rrc\n", rc));
@@ -1454,8 +1454,8 @@ void VGDrvCommonProcessOptionsFromHost(PVBOXGUESTDEVEXT pDevExt)
     {
         union
         {
-            VBGLIOCHGCMCONNECT          Connect;
-            VBGLIOCHGCMDISCONNECT       Disconnect;
+            VBGLIOCIDCCONNECT          Connect;
+            VBGLIOCIDCDISCONNECT       Disconnect;
             GuestPropMsgEnumProperties  EnumMsg;
         } uBuf;
 
@@ -1464,7 +1464,7 @@ void VGDrvCommonProcessOptionsFromHost(PVBOXGUESTDEVEXT pDevExt)
         uBuf.Connect.u.In.Loc.type = VMMDevHGCMLoc_LocalHost_Existing;
         RTStrCopy(uBuf.Connect.u.In.Loc.u.host.achName, sizeof(uBuf.Connect.u.In.Loc.u.host.achName),
                   "VBoxGuestPropSvc"); /** @todo Add a define to the header for the name. */
-        rc = VGDrvCommonIoCtl(VBGL_IOCTL_HGCM_CONNECT, pDevExt, pSession, &uBuf.Connect.Hdr, sizeof(uBuf.Connect));
+        rc = VGDrvCommonIoCtl(VBGL_IOCTL_IDC_CONNECT, pDevExt, pSession, &uBuf.Connect.Hdr, sizeof(uBuf.Connect));
         if (RT_SUCCESS(rc))
         {
             static const char   g_szzPattern[] = "/VirtualBox/GuestAdd/VBoxGuest/*\0";
@@ -1494,7 +1494,7 @@ void VGDrvCommonProcessOptionsFromHost(PVBOXGUESTDEVEXT pDevExt)
                     uBuf.EnumMsg.size.type                        = VMMDevHGCMParmType_32bit;
                     uBuf.EnumMsg.size.u.value32                   = 0;
 
-                    rc = VGDrvCommonIoCtl(VBGL_IOCTL_HGCM_CALL(sizeof(uBuf.EnumMsg)), pDevExt, pSession,
+                    rc = VGDrvCommonIoCtl(VBGL_IOCTL_IDC_CALL(sizeof(uBuf.EnumMsg)), pDevExt, pSession,
                                           &uBuf.EnumMsg.hdr.Hdr, sizeof(uBuf.EnumMsg));
                     if (RT_SUCCESS(rc))
                     {
@@ -1520,9 +1520,9 @@ void VGDrvCommonProcessOptionsFromHost(PVBOXGUESTDEVEXT pDevExt)
             /*
              * Disconnect and destroy the session.
              */
-            VBGLREQHDR_INIT(&uBuf.Disconnect.Hdr, HGCM_DISCONNECT);
+            VBGLREQHDR_INIT(&uBuf.Disconnect.Hdr, IDC_DISCONNECT);
             uBuf.Disconnect.u.In.idClient = idClient;
-            VGDrvCommonIoCtl(VBGL_IOCTL_HGCM_DISCONNECT, pDevExt, pSession, &uBuf.Disconnect.Hdr, sizeof(uBuf.Disconnect));
+            VGDrvCommonIoCtl(VBGL_IOCTL_IDC_DISCONNECT, pDevExt, pSession, &uBuf.Disconnect.Hdr, sizeof(uBuf.Disconnect));
 
             VGDrvCommonCloseSession(pDevExt, pSession);
 
@@ -1974,7 +1974,7 @@ static int vgdrvIoCtl_DriverVersionInfo(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESS
 
     pReq->u.Out.uSessionVersion = RT_SUCCESS(rc) ? VBGL_IOC_VERSION : UINT32_MAX;
     pReq->u.Out.uDriverVersion  = VBGL_IOC_VERSION;
-    pReq->u.Out.uDriverRevision = VBOX_SVN_REV;
+    pReq->u.Out.uDriverRevision = VRA_SVN_REV;
     pReq->u.Out.uReserved1      = 0;
     pReq->u.Out.uReserved2      = 0;
     return rc;
@@ -2015,7 +2015,7 @@ static int vgdrvIoCtl_IdcConnect(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION pSe
                 pReq->u.Out.pvSession       = pSession;
                 pReq->u.Out.uSessionVersion = VBGL_IOC_VERSION;
                 pReq->u.Out.uDriverVersion  = VBGL_IOC_VERSION;
-                pReq->u.Out.uDriverRevision = VBOX_SVN_REV;
+                pReq->u.Out.uDriverRevision = VRA_SVN_REV;
                 pReq->u.Out.uReserved1      = 0;
                 pReq->u.Out.pvReserved2     = NULL;
                 return VINF_SUCCESS;
@@ -2035,7 +2035,7 @@ static int vgdrvIoCtl_IdcConnect(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION pSe
         pReq->u.Out.pvSession       = NULL;
         pReq->u.Out.uSessionVersion = UINT32_MAX;
         pReq->u.Out.uDriverVersion  = VBGL_IOC_VERSION;
-        pReq->u.Out.uDriverRevision = VBOX_SVN_REV;
+        pReq->u.Out.uDriverRevision = VRA_SVN_REV;
         pReq->u.Out.uReserved1      = 0;
         pReq->u.Out.pvReserved2     = NULL;
     }
@@ -2662,7 +2662,7 @@ static DECLCALLBACK(int) vgdrvHgcmAsyncWaitCallbackInterruptible(VMMDevHGCMReque
 }
 
 
-static int vgdrvIoCtl_HGCMConnect(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION pSession, PVBGLIOCHGCMCONNECT pInfo)
+static int vgdrvIoCtl_HGCMConnect(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION pSession, PVBGLIOCIDCCONNECT pInfo)
 {
     int rc;
     HGCMCLIENTID idClient = 0;
@@ -2708,7 +2708,7 @@ static int vgdrvIoCtl_HGCMConnect(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION pS
 }
 
 
-static int vgdrvIoCtl_HGCMDisconnect(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION pSession, PVBGLIOCHGCMDISCONNECT pInfo)
+static int vgdrvIoCtl_HGCMDisconnect(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION pSession, PVBGLIOCIDCDISCONNECT pInfo)
 {
     /*
      * Validate the client id and invalidate its entry while we're in the call.
@@ -2726,7 +2726,7 @@ static int vgdrvIoCtl_HGCMDisconnect(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION
     RTSpinlockRelease(pDevExt->SessionSpinlock);
     if (i >= RT_ELEMENTS(pSession->aHGCMClientIds))
     {
-        LogRelMax(32, ("VBOXGUEST_IOCTL_HGCM_DISCONNECT: idClient=%RX32\n", idClient));
+        LogRelMax(32, ("VBOXGUEST_IOCTL_IDC_DISCONNECT: idClient=%RX32\n", idClient));
         return VERR_INVALID_HANDLE;
     }
 
@@ -2735,9 +2735,9 @@ static int vgdrvIoCtl_HGCMDisconnect(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION
      * call is performed in an ASYNC fashion. The function is not able
      * to deal with cancelled requests.
      */
-    Log(("VBOXGUEST_IOCTL_HGCM_DISCONNECT: idClient=%RX32\n", idClient));
+    Log(("VBOXGUEST_IOCTL_IDC_DISCONNECT: idClient=%RX32\n", idClient));
     rc = VbglR0HGCMInternalDisconnect(idClient, pSession->fRequestor, vgdrvHgcmAsyncWaitCallback, pDevExt, RT_INDEFINITE_WAIT);
-    LogFlow(("VBOXGUEST_IOCTL_HGCM_DISCONNECT: rc=%Rrc\n", rc));
+    LogFlow(("VBOXGUEST_IOCTL_IDC_DISCONNECT: rc=%Rrc\n", rc));
 
     /* Update the client id array according to the result. */
     RTSpinlockAcquire(pDevExt->SessionSpinlock);
@@ -2749,7 +2749,7 @@ static int vgdrvIoCtl_HGCMDisconnect(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION
 }
 
 
-static int vgdrvIoCtl_HGCMCallInner(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION pSession, PVBGLIOCHGCMCALL pInfo,
+static int vgdrvIoCtl_HGCMCallInner(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION pSession, PVBGLIOCIDCCALL pInfo,
                                     uint32_t cMillies, bool fInterruptible, bool f32bit, bool fUserData,
                                     size_t cbExtra, size_t cbData)
 {
@@ -2766,7 +2766,7 @@ static int vgdrvIoCtl_HGCMCallInner(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION 
     { /* likely */}
     else
     {
-        LogRel(("VBOXGUEST_IOCTL_HGCM_CALL: cParm=%RX32 is not sane\n", pInfo->cParms));
+        LogRel(("VBOXGUEST_IOCTL_IDC_CALL: cParm=%RX32 is not sane\n", pInfo->cParms));
         return VERR_INVALID_PARAMETER;
     }
 
@@ -2781,7 +2781,7 @@ static int vgdrvIoCtl_HGCMCallInner(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION 
     { /* likely */}
     else
     {
-        LogRel(("VBOXGUEST_IOCTL_HGCM_CALL: cbData=%#zx (%zu) required size is %#zx (%zu)\n",
+        LogRel(("VBOXGUEST_IOCTL_IDC_CALL: cbData=%#zx (%zu) required size is %#zx (%zu)\n",
                cbData, cbData, cbActual, cbActual));
         return VERR_INVALID_PARAMETER;
     }
@@ -2799,7 +2799,7 @@ static int vgdrvIoCtl_HGCMCallInner(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION 
     { /* likely */}
     else
     {
-        LogRelMax(32, ("VBOXGUEST_IOCTL_HGCM_CALL: Invalid handle. u32Client=%RX32\n", u32ClientId));
+        LogRelMax(32, ("VBOXGUEST_IOCTL_IDC_CALL: Invalid handle. u32Client=%RX32\n", u32ClientId));
         return VERR_INVALID_HANDLE;
     }
 
@@ -2809,7 +2809,7 @@ static int vgdrvIoCtl_HGCMCallInner(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION 
      * deal with cancelled requests, so we let user more requests
      * be interruptible (should add a flag for this later I guess).
      */
-    LogFlow(("VBOXGUEST_IOCTL_HGCM_CALL: u32Client=%RX32\n", pInfo->u32ClientID));
+    LogFlow(("VBOXGUEST_IOCTL_IDC_CALL: u32Client=%RX32\n", pInfo->u32ClientID));
     fFlags = !fUserData && pSession->R0Process == NIL_RTR0PROCESS ? VBGLR0_HGCMCALL_F_KERNEL : VBGLR0_HGCMCALL_F_USER;
     uint32_t cbInfo = (uint32_t)(cbData - cbExtra);
 #if defined(RT_ARCH_AMD64) || defined(RT_ARCH_ARM64)
@@ -2835,21 +2835,21 @@ static int vgdrvIoCtl_HGCMCallInner(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION 
     if (RT_SUCCESS(rc))
     {
         rc = pInfo->Hdr.rc;
-        LogFlow(("VBOXGUEST_IOCTL_HGCM_CALL: result=%Rrc\n", rc));
+        LogFlow(("VBOXGUEST_IOCTL_IDC_CALL: result=%Rrc\n", rc));
     }
     else
     {
         if (   rc != VERR_INTERRUPTED
             && rc != VERR_TIMEOUT)
-            LogRelMax(32, ("VBOXGUEST_IOCTL_HGCM_CALL: %s Failed. rc=%Rrc (Hdr.rc=%Rrc).\n", f32bit ? "32" : "64", rc, pInfo->Hdr.rc));
+            LogRelMax(32, ("VBOXGUEST_IOCTL_IDC_CALL: %s Failed. rc=%Rrc (Hdr.rc=%Rrc).\n", f32bit ? "32" : "64", rc, pInfo->Hdr.rc));
         else
-            Log(("VBOXGUEST_IOCTL_HGCM_CALL: %s Failed. rc=%Rrc (Hdr.rc=%Rrc).\n", f32bit ? "32" : "64", rc, pInfo->Hdr.rc));
+            Log(("VBOXGUEST_IOCTL_IDC_CALL: %s Failed. rc=%Rrc (Hdr.rc=%Rrc).\n", f32bit ? "32" : "64", rc, pInfo->Hdr.rc));
     }
     return rc;
 }
 
 
-static int vgdrvIoCtl_HGCMCallWrapper(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION pSession, PVBGLIOCHGCMCALL pInfo,
+static int vgdrvIoCtl_HGCMCallWrapper(PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSESSION pSession, PVBGLIOCIDCCALL pInfo,
                                       bool f32bit, bool fUserData, size_t cbData)
 {
     return vgdrvIoCtl_HGCMCallInner(pDevExt, pSession, pInfo, pInfo->cMsTimeout,
@@ -4180,24 +4180,24 @@ int VGDrvCommonIoCtl(uintptr_t iFunction, PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSE
             REQ_CHECK_EXPR(VBGL_IOCTL_IDC_HGCM_FAST_CALL, cbReq >= sizeof(VBGLIOCIDCHGCMFASTCALL) + sizeof(VMMDevHGCMCall));
             pReqHdr->rc = vgdrvIoCtl_HGCMFastCall(pDevExt, (VBGLIOCIDCHGCMFASTCALL volatile *)pReqHdr);
         }
-        else if (   iFunctionStripped == VBGL_IOCTL_CODE_STRIPPED(VBGL_IOCTL_HGCM_CALL(0))
+        else if (   iFunctionStripped == VBGL_IOCTL_CODE_STRIPPED(VBGL_IOCTL_IDC_CALL(0))
 # if ARCH_BITS == 64
-                 || iFunctionStripped == VBGL_IOCTL_CODE_STRIPPED(VBGL_IOCTL_HGCM_CALL_32(0))
+                 || iFunctionStripped == VBGL_IOCTL_CODE_STRIPPED(VBGL_IOCTL_IDC_CALL_32(0))
 # endif
                 )
         {
-            REQ_CHECK_EXPR(VBGL_IOCTL_HGCM_CALL, pReqHdr->cbIn >= sizeof(VBGLIOCHGCMCALL));
-            REQ_CHECK_EXPR(VBGL_IOCTL_HGCM_CALL, pReqHdr->cbIn == pReqHdr->cbOut);
-            pReqHdr->rc = vgdrvIoCtl_HGCMCallWrapper(pDevExt, pSession, (PVBGLIOCHGCMCALL)pReqHdr,
-                                                     iFunctionStripped == VBGL_IOCTL_CODE_STRIPPED(VBGL_IOCTL_HGCM_CALL_32(0)),
+            REQ_CHECK_EXPR(VBGL_IOCTL_IDC_CALL, pReqHdr->cbIn >= sizeof(VBGLIOCIDCCALL));
+            REQ_CHECK_EXPR(VBGL_IOCTL_IDC_CALL, pReqHdr->cbIn == pReqHdr->cbOut);
+            pReqHdr->rc = vgdrvIoCtl_HGCMCallWrapper(pDevExt, pSession, (PVBGLIOCIDCCALL)pReqHdr,
+                                                     iFunctionStripped == VBGL_IOCTL_CODE_STRIPPED(VBGL_IOCTL_IDC_CALL_32(0)),
                                                      false /*fUserData*/, cbReq);
         }
-        else if (iFunctionStripped == VBGL_IOCTL_CODE_STRIPPED(VBGL_IOCTL_HGCM_CALL_WITH_USER_DATA(0)))
+        else if (iFunctionStripped == VBGL_IOCTL_CODE_STRIPPED(VBGL_IOCTL_IDC_CALL_WITH_USER_DATA(0)))
         {
-            REQ_CHECK_RING0("VBGL_IOCTL_HGCM_CALL_WITH_USER_DATA");
-            REQ_CHECK_EXPR(VBGL_IOCTL_HGCM_CALL, pReqHdr->cbIn >= sizeof(VBGLIOCHGCMCALL));
-            REQ_CHECK_EXPR(VBGL_IOCTL_HGCM_CALL, pReqHdr->cbIn == pReqHdr->cbOut);
-            pReqHdr->rc = vgdrvIoCtl_HGCMCallWrapper(pDevExt, pSession, (PVBGLIOCHGCMCALL)pReqHdr,
+            REQ_CHECK_RING0("VBGL_IOCTL_IDC_CALL_WITH_USER_DATA");
+            REQ_CHECK_EXPR(VBGL_IOCTL_IDC_CALL, pReqHdr->cbIn >= sizeof(VBGLIOCIDCCALL));
+            REQ_CHECK_EXPR(VBGL_IOCTL_IDC_CALL, pReqHdr->cbIn == pReqHdr->cbOut);
+            pReqHdr->rc = vgdrvIoCtl_HGCMCallWrapper(pDevExt, pSession, (PVBGLIOCIDCCALL)pReqHdr,
                                                      ARCH_BITS == 32, true /*fUserData*/, cbReq);
         }
 #endif /* VBOX_WITH_HGCM */
@@ -4260,14 +4260,14 @@ int VGDrvCommonIoCtl(uintptr_t iFunction, PVBOXGUESTDEVEXT pDevExt, PVBOXGUESTSE
                     break;
 
 #ifdef VBOX_WITH_HGCM
-                case VBGL_IOCTL_HGCM_CONNECT:
-                    REQ_CHECK_SIZES(VBGL_IOCTL_HGCM_CONNECT);
-                    pReqHdr->rc = vgdrvIoCtl_HGCMConnect(pDevExt, pSession, (PVBGLIOCHGCMCONNECT)pReqHdr);
+                case VBGL_IOCTL_IDC_CONNECT:
+                    REQ_CHECK_SIZES(VBGL_IOCTL_IDC_CONNECT);
+                    pReqHdr->rc = vgdrvIoCtl_HGCMConnect(pDevExt, pSession, (PVBGLIOCIDCCONNECT)pReqHdr);
                     break;
 
-                case VBGL_IOCTL_HGCM_DISCONNECT:
-                    REQ_CHECK_SIZES(VBGL_IOCTL_HGCM_DISCONNECT);
-                    pReqHdr->rc = vgdrvIoCtl_HGCMDisconnect(pDevExt, pSession, (PVBGLIOCHGCMDISCONNECT)pReqHdr);
+                case VBGL_IOCTL_IDC_DISCONNECT:
+                    REQ_CHECK_SIZES(VBGL_IOCTL_IDC_DISCONNECT);
+                    pReqHdr->rc = vgdrvIoCtl_HGCMDisconnect(pDevExt, pSession, (PVBGLIOCIDCDISCONNECT)pReqHdr);
                     break;
 #endif
 

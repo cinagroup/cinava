@@ -1205,7 +1205,7 @@ void ConfigFileBase::createStubDocument()
                                                         "** Use VBoxManage or the VirtualBox Manager GUI to make changes.\n"
                                                         "**\n"
                                                         "** Written by VirtualBox %s (r%s)\n",
-                                                        VBOX_VERSION_STRING, RTBldCfgRevisionStr()).c_str());
+                                                        VRA_VERSION_STRING, RTBldCfgRevisionStr()).c_str());
 
     m->pelmRoot->setAttribute("xmlns", VBOX_XML_NAMESPACE);
     // Have the code for producing a proper schema reference. Not used by most

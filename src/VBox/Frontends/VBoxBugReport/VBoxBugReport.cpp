@@ -672,8 +672,8 @@ static void addMachine(MachineInfoList& list, ComPtr<IMachine> machine)
 
 static void printHeader(void)
 {
-    RTStrmPrintf(g_pStdErr, VBOX_PRODUCT " Bug Report Tool " VBOX_VERSION_STRING "\n"
-                 "Copyright (C) " VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+    RTStrmPrintf(g_pStdErr, VRA_PRODUCT " Bug Report Tool " VRA_VERSION_STRING "\n"
+                 "Copyright (C) " VRA_C_YEAR " " VRA_VENDOR "\n\n");
 }
 
 int main(int argc, char *argv[])

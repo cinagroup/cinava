@@ -58,7 +58,7 @@
 #include "wine/debug.h"
 //#include "wine/library.h"
 
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
 # include <VBoxDispMpLogger.h>
 # include <iprt/errcore.h>
 #else
@@ -66,7 +66,7 @@
 #endif
 #include <iprt/asm.h>
 
-#if VBOX_WITH_VMSVGA
+#if VRA_WITH_VMSVGA
 /* WINE defines this as inline in its headers, directly accessing a memory location */
 #ifndef RT_OS_WINDOWS
 #define GetCurrentThreadId() (1)
@@ -229,7 +229,7 @@ static void debug_usage(void)
     exit(1);
 }
 
-#ifndef VBOX_WITH_WDDM
+#ifndef VRA_WITH_WDDM
 static DECLCALLBACK(void) vbox_log_backdoor_rt(char* pcszStr)
 {
     RTLogPrintf("%s", pcszStr);
@@ -260,14 +260,14 @@ static void debug_init(void)
     nb_debug_options = 0;
     if ((wine_debug = getenv("WINEDEBUG")))
     {
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
         Assert(0);
 #endif
         if (!strcmp( wine_debug, "help" ))
             debug_usage();
         else if (getenv("WINEDEBUG_BACKDOOR"))
         {
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
             int rc = VBoxDispMpLoggerInit();
             if (RT_SUCCESS(rc))
                 vbox_log_backdoor = vbox_log_backdoor_dispmp;
@@ -325,7 +325,7 @@ int wine_dbg_log( enum __wine_debug_class cls, struct __wine_debug_channel *chan
     return ret;
 }
 
-#ifndef VBOX //!defined(VBOX_WITH_VMSVGA) || defined(RT_OS_WINDOWS)
+#ifndef VBOX //!defined(VRA_WITH_VMSVGA) || defined(RT_OS_WINDOWS)
 int interlocked_xchg_add( int *dest, int incr )
 {
     return InterlockedExchangeAdd((LONG *)dest, incr);

@@ -178,6 +178,7 @@ VBoxVTElemSize(VARTYPE vt)
 }
 
 static SAFEARRAY *
+RT_NOREF(vt); RT_NOREF(lLbound); RT_NOREF(cElements);
 VBoxSafeArrayCreateVector(VARTYPE vt, LONG lLbound, ULONG cElements)
 {
 #ifdef VBOX_WITH_XPCOM

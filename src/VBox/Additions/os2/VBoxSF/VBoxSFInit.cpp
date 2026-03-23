@@ -72,7 +72,7 @@ RT_C_DECLS_END
  */
 DECLASM(void) VBoxSFR0Init(void)
 {
-    RTLogBackdoorPrintf("VBoxSFR0Init: version " VBOX_VERSION_STRING " r" RT_XSTR(VBOX_SVN_REV));
+    RTLogBackdoorPrintf("VBoxSFR0Init: version " VRA_VERSION_STRING " r" RT_XSTR(VRA_SVN_REV));
     RTLogBackdoorPrintf("VBoxSFR0Init: g_fpfnDevHlp=%lx u32Version=%RX32 u32Session=%RX32 pfnServiceEP=%p g_u32Info=%u (%#x)\n",
                         g_fpfnDevHlp, g_VBoxGuestIDC.u32Version, g_VBoxGuestIDC.u32Session, g_VBoxGuestIDC.pfnServiceEP, g_u32Info, g_u32Info);
     //RTLogBackdoorPrintf("&KernSISData=%p\n",        &KernSISData);

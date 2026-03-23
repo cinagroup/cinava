@@ -288,9 +288,9 @@ static int vboxClientSignalHandlerUninstall(void)
  */
 static void vboxClientUsage(const char *pcszFileName)
 {
-    RTPrintf(VBOX_PRODUCT " VBoxClient "
-             VBOX_VERSION_STRING "\n"
-             "Copyright (C) 2005-" VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+    RTPrintf(VRA_PRODUCT " VBoxClient "
+             VRA_VERSION_STRING "\n"
+             "Copyright (C) 2005-" VRA_C_YEAR " " VRA_VENDOR "\n\n");
 
     RTPrintf("Usage: %s "
 #ifdef VBOX_WITH_SHARED_CLIPBOARD

@@ -211,7 +211,7 @@ static RTEXITCODE usage(enum VBoxControlUsage eWhich = USAGE_ALL, RTEXITCODE rcE
  */
 static RTEXITCODE printVersion(void)
 {
-    RTPrintf("%sr%u\n", VBOX_VERSION_STRING, RTBldCfgRevision());
+    RTPrintf("%sr%u\n", VRA_VERSION_STRING, RTBldCfgRevision());
     return RTEXITCODE_SUCCESS;
 }
 
@@ -2074,9 +2074,9 @@ int main(int argc, char **argv)
      */
     g_pszProgName = RTPathFilename(argv[0]);
     if (fShowLogo)
-        RTPrintf(VBOX_PRODUCT " Guest Additions Command Line Management Interface Version "
-                 VBOX_VERSION_STRING "\n"
-                 "Copyright (C) 2008-" VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+        RTPrintf(VRA_PRODUCT " Guest Additions Command Line Management Interface Version "
+                 VRA_VERSION_STRING "\n"
+                 "Copyright (C) 2008-" VRA_C_YEAR " " VRA_VENDOR "\n\n");
     if (fDoHelp)
         usage();
 

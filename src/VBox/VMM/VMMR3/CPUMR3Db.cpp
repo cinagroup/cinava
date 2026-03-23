@@ -886,7 +886,7 @@ static bool cpumR3DbIsBetterIntelFam06Match(CPUMMICROARCH enmConsider, CPUMMICRO
  * X86 version of helper that picks a DB entry for the host and merges it with
  * available info in the @a pInfo structure.
  */
-static int cpumR3DbCreateHostEntry(PVM pVM, PCPUMINFO pInfo)
+static int __attribute__((unused)) cpumR3DbCreateHostEntry(PVM pVM, PCPUMINFO pInfo)
 {
     RT_NOREF(pVM);
 

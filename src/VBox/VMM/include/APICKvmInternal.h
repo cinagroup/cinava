@@ -1,4 +1,5 @@
 /* $Id: APICKvmInternal.h 112727 2026-01-28 17:02:49Z alexander.eichner@oracle.com $ */
+typedef struct APICDEV *PAPICDEV;
 /** @file
  * APIC - Advanced Programmable Interrupt Controller - NEM Hyper-V backend, Internal header.
  */

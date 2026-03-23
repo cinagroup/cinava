@@ -435,8 +435,8 @@ static DECL_NO_RETURN(void) ShowVersionAndQuit(void)
 static DECL_NO_RETURN(void) ShowUsageAndQuit(void)
 {
     static char s_szHelp[] =
-        VBOX_PRODUCT " OS/2 Unattended Helper Version " VBOX_VERSION_STRING "\r\n"
-        "Copyright (C) 2005-" VBOX_C_YEAR " " VBOX_VENDOR "\r\n"
+        VRA_PRODUCT " OS/2 Unattended Helper Version " VRA_VERSION_STRING "\r\n"
+        "Copyright (C) 2005-" VRA_C_YEAR " " VRA_VENDOR "\r\n"
         "\r\n"
         "Os2Util.exe is tiny helper utility that implements TEE'ing to the VBox release\r\n"
         "log, files and shows the actual exit code of a program.  Standard error and\r\n"

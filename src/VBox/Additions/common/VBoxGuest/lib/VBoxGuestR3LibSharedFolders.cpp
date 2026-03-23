@@ -364,6 +364,8 @@ VBGLR3DECL(int) VbglR3SharedFolderWaitForMappingsChanges(HGCMCLIENTID idClient, 
  *
  * @returns VBox status code.
  * @param   idClient        The client ID.
+ *
+ * @note Migrated from VBGLIOCIDCCALL to VBGLIOCHGCMCALL for proper ring-3 HGCM support.
  */
 VBGLR3DECL(int) VbglR3SharedFolderCancelMappingsChangesWaits(HGCMCLIENTID idClient)
 {

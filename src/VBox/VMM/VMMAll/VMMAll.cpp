@@ -264,12 +264,12 @@ VMMDECL(PVMCPUCC) VMMGetCpuById(PVMCC pVM, RTCPUID idCpu)
 
 
 /**
- * Gets the VBOX_SVN_REV.
+ * Gets the VRA_SVN_REV.
  *
  * This is just to avoid having to compile a bunch of big files
  * and requires less Makefile mess.
  *
- * @returns VBOX_SVN_REV.
+ * @returns VRA_SVN_REV.
  */
 VMM_INT_DECL(uint32_t) VMMGetSvnRev(void)
 {

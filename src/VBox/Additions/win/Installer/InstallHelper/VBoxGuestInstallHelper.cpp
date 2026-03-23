@@ -2258,7 +2258,7 @@ static int handleNT4InstallCleanup(unsigned cArgs, wchar_t **papwszArgs)
 /** Handles 'version' and its aliases. */
 static int handleVersion(unsigned cArgs, wchar_t **papwszArgs)
 {
-    PrintStr(RT_XSTR(VBOX_VERSION_MAJOR) "." RT_XSTR(VBOX_VERSION_MINOR) "." RT_XSTR(VBOX_VERSION_BUILD) "r" RT_XSTR(VBOX_SVN_REV) "\r\n");
+    PrintStr(RT_XSTR(VBOX_VERSION_MAJOR) "." RT_XSTR(VBOX_VERSION_MINOR) "." RT_XSTR(VBOX_VERSION_BUILD) "r" RT_XSTR(VRA_SVN_REV) "\r\n");
     RT_NOREF(cArgs, papwszArgs);
     return EXIT_OK;
 }
@@ -2270,7 +2270,7 @@ static int handleHelp(unsigned cArgs, wchar_t **papwszArgs)
     /*       "0         1         2         3         4         5         6         7         8 */
     /*       "012345678901234567890123456789012345678901234567890123456789012345678901234567890 */
     PrintStr("VirtualBox Guest Additions Installation Helper for Windows\r\n"
-             "Version: " RT_XSTR(VBOX_VERSION_MAJOR) "." RT_XSTR(VBOX_VERSION_MINOR) "." RT_XSTR(VBOX_VERSION_BUILD) "r" RT_XSTR(VBOX_SVN_REV) "\r\n"
+             "Version: " RT_XSTR(VBOX_VERSION_MAJOR) "." RT_XSTR(VBOX_VERSION_MINOR) "." RT_XSTR(VBOX_VERSION_BUILD) "r" RT_XSTR(VRA_SVN_REV) "\r\n"
              "\r\n"
              "Syntax: VBoxGuestInstallHelper <command> <subcommand>\r\n"
              "\r\n"

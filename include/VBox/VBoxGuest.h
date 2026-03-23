@@ -40,6 +40,15 @@
 #include <VBox/VMMDevCoreTypes.h>
 #include <VBox/VBoxGuestCoreTypes.h>
 
+/** @name Compatibility defines for VRA (VirtualBox Guest Additions fork)
+ * @{ */
+#ifdef VRA_WITH_HGCM
+# ifndef VBOX_WITH_HGCM
+#  define VBOX_WITH_HGCM
+# endif
+#endif
+/** @} */
+
 
 
 /** @defgroup grp_vboxguest  VirtualBox Guest Additions Device Driver

@@ -1005,8 +1005,8 @@ static RTEXITCODE cmdAddTrustedPublisher(int argc, char **argv)
  */
 static void showLogo(PRTSTREAM pStream)
 {
-    RTStrmPrintf(pStream, VBOX_PRODUCT " VBoxCertUtil Version " VBOX_VERSION_STRING " - r%s\n"
-                 "Copyright (C) " VBOX_C_YEAR " " VBOX_VENDOR "\n\n", RTBldCfgRevisionStr());
+    RTStrmPrintf(pStream, VRA_PRODUCT " VBoxCertUtil Version " VRA_VERSION_STRING " - r%s\n"
+                 "Copyright (C) " VRA_C_YEAR " " VRA_VENDOR "\n\n", RTBldCfgRevisionStr());
 }
 
 

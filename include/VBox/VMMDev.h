@@ -41,6 +41,15 @@
 #include <iprt/assertcompile.h>
 #include <iprt/errcore.h>
 
+/** @name Compatibility defines for VRA (VirtualBox Guest Additions fork)
+ * @{ */
+#ifdef VRA_WITH_HGCM
+# ifndef VBOX_WITH_HGCM
+#  define VBOX_WITH_HGCM
+# endif
+#endif
+/** @} */
+
 
 #pragma pack(4) /* force structure dword packing here. */
 RT_C_DECLS_BEGIN

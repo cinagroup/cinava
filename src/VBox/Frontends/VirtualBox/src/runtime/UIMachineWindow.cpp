@@ -306,7 +306,7 @@ void UIMachineWindow::updateAppearanceOf(int iElement)
 void UIMachineWindow::sltRetranslateUI()
 {
     /* Compose window-title prefix: */
-    m_strWindowTitlePrefix = VBOX_PRODUCT;
+    m_strWindowTitlePrefix = VRA_PRODUCT;
 #ifdef VBOX_BLEEDING_EDGE
     m_strWindowTitlePrefix += UIMachineWindow::tr(" EXPERIMENTAL build %1r%2 - %3")
                               .arg(RTBldCfgVersion())

@@ -39,7 +39,7 @@
 #include <iprt/utf16.h>
 
 #include <VBox/version.h>
-#include <revision-generated.h> /* VBOX_SVN_REV. */
+#include <revision-generated.h> /* VRA_SVN_REV. */
 
 
 
@@ -740,7 +740,7 @@ int main(int argc, char **argv)
                 return usage(argv[0]);
 
             case 'V':
-                RTPrintf("%sr%u\n", VBOX_VERSION_STRING, VBOX_SVN_REV);
+                RTPrintf("%sr%u\n", VRA_VERSION_STRING, VRA_SVN_REV);
                 return RTEXITCODE_SUCCESS;
 
             default:

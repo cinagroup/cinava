@@ -30,10 +30,10 @@
 
 /* GUI includes: */
 #include "QIMainWindow.h"
-#ifdef VBOX_WS_MAC
+#ifdef VRA_WS_MAC
 # include "VBoxUtils-darwin.h"
 #endif
-#ifdef VBOX_WS_NIX
+#ifdef VRA_WS_NIX
 # include "UIDesktopWidgetWatchdog.h"
 #endif
 
@@ -89,7 +89,7 @@ void QIMainWindow::resizeEvent(QResizeEvent *pEvent)
 void QIMainWindow::restoreGeometry(const QRect &rect)
 {
     m_geometry = rect;
-#if defined(VBOX_WS_MAC) || defined(VBOX_WS_WIN)
+#if defined(VRA_WS_MAC) || defined(VRA_WS_WIN)
     /* Use the old approach for OSX/Win: */
     move(m_geometry.topLeft());
     resize(m_geometry.size());
@@ -105,7 +105,7 @@ void QIMainWindow::restoreGeometry(const QRect &rect)
 
 bool QIMainWindow::isCurrentlyMaximized()
 {
-#ifdef VBOX_WS_MAC
+#ifdef VRA_WS_MAC
     return ::darwinIsWindowMaximized(this);
 #else
     return isMaximized();

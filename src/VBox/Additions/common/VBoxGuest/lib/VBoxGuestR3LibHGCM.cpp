@@ -2,6 +2,13 @@
 /** @file
  * VBoxGuestR3Lib - Ring-3 Support Library for VirtualBox guest additions,
  * generic HGCM.
+ *
+ * @note This file was migrated from the legacy HGCM API to use the correct
+ *       VBGLIOCHGCM* structures (VBGLIOCHGCMCONNECT, VBGLIOCHGCMDISCONNECT,
+ *       VBGLIOCHGCMCALL) instead of the incorrect IDC structures that were
+ *       previously used. The IDC (Inter-Driver Communication) structures are
+ *       for ring-0 driver-to-driver communication, not for ring-3 HGCM
+ *       service access.
  */
 
 /*
@@ -51,22 +58,36 @@
  * @param   pszServiceName  Name of the host service.
  * @param   pidClient       Where to put the client ID on success. The client ID
  *                          must be passed to all the other calls to the service.
+ *
+ * @note Migrated from VBGLIOCIDCCONNECT to VBGLIOCHGCMCONNECT.
+ *       The IDC structures are for ring-0 driver communication, not HGCM.
  */
 VBGLR3DECL(int) VbglR3HGCMConnect(const char *pszServiceName, HGCMCLIENTID *pidClient)
 {
     AssertPtrReturn(pszServiceName, VERR_INVALID_POINTER);
     AssertPtrReturn(pidClient,      VERR_INVALID_POINTER);
 
+    /*
+     * Use VBGLIOCHGCMCONNECT for ring-3 HGCM service connection.
+     * This structure contains HGCMServiceLocation for specifying the service.
+     */
     VBGLIOCHGCMCONNECT Info;
     RT_ZERO(Info);
     VBGLREQHDR_INIT(&Info.Hdr, HGCM_CONNECT);
+
+    /* Set up the service location - use LocalHost_Existing for connecting to existing services */
     Info.u.In.Loc.type = VMMDevHGCMLoc_LocalHost_Existing;
+
+    /* Copy the service name to the location structure */
     int rc = RTStrCopy(Info.u.In.Loc.u.host.achName, sizeof(Info.u.In.Loc.u.host.achName), pszServiceName);
     if (RT_FAILURE(rc))
         return rc;
+
+    /* Perform the HGCM connect IOCTL */
     rc = vbglR3DoIOCtl(VBGL_IOCTL_HGCM_CONNECT, &Info.Hdr, sizeof(Info));
     if (RT_SUCCESS(rc))
         *pidClient = Info.u.Out.idClient;
+
     return rc;
 }
 
@@ -76,9 +97,16 @@ VBGLR3DECL(int) VbglR3HGCMConnect(const char *pszServiceName, HGCMCLIENTID *pidC
  *
  * @returns VBox status code.
  * @param   idClient        The client id returned by VbglR3HGCMConnect().
+ *
+ * @note Migrated from VBGLIOCIDCDISCONNECT to VBGLIOCHGCMDISCONNECT.
+ *       The IDC structures are for ring-0 driver communication, not HGCM.
  */
 VBGLR3DECL(int) VbglR3HGCMDisconnect(HGCMCLIENTID idClient)
 {
+    /*
+     * Use VBGLIOCHGCMDISCONNECT for ring-3 HGCM service disconnection.
+     * This structure contains the client ID to disconnect.
+     */
     VBGLIOCHGCMDISCONNECT Info;
     VBGLREQHDR_INIT(&Info.Hdr, HGCM_DISCONNECT);
     Info.u.In.idClient = idClient;
@@ -95,6 +123,9 @@ VBGLR3DECL(int) VbglR3HGCMDisconnect(HGCMCLIENTID idClient)
  * @param   cbInfo          Size of the info.  This may sometimes be larger than
  *                          what the parameter count indicates because of
  *                          parameter changes between versions and such.
+ *
+ * @note Uses VBGLIOCHGCMCALL which is the correct structure for ring-3 HGCM calls.
+ *       The VBGL_IOCTL_HGCM_CALL macro handles 32-bit vs 64-bit selection.
  */
 VBGLR3DECL(int) VbglR3HGCMCall(PVBGLIOCHGCMCALL pInfo, size_t cbInfo)
 {
@@ -104,5 +135,10 @@ VBGLR3DECL(int) VbglR3HGCMCall(PVBGLIOCHGCMCALL pInfo, size_t cbInfo)
     Assert(sizeof(*pInfo) + pInfo->cParms * sizeof(HGCMFunctionParameter) <= cbInfo);
     Assert(pInfo->u32ClientID != 0);
 
+    /*
+     * Use VBGL_IOCTL_HGCM_CALL for ring-3 HGCM service calls.
+     * This macro automatically selects the correct 32-bit or 64-bit IOCTL
+     * based on the architecture.
+     */
     return vbglR3DoIOCtl(VBGL_IOCTL_HGCM_CALL(cbInfo), &pInfo->Hdr, cbInfo);
 }

@@ -36,7 +36,7 @@
 #include <VBox/HostServices/VBoxSharedClipboardSvc.h>
 #include <VBox/GuestHost/clipboard-helper.h>
 #include <VBox/GuestHost/SharedClipboard-win.h>
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 # include <VBox/GuestHost/SharedClipboard-transfers.h>
 #endif
 
@@ -47,14 +47,14 @@
 #include <iprt/ldr.h>
 #include <iprt/semaphore.h>
 #include <iprt/thread.h>
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 # include <iprt/utf16.h>
 #endif
 
 #include <process.h>
 #include <iprt/win/shlobj.h> /* Needed for shell objects. */
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 # include "VBoxSharedClipboardSvc-transfers.h"
 #endif
 
@@ -81,7 +81,7 @@ struct SHCLCONTEXT
 *********************************************************************************************************************************/
 static int vboxClipboardSvcWinSyncInternal(PSHCLCONTEXT pCtx);
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 static DECLCALLBACK(int) shClSvcWinTransferIfaceHGRootListRead(PSHCLTXPROVIDERCTX pCtx);
 #endif
 
@@ -214,7 +214,7 @@ static DECLCALLBACK(int) vboxClipboardSvcWinRequestDataFromSourceCallback(PSHCLC
 }
 
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 /**
  * @copydoc SHCLTRANSFERCALLBACKS::pfnOnCreated
  *
@@ -416,7 +416,7 @@ static DECLCALLBACK(int) shClSvcWinDataObjectTransferBeginCallback(ShClWinDataOb
     LogFlowFuncLeaveRC(rc);
     return rc;
 }
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
 
 static LRESULT CALLBACK vboxClipboardSvcWinWndProcMain(PSHCLCONTEXT pCtx,
                                                        HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) RT_NOTHROW_DEF
@@ -585,7 +585,7 @@ static LRESULT CALLBACK vboxClipboardSvcWinWndProcMain(PSHCLCONTEXT pCtx,
             LogFunc(("SHCL_WIN_WM_REPORT_FORMATS: fFormats=%#xn", fFormats));
 
             int rc = ShClWinClearAndAnnounceFormats(pWinCtx, fFormats, hWnd);
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
             if (   RT_SUCCESS(rc)
                 && fFormats & VBOX_SHCL_FMT_URI_LIST)
             {
@@ -724,7 +724,7 @@ DECLCALLBACK(int) vboxClipboardSvcWinThread(RTTHREAD hThreadSelf, void *pvUser)
                     pWinCtx->oldAPI.timerRefresh = SetTimer(pWinCtx->hWnd, 0, 10 * 1000, NULL);
             }
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
             if (RT_SUCCESS(rc))
             {
                 HRESULT hr = OleInitialize(NULL);
@@ -757,7 +757,7 @@ DECLCALLBACK(int) vboxClipboardSvcWinThread(RTTHREAD hThreadSelf, void *pvUser)
             Assert(msgret >= 0);
             LogFunc(("Message loop finished. GetMessage returned %d, message id: %d \n", msgret, msg.message));
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
             OleSetClipboard(NULL); /* Make sure to flush the clipboard on destruction. */
             OleUninitialize();
 #endif
@@ -818,7 +818,7 @@ static int vboxClipboardSvcWinSyncInternal(PSHCLCONTEXT pCtx)
 int ShClBackendInit(PSHCLBACKEND pBackend, VBOXHGCMSVCFNTABLE *pTable)
 {
     RT_NOREF(pBackend, pTable);
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     HRESULT hr = OleInitialize(NULL);
     if (FAILED(hr))
     {
@@ -827,7 +827,7 @@ int ShClBackendInit(PSHCLBACKEND pBackend, VBOXHGCMSVCFNTABLE *pTable)
     }
     else
         LogRel(("Shared Clipboard: Initialized OLE\n"));
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
 
     return VINF_SUCCESS;
 }
@@ -836,7 +836,7 @@ void ShClBackendDestroy(PSHCLBACKEND pBackend)
 {
     RT_NOREF(pBackend);
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     OleSetClipboard(NULL); /* Make sure to flush the clipboard on destruction. */
     OleUninitialize();
 #endif
@@ -868,7 +868,7 @@ int ShClBackendConnect(PSHCLBACKEND pBackend, PSHCLCLIENT pClient, bool fHeadles
         pClient->State.pCtx = pCtx;
         pClient->State.pCtx->pClient = pClient;
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
         /*
          * Set callbacks.
          * Those will be registered within ShClSvcTransferInit() when a new transfer gets initialized.
@@ -882,7 +882,7 @@ int ShClBackendConnect(PSHCLBACKEND pBackend, PSHCLCLIENT pClient, bool fHeadles
         pClient->Transfers.Callbacks.pfnOnInitialize  = shClSvcWinTransferOnInitializeCallback;
         pClient->Transfers.Callbacks.pfnOnInitialized = shClSvcWinTransferOnInitializedCallback;
         pClient->Transfers.Callbacks.pfnOnDestroy     = shClSvcWinTransferOnDestroyCallback;
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
     }
     else
         rc = VERR_NO_MEMORY;
@@ -1054,7 +1054,7 @@ int ShClBackendReadData(PSHCLBACKEND pBackend, PSHCLCLIENT pClient, PSHCLCLIENTC
                 }
             }
         }
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
         else if (uFmt & VBOX_SHCL_FMT_URI_LIST)
         {
             hClip = hClip = GetClipboardData(CF_HDROP);
@@ -1087,7 +1087,7 @@ int ShClBackendReadData(PSHCLBACKEND pBackend, PSHCLCLIENT pClient, PSHCLCLIENTC
                 LogRel(("Shared Clipboard: Unable to retrieve clipboard data from clipboard (CF_HDROP), last error: %ld\n",
                         GetLastError()));
         }
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
         ShClWinClose();
     }
 
@@ -1111,7 +1111,7 @@ int ShClBackendWriteData(PSHCLBACKEND pBackend, PSHCLCLIENT pClient, PSHCLCLIENT
     return VINF_SUCCESS;
 }
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 /**
  * Handles transfer status replies from the guest.
  */
@@ -1143,4 +1143,4 @@ static DECLCALLBACK(int) shClSvcWinTransferIfaceHGRootListRead(PSHCLTXPROVIDERCT
     LogFlowFuncLeaveRC(rc);
     return rc;
 }
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */

@@ -67,11 +67,11 @@
 #include "inlines.h"
 #include "biosint.h"
 #include "VBox/bios.h"
-#ifndef VBOX_VERSION_STRING
+#ifndef VRA_VERSION_STRING
 #include <VBox/version.h>
 #endif
 
-static  const char  bios_cvs_version_string[] = "VirtualBox " VBOX_VERSION_STRING;
+static  const char  bios_cvs_version_string[] = "VirtualBox " VRA_VERSION_STRING;
 
 uint8_t inb_cmos(uint8_t cmos_reg)
 {

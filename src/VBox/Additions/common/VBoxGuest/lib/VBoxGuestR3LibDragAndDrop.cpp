@@ -1168,7 +1168,7 @@ VBGLR3DECL(int) VbglR3DnDReportFeatures(uint32_t idClient, uint64_t fGuestFeatur
     {
         struct
         {
-            VBGLIOCHGCMCALL         Hdr;
+            VBGLIOCIDCCALL         Hdr;
             HGCMFunctionParameter   f64Features0;
             HGCMFunctionParameter   f64Features1;
         } Msg;

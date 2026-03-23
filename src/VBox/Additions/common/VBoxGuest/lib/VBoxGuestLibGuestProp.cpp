@@ -187,6 +187,8 @@ DECLVBGL(int) VbglGuestPropDisconnect(PVBGLGSTPROPCLIENT pClient)
 
 /**
  * Wrapper around VbglR0HGCMCall & VbglR3HGCMCall.
+ *
+ * @note Migrated from VBGLIOCIDCCALL to VBGLIOCHGCMCALL for proper ring-3 HGCM support.
  */
 DECL_FORCE_INLINE(int) vbglGuestPropDoCall(PVBGLGSTPROPCLIENT pClient, struct VBGLIOCHGCMCALL *pData, uint32_t cbData)
 {

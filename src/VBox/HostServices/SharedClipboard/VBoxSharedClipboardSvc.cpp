@@ -96,7 +96,7 @@
  * @section sec_uri_intro               Transferring files
  *
  * Since VBox 7.1 transferring files via Shared Clipboard is supported.
- * See the VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS define for supported / enabled
+ * See the VRA_WITH_SHARED_CLIPBOARD_TRANSFERS define for supported / enabled
  * platforms. This is called "Shared Clipboard transfers".
  *
  * At the moment a transfer is a all-or-nothing operation, e.g. it either
@@ -228,7 +228,7 @@
 #include <iprt/critsect.h>
 #include <iprt/rand.h>
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 # include "VBoxSharedClipboardSvc-transfers.h"
 #endif
 
@@ -275,7 +275,7 @@ PVBOXHGCMSVCHELPERS g_pHelpers;
 static RTCRITSECT g_CritSect;               /** @todo r=andy Put this into some instance struct, avoid globals. */
 /** Global Shared Clipboard mode. */
 static uint32_t g_uMode  = VBOX_SHCL_MODE_OFF;
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
 /** Global Shared Clipboard (file) transfer mode. */
 uint32_t g_fTransferMode = VBOX_SHCL_TRANSFER_MODE_F_NONE;
 #endif
@@ -296,7 +296,7 @@ ClipboardClientQueue g_listClientsDeferred;
 /** Host feature mask (VBOX_SHCL_HF_0_XXX) for VBOX_SHCL_GUEST_FN_REPORT_FEATURES
  * and VBOX_SHCL_GUEST_FN_QUERY_FEATURES. */
 static uint64_t const g_fHostFeatures0 = VBOX_SHCL_HF_0_CONTEXT_ID
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
                                        | VBOX_SHCL_HF_0_TRANSFERS
 #endif
                                        ;
@@ -620,7 +620,7 @@ int ShClSvcClientInit(PSHCLCLIENT pClient, uint32_t uClientID)
             /* (Re-)initialize the client state. */
             rc = shClSvcClientStateInit(&pClient->State, uClientID);
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
             if (RT_SUCCESS(rc))
                 rc = ShClTransferCtxInit(&pClient->Transfers.Ctx);
 #endif
@@ -658,7 +658,7 @@ static void shClSvcClientDestroy(PSHCLCLIENT pClient)
         pClient->Pending.paParms = NULL;
     }
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     shClSvcTransferDestroyAll(pClient);
     ShClTransferCtxDestroy(&pClient->Transfers.Ctx);
 #endif
@@ -718,7 +718,7 @@ static void shClSvcClientReset(PSHCLCLIENT pClient)
     /* Reset pending state. */
     RT_ZERO(pClient->Pending);
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     shClSvcTransferDestroyAll(pClient);
 #endif
 
@@ -1286,7 +1286,7 @@ int ShClSvcReadDataFromGuestAsync(PSHCLCLIENT pClient, SHCLFORMATS fFormats, PSH
             fFormat = VBOX_SHCL_FMT_BITMAP;
         else if (fFormats & VBOX_SHCL_FMT_HTML)
             fFormat = VBOX_SHCL_FMT_HTML;
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
         else if (fFormats & VBOX_SHCL_FMT_URI_LIST)
             fFormat = VBOX_SHCL_FMT_URI_LIST;
 #endif
@@ -1521,7 +1521,7 @@ int ShClSvcGuestDataSignal(PSHCLCLIENT pClient, PSHCLCLIENTCMDCTX pCmdCtx, SHCLF
  */
 static SHCLFORMATS shClSvcHandleFormats(bool fHostToGuest, PSHCLCLIENT pClient, SHCLFORMATS fFormats)
 {
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     bool fSkipTransfers = false;
     if (fFormats & VBOX_SHCL_FMT_URI_LIST)
     {
@@ -1551,7 +1551,7 @@ static SHCLFORMATS shClSvcHandleFormats(bool fHostToGuest, PSHCLCLIENT pClient, 
     }
 #else
     RT_NOREF(pClient);
-#endif /* VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS */
+#endif /* VRA_WITH_SHARED_CLIPBOARD_TRANSFERS */
 
     char *pszFmts = ShClFormatsToStrA(fFormats);
     if (pszFmts)
@@ -1710,7 +1710,7 @@ static int shClSvcClientMsgReportFormats(PSHCLCLIENT pClient, uint32_t cParms, V
         rc = VINF_SUCCESS;
     else
     {
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
         fFormats = shClSvcHandleFormats(false /* fHostToGuest */, pClient, fFormats);
 #endif
         rc = RTCritSectEnter(&g_CritSect);
@@ -2339,7 +2339,7 @@ static DECLCALLBACK(void) svcCall(void *,
 
         default:
         {
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
             if (   u32Function <= VBOX_SHCL_GUEST_FN_LAST
                 && (pClient->State.fGuestFeatures0 &  VBOX_SHCL_GF_0_CONTEXT_ID) )
             {
@@ -2422,7 +2422,7 @@ static void shclSvcClientStateReset(PSHCLCLIENTSTATE pState)
     pState->POD.cbToReadWriteTotal = 0;
     pState->POD.cbReadWritten      = 0;
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
     pState->Transfers.enmTransferDir = SHCLTRANSFERDIR_UNKNOWN;
 #endif
 }
@@ -2460,7 +2460,7 @@ static DECLCALLBACK(int) svcHostCall(void *,
             break;
         }
 
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
         case VBOX_SHCL_HOST_FN_SET_TRANSFER_MODE:
         {
             if (cParms != 1)
@@ -2498,7 +2498,7 @@ static DECLCALLBACK(int) svcHostCall(void *,
 
         default:
         {
-#ifdef VBOX_WITH_SHARED_CLIPBOARD_TRANSFERS
+#ifdef VRA_WITH_SHARED_CLIPBOARD_TRANSFERS
             rc = ShClSvcTransferMsgHostHandler(u32Function, cParms, paParms);
 #else
             rc = VERR_NOT_IMPLEMENTED;

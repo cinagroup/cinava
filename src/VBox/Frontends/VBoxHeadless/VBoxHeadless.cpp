@@ -978,8 +978,8 @@ extern "C" DECLEXPORT(int) TrustedMain(int argc, char **argv, char **envp)
 #endif
 
     LogFlow(("VBoxHeadless STARTED.\n"));
-    RTPrintf(VBOX_PRODUCT " Headless Interface " VBOX_VERSION_STRING "\n"
-             "Copyright (C) 2008-" VBOX_C_YEAR " " VBOX_VENDOR "\n\n");
+    RTPrintf(VRA_PRODUCT " Headless Interface " VRA_VERSION_STRING "\n"
+             "Copyright (C) 2008-" VRA_C_YEAR " " VRA_VENDOR "\n\n");
 
 #ifdef VBOX_WITH_RECORDING
     /* Parse the environment */

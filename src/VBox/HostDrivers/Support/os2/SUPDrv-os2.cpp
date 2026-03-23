@@ -124,9 +124,9 @@ DECLASM(int) VBoxDrvInit(const char *pszArgs)
                 {
                     strcpy(&g_szInitText[0],
                            "\r\n"
-                           "VirtualBox.org Support Driver for OS/2 version " VBOX_VERSION_STRING "\r\n"
+                           "VirtualBox.org Support Driver for OS/2 version " VRA_VERSION_STRING "\r\n"
                            "Copyright (C) 2007 Knut St. Osmundsen\r\n"
-                           "Copyright (C) 2007-" VBOX_C_YEAR " Oracle and/or its affiliates\r\n");
+                           "Copyright (C) 2007-" VRA_C_YEAR " Oracle and/or its affiliates\r\n");
                     g_cchInitText = strlen(&g_szInitText[0]);
                 }
                 return VINF_SUCCESS;

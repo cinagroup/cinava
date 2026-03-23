@@ -78,7 +78,7 @@ void UINewVersionChecker::start()
     }
     else
     {
-        /* Use hard coded version set by VBOX_VERSION_STRING: */
+        /* Use hard coded version set by VRA_VERSION_STRING: */
         url.addQueryItem("version", QString("%1_%2").arg(gpGlobalSession->virtualBox().GetVersion())
                                                     .arg(gpGlobalSession->virtualBox().GetRevision()));
     }

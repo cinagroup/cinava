@@ -53,7 +53,7 @@ WINE_DECLARE_DEBUG_CHANNEL(d3d);
 # include <iprt/string.h>
 #endif
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 #define LOG_GROUP LOG_GROUP_DEV_VMSVGA
 #include <VBox/log.h>
 #undef WDLOG
@@ -142,14 +142,14 @@ struct glsl_shader_prog_link {
     UINT                        inp2Fixup_info;
 };
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 # define WINEFIXUPINFO_NOINDEX (~0U)
 #else
 #define WINEFIXUPINFO_NOINDEX (~0UL)
 #endif
 #define WINEFIXUPINFO_GET(_p) get_fixup_info((const IWineD3DPixelShaderImpl*)(_p)->pshader, (_p)->inp2Fixup_info)
 #define WINEFIXUPINFO_ISVALID(_p) ((_p)->inp2Fixup_info != WINEFIXUPINFO_NOINDEX)
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 # define WINEFIXUPINFO_INIT(_p) do { (_p)->inp2Fixup_info = WINEFIXUPINFO_NOINDEX; } while (0)
 #else
 #define WINEFIXUPINFO_INIT(_p) ((_p)->inp2Fixup_info == WINEFIXUPINFO_NOINDEX)
@@ -196,7 +196,9 @@ struct glsl_vshader_private
     UINT                            num_gl_shaders, shader_array_size;
 };
 
-#ifdef LOG_ENABLED
+/* Wine compatibility fix: Make debug_gl_shader_type always available
+ * Originally this was conditional on LOG_ENABLED, but it's used in WDLOG
+ * calls which still require the function declaration even when debug msgs are disabled */
 static const char *debug_gl_shader_type(GLenum type)
 {
     switch (type)
@@ -210,7 +212,6 @@ static const char *debug_gl_shader_type(GLenum type)
             return wine_dbg_sprintf("UNKNOWN(%#x)", type);
     }
 }
-#endif
 
 /* Extract a line from the info log.
  * Note that this modifies the source string. */
@@ -421,7 +422,7 @@ static void shader_glsl_validate_compile_link(const struct wined3d_gl_info *gl_i
             shader_glsl_dump_program_source(gl_info, program);
 #endif
         }
-#if defined(VBOX_WITH_VMSVGA) && defined(DEBUG)
+#if defined(VRA_WITH_VMSVGA) && defined(DEBUG)
         shader_glsl_dump_program_source(gl_info, program);
 #endif
     }
@@ -786,7 +787,8 @@ static const struct ps_np2fixup_info * get_fixup_info(const IWineD3DPixelShaderI
 {
     struct glsl_pshader_private    *shader_data = shader->baseShader.backend_data;
 
-    if (inp2fixup_info == WINEFIXUPINFO_NOINDEX)
+    /* Wine compatibility fix: Cast to UINT to avoid type comparison warning */
+    if (inp2fixup_info == (UINT)WINEFIXUPINFO_NOINDEX)
         return NULL;
 
     if (!shader->baseShader.backend_data)
@@ -952,7 +954,7 @@ static void shader_glsl_load_constants(const struct wined3d_context *context,
                 correction_params[1] = 1.0f;
             } else {
                 /* position is window relative, not viewport relative */
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
                 correction_params[0] = device->rtHeight;               
 #else
                 correction_params[0] = ((IWineD3DSurfaceImpl *)context->current_rt)->currentDesc.Height;
@@ -1064,7 +1066,7 @@ static void shader_generate_glsl_declarations(const struct wined3d_context *cont
         if (map & 1) shader_addline(buffer, "void subroutine%u();\n", i);
     }
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
     /* Declare texture samplers before the constants in order to workaround a NVidia driver quirk. */
     for (i = 0; i < This->baseShader.limits.sampler; i++) {
         if (reg_maps->sampler_type[i])
@@ -1120,7 +1122,7 @@ static void shader_generate_glsl_declarations(const struct wined3d_context *cont
         }
         else
         {
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
             if(This->baseShader.reg_maps.usesrelconstF) {
 #else
             /* If GL supports only 256 constants (seen on macOS drivers for compatibility profile, which we use),
@@ -1140,7 +1142,7 @@ static void shader_generate_glsl_declarations(const struct wined3d_context *cont
                  *
                  * Writing gl_ClipVertex requires one uniform for each clipplane as well.
                  */
-#ifdef VBOX_WITH_WDDM
+#ifdef VRA_WITH_WDDM
                 if (gl_info->limits.glsl_vs_float_constants == 256)
                 {
                     DWORD dwVersion = GetVersion();
@@ -1257,7 +1259,7 @@ static void shader_generate_glsl_declarations(const struct wined3d_context *cont
         }
     }
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
     /* Declare texture samplers before the constants in order to workaround a NVidia driver quirk. */
 #else
     /* Declare texture samplers */
@@ -1381,7 +1383,7 @@ static void shader_generate_glsl_declarations(const struct wined3d_context *cont
     /* Temporary variables for matrix operations */
     shader_addline(buffer, "vec4 tmp0;\n");
     shader_addline(buffer, "vec4 tmp1;\n");
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
     shader_addline(buffer, "bool p0[4];\n");
 #endif
 
@@ -1697,7 +1699,7 @@ static void shader_glsl_get_register_name(const struct wined3d_shader_register *
             }
             break;
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
         case WINED3DSPR_PREDICATE:
             sprintf(register_name, "p0");
             break;
@@ -1732,7 +1734,7 @@ static DWORD shader_glsl_get_write_mask(const struct wined3d_shader_dst_param *p
     }
     else
     {
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
         if (param->reg.type == WINED3DSPR_PREDICATE)
         {
             *write_mask++ = '[';
@@ -2250,7 +2252,7 @@ static void shader_glsl_arith(const struct wined3d_shader_instruction *ins)
     shader_addline(buffer, "%s %c %s);\n", src0_param.param_str, op, src1_param.param_str);
 }
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 static void shader_glsl_mov_impl(const struct wined3d_shader_instruction *ins, int p0_idx);
 
 /* Process the WINED3DSIO_MOV opcode using GLSL (dst = src) */
@@ -2290,7 +2292,7 @@ static void shader_glsl_mov(const struct wined3d_shader_instruction *ins)
     glsl_src_param_t src0_param;
     DWORD write_mask;
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
     if (ins->predicate)
     {
         shader_addline(buffer, "if (p0[%d]) {\n", p0_idx);
@@ -2340,7 +2342,7 @@ static void shader_glsl_mov(const struct wined3d_shader_instruction *ins)
     {
         shader_addline(buffer, "%s);\n", src0_param.param_str);
     }
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
     if (ins->predicate)
     {
         shader_addline(buffer, "}\n");
@@ -2603,7 +2605,7 @@ static void shader_glsl_rsq(const struct wined3d_shader_instruction *ins)
     }
 }
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 static void shader_glsl_setp(const struct wined3d_shader_instruction *ins)
 {
     struct wined3d_shader_buffer *buffer = ins->ctx->buffer;
@@ -4332,7 +4334,7 @@ static GLhandleARB generate_param_reorder_function(struct wined3d_shader_buffer 
     return ret;
 }
 
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 static GLhandleARB generate_passthrough_vshader(const struct wined3d_gl_info *gl_info)
 {
     GLhandleARB ret = 0;
@@ -4381,7 +4383,7 @@ static void hardcode_local_constants(IWineD3DBaseShaderImpl *shader, const struc
 }
 
 /* GL locking is done by the caller */
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 static GLhandleARB shader_glsl_generate_pshader(const struct wined3d_context *context,
 #else
 static GLuint shader_glsl_generate_pshader(const struct wined3d_context *context,
@@ -4491,7 +4493,7 @@ static GLuint shader_glsl_generate_pshader(const struct wined3d_context *context
 }
 
 /* GL locking is done by the caller */
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
 static GLhandleARB shader_glsl_generate_vshader(const struct wined3d_context *context,
 #else
 static GLuint shader_glsl_generate_vshader(const struct wined3d_context *context,
@@ -4815,7 +4817,7 @@ static void set_glsl_shader_program(const struct wined3d_context *context,
 
         list_add_head(&((IWineD3DBaseShaderImpl *)vshader)->baseShader.linked_programs, &entry->vshader_entry);
     }
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
     else
     if (device->strided_streams.position_transformed)
     {
@@ -5537,7 +5539,7 @@ static const SHADER_HANDLER shader_glsl_instruction_handler_table[WINED3DSIH_TAB
     /* WINED3DSIH_REP           */ shader_glsl_rep,
     /* WINED3DSIH_RET           */ shader_glsl_ret,
     /* WINED3DSIH_RSQ           */ shader_glsl_rsq,
-#ifdef VBOX_WITH_VMSVGA
+#ifdef VRA_WITH_VMSVGA
     /* WINED3DSIH_SETP          */ shader_glsl_setp,
 #else
     /* WINED3DSIH_SETP          */ NULL,

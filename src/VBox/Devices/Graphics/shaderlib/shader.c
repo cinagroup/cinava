@@ -1214,7 +1214,7 @@ void shader_generate_main(IWineD3DBaseShader *iface, struct wined3d_shader_buffe
         /* Predication token */
         if (ins.predicate)
         {
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
             FIXME("Predicates not implemented.\n");
 #endif
             ins.predicate = *ptr++;
@@ -1642,7 +1642,7 @@ static ULONG STDMETHODCALLTYPE vertexshader_Release(IWineD3DVertexShader *iface)
         shader_chache_put(&((IWineD3DDeviceImpl*)shader->baseShader.device)->vshaderCache, (IWineD3DBaseShaderImpl*)shader);
 #else
         shader_cleanup((IWineD3DBaseShader *)iface);
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
         shader->baseShader.parent_ops->wined3d_object_destroyed(shader->baseShader.parent);
 #endif
         HeapFree(GetProcessHeap(), 0, shader);
@@ -2042,7 +2042,7 @@ static ULONG STDMETHODCALLTYPE pixelshader_Release(IWineD3DPixelShader *iface)
         shader_chache_put(&((IWineD3DDeviceImpl*)shader->baseShader.device)->pshaderCache, (IWineD3DBaseShaderImpl*)shader);
 #else
         shader_cleanup((IWineD3DBaseShader *)iface);
-#ifndef VBOX_WITH_VMSVGA
+#ifndef VRA_WITH_VMSVGA
         shader->baseShader.parent_ops->wined3d_object_destroyed(shader->baseShader.parent);
 #endif
         HeapFree(GetProcessHeap(), 0, shader);
